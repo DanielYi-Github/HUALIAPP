@@ -1,0 +1,3 @@
+export const LOADGROUPFILESNEWS = 'LOADGROUPFILESNEWS';//查詢最新文章
+export const LOADGROUPFILETYPES = 'LOADGROUPFILETYPES';//查詢各類型資料
+export const REFRESH_SUCCESS        = 'REFRESH_SUCCESS';   //更新成功
