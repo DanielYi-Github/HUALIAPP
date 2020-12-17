@@ -61,16 +61,13 @@ class IntroductionPage extends React.Component {
         banner1 = require(`../../image/banner/banner1_zh-CN.png`);
         banner2 = require(`../../image/banner/banner2_zh-CN.png`);
     }
-
     return (
       <Container>
         <HeaderForInitial
-          // isLeftButtonIconShow    = {this.state.loginButton ? true : false}
           isLeftButtonIconShow    = {true}
           leftButtonIcon          = {{name:"menu"}}
           leftButtonOnPress       = {this.openDrawer} 
-          // isRightButtonIconShow   = {this.state.loginButton ? true : false}
-          isRightButtonIconShow   = {true}
+          isRightButtonIconShow   = {this.props.state.Network.networkStatus}
           rightButtonIcon         = {{name: "person-circle-sharp"}}
           rightButtonOnPress      = {this.loginWay}
           rightButtonOnPress_lang = {this.showActionSheet} 
@@ -183,7 +180,7 @@ class IntroductionPage extends React.Component {
   renderGroupIntroduction = (key) => {
     return (
       <View key={key}>
-        <Title style={{paddingTop:30, alignSelf: 'center', color:this.props.style.dynamicTitleColor}}>
+        <Title style={{paddingTop:30, alignSelf: 'center'}}>
           {this.props.state.Language.lang.InitialPage.GroupIntroduction}
         </Title>
         <Card>
@@ -224,7 +221,7 @@ class IntroductionPage extends React.Component {
   renderServiceItems = (key) => {
     return(
       <View key={key}>
-        <Title style={{paddingTop:30, alignSelf: 'center', color:this.props.style.dynamicTitleColor }}>{this.props.state.Language.lang.InitialPage.ServiceItems}</Title>
+        <Title style={{paddingTop:30, alignSelf: 'center'}}>{this.props.state.Language.lang.InitialPage.ServiceItems}</Title>
         <Card>
           <CardItem style={{height:this.props.style.InitialPageServiceImage.height}}>
             <Image
@@ -295,7 +292,7 @@ class IntroductionPage extends React.Component {
   renderManagementIdea = (key) => {
     return(
       <View key={key}>
-        <Title style={{paddingTop:30, alignSelf: 'center', color:this.props.style.dynamicTitleColor}}>{this.props.state.Language.lang.InitialPage.ManagementIdea}</Title>
+        <Title style={{paddingTop:30, alignSelf: 'center'}}>{this.props.state.Language.lang.InitialPage.ManagementIdea}</Title>
         <Card>
           <CardItem>
             <Body>

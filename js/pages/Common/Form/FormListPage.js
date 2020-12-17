@@ -86,6 +86,7 @@ class FormListPage extends React.Component {
     let filteredData = (this.state.DefaultFormSelect.key=="all") 
         ? FormData : FormData.filter(createFilter(this.state.DefaultFormSelect.key, KEYS_TO_FILTERS));
     */
+   
     let formListPage = (
         <Container>
         {/*標題列*/}
@@ -103,18 +104,17 @@ class FormListPage extends React.Component {
         <FlatList
           keyExtractor        ={(item, index) => index.toString()}
           data                = {filteredData}
-          extraData          ={filteredData}
+          extraData           = {filteredData}
           renderItem          = {this.renderFormItem}
           ListFooterComponent = {this.renderFooter}
           refreshControl      ={
             <RefreshControl
+              // refreshing = {false}
               // refreshing = {this.state.refreshing}
-              refreshing = {false}
-              // refreshing = {!this.props.state.Form.isLoadDone}
-              colors     = {['#3691ec']}
-              title      = "Loading..."
-              progressBackgroundColor = "#fff"
+              refreshing = {!this.props.state.Form.isLoadDone}
               onRefresh  ={this.handleOnRefresh.bind(this)}
+              colors     ={[this.props.state.Theme.theme.variables.titleFontColor]}
+              tintColor  ={this.props.state.Theme.theme.variables.titleFontColor}
 
             />
           }

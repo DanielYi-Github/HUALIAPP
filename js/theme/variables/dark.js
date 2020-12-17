@@ -198,17 +198,15 @@ export default {
     width:window.width/3
   },
 
-  //HomePageBanner
-  // HomePageBanner:Basic.HomePageBanner,
-  //HomePageBannerTitle
-  // HomePageBannerTitle:Basic.HomePageBannerTitle,
-
   //image 657 303 455 182
   HomePageBanner:{
     height: bannerHeight,
     width : bannerWidth,
   },
 
+  //HomePageBannerTitle
+  HomePageBannerTitle:56,
+  HomePageBannerBackgroundColor:"#616161",
 
   ExplainText:{
     color:"#47ACF2"

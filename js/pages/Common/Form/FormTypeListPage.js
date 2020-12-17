@@ -221,6 +221,7 @@ class FormTypeListPage extends React.Component {
     forms = this.divideForms(this.props.state.Form.FormTypes, forms);                                     // 進行表單資料的分類與數量
     forms = this.state.isShowSearchResult ? this.filterKeyword(forms) : this.renderFormTypeLayout(forms); // 顯示關鍵字搜尋 或 表單列表
 
+    console.log(this.props.style)
     return(
       <Container>
           {/*標題列*/}
@@ -243,23 +244,24 @@ class FormTypeListPage extends React.Component {
             title                 = {this.props.state.Language.lang.HomePage.FormTypeList}
             titleOnPress          = {()=>{ this.setState({ isShowSearch:true });}}
           />
-           <FunctionPageBanner
-              explain         ={this.props.state.Language.lang.FormTypeListPage.FunctionInfo} //隨時了解表單狀態，流程追蹤、表單簽核目了然，簡單管理流程進度。
-              isShowButton    ={this.state.selectedCompany ? true : false}
-              buttonText      ={this.state.selectedCompany }
-              imageBackground ={require("../../../image/functionImage/sign.jpg")}
-              onPress         ={() => this.ActionSheet.show()}
-            />
+           
           <Content
             refreshControl = {
               <RefreshControl
                 refreshing ={!this.props.state.Form.isLoadDone}
                 onRefresh  ={this.handleOnRefresh.bind(this)}
-                colors     ={['#3691ec']}
-                progressBackgroundColor = "#fff"
+                colors     ={[this.props.style.titleFontColor]}
+                tintColor  ={this.props.style.titleFontColor}
               />
             }
           >
+            <FunctionPageBanner
+               explain         ={this.props.state.Language.lang.FormTypeListPage.FunctionInfo} //隨時了解表單狀態，流程追蹤、表單簽核目了然，簡單管理流程進度。
+               isShowButton    ={this.state.selectedCompany ? true : false}
+               buttonText      ={this.state.selectedCompany }
+               imageBackground ={require("../../../image/functionImage/sign.jpg")}
+               onPress         ={() => this.ActionSheet.show()}
+             />
             {/*forms*/}
             {
               (!this.props.state.Form.isLoadDone)?

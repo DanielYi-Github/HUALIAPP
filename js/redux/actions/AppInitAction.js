@@ -1,5 +1,5 @@
 'use strict';
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
 import NetInfo from "@react-native-community/netinfo";
 import * as AppInitTypes from '../actionTypes/AppInitTypes';
 
@@ -30,7 +30,6 @@ export function appInit(initActions, downloadProgressCallback) {
 		    創建使用者資料
 		*/
 
-		initActions.setThemeState();   				// 設定APP主題風格
 		initActions.initLang();        				// 判斷系統語系，如果本地資料沒有，就取系統語系，系統語系不合選擇中文簡體
 		initActions.setNetworkStatus();  			// 新增網路監聽
 		let netStatus = await getNetworkStatus(); 	// 獲取當下網路狀況
@@ -39,6 +38,7 @@ export function appInit(initActions, downloadProgressCallback) {
 		
 		
 		if (netStatus) {
+			initActions.setThemeState(null,netStatus);  // 設定APP主題風格
     		initActions.bios_check(); 					// 檢查設備是否支持生物識別
     		initActions.biometricInfo_check();			// 檢查server與設備有無使用者生物識別資訊且一致
 			await UpgradeDBTableUtil.UpgradeDBTable(); 	// 檢查DB表有無更新
@@ -63,7 +63,9 @@ export function appInit(initActions, downloadProgressCallback) {
 			}
 		 		
 		} else {
-
+			initActions.setThemeState(null,netStatus);  // 設定APP主題風格
+			intoAppProgress(initActions, getState(), netStatus, lang);
+			/*
 			let user = await DeviceStorageUtil.get('User'); // 有無使用者資料
 			user = user ? JSON.parse(user) : false;
 
@@ -78,6 +80,7 @@ export function appInit(initActions, downloadProgressCallback) {
 		 	} else {
           		Navigation.navigate('IntroductionDrawer');
 		 	}
+		 	*/
 		}
 	}
 }
@@ -88,43 +91,64 @@ export function userSkipDigUpdate(initActions){
 	}
 }
 
-async function intoAppProgress(initActions, State){
-	let arr = [
-		UpdateDataUtil.getPublicView(), 		//取得公開畫面參數
-		UpdateDataUtil.getPublicViewContent(), 	//取得公開畫面-集團介紹顯示內容參數
-	];
-	await Promise.all(arr).then((data) => {
-		// 設定是否開啟蘋果驗證機制
-		initActions.setAppleVerify(data[1].length == 3 ? true : false); 
-		initActions.setIntroductionDrawerPages(data[0]); 
-		initActions.setIntroductionPageContent(data[1]); 
-	}).catch(reason => {
-		LoggerUtil.addErrorLog("InitialPage initUser", "APP Page in InitialPage", "WARN", reason);
-	});
-
+async function intoAppProgress(initActions, State, netStatus=true, lang){
 	let user = await DeviceStorageUtil.get('User'); // 有無使用者資料
 	user = user ? JSON.parse(user) : false;
 
-		
-	// 確認是否是使用帳號切換登入方式來登入：是，開始進行單入步驟；否，進行正常登入
-	let loginChangeUserInfo = State.Login.loginChangeUserInfo
-	if (Object.entries(loginChangeUserInfo).length) {
-		switch (loginChangeUserInfo.checkAccType) {
-			case "AD":
-				initActions.loginByAD(loginChangeUserInfo.account, loginChangeUserInfo.password);
-				break;
-			case "EMPID":
-				initActions.loginByEmpid(loginChangeUserInfo.account, loginChangeUserInfo.password);
-				break;
-			default:
-		};
-	} else {
-		if (user) {
-			initActions.loadUserInfoState(user);
-			initActions.loginByToken(user);
+	// 有無網路
+	if (netStatus) {
+		let arr = [
+			UpdateDataUtil.getPublicView(), 		//取得公開畫面參數
+			UpdateDataUtil.getPublicViewContent(), 	//取得公開畫面-集團介紹顯示內容參數
+		];
+		await Promise.all(arr).then((data) => {
+			// 設定是否開啟蘋果驗證機制
+			initActions.setAppleVerify(data[1].length == 3 ? true : false); 
+			initActions.setIntroductionDrawerPages(data[0]); 
+			initActions.setIntroductionPageContent(data[1]); 
+		}).catch(reason => {
+			LoggerUtil.addErrorLog("InitialPage initUser", "APP Page in InitialPage", "WARN", reason);
+		});
+
+		// 確認是否是使用帳號切換登入方式來登入：是，開始進行單入步驟；否，進行正常登入
+		let loginChangeUserInfo = State.Login.loginChangeUserInfo
+		if (Object.entries(loginChangeUserInfo).length) {
+			switch (loginChangeUserInfo.checkAccType) {
+				case "AD":
+					initActions.loginByAD(loginChangeUserInfo.account, loginChangeUserInfo.password);
+					break;
+				case "EMPID":
+					initActions.loginByEmpid(loginChangeUserInfo.account, loginChangeUserInfo.password);
+					break;
+				default:
+			};
 		} else {
-			Navigation.navigate('IntroductionDrawer');
+			if (user) {
+				initActions.loadUserInfoState(user);
+				initActions.loginByToken(user);
+			} else {
+				Navigation.navigate('IntroductionDrawer');
+			}
 		}
+	} else {
+		initActions.setIntroductionDrawerPages(getDefaultDrawerPages()); 
+		initActions.setIntroductionPageContent(getDefaultPageContent()); 
+		if (user) {
+		  initActions.loadUserInfoState(user);
+          Navigation.navigate('HomeTabNavigator');
+		  Alert.alert(
+		    lang.Common.Alert,
+		    lang.Common.InternetAlert    
+		  );
+		} else {
+
+          Navigation.navigate('IntroductionDrawer');
+		  Alert.alert(
+		    lang.Common.Error,
+		    lang.Common.NoInternetAlert
+		  );
+		}
+
 	}
 }
 
@@ -133,4 +157,104 @@ async function  getNetworkStatus(){
 	  return state.isConnected;
 	});
 	return networkStatus;
+}
+
+function getDefaultDrawerPages() {
+	return [
+		{
+			crtdat: 1561000180000,
+			crtemp: "A10433",
+			desccode: null,
+			descname: null,
+			oid: "8BB973C2D8182301E05010ACB8004D37",
+			paramcode: "Introduction",
+			paramname: "公司介紹",
+			paramsort: 1,
+			paramtype: "PublicView",
+			paramtypename: "公開畫面",
+			parentparam: null,
+			status: "Y",
+			txdat: 1561000180000,
+			txemp: null,
+		}, {
+			crtdat: 1561000180000,
+			crtemp: "A10433",
+			desccode: null,
+			descname: null,
+			oid: "8BB973C2D8172301E05010ACB8004D37",
+			paramcode: "Recruitment",
+			paramname: "招聘信息",
+			paramsort: 2,
+			paramtype: "PublicView",
+			paramtypename: "公開畫面",
+			parentparam: null,
+			status: "Y",
+			txdat: 1561000180000,
+			txemp: null
+		}, {
+			crtdat: 1561089206000,
+			crtemp: "A10433",
+			desccode: null,
+			descname: null,
+			oid: "8BCE6799132D45D0E05010ACB8001ED4",
+			paramcode: "ShoesIntroduction",
+			paramname: "製鞋介紹",
+			paramsort: 4,
+			paramtype: "PublicView",
+			paramtypename: "公開畫面",
+			parentparam: null,
+			status: "Y",
+			txdat: 1561089206000,
+			txemp: null
+		}
+	];
+}
+
+function getDefaultPageContent() {
+	return [{
+		crtdat: 1563414285000,
+		crtemp: "A10480",
+		desccode: null,
+		descname: null,
+		oid: "8DEBC118A2B95AF1E050A8C0BB1E5EC5",
+		paramcode: "GroupIntroduction",
+		paramname: "集團介紹",
+		paramsort: 1,
+		paramtype: "PublicViewContent",
+		paramtypename: "公開畫面_集團介紹內容",
+		parentparam: null,
+		status: "Y",
+		txdat: 1596441709000,
+		txemp: null
+	}, {
+		crtdat: 1563414365000,
+		crtemp: "A10480",
+		desccode: null,
+		descname: null,
+		oid: "8DEBC118A2BA5AF1E050A8C0BB1E5EC5",
+		paramcode: "ServiceItems",
+		paramname: "服務項目",
+		paramsort: 2,
+		paramtype: "PublicViewContent",
+		paramtypename: "公開畫面_集團介紹內容",
+		parentparam: null,
+		status: "Y",
+		txdat: 1596441699000,
+		txemp: null
+	}, {
+		crtdat: 1563414790000,
+		crtemp: "A10480",
+		desccode: null,
+		descname: null,
+		oid: "8DEBC118A2BB5AF1E050A8C0BB1E5EC5",
+		paramcode: "ManagementIdea",
+		paramname: "經營理念",
+		paramsort: 3,
+		paramtype: "PublicViewContent",
+		paramtypename: "公開畫面_集團介紹內容",
+		parentparam: null,
+		status: "Y",
+		txdat: 1563414790000,
+		txemp: null
+	}]
 }

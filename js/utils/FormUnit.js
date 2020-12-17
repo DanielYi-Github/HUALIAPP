@@ -35,11 +35,10 @@ let FormUnit = {
     if ( editCheckItemIndex == 0 ) return compareResult;
 
     switch(parentItem.columntype) {
-      case "tableaveforlocal":
+      // case "tableaveforlocal":
       /* 台籍幹部休假單的表格規則
          新一筆的起始時間不能小於前一筆的起迄時間
       */
-     
       case "tableave":
         if (parentItem.defaultvalue == null) return compareResult;  // 馬上結束
         if (parentItem.defaultvalue.length == 0) return compareResult;  // 馬上結束

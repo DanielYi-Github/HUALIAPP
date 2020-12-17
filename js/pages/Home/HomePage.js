@@ -69,6 +69,7 @@ class HomePage extends React.Component {
       MTlistHeight:null,
 
       contentOffset_Y:0,
+      isLoadFunctionDataRelateData:false // 是否已撈取Function模組關聯所有資料
     }
 
     MessageRouter.initial(this.props.state, this.props.actions);// 處理訊息分流的類別
@@ -85,11 +86,7 @@ class HomePage extends React.Component {
     props.actions.messageInitial(user);                    //撈取全部的消息資料，並放置在redux的state中
     props.actions.loadWaterMarkViewConfig();               //撈取APP共用資料_浮水印顯示畫面控制
     props.actions.getIsAppNotificationEnable(user);        //檢查手機ＡＰＰ的通知是否開啟
-    props.actions.loadCompanyData_CarCO();                 //撈取APP共用資料_派車查詢公司
     props.actions.loadCompanyData_ContactCO();             //撈取APP共用資料_通訊錄公司
-    props.actions.loadCompanyData_HrCO();                  //撈取APP共用資料_Hr查詢公司
-    props.actions.loadFormTypeIntoState(user, langStatus); //取得表單簽核資料_表單簽核公司清單
-    props.actions.myFormInitial(user);                     //撈取我的表單資料
     Platform.OS == 'android' ? props.actions.enableScreenShot(false) : null; //啟動禁止截圖的功能(android專屬)  
   }
 
@@ -108,7 +105,7 @@ class HomePage extends React.Component {
           headerMaxHeight       ={bannerHeight}
           extraScrollHeight     ={20}
           navbarColor           ={this.props.style.MainPageBackground.backgroundColor}
-          backgroundColor       ={this.props.style.MainPageBackground.backgroundColor}
+          backgroundColor       ={this.props.style.HomePageBannerBackgroundColor}
           renderNavBar          ={this.renderNavBar}
           title                 ={this.showHomePageBanner()}
           renderContent         ={this.renderContent}
@@ -154,8 +151,12 @@ class HomePage extends React.Component {
   }
 
   renderContent = () => {
-    let Home = this.props.state.Home;   //需要進行分類的資料  
+    // 有值再進行渲染
+    if(this.props.state.Home.FunctionData.length == 0) return null;
+    // 根據FunctionData的資料來進行其他資料的獲取
+    if(!this.state.isLoadFunctionDataRelateData) this.LoadFunctionDataRelateData();
 
+    let Home = this.props.state.Home;   //需要進行分類的資料  
     {/*集團公告*/}
     let noticeListBody = (
       <Body 
@@ -527,6 +528,38 @@ class HomePage extends React.Component {
     let appID = item.item.ID;
     let userID = this.props.state.UserInfo.UserInfo.id;
     this.props.actions.navigateFunctionPage(appID, userID);
+  }
+
+  LoadFunctionDataRelateData = () =>{
+    this.setState({
+      isLoadFunctionDataRelateData:true
+    });
+    // console.log(this.props.state.Home.FunctionData);
+    /*
+      props.actions.loadCompanyData_CarCO();                 //撈取APP共用資料_派車查詢公司
+      props.actions.loadCompanyData_HrCO();                  //撈取APP共用資料_Hr查詢公司
+      props.actions.loadFormTypeIntoState(user, langStatus); //取得表單簽核資料_表單簽核公司清單
+      props.actions.myFormInitial(user);                     //撈取我的表單資料
+     */
+    let user         = this.props.state.UserInfo.UserInfo;
+    let {langStatus} = this.props.state.Language;
+    for(let functionItem of this.props.state.Home.FunctionData){
+      switch(functionItem.ID) {
+        case "Car":
+          this.props.actions.loadCompanyData_CarCO();   //撈取APP共用資料_派車查詢公司
+          break;
+        case "Birthday":
+          this.props.actions.loadCompanyData_HrCO(); //撈取APP共用資料_Hr查詢公司
+          break;
+        case "Sign":
+          this.props.actions.loadFormTypeIntoState(user, langStatus); //取得表單簽核資料_表單簽核公司清單
+          break;
+        case "MyForm":
+          this.props.actions.myFormInitial(user);  //撈取我的表單資料
+          break;
+        
+      }
+    }
   }
 }
 

@@ -129,6 +129,7 @@ export function loadBannerImages(){
 		let data = [];
 		let lang = getState().Language.langStatus;
 
+		
 		// 先判斷有沒有網路
 		if (getState().Network.networkStatus) {
 			let sql = `select * from THF_BANNER where LANG='${lang}' and STATUS='Y' order by SORT;`
@@ -148,10 +149,11 @@ export function loadBannerImages(){
 				LoggerUtil.addErrorLog("CommonAction loadBannerImages", "APP Action", "ERROR", e);
 			});
 		}
+		
 
 		//如果沒有網路或是SQL查詢出錯，則做下面的處理
 		if (data.length == 0) {
-			let banne, banner2;
+			let banner1, banner2;
 			switch(lang){
 				case "vi":
 					banner1 = require(`../../image/banner/banner1_en.png`);
@@ -167,6 +169,7 @@ export function loadBannerImages(){
 					break;
 				case "zh-TW":
 					banner1 = require(`../../image/banner/banner1_zh-TW.png`);
+					// banner1 = require(`../../image/banner/banner_CN.png`);
 					banner2 = require(`../../image/banner/banner2_zh-TW.png`);
 					break;
 			}
@@ -231,8 +234,8 @@ export function cleanNotificationContent(){
 // for Messages
 export function checkDirectorPage(data){
 	return async (dispatch, getState) => {
-		// 找出該訊息的EVENT 再進行調轉動作
 		
+		// 找出該訊息的EVENT 再進行調轉動作
 		let user = getState().UserInfo.UserInfo;
 		let OID  = data.oid ? data.oid: data.OID;
 		let sql  = `SELECT case when r.ISREAD is null then 'F' else r.ISREAD end ISREAD,
@@ -242,7 +245,9 @@ export function checkDirectorPage(data){
 		         	left join THF_EVENT e on e.OID=a.EVENTOID
 					left join THF_MSG_USERREAD r on r.MSGOID=a.OID 
 					WHERE a.STATUS='Y' AND a.OID='${OID}'`;
-		data = await SQLite.selectData(sql, []).then((result) => {return result.item(0)});
+		data = await SQLite.selectData(sql, []).then((result) => {
+			return result.item(0)
+		});
 
 		if (data.ISREAD == "F") updateMessageReadState(OID, user, dispatch, getState)
 

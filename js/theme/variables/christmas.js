@@ -72,7 +72,7 @@ export default {
   searchBarInputHeight: platform === "ios" ? 30 : 50,
   toolbarBtnTextColor: platform === "ios" ? "#007aff" : "#fff",
   toolbarDefaultBorder: platform === "ios" ? "#a7a6ab" : "#3F51B5",
-  iosStatusbar: platform === "ios" ? "dark-content" : "light-content",
+  iosStatusbar: platform === "ios" ? "light-content" : "light-content",
   iosSearchBarBackgroundColor:"#FFF", // ios Findpage上方輸入框背景顏色
   get statusBarColor() {
     return color(this.toolbarDefaultBg)
@@ -206,9 +206,10 @@ export default {
   },
   //HomePageBannerTitle
   HomePageBannerTitle:56,
+  HomePageBannerBackgroundColor:"#4BA928",
 
   ExplainText:{
-    color:"#47ACF2"
+    color:"#F73525"
   },
   ExplainIcon:{
     iconIsImage:true,

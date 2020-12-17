@@ -93,6 +93,7 @@ function IntroductionDrawer(props) {
   const [preventGoback, setPreventGoback] = useState(false);
   const IntroductionDrawerPages = useSelector(state => state.Common.IntroductionDrawerPages)
   const lang                    = useSelector(state => state.Language.lang)
+  const LabelColor              = useSelector(state => state.Theme.theme.variables.LabelColor)
 
   if (useIsFocused()) {
     if (!preventGoback) {
@@ -124,6 +125,7 @@ function IntroductionDrawer(props) {
     <Drawer.Navigator 
       initialRouteName ="Introduction" 
       drawerContent    ={ props => <IntroductionDrawerContent {...props} lang={lang}/>}
+      drawerContentOptions = {{ inactiveTintColor:LabelColor }}
     >
       {
         IntroductionDrawerPages.map( page => {
@@ -132,7 +134,7 @@ function IntroductionDrawer(props) {
               return <Drawer.Screen 
                       name      ={page.paramcode} 
                       component ={IntroductionPage} 
-                      options   ={{ drawerLabel:lang.SideBar.CompanyInformation  }}/>
+                      options   ={{ drawerLabel:lang.SideBar.CompanyInformation }} />
             case "Recruitment":
               return <Drawer.Screen 
                       name      ={page.paramcode} 
@@ -351,8 +353,6 @@ function Router(props) {
                     </RootStack.Navigator>
                   </SafeAreaView>
               }
-
-                
               </NavigationContainer>
             </SafeAreaProvider>
           </StyleProvider>
