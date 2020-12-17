@@ -27,7 +27,9 @@ import MainPageBackground        from '../../components/MainPageBackground';
 
 
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
+console.log(SCREEN_HEIGHT);
 const IS_IPHONE_X       = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 844 || SCREEN_HEIGHT === 896 || SCREEN_HEIGHT === 926;
+console.log(IS_IPHONE_X);
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
 const HEADER_HEIGHT     = Platform.OS === 'ios' ? (IS_IPHONE_X ? 88 : 64) : 64;
 const NAV_BAR_HEIGHT    = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
