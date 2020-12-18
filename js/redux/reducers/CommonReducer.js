@@ -31,7 +31,8 @@ const initialState = {
   enableAuthentication :false,
   isAuthenticateApprove:false,
   navigatePage         :null,
-  enableScreenShot     :false
+  enableScreenShot     :false,
+  isShowAndroidChangeAPPMessage:false
 };
 
 export default function common(state = initialState, action = {}) {
@@ -172,6 +173,11 @@ export default function common(state = initialState, action = {}) {
       return {
         ...state,
         enableScreenShot:action.isEnable
+      }
+    case types.SHOW_ANDROID_CHANGE_APP_MESSAGE:
+      return {
+        ...state,
+        isShowAndroidChangeAPPMessage:action.result
       }
     default:
       return state;

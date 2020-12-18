@@ -3898,3 +3898,27 @@ export async function getSeasonThemeDisplay() {
 		return false ;
 	}
 }
+
+export async function getAndroidChangeAppMessage(version, platform) {
+	let content = {
+		no:version,
+		platform:platform == "android"? "A": "I"
+    }
+    let params = {
+		"content":content,
+    };
+	let url = "version/check";
+
+	let isConnected = await NetInfo.fetch().then((state) => {
+		return state.isConnected;
+	});
+
+	if (isConnected) {
+		return await NetUtil.getRequestContent(params, url).then((data) => {
+			data.content = (data.code != 200) ? false : data.content
+			return data.content;
+		})
+	} else {
+		return false ;
+	}
+}

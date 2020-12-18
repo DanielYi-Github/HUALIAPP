@@ -245,6 +245,7 @@ export function navigateFunctionPage(appID = null, userID = null) {
 				}
 				break;
 			default:
+				console.log(appID);
 				NavigationService.navigate(appID);
 				break;
 		}

@@ -6,6 +6,7 @@ let FormUnit = {
   language:{},
   // 欄位規則檢查
   formFieldRuleCheck(value, formItem, formContent, columntype){
+    console.log(value, formItem, formContent, columntype);
     if (formItem.rulesList == null) return true;                       // 馬上結束
     let compareResult = true;                                          // 比對結果
     
@@ -35,7 +36,6 @@ let FormUnit = {
     if ( editCheckItemIndex == 0 ) return compareResult;
 
     switch(parentItem.columntype) {
-      // case "tableaveforlocal":
       /* 台籍幹部休假單的表格規則
          新一筆的起始時間不能小於前一筆的起迄時間
       */
@@ -88,6 +88,11 @@ let FormUnit = {
 
         }
         break;
+      /* 請假單的表格規則
+         新一筆的起始時間不能小於相同工號前一筆的起迄時間
+         起日ITEM4 迄日ITEM6 期間不能跨年 起日年份不等於迄日年份時提示不可跨年休假
+       */
+      //case "tableaveforlocal":
     }
 
     return compareResult;

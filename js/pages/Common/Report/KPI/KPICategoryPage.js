@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 
 import MyFormSelectListButton from '../../../../components/MyFormSelectListButton';
 import HeaderForGeneral       from '../../../../components/HeaderForGeneral';
+import MainPageBackground     from '../../../../components/MainPageBackground';
 import * as SQLite            from '../../../../utils/SQLiteUtil';
 import * as UpdateDataUtil    from '../../../../utils/UpdateDataUtil';
 import * as LoginAction      from '../../../../redux/actions/LoginAction';
@@ -309,9 +310,11 @@ class KPICategoryPage extends React.Component {
   }
 
   renderDrawerContent = () => {
+    let containerBgColor = this.props.state.Theme.theme.variables.containerBgColor; 
+    let contentStyle = this.props.state.Theme.theme.variables.contentStyle;
     if (Platform.OS === "ios") {
       return(
-        <Container>
+        <Container style={{backgroundColor: containerBgColor=="rgba(0,0,0,0)" ? contentStyle: containerBgColor }}>
           {/*標題列*/}
           <HeaderForGeneral
             isLeftButtonIconShow  = {true}
@@ -392,7 +395,7 @@ class KPICategoryPage extends React.Component {
       );
     } else {
       return(
-        <Container >
+        <Container style={{backgroundColor: containerBgColor=="rgba(0,0,0,0)" ? contentStyle: containerBgColor }}>
           {/*標題列*/}
           <HeaderForGeneral
             isLeftButtonIconShow  = {true}
@@ -712,7 +715,6 @@ class KPICategoryPage extends React.Component {
           },
       };
     }
-
     return (
       <Drawer
           ref            ={(comp) => {this.drawer = comp;}}
@@ -735,6 +737,12 @@ class KPICategoryPage extends React.Component {
           isTransparent         = {false}
         />
         <Content> 
+          {
+            (this.props.state.Theme.themeType == "season") ?
+              <MainPageBackground/>
+            :
+              null
+          }
           {(Platform.OS === "ios")?
             <Tabs 
               tabBarUnderlineStyle={ this.props.style.tabBarUnderlineStyle } 

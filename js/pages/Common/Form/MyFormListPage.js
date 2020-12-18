@@ -189,9 +189,11 @@ class MyFormListPage extends React.Component {
   }
 
   renderDrawerContent = () => {
+    let containerBgColor = this.props.state.Theme.theme.variables.containerBgColor; 
+    let contentStyle = this.props.state.Theme.theme.variables.contentStyle;
     if (Platform.OS === "ios") {
       return(
-        <Container>
+        <Container style={{backgroundColor: containerBgColor=="rgba(0,0,0,0)" ? contentStyle: containerBgColor }}>
           {/*標題列*/}
           <HeaderForGeneral
             isLeftButtonIconShow  = {true}
@@ -327,7 +329,7 @@ class MyFormListPage extends React.Component {
       );
     } else {
       return(
-        <Container>
+        <Container style={{backgroundColor: containerBgColor=="rgba(0,0,0,0)" ? contentStyle: containerBgColor }}>
           {/*標題列*/}
           <HeaderForGeneral
             isLeftButtonIconShow  = {true}

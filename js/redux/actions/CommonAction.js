@@ -4,7 +4,9 @@ import * as MessageTypes   from '../actionTypes/MessageTypes';
 import * as SQLite         from '../../utils/SQLiteUtil';
 import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
 import * as LoggerUtil     from '../../utils/LoggerUtil';
+import * as DeviceInfo     from '../../utils/DeviceInfoUtil';
 import * as NavigationService   from '../../utils/NavigationService';
+import DeviceStorageUtil   from '../../utils/DeviceStorageUtil';
 import SearchInput, { createFilter } from 'react-native-search-filter';
 
 export function loadCompanyData_ContactCO(){
@@ -714,6 +716,39 @@ export function enableScreenShot(isEnable) {
 		dispatch({
 			type: types.ENABLE_SCREENSHOT,
 			isEnable
+		});
+	}
+}
+
+export function isShowAndroidChangeAPPMessage(){
+	return async (dispatch, getState) => {
+		let isShowAndroidChangeAPPMessage = await DeviceStorageUtil.get('isShowAndroidChangeAPPMessage').then(async (data)=>{
+			data = await JSON.parse(data)
+			if ( data === "N" ) {
+				return false;
+			}else{
+				return true;
+			}
+		});
+
+		if (isShowAndroidChangeAPPMessage) {
+			UpdateDataUtil.getAndroidChangeAppMessage(DeviceInfo.getVersion(), Platform.OS).then((result)=>{
+				dispatch({
+					type: types.SHOW_ANDROID_CHANGE_APP_MESSAGE,
+					result
+				});
+			});
+		}
+	}
+}
+
+export function noMoreShowAndroidChangeAPPMessage(){
+	return async (dispatch, getState) => {
+		DeviceStorageUtil.set('isShowAndroidChangeAPPMessage', "N");
+		let result = false;
+		dispatch({
+			type: types.SHOW_ANDROID_CHANGE_APP_MESSAGE,
+			result
 		});
 	}
 }
