@@ -79,7 +79,6 @@ class HomePage extends React.Component {
     let {langStatus} = props.state.Language;
 
     //撈取APP所有必要資料
-    props.actions.loadBannerImages();                      //撈取HomePage Banners資料
     props.actions.loadFunctionData(langStatus);            //取得圓圈功能按鍵的Data    
     props.actions.loadFunctionType(langStatus);            //取得Module分類    
     props.actions.loadInitialNoticeData();                 //撈取公告列表資料 
