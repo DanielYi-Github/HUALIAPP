@@ -307,30 +307,6 @@ function MainStack(){
 }
 
 const RootStack = createStackNavigator();
-/*
-class Router extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (  
-      <Root>
-        <StyleProvider style={this.props.state.Theme.theme}>
-          <SafeAreaProvider>
-            <NavigationContainer ref={navigationRef}>
-              <RootStack.Navigator headerMode="none" mode="modal" >
-                <RootStack.Screen name="Main" component={MainStack} options={{ headerShown: false }}/>
-                <RootStack.Screen name="Authentication" component={AuthenticationView} />
-              </RootStack.Navigator>
-            </NavigationContainer>
-          </SafeAreaProvider>
-        </StyleProvider>
-      </Root>
-    );
-  }
-}
-*/
 function Router(props) {
   const theme  = useSelector(state => state.Theme.theme)
   return (  

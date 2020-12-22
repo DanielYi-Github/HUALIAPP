@@ -349,7 +349,6 @@ class IntroductionPage extends React.Component {
 
   // 顯示重新安裝訊息
   showAdvertisement = () => {
-    console.log(this.props.state.Language);
     let lang = this.props.state.Language.lang.Common;
     return(
       <ModalWrapper 

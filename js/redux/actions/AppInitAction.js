@@ -34,8 +34,6 @@ export function appInit(initActions, downloadProgressCallback) {
 		initActions.setNetworkStatus();  			// 新增網路監聽
 		let netStatus = await getNetworkStatus(); 	// 獲取當下網路狀況
 		let lang = getState().Language.lang;
-		let navigationPage; 						// 初始化結束後要跳轉的畫面
-		
 		
 		if (netStatus) {
 			initActions.setThemeState(null,netStatus);  // 設定APP主題風格
@@ -51,10 +49,12 @@ export function appInit(initActions, downloadProgressCallback) {
 				isVersionUpdate = await UpgradeAppVersionUtil.checkBigUpdate(lang); // 版本更新檢查
 
 				if (!isVersionUpdate) {
+					
 					isVersionUpdate = Platform.OS == 'ios' ? 
 							isVersionUpdate 
 						: 
 							await UpgradeAppVersionUtil.checkHotUpdate(lang, downloadProgressCallback); // 熱更新檢查
+					
 					
 					if (!isVersionUpdate) intoAppProgress(initActions, getState());
 					initActions.setNoUpdateAlert(); // 設定不要顯示提醒框
@@ -98,39 +98,41 @@ async function intoAppProgress(initActions, State, netStatus=true, lang){
 
 	// 有無網路
 	if (netStatus) {
+		
 		let arr = [
 			UpdateDataUtil.getPublicView(), 		//取得公開畫面參數
-			UpdateDataUtil.getPublicViewContent(), 	//取得公開畫面-集團介紹顯示內容參數
+			UpdateDataUtil.getPublicViewContent() 	//取得公開畫面-集團介紹顯示內容參數
 		];
-		await Promise.all(arr).then((data) => {
+		Promise.all(arr).then((data) => {
 			// 設定是否開啟蘋果驗證機制
 			initActions.setAppleVerify(data[1].length == 3 ? true : false); 
 			initActions.setIntroductionDrawerPages(data[0]); 
 			initActions.setIntroductionPageContent(data[1]); 
+
+			// 確認是否是使用帳號切換登入方式來登入：是，開始進行單入步驟；否，進行正常登入
+			let loginChangeUserInfo = State.Login.loginChangeUserInfo;
+			if (Object.entries(loginChangeUserInfo).length) {
+				switch (loginChangeUserInfo.checkAccType) {
+					case "AD":
+						initActions.loginByAD(loginChangeUserInfo.account, loginChangeUserInfo.password);
+						break;
+					case "EMPID":
+						initActions.loginByEmpid(loginChangeUserInfo.account, loginChangeUserInfo.password);
+						break;
+					default:
+				};
+			} else {
+				if (user) {
+					initActions.loadUserInfoState(user);
+					initActions.loginByToken(user);
+				} else {
+					Navigation.navigate('IntroductionDrawer');
+				}
+			}
+
 		}).catch(reason => {
 			LoggerUtil.addErrorLog("InitialPage initUser", "APP Page in InitialPage", "WARN", reason);
 		});
-
-		// 確認是否是使用帳號切換登入方式來登入：是，開始進行單入步驟；否，進行正常登入
-		let loginChangeUserInfo = State.Login.loginChangeUserInfo
-		if (Object.entries(loginChangeUserInfo).length) {
-			switch (loginChangeUserInfo.checkAccType) {
-				case "AD":
-					initActions.loginByAD(loginChangeUserInfo.account, loginChangeUserInfo.password);
-					break;
-				case "EMPID":
-					initActions.loginByEmpid(loginChangeUserInfo.account, loginChangeUserInfo.password);
-					break;
-				default:
-			};
-		} else {
-			if (user) {
-				initActions.loadUserInfoState(user);
-				initActions.loginByToken(user);
-			} else {
-				Navigation.navigate('IntroductionDrawer');
-			}
-		}
 	} else {
 		initActions.setIntroductionDrawerPages(getDefaultDrawerPages()); 
 		initActions.setIntroductionPageContent(getDefaultPageContent()); 

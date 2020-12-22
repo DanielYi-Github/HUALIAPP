@@ -652,7 +652,7 @@ export function enableScreenShot(isEnable) {
 export function isShowAndroidChangeAPPMessage(){
 	return async (dispatch, getState) => {
 		let isShowAndroidChangeAPPMessage = await DeviceStorageUtil.get('isShowAndroidChangeAPPMessage').then(async (data)=>{
-			data = await JSON.parse(data)
+			data = data=="" ? "Y": await JSON.parse(data)
 			if ( data === "N" ) {
 				return false;
 			}else{

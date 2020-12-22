@@ -26,7 +26,7 @@ export function setThemeState(theme = null, netStatus) {
 	return async (dispatch, getState) => {
 		let seasonThemeDisplayFromServer = false;
 		if (netStatus) seasonThemeDisplayFromServer = await UpdateDataUtil.getSeasonThemeDisplay();
-
+		
 		let storageTheme = await DeviceStorageUtil.get('storageTheme').then( async (data)=>{
 			let defaultTheme = {
 				showTheme : "platform",
