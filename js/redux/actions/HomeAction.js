@@ -182,7 +182,6 @@ export function loadNoticeData(page = 0, data = [], noticeType=null){
 export function navigateFunctionPage(appID = null, userID = null) {
 	return async (dispatch, getState) => {
 		let recordHitCount = true;
-
 		switch (appID) {
 			case "Sign":
 				NavigationService.navigate("FormTypeList");

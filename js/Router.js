@@ -9,6 +9,7 @@ import { SafeAreaProvider, SafeAreaView }     from 'react-native-safe-area-conte
 import { NavigationContainer, useIsFocused }  from '@react-navigation/native';
 import { createStackNavigator, TransitionSpecs, CardStyleInterpolators, TransitionPresets } from '@react-navigation/stack';
 import { createDrawerNavigator }from '@react-navigation/drawer';
+import { withSecurityView }     from './components/WithSecurityView';
 import { createMyNavigator }    from './components/CustomBottomTabNavigation';
 import { navigationRef }        from './utils/NavigationService';
 
@@ -336,8 +337,7 @@ function Router(props) {
       );
 }
 
-
-export default connect(
+const appRouter = connect(
   (state) => ({
     state: { ...state }
   }),
@@ -347,3 +347,5 @@ export default connect(
     }, dispatch)
   })
 )(Router);
+
+export default withSecurityView(appRouter);

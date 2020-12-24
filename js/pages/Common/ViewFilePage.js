@@ -32,7 +32,6 @@ class ViewFilePage extends React.Component {
       this.state.url,
       this.state.content
     ).then((data) => {
-      // console.log(data);
       if (data == null || data.url == undefined) {
         Alert.alert(
           this.props.state.Language.lang.Common.Sorry,
@@ -51,7 +50,6 @@ class ViewFilePage extends React.Component {
         });
       }
     }).catch((data) => {
-      // console.log("errpr1", data);
       Alert.alert(
         this.props.state.Language.lang.Common.Sorry,
         data ? data.message : this.props.state.Language.lang.Common.FileLoadingError, [{

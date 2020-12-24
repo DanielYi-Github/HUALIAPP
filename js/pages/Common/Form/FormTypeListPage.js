@@ -221,7 +221,6 @@ class FormTypeListPage extends React.Component {
     forms = this.divideForms(this.props.state.Form.FormTypes, forms);                                     // 進行表單資料的分類與數量
     forms = this.state.isShowSearchResult ? this.filterKeyword(forms) : this.renderFormTypeLayout(forms); // 顯示關鍵字搜尋 或 表單列表
 
-    console.log(this.props.style)
     return(
       <Container>
           {/*標題列*/}

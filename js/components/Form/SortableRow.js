@@ -77,7 +77,7 @@ class SortableRow extends Component {
             <Label>{`${index+1}.`}{data.COLUMN2}</Label>
           </Body>
           <Right>
-            <Icon name={Platform.OS=="ios" ? "reorder-two": "reorder"}/>
+            <Icon name={"reorder-two"}/>
           </Right>
         </Body>
       </Animated.View>
