@@ -309,7 +309,7 @@ export function initialApi(user,way=false){
   			UpdateDataUtil.updateLanguage(user),    //語系表
   			UpdateDataUtil.updateMasterData(user),  //主資料表
 			UpdateDataUtil.updatePermission(user),  //權限資料
-			UpdateDataUtil.updateEvent(user),		//事件表   測試機上面暫時沒有這張表 開發基要解除註解
+			UpdateDataUtil.updateEvent(user),		//事件表
 			UpdateDataUtil.updateBanner(user),		//Banner
 			UpdateDataUtil.updateModule(user)		//module
   		];
@@ -359,7 +359,6 @@ export function initialApi(user,way=false){
 async function loadBannerImagesIntoState(dispatch, getState){
 	let data = [];
 	let lang = getState().Language.langStatus;
-
 	
 	// 先判斷有沒有網路
 	if (getState().Network.networkStatus) {
@@ -400,7 +399,6 @@ async function loadBannerImagesIntoState(dispatch, getState){
 				break;
 			case "zh-TW":
 				banner1 = require(`../../image/banner/banner1_zh-TW.png`);
-				// banner1 = require(`../../image/banner/banner_CN.png`);
 				banner2 = require(`../../image/banner/banner2_zh-TW.png`);
 				break;
 		}
@@ -481,7 +479,51 @@ function setUserInfo(data) {
 		data
 	}
 }
+
+// 新增熱起動的資料撈取
+export function hotInitialApi( user, way=false ){
+	return (dispatch, getState) => {
+		LoggerUtil.uploadLocalDBErrorLog(user); 	// 將資料庫的log上傳至server
+
+		// 輪播圖、公告資訊、消息 進行重新獲取
+		let arr = [
+  			// UpdateDataUtil.updateMSG(user), 	//手機消息-執行最久
+  			UpdateDataUtil.updateNotice(user),	//公告資訊				
+			UpdateDataUtil.updateBanner(user),	//Banner
+  		];
+
+	  	Promise.all(arr).then( async () => {
+	  		loadBannerImagesIntoState(dispatch, getState);//撈取HomePage Banners資料
+	  	}).catch((e)=>{
+	  		switch(way) {
+	  		  case "token":
+	  		    dispatch(logout('code:'+e, true));
+	  		    break;
+	  		  case "ad":
+	  		    dispatch(logout("API Error, Please try it later.", true)); //登入失敗，跳至登入頁
+	  		    break;
+	  		  case "empid":
+	  		    dispatch(logout('code:'+e, true));
+	  		    break;
+	  		  case "imei":
+	  		    dispatch(logout('code:'+e, true)); //登入失敗，跳至登入頁
+	  		    dispatch(check_done());
+	  		    break;
+	  		  default:
+	  		    dispatch(logout());
+	  		}
+	  		LoggerUtil.addErrorLog("LoginAction hotInitialApi", "APP Action", "ERROR", e);
+	  		console.log("LoginAction hotInitialApi", e);
+	  	})	
+
+  		//後期	            
+		UpdateDataUtil.updateVisitLogToServer(user);	//update功能訪問數量回Server	  	
+  		UpdateDataUtil.updateRead(user);				//訊息讀取表       
+		UpdateDataUtil.setLoginInfo(user); 	
+	}
+}
 /*****配置結束*****/
+
 
 
 function login_doing() {

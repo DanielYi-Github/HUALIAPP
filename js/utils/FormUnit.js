@@ -6,7 +6,6 @@ let FormUnit = {
   language:{},
   // 欄位規則檢查
   formFieldRuleCheck(value, formItem, formContent, columntype){
-    console.log(value, formItem, formContent, columntype);
     if (formItem.rulesList == null) return true;                       // 馬上結束
     let compareResult = true;                                          // 比對結果
     
@@ -230,13 +229,13 @@ let FormUnit = {
   async getActionValue(user, item, itemListComponent = []){
     let returnValue = null;
     if (item.action) {
-      // let actionObject = {};
       let actionObject = { count:0 };
       for(let column of item.actionColumn){
         for(let component of itemListComponent){
           actionObject[column] = (column == component.component.id) ? component.defaultvalue : false;
         }
       }
+
       await UpdateDataUtil.getCreateFormDetailFormat(user, item.action, actionObject).then((data)=>{
         returnValue = data;
         returnValue["actionObject"] = actionObject;
@@ -253,8 +252,21 @@ let FormUnit = {
       for(let column of item.columnactionColumn){     
           switch( item.columntype ) {
             case "rdo":
+              let isMatch = false;
               for(let it of item.listComponent){
-                if(column == it.component.id) columnactionObject[column] = it.defaultvalue;
+                if(column == it.component.id){
+                  isMatch = true;
+                  columnactionObject[column] = it.defaultvalue;
+                } 
+              }
+              if (!isMatch) {
+                if (column == item.component.id) {
+                  columnactionObject[column] = item.defaultvalue; 
+                } else {
+                  for(let pItem of parentItem){
+                    if (column == pItem.component.id) columnactionObject[column] = pItem.defaultvalue;
+                  }
+                }
               }
               break;
             case "tableave":
@@ -273,19 +285,6 @@ let FormUnit = {
               }
               break;
             default:
-              // 原
-              //是否取值欄位自己擁有，沒有的話去上層parentItem找
-              /*
-              if (column == item.component.id) {
-                columnactionObject[column] = item.defaultvalue; 
-              } else {
-                for(let pItem of parentItem){
-                  if (column == pItem.component.id) {
-                    columnactionObject[column] = pItem.defaultvalue; 
-                  }
-                }
-              }
-              */
               isGetColumnactionValueFromObject = true;
               //是否取值欄位自己擁有，沒有的話去上層parentItem找
               if (column == item.component.id) {
@@ -306,12 +305,8 @@ let FormUnit = {
           }
       }
 
-
-
       // 只要有一個key值為空就不發request，改成
       // for(var index in columnactionObject) if(columnactionObject[index] == null) return returnValue;
-
-
       if (isGetColumnactionValueFromObject) {
         // 所有必填欄位有值才會觸發
         for (let [key, value] of Object.entries(columnactionObject)) {

@@ -18,7 +18,6 @@ let renderIcon = (icon, iconIsImage, activeIconColor, inactiveIconColor) => ({ i
     :
       <Icon style={{color: inactiveIconColor}} name={icon.inactive} />
   }
-  
 }
 
 function RenderTab(style, Message, { tab, isActive }){
@@ -129,9 +128,7 @@ function TabNavigator({ initialRouteName, children, screenOptions, tabBarStyle, 
         null
       }
     </NavigationHelpersContext.Provider>
-
   );
-  
 }
 
 export const createMyNavigator = createNavigatorFactory(TabNavigator);

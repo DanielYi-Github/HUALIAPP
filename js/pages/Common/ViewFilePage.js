@@ -16,6 +16,7 @@ class ViewFilePage extends React.Component {
     super(props);
     this.state = {
         url       :props.route.params.url?props.route.params.url:'NO-ID',
+
         content   :props.route.params.content?props.route.params.content:'NO-ID',
         refreshing:true,
         file      :null,
@@ -32,6 +33,7 @@ class ViewFilePage extends React.Component {
       this.state.url,
       this.state.content
     ).then((data) => {
+      console.log(data);
       if (data == null || data.url == undefined) {
         Alert.alert(
           this.props.state.Language.lang.Common.Sorry,
@@ -82,7 +84,8 @@ class ViewFilePage extends React.Component {
               pdf = (
                 <Pdf
                     // source={{uri:"data:application/pdf;base64,"+this.state.file}}
-                    source={{uri:encodeURI("http://"+this.state.file)}}
+                    // source={{uri:encodeURI("http://"+this.state.file)}}
+                    source={{uri:encodeURI("http://qasapp.huali-group.com/temp/Ans000005201003ITEM80YANG MENGCHANG MR 春节.doc.pdf")}}
                     style={{flex:1}}
                     onLoadComplete={(numberOfPages,filePath)=>{
                         // console.log(`number of pages: ${numberOfPages}`);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Dimensions, FlatList, Platform, ImageBackground} from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions, FlatList, Platform, ImageBackground, AppState} from 'react-native';
 import { Container, Content, Text, Icon, Left, Button, Body, Right, Title, Card, CardItem, Tab, Tabs, ScrollableTab, connectStyle } from 'native-base';
 
 import MessageRouter   from '../../utils/MessageRouter';
@@ -25,7 +25,7 @@ import WaterMarkView             from '../../components/WaterMarkView';
 import ExplainCardItem           from '../../components/ExplainCardItem';
 import MainPageBackground        from '../../components/MainPageBackground';
 
-
+const showSecurityScreenFromAppState = appState =>['background', 'inactive'].includes(appState);
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
 const IS_IPHONE_X       = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 844 || SCREEN_HEIGHT === 896 || SCREEN_HEIGHT === 926;
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
@@ -69,7 +69,7 @@ class HomePage extends React.Component {
       MTlistHeight:null,
 
       contentOffset_Y:0,
-      isLoadFunctionDataRelateData:false // 是否已撈取Function模組關聯所有資料
+      isLoadFunctionDataRelateData:false, // 是否已撈取Function模組關聯所有資料,
     }
 
     MessageRouter.initial(this.props.state, this.props.actions);// 處理訊息分流的類別
@@ -90,6 +90,7 @@ class HomePage extends React.Component {
   }
 
   componentDidMount() {
+    AppState.addEventListener('change', this.onChangeAppState)
     if (this.props.state.Home.NoticeData.length == 0 && !this.props.state.Home.isRefreshing) {
       this.props.actions.loadInitialNoticeData(); //撈取公告列表資料 
     }
@@ -508,8 +509,9 @@ class HomePage extends React.Component {
   };
 
   componentWillUnmount(){
-    // 清除目前的表單
+    // 清除目前的公告信息
     this.props.actions.CleanNoticeListState();
+    AppState.removeEventListener('change', this.onChangeAppState)
   }
 
   //中間圓圈功能按鍵的地方
@@ -560,6 +562,26 @@ class HomePage extends React.Component {
       }
     }
   }
+
+  onChangeAppState = async nextAppState => {
+    let isAppActive = showSecurityScreenFromAppState(nextAppState);
+    if (isAppActive) { 
+      this.props.actions.CleanNoticeListState(); 
+      this.setState({
+        activeTab: 'ALL',
+        tabsHeaderbHeight:50.13334350585937,
+        tabsViewbHeight:null,   //整個Tabs的高度
+        isTabDroping:true,    //是否讓TabsVView可以自動加載高度
+        listHeight  :null,
+        HRlistHeight:null,
+        FRlistHeight:null,
+        ITlistHeight:null,
+        AGlistHeight:null,
+        MTlistHeight:null,
+        contentOffset_Y:0,
+      });
+    }
+  }  
 }
 
 

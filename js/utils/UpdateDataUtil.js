@@ -1288,7 +1288,7 @@ export async function updateBanner(user){
 				Promise.all(dExecute).then(()=>{
 					Promise.all(iExecute).then(()=>{
 						let end = new Date().getTime();
-						console.log("updateNotice:"+ (end - start) / 1000);
+						console.log("updateBanner_end:"+ (end - start) / 1000);
 						resolve();
 					})
 				})

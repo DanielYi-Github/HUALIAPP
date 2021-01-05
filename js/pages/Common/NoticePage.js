@@ -41,6 +41,7 @@ class NoticePage extends React.Component {
 	}
 
 	onMessage = (event) => {
+		console.log(event);
 	   try {
 	     const action = JSON.parse(event)
 	     if (action.type === 'setHeight' && action.height > 0 && this.state.height==0) {
@@ -51,6 +52,7 @@ class NoticePage extends React.Component {
 	 }
 
 	render() {
+		let str = FixTinyText+CopyPastDisable+this.state.item.CONTENT;
 		let noticePage = (
 			<Container>
 				<HeaderForGeneral
@@ -62,6 +64,68 @@ class NoticePage extends React.Component {
 				  rightButtonOnPress    = {null} 
 				  title                 = {this.props.state.Language.lang.HomePage.Announcement}
 				/>
+
+				<Card style={{alignSelf: 'center'}}>
+					<CardItem style={{flexDirection: 'column'}}>		
+						<Body style={{paddingTop: 5, paddingBottom: 10}}>		
+					    	<Title 
+					    		style={{fontSize:18, textAlign: 'left'}}
+					    		ellipsizeMode={"tail"}
+					    		numberOfLines={5}
+					    	>
+					    		{this.state.item.TITLE}
+					    	</Title>
+						</Body>
+						<Body style={{alignSelf: 'flex-start', flexDirection:'row', alignItems: 'center'}}>		
+							<Icon name="person" />
+					    	<Text style={{marginLeft: 5}}>{this.state.item.EMP}</Text>
+						</Body>
+						<Body style={{alignSelf: 'flex-start', flexDirection:'row', alignItems: 'center'}}>		
+							<Icon name="time" />
+					    	<Text style={{marginLeft: 5}}>{this.state.item.NOTICEDATE}</Text>
+						</Body>
+					</CardItem>
+				</Card>
+
+				<Card style={{alignSelf: 'center'}}>
+					<CardItem>
+        		{
+					(Platform.OS === "ios") ?
+						<WebView
+						  injectedJavaScript={BaseScript}
+						  source={{ html: 
+						  		FixTinyText+
+						  		CopyPastDisable+
+						  		this.state.item.CONTENT}}
+						  style={{
+						    width: "100%",
+						    height: this.state.height,
+						    backgroundColor: 'transparent'
+						  }}
+					      onMessage={event => this.onMessage(event.nativeEvent.data) }
+						/>	
+					:
+
+						<WebView
+						  injectedJavaScript={BaseScript}
+						  source={{ html: 
+						  	FixTinyText+
+						  	CopyPastDisable+
+						  	this.state.item.CONTENT, baseUrl:'' }}
+						  style={{
+						    flex:0,
+						    height: this.state.height,
+						    backgroundColor: 'transparent'
+						  }}
+					      // javaScriptEnabled // 仅限Android平台。iOS平台JavaScript是默认开启的。
+					      // scrollEnabled={false}
+					      onMessage={event => this.onMessage(event.nativeEvent.data) }
+						/>
+        		}
+        			</CardItem>
+        		</Card>
+
+        	{/*
 		        <Content>
 		        	{
 		        		(this.state.height!=0) ?
@@ -89,6 +153,8 @@ class NoticePage extends React.Component {
 		        		:
 		        			null
 		        	}
+
+		        		
 									
 		        	<Card style={{alignSelf: 'center'}}>
 		        		<CardItem>
@@ -120,14 +186,16 @@ class NoticePage extends React.Component {
 								    height: this.state.height,
 								    backgroundColor: 'transparent'
 								  }}
-							      javaScriptEnabled // 仅限Android平台。iOS平台JavaScript是默认开启的。
-							      scrollEnabled={false}
+							      // javaScriptEnabled // 仅限Android平台。iOS平台JavaScript是默认开启的。
+							      // scrollEnabled={false}
 							      onMessage={event => this.onMessage(event.nativeEvent.data) }
 								/>
 		        		}
+		        		
 		        		</CardItem>
 		        	</Card>
 		        </Content>
+		        */}
 			</Container>
 		);
 

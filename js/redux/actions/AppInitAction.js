@@ -62,26 +62,9 @@ export function appInit(initActions, downloadProgressCallback) {
 			} else {
 				intoAppProgress(initActions, getState());
 			}
-		 		
 		} else {
 			initActions.setThemeState(null,netStatus);  // 設定APP主題風格
 			intoAppProgress(initActions, getState(), netStatus, lang);
-			/*
-			let user = await DeviceStorageUtil.get('User'); // 有無使用者資料
-			user = user ? JSON.parse(user) : false;
-
-			if (user) {				
-				initActions.loadUserInfoState(user);
-				Alert.alert(
-				  lang.Common.Alert,
-				  lang.Common.InternetAlert    
-				);
-				
-          		Navigation.navigate('HomeTabNavigator');
-		 	} else {
-          		Navigation.navigate('IntroductionDrawer');
-		 	}
-		 	*/
 		}
 	}
 }
@@ -260,4 +243,14 @@ function getDefaultPageContent() {
 		txdat: 1563414790000,
 		txemp: null
 	}]
+}
+
+export function appHotInit(initActions){
+	return async (dispatch, getState) => {
+		initActions.setThemeState( null, getState().Network.networkStatus); // 設定APP主題風格
+		await initActions.hotInitialApi( getState().UserInfo.UserInfo ); // 集團公告、輪播圖 重新撈取
+
+    	initActions.loadInitialNoticeData(); // 集團公告重新自資料庫撈取           
+		// 首頁輪播圖重新至State撈取
+	}
 }

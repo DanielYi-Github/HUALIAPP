@@ -68,7 +68,7 @@
     "react-native-toast-message": "^1.4.1",
     "react-native-vector-icons": "^7.1.0",
     "react-native-watermark-component": "^0.1.0",
-    "react-native-webview": "^10.10.2",
+    "react-native-webview": "^11.0.2",
     "react-native-wheel-picker-android": "^2.0.6",
     "react-redux": "^7.2.2",
     "redux": "^4.0.5",

@@ -47,13 +47,13 @@ export function setThemeState(theme = null, netStatus) {
 			if (storageTheme.seasonThemeDisplay) {
 				dispatch({ 
 					type: "season",
-					initial: true,
+					initial: false,
 					serverSeasonTheme:seasonThemeDisplayFromServer
 				});
 			} else {
 				dispatch({ 
 					type: storageTheme.showTheme,
-					initial: true,
+					initial: false,
 					serverSeasonTheme:seasonThemeDisplayFromServer
 				});
 			}
@@ -62,18 +62,25 @@ export function setThemeState(theme = null, netStatus) {
 			if (storageTheme.seasonThemeDisplay) {
 				dispatch({ 
 					type: storageTheme.showTheme,
-					initial: true,
+					initial: false,
 					serverSeasonTheme:seasonThemeDisplayFromServer
 				});
 			} else {
 				dispatch({ 
 					type: storageTheme.showTheme,
-					initial: true,
+					initial: false,
 					serverSeasonTheme:seasonThemeDisplayFromServer
 				});
 				storageTheme.seasonThemeDisplay = true;
 			}
 		}
+
+		setTimeout(() => {
+			dispatch({
+				type: types.themeChangeDone
+			});
+		}, 5);
+
 		DeviceStorageUtil.set('storageTheme',storageTheme);
 	}
 }
