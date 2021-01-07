@@ -36,6 +36,7 @@ export function appInit(initActions, downloadProgressCallback) {
 		let lang = getState().Language.lang;
 		
 		if (netStatus) {
+			initActions.loadLoginMode();  				// 檢核登陸模式 tab/single
 			initActions.setThemeState(null,netStatus);  // 設定APP主題風格
     		initActions.bios_check(); 					// 檢查設備是否支持生物識別
     		initActions.biometricInfo_check();			// 檢查server與設備有無使用者生物識別資訊且一致
@@ -249,8 +250,6 @@ export function appHotInit(initActions){
 	return async (dispatch, getState) => {
 		initActions.setThemeState( null, getState().Network.networkStatus); // 設定APP主題風格
 		await initActions.hotInitialApi( getState().UserInfo.UserInfo ); // 集團公告、輪播圖 重新撈取
-
     	initActions.loadInitialNoticeData(); // 集團公告重新自資料庫撈取           
-		// 首頁輪播圖重新至State撈取
 	}
 }

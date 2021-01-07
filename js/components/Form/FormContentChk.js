@@ -30,12 +30,21 @@ class FormContentChk extends Component {
 		//整理tags的資料格式
 		let tagsArray = [];
 		this.props.data.defaultvalue = this.props.data.defaultvalue ? this.props.data.defaultvalue : [];
-		for(let value of this.props.data.defaultvalue) tagsArray.push(value.COLUMN2);
+		for(let value of this.props.data.defaultvalue) {
+			for(let component of this.props.data.listComponent){
+				if (value == component.component.id) tagsArray.push(component.component.name);
+			}
+		}
 		let tags = { tag: '', tagsArray: tagsArray }
 
+		/*
+		let tagsArray = [];
+		this.props.data.defaultvalue = this.props.data.defaultvalue ? this.props.data.defaultvalue : [];
+		for(let value of this.props.data.defaultvalue) tagsArray.push(value.COLUMN2);
+		let tags = { tag: '', tagsArray: tagsArray }
+		*/
+
 		if (editable) {
-			// renderItem = null;
-			
 			renderItem = (
 				<View style={{width: '100%'}}>
 	            	<Item 
@@ -97,6 +106,8 @@ class FormContentChk extends Component {
 					    />
 					  </Item>
 			} else {
+
+
 				renderItem = 
 					<View style={{width: '100%'}}>
 		            	<Item fixedLabel style={{borderBottomWidth: 0, paddingTop: 15}}>

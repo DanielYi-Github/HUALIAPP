@@ -383,7 +383,7 @@ async function loadBannerImagesIntoState(dispatch, getState){
 
 	//如果沒有網路或是SQL查詢出錯，則做下面的處理
 	if (data.length == 0) {
-		let banner1, banner2;
+		let banner1, banner2, banner3, banner4, banner5, banner6, banner7, banner8, banner9, banner10;
 		switch(lang){
 			case "vi":
 				banner1 = require(`../../image/banner/banner1_en.png`);
@@ -400,6 +400,15 @@ async function loadBannerImagesIntoState(dispatch, getState){
 			case "zh-TW":
 				banner1 = require(`../../image/banner/banner1_zh-TW.png`);
 				banner2 = require(`../../image/banner/banner2_zh-TW.png`);
+				/*
+				banner3 = require(`../../image/banner/banner1.png`);
+				banner4 = require(`../../image/banner/banner2.png`);
+				banner5 = require(`../../image/banner/banner3.png`);
+				banner6 = require(`../../image/banner/lunarNewYear.png`);
+				banner7 = require(`../../image/banner/dragonBoatFestival.png`);
+				banner8 = require(`../../image/banner/moonFestival.png`);
+				banner9 = require(`../../image/banner/christmas.png`);
+				*/
 				break;
 		}
 		data = [{
@@ -414,7 +423,42 @@ async function loadBannerImagesIntoState(dispatch, getState){
 			source: banner2,
 			APPID    : null,
 			PORTALURL: null
-		}];
+		}, /*{
+			key: 3,
+			source: banner3,
+			APPID    : null,
+			PORTALURL: null
+		}, {
+			key: 4,
+			source: banner4,
+			APPID    : null,
+			PORTALURL: null
+		}, {
+			key: 5,
+			source: banner5,
+			APPID    : null,
+			PORTALURL: null
+		}, {
+			key: 6,
+			source: banner6,
+			APPID    : null,
+			PORTALURL: null
+		}, {
+			key: 7,
+			source: banner7,
+			APPID    : null,
+			PORTALURL: null
+		}, {
+			key: 8,
+			source: banner8,
+			APPID    : null,
+			PORTALURL: null
+		}, {
+			key: 9,
+			source: banner9,
+			APPID    : null,
+			PORTALURL: null
+		}*/];
 	}
 
 	dispatch({

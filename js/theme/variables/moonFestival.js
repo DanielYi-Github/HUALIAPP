@@ -228,7 +228,8 @@ export default {
   },
   //  MainPageBackground
   MainPageBackground:{
-    height: platform === "ios"? 150: 125,
+    // height: platform === "ios"? 150: 125,
+    height: deviceHeight,
     width : "100%",
     backgroundColor:"#47ACF2",
     position: 'absolute',

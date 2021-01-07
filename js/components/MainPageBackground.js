@@ -31,7 +31,7 @@ class MainPageBackground extends React.Component {
           style={{ flex: 1, resizeMode: "cover" }}
           source={this.props.style.MainPageBackground.source}
         >
-          {
+          {/*
             [...Array(10)].map((_, index) => 
               <Flake
                 x={Math.random() * width}               // x-coordinate
@@ -41,7 +41,7 @@ class MainPageBackground extends React.Component {
                 key={index}
               />
             )
-          }
+          */}
         </ImageBackground>
       );
     }

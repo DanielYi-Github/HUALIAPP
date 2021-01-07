@@ -183,13 +183,10 @@ export default {
     pressColor        : 'rgba(253, 186, 28, 1)',
     barColor_Home     : "#F73525",
     pressColor_Home   : "#F73525",
-
     barColor_Find     : "#7375A8",
     pressColor_Find   : "#7375A8",
-    
     barColor_Message  : "#4BA928",
     pressColor_Message: "#4BA928",
-    
     barColor_Mine     : "rgba(253, 186, 28, 1)",
     pressColor_Mine   : "rgba(253, 186, 28, 1)",
     // ToolbarStyle      :Basic.ToolbarStyle

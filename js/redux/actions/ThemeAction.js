@@ -4,7 +4,6 @@ import * as types          from '../actionTypes/ThemeTypes';
 import DeviceStorageUtil   from '../../utils/DeviceStorageUtil';
 import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
 
-
 /*****
 	初始化節慶主題皮膚的設置，分別有三個變數做決定
 	server 端的

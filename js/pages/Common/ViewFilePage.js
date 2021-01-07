@@ -11,20 +11,18 @@ import * as NavigationService from '../../utils/NavigationService';
 import * as UpdateDataUtil    from '../../utils/UpdateDataUtil';
 import RNFetchBlob from 'rn-fetch-blob'
 
+// 集團文件、管理文章、BPM原始表單、BPM附件資訊
 class ViewFilePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
         url       :props.route.params.url?props.route.params.url:'NO-ID',
-
         content   :props.route.params.content?props.route.params.content:'NO-ID',
         refreshing:true,
         file      :null,
         fileType  : "",
     }
   }
-
-  
 
   componentDidMount() {
     let user = this.props.state.UserInfo.UserInfo;
@@ -33,7 +31,6 @@ class ViewFilePage extends React.Component {
       this.state.url,
       this.state.content
     ).then((data) => {
-      console.log(data);
       if (data == null || data.url == undefined) {
         Alert.alert(
           this.props.state.Language.lang.Common.Sorry,
@@ -84,8 +81,7 @@ class ViewFilePage extends React.Component {
               pdf = (
                 <Pdf
                     // source={{uri:"data:application/pdf;base64,"+this.state.file}}
-                    // source={{uri:encodeURI("http://"+this.state.file)}}
-                    source={{uri:encodeURI("http://qasapp.huali-group.com/temp/Ans000005201003ITEM80YANG MENGCHANG MR 春节.doc.pdf")}}
+                    source={{uri:encodeURI("http://"+this.state.file)}}
                     style={{flex:1}}
                     onLoadComplete={(numberOfPages,filePath)=>{
                         // console.log(`number of pages: ${numberOfPages}`);

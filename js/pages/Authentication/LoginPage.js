@@ -21,10 +21,6 @@ class LoginPage extends React.Component {
       isChangeAccount :this.props.route.params?.isChangeAccount,
     }
   }
-
-  async componentDidMount() {
-    // this.props.actions.loadLoginMode();  // 檢核登陸模式 tab/single
-  }
   
   UNSAFE_componentWillReceiveProps(nextProps) {
     // 用以顯示登入時所出現的訊息提示，例如密碼錯誤、人員不存在等

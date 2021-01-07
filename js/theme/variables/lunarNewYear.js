@@ -22,15 +22,25 @@
 
 import color from "color";
 import { Platform, Dimensions, PixelRatio } from "react-native";
-import Basic from '../../styles/Basic';
-
-const deviceHeight = Dimensions.get("window").height;
-const deviceWidth = Dimensions.get("window").width;
-const platform = Platform.OS;
+// import Basic from '../../styles/Basic';
+const window        = Dimensions.get('window');
+const bannerHeight  = window.width*182/455;
+const bannerWidth   = window.width;
+const deviceHeight  = Dimensions.get("window").height;
+const deviceWidth   = Dimensions.get("window").width;
+const platform      = Platform.OS;
 const platformStyle = undefined;
 const isIphoneX =
-platform === "ios" && (deviceHeight === 812 || deviceWidth === 812 || deviceHeight === 896 || deviceWidth === 896);
-
+platform === "ios" && (
+  deviceHeight === 812 || 
+  deviceWidth === 812 || 
+  deviceHeight === 896 || 
+  deviceWidth === 896 ||
+  deviceHeight === 844 || 
+  deviceWidth === 844 ||
+  deviceHeight === 926 || 
+  deviceWidth === 926 
+);
 export default {
   platformStyle,
   platform,
@@ -61,6 +71,7 @@ export default {
   toolbarBtnTextColor: platform === "ios" ? "#007aff" : "#fff",
   toolbarDefaultBorder: platform === "ios" ? "#a7a6ab" : "#3F51B5",
   iosStatusbar: platform === "ios" ? "dark-content" : "light-content",
+  iosSearchBarBackgroundColor:"#FFF", // ios Findpage上方輸入框背景顏色
   get statusBarColor() {
     return color(this.toolbarDefaultBg)
       .darken(0.2)
@@ -140,12 +151,10 @@ export default {
   //HeaderForGeneral
   HeaderForGeneral:{
     iconColor:"#FFF",
-    marginTop:Basic.HeaderBackground,
   },
   //HeaderForTransparent
   HeaderForTransparent:{
     color:"#FFF",
-    marginTop:Basic.HeaderBackground,
   },
   //IconColor
   IconColor:"#000",
@@ -154,14 +163,14 @@ export default {
   //CustomBottomNavigation
   CustomBottomNavigation:{
     iconIsImage          :true,
-    icon_Home_active     :require("./seasionImage/Home-1.png"),
-    icon_Home_inactive   :require("./seasionImage/Home.png"),
-    icon_Find_active     :require("./seasionImage/Find-1.png"),
-    icon_Find_inactive   :require("./seasionImage/Find.png"),
-    icon_Message_active  :require("./seasionImage/Message-1.png"),
-    icon_Message_inactive:require("./seasionImage/Message.png"),
-    icon_Mine_active     :require("./seasionImage/Mine-1.png"),
-    icon_Mine_inactive   :require("./seasionImage/Mine.png"),
+    icon_Home_active     :require("./lunarNewYear/Home-1.png"),
+    icon_Home_inactive   :require("./lunarNewYear/Home.png"),
+    icon_Find_active     :require("./lunarNewYear/Find-1.png"),
+    icon_Find_inactive   :require("./lunarNewYear/Find.png"),
+    icon_Message_active  :require("./lunarNewYear/Message-1.png"),
+    icon_Message_inactive:require("./lunarNewYear/Message.png"),
+    icon_Mine_active     :require("./lunarNewYear/Mine-1.png"),
+    icon_Mine_inactive   :require("./lunarNewYear/Mine.png"),
 
     activeIconColor      :'#47ACF2',
     inactiveIconColor    :'#A1A1A1',
@@ -177,24 +186,33 @@ export default {
     pressColor_Find      :"rgba(255, 223, 0, 0.8)",
     pressColor_Message   :"rgba(255, 223, 0, 0.8)",
     pressColor_Mine      :"rgba(255, 223, 0, 0.8)",
-    ToolbarStyle         :Basic.ToolbarStyle
+    // ToolbarStyle         :Basic.ToolbarStyle
   },
-  //HomePageBanner
-  HomePageBanner:Basic.HomePageBanner,
+  // 458 38
+  LoginPageIcon:{
+    height:386*(window.width/3)/458,
+    width:window.width/3
+  },
+  //image 657 303 455 182
+  HomePageBanner:{
+    height: bannerHeight,
+    width : bannerWidth,
+  },
   //HomePageBannerTitle
-  HomePageBannerTitle:Basic.HomePageBannerTitle,
-  // IOSHeaderMarginTop:Basic.IOSHeaderMarginTop,
+  HomePageBannerTitle:56,
+  HomePageBannerBackgroundColor:"#f7d4d1",
+
   ExplainText:{
     color:"#e52d2f"
   },
   ExplainIcon:{
     iconIsImage:true,
-    icon1      :require("./seasionImage/1.png"),
-    icon2      :require("./seasionImage/2.png"),
-    icon3      :require("./seasionImage/3.png"),
-    icon4      :require("./seasionImage/4.png"),
-    icon5      :require("./seasionImage/5.png"),
-    icon6      :require("./seasionImage/6.png")
+    icon1      :require("./lunarNewYear/1.png"),
+    icon2      :require("./lunarNewYear/2.png"),
+    icon3      :require("./lunarNewYear/3.png"),
+    icon4      :require("./lunarNewYear/4.png"),
+    icon5      :require("./lunarNewYear/5.png"),
+    icon6      :require("./lunarNewYear/6.png")
   },
   separator:{
     height: 1, 
@@ -210,7 +228,7 @@ export default {
     width : "100%",
     backgroundColor:"#47ACF2",
     position: 'absolute',
-    source:require('../../image/newyear.jpg')
+    source:require('./lunarNewYear/newyear.jpg')
   },
   SearchBarBg:"#FFF",
   // 消息畫面右上角的下拉選單
@@ -260,7 +278,15 @@ export default {
   // 大頭照邊框顏色
   BigProfileImageBorder:'#FFF',
   // 修復ios欄位顯示問題
-  fixCreateFormPageFiledItemWidth:Basic.fixCreateFormPageFiledItemWidth,
+  fixCreateFormPageFiledItemWidth:platform === "ios"?{
+   paddingTop:13,
+   paddingBottom:13
+  }:{},
+  CreateFormPageFiledItemWidth:{
+   width:window.width*0.86, 
+   borderWidth:0,
+  },
+
   // 轉圈圈的顏色
   SpinnerColor:"rgba(255, 223, 0, 1)",
   SpinnerbackgroundColor:'rgba(255,255,255,.7)',
@@ -450,5 +476,15 @@ export default {
   watermarkTextStyle :{
     fontSize:15,
     color:"rgba(0,0,0,.15)"
-  }
+  },
+
+  InitialPageBanner:{
+    height:window.width*2148/3631
+  },
+  InitialPageCompanyLogo:{
+    height:window.width*111/200
+  },
+  InitialPageServiceImage:{
+    height:window.width*1080/1920
+  },
 };

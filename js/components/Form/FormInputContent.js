@@ -12,13 +12,13 @@ import FormContentTime           from './FormContentTime';
 import FormContentDateTime       from './FormContentDateTime';
 import FormContentTabOneItem     from './FormContentTabOneItem';
 import FormContentTextWithAction from './FormContentTextWithAction';
+import FormContentChk    		 from './FormContentChk';
 import FormContentChkWithAction  from './FormContentChkWithAction';
 import FormContentRta            from './FormContentRta';
 import FormDrawSignImage         from './FormDrawSignImage';
 import FormContentFile           from './FormContentFile';
 import FormContentGrid     		 from './FormContentGrid';
 import FormInputContentGrid      from './FormInputContentGrid';
-import FormContentChk    		 from './FormContentChk';
 import FormInputContentGridForDeputy  from './FormInputContentGridForDeputy';
 import FormContentTabRdo            from './FormContentTabRdo';
 

@@ -319,7 +319,6 @@ class Router extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // showSecurityScreen: showSecurityScreenFromAppState(AppState.currentState)
       initialActiveCount:0 //如果大於2表示非冷啟動
     }
   }
@@ -373,35 +372,6 @@ class Router extends React.Component {
         );
   }
 }
-/*
-function Router(props) {
-  const theme  = useSelector(state => state.Theme.theme)
-  return (  
-        <Root>
-          <StyleProvider style={theme}>
-            <SafeAreaProvider>
-              <NavigationContainer ref={navigationRef}>
-              {
-                Platform.OS == 'ios' ?
-                  <RootStack.Navigator headerMode="none" mode="modal" >
-                    <RootStack.Screen name="Main" component={MainStack} options={{ headerShown: false }}/>
-                    <RootStack.Screen name="Authentication" component={AuthenticationView} />
-                  </RootStack.Navigator>
-                :
-                  <SafeAreaView style={{flex: 1}}>
-                    <RootStack.Navigator headerMode="none" mode="modal" >
-                      <RootStack.Screen name="Main" component={MainStack} options={{ headerShown: false }}/>
-                      <RootStack.Screen name="Authentication" component={AuthenticationView} />
-                    </RootStack.Navigator>
-                  </SafeAreaView>
-              }
-              </NavigationContainer>
-            </SafeAreaProvider>
-          </StyleProvider>
-        </Root>
-      );
-}
-*/
 
 const appRouter = connect(
   (state) => ({

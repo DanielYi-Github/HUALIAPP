@@ -17,7 +17,6 @@ export default class DocumentContentItem extends React.PureComponent  {
 		let iconType = iconParmas[3] ? iconParmas[3] : "Ionicons";
 		let selectedInfo=this.props.selectedInfo; 
 
-		if (Platform.OS === "ios") {
 			switch(icon) {
 			     case "filing":
 			        icon = "file-tray";
@@ -30,7 +29,6 @@ export default class DocumentContentItem extends React.PureComponent  {
 			        break;
 			     default:
 			}
-		} 
 
 		return(
 			<Card style={{alignSelf: 'center'}}>
