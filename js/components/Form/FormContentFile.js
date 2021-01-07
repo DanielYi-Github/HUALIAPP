@@ -60,7 +60,8 @@ class FormContentFile extends Component {
 						artId:item.artId,
 						ansId:item.ansId,
 						itemId:item.itemId,
-						fileName:item.fileName
+						fileName:item.fileName,
+						fileId:item.fileId
 					};
 					NavigationService.navigate("ViewFile", {
 					  content: content,

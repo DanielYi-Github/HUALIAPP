@@ -31,7 +31,18 @@ class ViewFilePage extends React.Component {
       this.state.url,
       this.state.content
     ).then((data) => {
-      if (data == null || data.url == undefined) {
+      // 驗證資料的正確性
+      let isUnvalid = false;
+      switch(data.type) {
+        case "pic":
+          isUnvalid = data.base64 == "" ? true: isUnvalid;
+          break;
+        case "pdf":
+          isUnvalid = data.url == "" ? true: isUnvalid;
+          break;
+      }
+
+      if (data == null || isUnvalid ) {
         Alert.alert(
           this.props.state.Language.lang.Common.Sorry,
           data ? data.message : this.props.state.Language.lang.Common.FileLoadingError, [{
@@ -44,7 +55,7 @@ class ViewFilePage extends React.Component {
       } else {    
         this.setState({
           refreshing: false,
-          file: data.url,
+          file: data.type=="pic"?data.base64 :data.url,
           fileType: data.type
         });
       }
@@ -81,7 +92,7 @@ class ViewFilePage extends React.Component {
               pdf = (
                 <Pdf
                     // source={{uri:"data:application/pdf;base64,"+this.state.file}}
-                    source={{uri:encodeURI("http://"+this.state.file)}}
+                    source={{uri:encodeURI(this.state.file)}}
                     style={{flex:1}}
                     onLoadComplete={(numberOfPages,filePath)=>{
                         // console.log(`number of pages: ${numberOfPages}`);
