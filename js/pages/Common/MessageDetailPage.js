@@ -4,6 +4,7 @@ import { Container, Header, Content, Icon, Button, Left, Body, Right, Title, Tex
 import * as NavigationService from '../../utils/NavigationService';
 import WaterMarkView 	  from '../../components/WaterMarkView';
 import HeaderForGeneral   from '../../components/HeaderForGeneral';
+import MainPageBackground from '../../components/MainPageBackground';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -20,6 +21,7 @@ class MessageDetailPage extends React.Component {
 	render() {
 		let messageDetailPage = (
 				<Container>
+        			<MainPageBackground height={null}/>
 					<HeaderForGeneral
 					  isLeftButtonIconShow  = {true}
 					  leftButtonIcon        = {{name:"arrow-back"}}

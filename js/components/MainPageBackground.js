@@ -20,6 +20,10 @@ class MainPageBackground extends React.Component {
     let heightObject = {};
     if (this.props.height) {
       heightObject.height = this.props.height;
+    } else {
+      if (typeof this.props.height !== "undefined") {
+        heightObject.height = 0;
+      }
     }
 
     // 確定是不是全屏顯示

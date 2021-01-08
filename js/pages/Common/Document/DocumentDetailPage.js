@@ -5,6 +5,7 @@ import { Container, Content } from 'native-base';
 import DocumentDetailItem from '../../../components/Document/DocumentDetailItem';
 import NoMoreItem from '../../../components/NoMoreItem';
 import HeaderForGeneral  from '../../../components/HeaderForGeneral';
+import MainPageBackground     from '../../../components/MainPageBackground';
 import { connect } from 'react-redux';
 
 import * as NavigationService  from '../../../utils/NavigationService';
@@ -83,6 +84,7 @@ class DocumentDetailPage extends React.Component {
   render() {
     return (
       <Container>
+        <MainPageBackground height={null}/>
         {/*標題列*/}
         <HeaderForGeneral
           isLeftButtonIconShow  = {true}

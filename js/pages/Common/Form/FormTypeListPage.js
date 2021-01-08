@@ -9,6 +9,7 @@ import FunctionPageBanner from '../../../components/FunctionPageBanner';
 import FormItem           from '../../../components/Form/FormItem';
 import NoMoreItem         from '../../../components/NoMoreItem';
 import HeaderForSearch    from '../../../components/HeaderForSearch';
+import MainPageBackground     from '../../../components/MainPageBackground';
 import * as NavigationService  from '../../../utils/NavigationService';
 import ToastUnit               from '../../../utils/ToastUnit';
 
@@ -223,6 +224,7 @@ class FormTypeListPage extends React.Component {
 
     return(
       <Container>
+          <MainPageBackground height={null}/>
           {/*標題列*/}
           <HeaderForSearch
             /*搜尋框的部分*/

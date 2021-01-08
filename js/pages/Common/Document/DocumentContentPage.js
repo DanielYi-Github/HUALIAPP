@@ -6,6 +6,7 @@ import * as NavigationService  from '../../../utils/NavigationService';
 import DocumentContentItem from '../../../components/Document/DocumentContentItem';
 import NoMoreItem from '../../../components/NoMoreItem';
 import HeaderForGeneral  from '../../../components/HeaderForGeneral';
+import MainPageBackground     from '../../../components/MainPageBackground';
 import { connect } from 'react-redux';
 import * as UpdateDataUtil from '../../../utils/UpdateDataUtil';
 import * as LoginAction      from '../../../redux/actions/LoginAction';
@@ -74,6 +75,7 @@ class DocumentContentPage extends React.Component {
   render() {
     return (
       <Container>
+        <MainPageBackground height={null}/>
         {/*標題列*/}
         <HeaderForGeneral
           isLeftButtonIconShow  = {true}

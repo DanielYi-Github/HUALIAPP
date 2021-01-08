@@ -10,6 +10,7 @@ import FormItem          from '../../../components/Form/FormItem';
 import NoMoreItem        from '../../../components/NoMoreItem';
 import WaterMarkView     from '../../../components/WaterMarkView';
 import HeaderForGeneral  from '../../../components/HeaderForGeneral';
+import MainPageBackground from '../../../components/MainPageBackground';
 import * as FormAction   from '../../../redux/actions/FormAction';
 
 
@@ -89,6 +90,7 @@ class FormListPage extends React.Component {
    
     let formListPage = (
         <Container>
+        <MainPageBackground height={null}/>
         {/*標題列*/}
         <HeaderForGeneral
           isLeftButtonIconShow  = {true}

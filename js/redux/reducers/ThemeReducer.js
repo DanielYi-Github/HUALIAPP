@@ -4,7 +4,7 @@ import getTheme   from '../../theme/components';
 import platform   from '../../theme/variables/platform';
 import dark       from '../../theme/variables/dark';
 import season     from '../../theme/variables/lunarNewYear'; 
-// import season     from '../../theme/variables/moonFestival'; 
+// import season     from '../../theme/variables/moonFestival'; /
 // import season     from '../../theme/variables/christmas'; 
 
 import { clearThemeCache } from 'native-base-shoutem-theme';

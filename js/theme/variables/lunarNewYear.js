@@ -122,13 +122,14 @@ export default {
   get defaultTextColor() {
     return this.textColor;
   },
+  noticePageTextColor:"#FFF", // 公告消息使用的文字顏色
 
   // Title
   titleFontfamily : platform === "ios" ? "System" : "Roboto_medium",
   titleFontSize   : platform === "ios" ? 17 : 19,
   subTitleFontSize: platform === "ios" ? 11 : 14,
   subtitleColor   : "#8e8e93",
-  titleFontColor  : "#000",
+  titleFontColor  : "#FFF",
   //遇到特別背景時需要顯示的字體顏色 例如 初始畫面的介紹文字 發現畫面的搜尋結果 個人資訊的稱號 通訊錄內容的稱號
   dynamicTitleColor: "#FFF", 
 
@@ -150,7 +151,7 @@ export default {
   },
   //HeaderForGeneral
   HeaderForGeneral:{
-    iconColor:"#FFF",
+    color:"#FFF",
   },
   //HeaderForTransparent
   HeaderForTransparent:{
@@ -226,7 +227,7 @@ export default {
   MainPageBackground:{
     height: deviceHeight,
     width : "100%",
-    backgroundColor:"#47ACF2",
+    backgroundColor:"#9d012e",
     position: 'absolute',
     source:require('./lunarNewYear/newyear.jpg')
   },

@@ -5,8 +5,7 @@ import { Container, Header, Content, Icon, Button, Left, Body, Right, Title, Tex
 import * as NavigationService from '../../utils/NavigationService';
 import WaterMarkView from '../../components/WaterMarkView';
 import HeaderForGeneral from '../../components/HeaderForGeneral';
-
-
+import MainPageBackground from '../../components/MainPageBackground';
 import { connect } from 'react-redux';
 
 const BaseScript =
@@ -41,7 +40,7 @@ class NoticePage extends React.Component {
 		<style>
 			* { 
 				-webkit-user-select: none; 
-				color:${props.style.textColor}; 
+				color:${props.style.noticePageTextColor}; 
 			}
 		</style>`;
 	}
@@ -64,6 +63,7 @@ class NoticePage extends React.Component {
 		let str = FixTinyText+CopyPastDisable+title+this.state.item.CONTENT;
 		let noticePage = (
 			<Container>
+      			<MainPageBackground height={null}/>
 				<HeaderForGeneral
 				  isLeftButtonIconShow  = {true}
 				  leftButtonIcon        = {{name:"arrow-back"}}

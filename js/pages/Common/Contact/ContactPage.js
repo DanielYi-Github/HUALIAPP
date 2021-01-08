@@ -15,6 +15,7 @@ import ContactItem            from '../../../components/ContactItem';
 import NoMoreItem             from '../../../components/NoMoreItem';
 import WaterMarkView          from '../../../components/WaterMarkView';
 import HeaderForSearch        from '../../../components/HeaderForSearch';
+import MainPageBackground     from '../../../components/MainPageBackground';
 
 
 class ContactPage extends React.Component {
@@ -77,6 +78,7 @@ class ContactPage extends React.Component {
 
     let contactPage = (
       <Container>
+        <MainPageBackground height={null}/>
         {/*標題列*/}
         <HeaderForSearch
           /*搜尋框的部分*/

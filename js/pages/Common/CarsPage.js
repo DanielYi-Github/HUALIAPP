@@ -14,6 +14,7 @@ import CarItem            from '../../components/CarItem';
 import CustomDatePicker   from '../../components/CustomDatePicker';
 import NoMoreItem 		  from '../../components/NoMoreItem';
 import WaterMarkView 	  from '../../components/WaterMarkView';
+import MainPageBackground from '../../components/MainPageBackground';
 import * as NavigationService  from '../../utils/NavigationService';
 import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
 import ToastUnit from '../../utils/ToastUnit';
@@ -123,6 +124,7 @@ class CarsPage extends React.Component {
 	render() {
 		let carsPage = (
 			<Container>
+	        	<MainPageBackground height={null}/>
 			{/*標題列*/}
 				<Header style={this.props.style.HeaderBackground} searchBar rounded>
 		    	     <Left>				

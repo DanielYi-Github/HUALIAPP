@@ -100,7 +100,7 @@ function IntroductionDrawer(props) {
   const [preventGoback, setPreventGoback] = useState(false);
   const IntroductionDrawerPages = useSelector(state => state.Common.IntroductionDrawerPages)
   const lang                    = useSelector(state => state.Language.lang)
-  const LabelColor              = useSelector(state => state.Theme.theme.variables.LabelColor)
+  const LabelColor              = useSelector(state => state.Theme.theme.variables.noticePageTextColor)
 
   if (useIsFocused()) {
     if (!preventGoback) {

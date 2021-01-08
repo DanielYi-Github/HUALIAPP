@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import NoMoreItem from '../../../components/NoMoreItem';
 import { createFilter } from 'react-native-search-filter';
 import ManageDocItem from '../../../components/ManageDocument/ManageDocItem';
+import MainPageBackground     from '../../../components/MainPageBackground';
 import * as UpdateDataUtil from '../../../utils/UpdateDataUtil';
 import HeaderForSearch     from '../../../components/HeaderForSearch';
 import * as LoginAction      from '../../../redux/actions/LoginAction';
@@ -95,6 +96,7 @@ class ManageDocumentPage extends React.Component {
 
     return (
       <Container>
+        <MainPageBackground height={null}/>
         {/*標題列*/}
         <HeaderForSearch
           /*搜尋框的部分*/

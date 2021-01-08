@@ -123,6 +123,7 @@ export default {
   get defaultTextColor() {
     return this.textColor;
   },
+  noticePageTextColor:"#FFF", // 公告消息使用的文字顏色
 
   // Title
   titleFontfamily : platform === "ios" ? "System" : "Roboto_medium",

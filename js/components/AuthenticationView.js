@@ -7,6 +7,7 @@ import { connect }           from 'react-redux';
 import { bindActionCreators }from 'redux';
 import * as CommonAction     from '../redux/actions/CommonAction';
 import HeaderForGeneral      from './HeaderForGeneral';
+import MainPageBackground     from './MainPageBackground';
 import Common                from '../utils/Common';
 
 class AuthenticationView extends Component {
@@ -61,7 +62,7 @@ class AuthenticationView extends Component {
 
 		let passwordMode = (
 			<Content contentContainerStyle={{paddingTop: 35, paddingLeft:"5%", paddingRight:"5%", alignItems: 'center'}}>
-				<Icon type={type} name={name}style={{fontSize: 200}}/>
+				<Icon type={type}  name={name}style={{fontSize: 200, color:this.props.style.inputWithoutCardBg.inputColor}}/>
 	            <Form style={{ width: "100%" }}>
 	              <Body style={{flexDirection: 'row', alignSelf: 'flex-start'}}>
 	                <Icon 
@@ -159,6 +160,7 @@ class AuthenticationView extends Component {
 		return (
 		  <View style={{ flex: 1 }}>
 	          <Container>
+        		<MainPageBackground height={null}/>
 	            <HeaderForGeneral
 	              isLeftButtonIconShow  = {true}
 	              leftButtonIcon        = {{name:"close"}}
