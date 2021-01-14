@@ -468,16 +468,20 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		renderingPageError:"表单生成失败，请稍后在试。"
 	},
 	FormUnit:{
+		and 		  : "與",
 		Connot        : "不能",
 		Previous      : "前一笔的",
+		PreviousSameName:"之前相同姓名的",
 		Including     : "不能含周日",
 		CrossWeek     : "不能跨周",
+		CrossYear     : "不能跨年",
 		Today         : "今天",
 		BiggerOrEqual : "大于或等于",
 		Bigger        : "大于",
 		SmallerOrEqual: "小于或等于",
 		Smaller       : "小于",
 		NotEqual      : "不等于",
+		requireFirst  : "必须先行填写"
 	},
 	ContactUsPage: {
 		ContactUs    : "联络我们",

@@ -380,9 +380,11 @@ async function loadBannerImagesIntoState(dispatch, getState){
 		});
 	}
 	
+	
 
 	//如果沒有網路或是SQL查詢出錯，則做下面的處理
-	if (data.length == 0) {
+	// if (data.length == 0) {
+	if (true) {
 		let banner1, banner2, banner3, banner4, banner5, banner6, banner7, banner8, banner9, banner10;
 		switch(lang){
 			case "vi":
@@ -401,9 +403,6 @@ async function loadBannerImagesIntoState(dispatch, getState){
 				banner1 = require(`../../image/banner/banner1_zh-TW.png`);
 				banner2 = require(`../../image/banner/banner2_zh-TW.png`);
 				/*
-				banner3 = require(`../../image/banner/banner1.png`);
-				banner4 = require(`../../image/banner/banner2.png`);
-				banner5 = require(`../../image/banner/banner3.png`);
 				banner6 = require(`../../image/banner/lunarNewYear.png`);
 				banner7 = require(`../../image/banner/dragonBoatFestival.png`);
 				banner8 = require(`../../image/banner/moonFestival.png`);

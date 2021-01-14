@@ -465,16 +465,20 @@ export default {
 		renderingPageError: "There is something error. Please try it later."
 	},
 	FormUnit: {
+		and  : "and",
 		Connot: "can not",
 		Previous: "previous",
+		PreviousSameName:"previous same name's ",
 		Including: "can not be including Sunday",
 		CrossWeek: "can not across the weekend",
+		CrossYear     : "can not across years ",
 		Today: "Today",
 		BiggerOrEqual: "be more or equal",
 		Bigger: "be more than",
 		SmallerOrEqual: "be less or equal",
 		Smaller: "be less than",
 		NotEqual: "be unequal to",
+		requireFirst  : "have to write down first." 
 	},
 	ContactUsPage: {
 		ContactUs: "Contact Us",

@@ -201,14 +201,15 @@ export function navigateFunctionPage(appID = null, userID = null) {
 			case "G00040": //物品放行單
 				NavigationService.navigate("CreateForm", {FormID: "G00040"});
 				break;
-
 			case "H00020": //請假單
 				NavigationService.navigate("CreateForm", {FormID: "H00020"});
 				break;
 			case "H00060": //海外陸籍幹部休假單
 				NavigationService.navigate("CreateForm", {FormID: "H00060"});
 				break;
-				
+			case "Survey": //問券調查
+				NavigationService.navigate("Survey", {SurveyOID: "B8BF35C543F2D569E050000A76006341"});
+				break;
 			case "Documents": //集團文件
 				NavigationService.navigate("DocumentCategories");
 				break;
@@ -244,7 +245,6 @@ export function navigateFunctionPage(appID = null, userID = null) {
 				}
 				break;
 			default:
-				console.log(appID);
 				NavigationService.navigate(appID);
 				break;
 		}

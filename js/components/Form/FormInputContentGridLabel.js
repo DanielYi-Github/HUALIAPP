@@ -10,21 +10,29 @@ export default class FormInputContentGridLabel extends Component {
 
 	render() {		
 		let value = this.props.data.defaultvalue;
-
 		switch(this.props.data.columntype) {
-		  case "cbo":
-		  	for(let param of this.props.data.paramList){
-		  		if (param.paramcode == value) {
-					value = param.paramname;			
-		  		}
-		  	}
-		    break;
-		  case "hidetxt":
-			return null;			
-		    break;
-		  default:
+			case "cbo":
+				for(let param of this.props.data.paramList){
+					if (param.paramcode == value) {
+						value = param.paramname;			
+					}
+				}
+				break;
+			case "tabrdo":
+				value = value.toString();
+				for(let param of this.props.data.paramList){
+					if (param.paramcode == value) {
+						value = param.paramname;			
+					}
+				}
+				break;
+			case "hidetxt":
+				return null;			
+				break;
+			default:
 		    // code block
 		}
+
 		value = (value == null || value == "null" || value == "" || value == " " ) ? " " : value;
 		return(
 			<Label>{`${this.props.data.component.name}:${value}`}</Label>

@@ -3922,3 +3922,29 @@ export async function getAndroidChangeAppMessage(version, platform) {
 		return false ;
 	}
 }
+
+
+/**
+* 取得問卷
+* @param user資料
+* @param content json包含 id、lang id例如 G00010
+*/
+export async function getCreateSurvey(user, content){
+	let promise = new Promise((resolve, reject) => {
+		let url = "app/survey/getCreateSurvey";
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content))
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+ 			resolve(data);
+		})
+	});
+	return promise;
+}

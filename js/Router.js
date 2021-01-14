@@ -60,7 +60,10 @@ import FormContentTextWithActionPage     from './components/Form/FormContentText
 import FormContentTextWithTagsPage       from './components/Form/FormContentTextWithTagsPage';
 import FormContentChkWithActionPage      from './components/Form/FormContentChkWithActionPage';
 import FormInputContentGridPageForDeputy from './components/Form/FormInputContentGridPageForDeputy';
+
 import SalaryPage              from './pages/Common/Salary/SalaryPage';
+import SurveyPage              from './pages/Common/Survey/SurveyPage';
+
 import PublishPage             from './pages/Common/Publish/PublishPage';
 import PublishEditPage         from './pages/Common/Publish/PublishEditPage';
 import PublishSubmitPage       from './pages/Common/Publish/PublishSubmitPage';
@@ -281,7 +284,8 @@ function MainStack(){
       <AppStack.Screen name ="FormContentChkWithAction"     component={FormContentChkWithActionPage} />
       <AppStack.Screen name ="FormInputContentGridPageForDeputy"  component={FormInputContentGridPageForDeputy} />
       <AppStack.Screen name ="Salary"               component={SalaryPage} />
-      
+      <AppStack.Screen name ="Survey"               component={SurveyPage} />
+
       <AppStack.Screen name ="Publish"              component={PublishPage} />
       <AppStack.Screen name ="PublishEdit"          component={PublishEditPage} />
       <AppStack.Screen name ="PublishSubmit"        component={PublishSubmitPage} />
