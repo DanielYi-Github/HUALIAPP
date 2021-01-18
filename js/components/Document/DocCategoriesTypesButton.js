@@ -17,7 +17,6 @@ class DocCategoriesTypesButton extends Component {
 		iconType = iconParmas[3] ? iconParmas[3] : "Ionicons";
 		let isDarkMode = this.props.state.Theme.themeType == "dark" ? true: false;
 
-		if (Platform.OS === "ios") {
 			switch(icon) {
 			     case "filing":
 			        icon = "file-tray";
@@ -30,7 +29,6 @@ class DocCategoriesTypesButton extends Component {
 			        break;
 			     default:
 			}
-		} 
 
 		if(icon){
 			return(

@@ -11,6 +11,7 @@ import * as NavigationService from '../../utils/NavigationService';
 import * as UpdateDataUtil    from '../../utils/UpdateDataUtil';
 import RNFetchBlob from 'rn-fetch-blob'
 
+// 集團文件、管理文章、BPM原始表單、BPM附件資訊
 class ViewFilePage extends React.Component {
   constructor(props) {
     super(props);
@@ -23,8 +24,6 @@ class ViewFilePage extends React.Component {
     }
   }
 
-  
-
   componentDidMount() {
     let user = this.props.state.UserInfo.UserInfo;
     console.log("this.state",this.state);
@@ -34,7 +33,18 @@ class ViewFilePage extends React.Component {
       this.state.url,
       this.state.content
     ).then((data) => {
-      if (data == null || data.url == undefined) {
+      // 驗證資料的正確性
+      let isUnvalid = false;
+      switch(data.type) {
+        case "pic":
+          isUnvalid = data.base64 == "" ? true: isUnvalid;
+          break;
+        case "pdf":
+          isUnvalid = data.url == "" ? true: isUnvalid;
+          break;
+      }
+
+      if (data == null || isUnvalid ) {
         Alert.alert(
           this.props.state.Language.lang.Common.Sorry,
           data ? data.message : this.props.state.Language.lang.Common.FileLoadingError, [{
@@ -47,7 +57,7 @@ class ViewFilePage extends React.Component {
       } else {    
         this.setState({
           refreshing: false,
-          file: data.url,
+          file: data.type=="pic"?data.base64 :data.url,
           fileType: data.type
         });
       }
@@ -84,7 +94,7 @@ class ViewFilePage extends React.Component {
               pdf = (
                 <Pdf
                     // source={{uri:"data:application/pdf;base64,"+this.state.file}}
-                    source={{uri:encodeURI("http://"+this.state.file)}}
+                    source={{uri:encodeURI(this.state.file)}}
                     style={{flex:1}}
                     onLoadComplete={(numberOfPages,filePath)=>{
                         // console.log(`number of pages: ${numberOfPages}`);

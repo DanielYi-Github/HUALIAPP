@@ -6,6 +6,7 @@ import * as NavigationService  from '../../../utils/NavigationService';
 import DocumentContentItem from '../../../components/Document/DocumentContentItem';
 import HeaderForGeneral  from '../../../components/HeaderForGeneral';
 import NoMoreItem from '../../../components/NoMoreItem';
+import MainPageBackground     from '../../../components/MainPageBackground';
 import { connect } from 'react-redux';
 import * as UpdateDataUtil from '../../../utils/UpdateDataUtil';
 import { bindActionCreators }   from 'redux';
@@ -28,6 +29,7 @@ class DocumentNewsContentPage extends React.Component {
 
     return (
       <Container>
+        <MainPageBackground height={null}/>
         {/*標題列*/}
         <HeaderForGeneral
           isLeftButtonIconShow  = {true}

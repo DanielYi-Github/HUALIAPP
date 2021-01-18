@@ -5,7 +5,7 @@ export default (variables /*: * */ = variable) => {
   const homePageTheme = {
   	container:{
   		flex:1,
-  		backgroundColor: variables.containerBgColor
+  		backgroundColor: typeof variables.MainPageBackground.source =="undefined" ? variables.containerBgColor: "rgba(0,0,0,0)"
   	},
   	contentContainer:{
   		flexGrow: 1,
@@ -46,6 +46,7 @@ export default (variables /*: * */ = variable) => {
 		color: variables.subtitleColor
 	},
     textColor:variables.textColor,
+    noticePageTextColor:variables.noticePageTextColor,
   	dynamicTitleColor: variables.dynamicTitleColor, 
   	cardBackground:variables.cardDefaultBg,
   	InitialPageCompanyLogo:variables.InitialPageBanner,

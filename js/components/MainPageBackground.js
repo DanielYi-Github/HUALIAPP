@@ -20,6 +20,10 @@ class MainPageBackground extends React.Component {
     let heightObject = {};
     if (this.props.height) {
       heightObject.height = this.props.height;
+    } else {
+      if (typeof this.props.height !== "undefined") {
+        heightObject.height = 0;
+      }
     }
 
     // 確定是不是全屏顯示
@@ -31,7 +35,7 @@ class MainPageBackground extends React.Component {
           style={{ flex: 1, resizeMode: "cover" }}
           source={this.props.style.MainPageBackground.source}
         >
-          {
+          {/*
             [...Array(10)].map((_, index) => 
               <Flake
                 x={Math.random() * width}               // x-coordinate
@@ -41,7 +45,7 @@ class MainPageBackground extends React.Component {
                 key={index}
               />
             )
-          }
+          */}
         </ImageBackground>
       );
     }

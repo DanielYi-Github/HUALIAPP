@@ -15,6 +15,7 @@ const KEYS_TO_FILTERS = ['detail'];
 import DocumentContentItem from '../../../components/Document/DocumentContentItem';
 import HeaderForSearch     from '../../../components/HeaderForSearch';
 import ExplainCardItem     from '../../../components/ExplainCardItem';
+import MainPageBackground     from '../../../components/MainPageBackground';
 import * as UpdateDataUtil from '../../../utils/UpdateDataUtil';
 
 
@@ -53,6 +54,7 @@ class DocumentCategoriesPage extends React.Component {
     //過濾關鍵字所查詢的資料
     return (
       <Container>
+        <MainPageBackground height={null}/>
         {/*標題列*/}
         <HeaderForSearch
           /*搜尋框的部分*/

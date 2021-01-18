@@ -32,7 +32,7 @@ class CustomDrawerContent extends React.Component {
           <View style={{flex: 1}}>
           <DrawerItemList {...this.props} />
           </View>
-          <Footer style={{justifyContent: 'flex-end'}}>
+          <Footer style={{justifyContent: 'flex-end', backgroundColor: this.props.style.inputWithoutCardBg}}>
             <FooterTab>
               <Body>
                 <Label style={{fontSize:10}}>Zhijie Footwear Technical Service Co., Ltd</Label>

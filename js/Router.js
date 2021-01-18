@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { View, Platform, Alert, NativeModules } from 'react-native';
+import { View, Platform, Alert, NativeModules, AppState } from 'react-native';
 import { Icon, Text, StyleProvider, Root, connectStyle} from 'native-base';
 import { connect, useSelector, useDispatch}from 'react-redux';
 import { bindActionCreators } from 'redux';
+import * as AppInitAction     from './redux/actions/AppInitAction';
 import * as HomeAction        from './redux/actions/HomeAction';
+import * as ThemeAction       from './redux/actions/ThemeAction';
+import * as CommonAction      from './redux/actions/CommonAction';
+import * as LoginAction       from './redux/actions/LoginAction';
 
 import { SafeAreaProvider, SafeAreaView }     from 'react-native-safe-area-context';
 import { NavigationContainer, useIsFocused }  from '@react-navigation/native';
@@ -12,6 +16,8 @@ import { createDrawerNavigator }from '@react-navigation/drawer';
 import { withSecurityView }     from './components/WithSecurityView';
 import { createMyNavigator }    from './components/CustomBottomTabNavigation';
 import { navigationRef }        from './utils/NavigationService';
+import DeviceStorageUtil        from './utils/DeviceStorageUtil';
+
 
 import SplashPage                from './pages/SplashPage';
 import IntroductionDrawerContent from './components/IntroductionDrawerContent';
@@ -54,7 +60,10 @@ import FormContentTextWithActionPage     from './components/Form/FormContentText
 import FormContentTextWithTagsPage       from './components/Form/FormContentTextWithTagsPage';
 import FormContentChkWithActionPage      from './components/Form/FormContentChkWithActionPage';
 import FormInputContentGridPageForDeputy from './components/Form/FormInputContentGridPageForDeputy';
+
 import SalaryPage              from './pages/Common/Salary/SalaryPage';
+import SurveyPage              from './pages/Common/Survey/SurveyPage';
+
 import PublishPage             from './pages/Common/Publish/PublishPage';
 import PublishEditPage         from './pages/Common/Publish/PublishEditPage';
 import PublishSubmitPage       from './pages/Common/Publish/PublishSubmitPage';
@@ -94,7 +103,7 @@ function IntroductionDrawer(props) {
   const [preventGoback, setPreventGoback] = useState(false);
   const IntroductionDrawerPages = useSelector(state => state.Common.IntroductionDrawerPages)
   const lang                    = useSelector(state => state.Language.lang)
-  const LabelColor              = useSelector(state => state.Theme.theme.variables.LabelColor)
+  const LabelColor              = useSelector(state => state.Theme.theme.variables.noticePageTextColor)
 
   if (useIsFocused()) {
     if (!preventGoback) {
@@ -275,7 +284,8 @@ function MainStack(){
       <AppStack.Screen name ="FormContentChkWithAction"     component={FormContentChkWithActionPage} />
       <AppStack.Screen name ="FormInputContentGridPageForDeputy"  component={FormInputContentGridPageForDeputy} />
       <AppStack.Screen name ="Salary"               component={SalaryPage} />
-      
+      <AppStack.Screen name ="Survey"               component={SurveyPage} />
+
       <AppStack.Screen name ="Publish"              component={PublishPage} />
       <AppStack.Screen name ="PublishEdit"          component={PublishEditPage} />
       <AppStack.Screen name ="PublishSubmit"        component={PublishSubmitPage} />
@@ -308,33 +318,63 @@ function MainStack(){
 }
 
 const RootStack = createStackNavigator();
-function Router(props) {
-  const theme  = useSelector(state => state.Theme.theme)
-  return (  
-        <Root>
-          <StyleProvider style={theme}>
-            <SafeAreaProvider>
-              <NavigationContainer ref={navigationRef}>
+const showSecurityScreenFromAppState = appState =>['background', 'inactive'].includes(appState)
+class Router extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      initialActiveCount:0 //如果大於2表示非冷啟動
+    }
+  }
 
-              {
-                Platform.OS == 'ios' ?
-                  <RootStack.Navigator headerMode="none" mode="modal" >
-                    <RootStack.Screen name="Main" component={MainStack} options={{ headerShown: false }}/>
-                    <RootStack.Screen name="Authentication" component={AuthenticationView} />
-                  </RootStack.Navigator>
-                :
-                  <SafeAreaView style={{flex: 1}}>
+  componentDidMount () {
+    AppState.addEventListener('change', this.onChangeAppState)
+  }
+  
+  componentWillUnmount () {
+    AppState.removeEventListener('change', this.onChangeAppState)
+  }
+
+  onChangeAppState = async nextAppState => {
+    this.setState({ initialActiveCount: this.state.initialActiveCount+1 });
+    // 熱起動資料重新刷新的條件，有網路、冷啟動不算、畫面在APP當中、user資料有值
+    if ( 
+      this.props.state.Network.networkStatus && 
+      this.state.initialActiveCount > 2 && 
+      !showSecurityScreenFromAppState(nextAppState) 
+    ) {
+      let user = await DeviceStorageUtil.get('User');
+      if (user !== "") this.props.actions.appHotInit(this.props.actions);
+    }
+  }  
+  
+  render() {
+    let theme = this.props.state.Theme.theme
+    return (  
+          <Root>
+            <StyleProvider style={theme}>
+              <SafeAreaProvider>
+                <NavigationContainer ref={navigationRef}>
+                {
+                  Platform.OS == 'ios' ?
                     <RootStack.Navigator headerMode="none" mode="modal" >
                       <RootStack.Screen name="Main" component={MainStack} options={{ headerShown: false }}/>
                       <RootStack.Screen name="Authentication" component={AuthenticationView} />
                     </RootStack.Navigator>
-                  </SafeAreaView>
-              }
-              </NavigationContainer>
-            </SafeAreaProvider>
-          </StyleProvider>
-        </Root>
-      );
+                  :
+                    <SafeAreaView style={{flex: 1}}>
+                      <RootStack.Navigator headerMode="none" mode="modal" >
+                        <RootStack.Screen name="Main" component={MainStack} options={{ headerShown: false }}/>
+                        <RootStack.Screen name="Authentication" component={AuthenticationView} />
+                      </RootStack.Navigator>
+                    </SafeAreaView>
+                }
+                </NavigationContainer>
+              </SafeAreaProvider>
+            </StyleProvider>
+          </Root>
+        );
+  }
 }
 
 const appRouter = connect(
@@ -343,9 +383,14 @@ const appRouter = connect(
   }),
   (dispatch) => ({
     actions: bindActionCreators({
+      ...AppInitAction,
       ...HomeAction,
+      ...ThemeAction,
+      ...CommonAction,
+      ...LoginAction
     }, dispatch)
   })
 )(Router);
 
-export default withSecurityView(appRouter);
+export default appRouter;
+// export default withSecurityView(appRouter);

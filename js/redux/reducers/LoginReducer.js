@@ -116,7 +116,6 @@ export default function login(state = initialState, action = {}) {
       logoutInfo: action.message ? action.message : null,
       checkAccType: null,
     };
-
       
     // 切換帳號
     case types.LOGIN_CHANGE_ACCOUNT:

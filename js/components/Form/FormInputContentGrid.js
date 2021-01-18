@@ -192,7 +192,8 @@ class FormInputContentGrid extends Component {
 
 		let labels = [];
 		for (let i in item) {
-			labels.push(<FormInputContentGridLabel key={i} data={item[i]}/>);
+			// 沒有值得話不做顯示
+			if(item[i].defaultvalue !== null) labels.push(<FormInputContentGridLabel key={i} data={item[i]}/>);
 		}
 
 		if (this.state.editable) {

@@ -6708,10 +6708,10 @@ react-native-watermark-component@^0.1.0:
   resolved "https://registry.npm.taobao.org/react-native-watermark-component/download/react-native-watermark-component-0.1.0.tgz#d8c2b1d307cf0ee22773ca5e35e1e9b33a84d514"
   integrity sha1-2MKx0wfPDuInc8peNeHpszqE1RQ=
 
-react-native-webview@^10.10.2:
-  version "10.10.2"
-  resolved "https://registry.npm.taobao.org/react-native-webview/download/react-native-webview-10.10.2.tgz#13208aef17c9ccfd28355363688f4cbe2143f10a"
-  integrity sha1-EyCK7xfJzP0oNVNjaI9MviFD8Qo=
+react-native-webview@^11.0.2:
+  version "11.0.2"
+  resolved "https://registry.npm.taobao.org/react-native-webview/download/react-native-webview-11.0.2.tgz#c88e84fa470f04ff070ff8a2c7f4d7295d46bb06"
+  integrity sha1-yI6E+kcPBP8HD/iix/TXKV1GuwY=
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"

@@ -5,6 +5,7 @@ import ReactNativeBiometrics  from 'react-native-biometrics'
 import { connect }            from 'react-redux'; 
 import { bindActionCreators } from 'redux';
 import HeaderForGeneral       from '../../components/HeaderForGeneral';
+import MainPageBackground     from '../../components/MainPageBackground';
 import * as NavigationService from '../../utils/NavigationService';
 import DeviceStorageUtil      from '../../utils/DeviceStorageUtil';
 import * as UpdateDataUtil    from '../../utils/UpdateDataUtil';
@@ -28,6 +29,7 @@ class AccountSafePage extends React.Component {
 
     return(
       <Container>
+        <MainPageBackground height={null}/>
         <HeaderForGeneral
           isLeftButtonIconShow  = {true}
           leftButtonIcon        = {{name:"arrow-back"}}

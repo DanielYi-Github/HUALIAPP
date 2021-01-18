@@ -123,6 +123,7 @@ export default {
   get defaultTextColor() {
     return this.textColor;
   },
+  noticePageTextColor:"#FFF", // 公告消息使用的文字顏色
 
   // Title
   titleFontfamily : platform === "ios" ? "System" : "Roboto_medium",
@@ -228,7 +229,8 @@ export default {
   },
   //  MainPageBackground
   MainPageBackground:{
-    height: platform === "ios"? 150: 125,
+    // height: platform === "ios"? 150: 125,
+    height: deviceHeight,
     width : "100%",
     backgroundColor:"#47ACF2",
     position: 'absolute',

@@ -17,7 +17,6 @@ export default class DocCategoriesNewsButton extends PureComponent{
 		let backgroundColor = iconParmas[2]; //功能鍵的名稱、圖片、按鈕顏色
 		let iconType = iconParmas[3] ? iconParmas[3] : "Ionicons";
 
-		if (Platform.OS === "ios") {
 			switch(icon) {
 			     case "filing":
 			        icon = "file-tray";
@@ -30,7 +29,6 @@ export default class DocCategoriesNewsButton extends PureComponent{
 			        break;
 			     default:
 			}
-		} 
 
 		cardItem = (
 		

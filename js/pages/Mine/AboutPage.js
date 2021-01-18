@@ -4,6 +4,7 @@ import { Container, Header, Left, Content, Body, Right, Button, Icon, Title, Tex
 import DateFormat from  'dateformat'; //  https://www.npmjs.com/package/dateformat
 import { connect } from 'react-redux'; 
 import HeaderForGeneral       from '../../components/HeaderForGeneral';
+import MainPageBackground     from '../../components/MainPageBackground';
 import * as NavigationService from '../../utils/NavigationService';
 import * as DeviceInfo        from '../../utils/DeviceInfoUtil';
 import * as SQLite            from '../../utils/SQLiteUtil';
@@ -111,6 +112,7 @@ class AboutPage extends React.Component {
 
     return(
       <Container>
+        <MainPageBackground height={null}/>
         <HeaderForGeneral
           isLeftButtonIconShow  = {true}
           leftButtonIcon        = {{name:"arrow-back"}}

@@ -4,6 +4,7 @@ import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Ico
 import * as NavigationService from '../../utils/NavigationService';
 import ToastUnit              from '../../utils/ToastUnit';
 import HeaderForGeneral    from '../../components/HeaderForGeneral';
+import MainPageBackground        from '../../components/MainPageBackground';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -32,6 +33,7 @@ class AdvicesPage extends React.Component {
   render() {
     return(
       <Container>
+        <MainPageBackground height={null}/>
         <HeaderForGeneral
           isLeftButtonIconShow  = {true}
           leftButtonIcon        = {{name:"arrow-back"}}

@@ -42,7 +42,6 @@ class IntroductionPage extends React.Component {
       ToastUnit.show('error', this.props.state.Login.logoutInfo);
       this.props.actions.reset_mix();
     }
-    this.props.actions.loadLoginMode();  // 檢核登陸模式 tab/single
   }
 
   render() {

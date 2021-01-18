@@ -9,6 +9,7 @@ import NoMoreItem             from '../../../components/NoMoreItem';
 import FunctionPageBanner     from '../../../components/FunctionPageBanner';
 import WaterMarkView          from '../../../components/WaterMarkView';
 import HeaderForGeneral       from '../../../components/HeaderForGeneral';
+import MainPageBackground     from '../../../components/MainPageBackground';
 import * as NavigationService  from '../../../utils/NavigationService';
 import * as UpdateDataUtil     from '../../../utils/UpdateDataUtil';
 import ToastUnit               from '../../../utils/ToastUnit';
@@ -112,6 +113,7 @@ class MyFormListPage extends React.Component {
         >
 
         <Container>
+          <MainPageBackground height={null}/>
           {/*標題列*/}
           <HeaderForGeneral
             isLeftButtonIconShow  = {true}

@@ -4,7 +4,6 @@ import * as types          from '../actionTypes/ThemeTypes';
 import DeviceStorageUtil   from '../../utils/DeviceStorageUtil';
 import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
 
-
 /*****
 	初始化節慶主題皮膚的設置，分別有三個變數做決定
 	server 端的
@@ -47,13 +46,13 @@ export function setThemeState(theme = null, netStatus) {
 			if (storageTheme.seasonThemeDisplay) {
 				dispatch({ 
 					type: "season",
-					initial: true,
+					initial: false,
 					serverSeasonTheme:seasonThemeDisplayFromServer
 				});
 			} else {
 				dispatch({ 
 					type: storageTheme.showTheme,
-					initial: true,
+					initial: false,
 					serverSeasonTheme:seasonThemeDisplayFromServer
 				});
 			}
@@ -62,18 +61,25 @@ export function setThemeState(theme = null, netStatus) {
 			if (storageTheme.seasonThemeDisplay) {
 				dispatch({ 
 					type: storageTheme.showTheme,
-					initial: true,
+					initial: false,
 					serverSeasonTheme:seasonThemeDisplayFromServer
 				});
 			} else {
 				dispatch({ 
 					type: storageTheme.showTheme,
-					initial: true,
+					initial: false,
 					serverSeasonTheme:seasonThemeDisplayFromServer
 				});
 				storageTheme.seasonThemeDisplay = true;
 			}
 		}
+
+		setTimeout(() => {
+			dispatch({
+				type: types.themeChangeDone
+			});
+		}, 5);
+
 		DeviceStorageUtil.set('storageTheme',storageTheme);
 	}
 }

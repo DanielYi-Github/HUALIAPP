@@ -22,15 +22,17 @@ const withSecurityScreenIOS = Wrapped => {
     }
   
     onChangeAppState = nextAppState => {
-      console.log(nextAppState);
       const showSecurityScreen = showSecurityScreenFromAppState(nextAppState)
       this.setState({ showSecurityScreen })
     }  
     
     render() {
+      /*
       return this.state.showSecurityScreen
         ? <SecurityScreen />
         : <Wrapped {...this.props} />
+      */
+     return <Wrapped {...this.props} />
     }
 	
   }
