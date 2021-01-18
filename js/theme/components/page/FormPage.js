@@ -37,7 +37,8 @@ export default (variables /*: * */ = variable) => {
     activeTabStyle:{
       backgroundColor:"transparent" 
     },
-    backgroundColor: variable.containerBgColor
+    backgroundColor: variable.containerBgColor,
+    ExplainText:variables.ExplainText,
   };
 
   return formPageTheme;

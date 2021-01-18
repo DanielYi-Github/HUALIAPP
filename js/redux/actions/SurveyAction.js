@@ -1,52 +1,27 @@
-import * as types          from '../actionTypes/CreateFormType';
+import * as types          from '../actionTypes/SurveyTypes';
 import * as LoginTypes     from '../actionTypes/LoginTypes';
 import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
 import * as LoggerUtil     from '../../utils/LoggerUtil';
 import FormUnit            from '../../utils/FormUnit';
 import ToastUnit 		   from '../../utils/ToastUnit';
 
-/*
-	欄位顯示的代辦事項
-	1.每比欄位資料會多一個值與欄位id，控制該id是否顯示欄位，第一次加載時就要取得這些資料
-	2.action 回傳直多一欄位 ，說明哪些id欄位要賦予什麼值
-*/
-/*
-	[
-		{"columntype":"rdo","id":"rdoYes","value":"true"},
-		{"columntype":"rdo","id":"rdoNo","value":"false"},
-		{"columntype":"txt","id":"txtEndPlace","value":"中山志捷"},
-		{"columntype":"txt","id":"txtStratPlace","value":"中山志捷"},
-		{"columntype":"txt","id":"txtPhoneManName","value":"楊孟璋"},
-		{"columntype":"tar","id":"tarContent","value":"返台休假"},
-		{"columntype":"cbo","id":"cboApporveLevel","value":"45"},
-		{"columntype":"tab","id":"tabDispatchCarTime","value":[
-			{"ROWINDEX":"0","ITEM1":"2019/09/24","ITEM2":"04:45","ITEM3":""},
-			{"ROWINDEX":"1","ITEM1":"2019/09/25","ITEM2":"04:45","ITEM3":""}
-			]
-		},
-		{"columntype":"tab","id":"tabManName","value":[]},
-		{"columntype":"tab","id":"tabManNameBack","value":[]}
-	]
-*/
-
-export function getFormFormat(formID){
+export function getSurveyFormat( surveyOID ){
 	return (dispatch, getState) => {
 		//顯示載入動態
 		dispatch(
-			refresh( getState().Language.lang.CreateFormPage.Creating )
-		); 
-
+			refresh( getState().Language.lang.SurveyPage.Creating )
+		);
+		 
 		let user = getState().UserInfo.UserInfo;
 		let content = {
-			id  : formID,
-			lang: getState().Language.langStatus
+			id  : surveyOID,
 		};
 
 		// 載入語系給FormUnit元件
 		FormUnit.language = getState().Language.lang.FormUnit;
 		
-		UpdateDataUtil.getBPMCreateForm(user, content).then( async (data)=>{
-			console.log(data);
+		UpdateDataUtil.getCreateSurvey(user, content).then( async (data)=>{
+			console.log("getCreateSurvey",data);
 			let stepsTitle       = [];
 			let apList           = [];
 			let apListIndex      = -1;
@@ -86,32 +61,36 @@ export function getFormFormat(formID){
 					comfirmComponent.push(columnData);
 				}
 			}
-			
+			/*
 			apList.push({
 				id        :"finallComfirm",
 				name      :getState().Language.lang.CreateFormPage.FinallComfirm, 	// 確認內容
 				columntype:"ap",
 				content   :comfirmComponent
 			})
-
+			
 			stepsTitle.push(getState().Language.lang.CreateFormPage.FinallComfirm); // 確認內容
+			*/
+			
 			dispatch(
 				renderFormFormat(
 					stepsTitle, 
 					apList,
 					{
-						id           : formID,
+						id           : surveyOID,
+						title 		 : data.title,
+						explain      : data.explain,
 						empid        : user.id,
 						proid        : data.proid,
 						astid        : data.astid,
-						listComponent: formatSubmitFormValue(comfirmComponent)
+						listComponent: formatSubmitFormValue(comfirmComponent),
+						// answerAPI    : data.answerapi
 					},
 				)
 			);
-
+			
 		}).catch( e => {
 			LoggerUtil.addErrorLog("CreateFormAction getFormFormat", "APP Action", "ERROR", e);
-			
 			
 			if (e.code == "0") {
 				dispatch(logout()); //已在其他裝置登入，強制登出
@@ -126,7 +105,7 @@ export function getFormFormat(formID){
 
 function renderFormFormat(stepsTitle, apList, formValue) {
 	return {
-		type: types.RENDERFORMFORMAT,
+		type: types.RENDERSURVEYFORMAT,
 		stepsTitle, 
 		apList,
 		formValue
@@ -134,60 +113,55 @@ function renderFormFormat(stepsTitle, apList, formValue) {
 }
 
 function renderFormFormatError(e){
-	console.log(e);
 	return {
-		type: types.RENDERFORMFORMATERROR,
+		type: types.RENDERSURVEYFORMATERROR,
 		e
 	}
 }
 
 export function updateFormDefaultValue(value, formItem, pageIndex){
 	return async (dispatch, getState) => {
-		let formFormat = getState().CreateForm.formFormat;
-		let editIndex  = formFormat[pageIndex].content.indexOf(formItem);
-		let allIndex   = formFormat[formFormat.length-1].content.indexOf(formItem);
+		let surveyFormat = getState().Survey.surveyFormat;
+		let editIndex  = surveyFormat[pageIndex].content.indexOf(formItem);
+		// let allIndex   = formFormat[formFormat.length-1].content.indexOf(formItem);
 
 		// 欄位自己的規則比較
 		let ruleCheck = await FormUnit.formFieldRuleCheck(
 								value, 
 								formItem, 
-								formFormat[formFormat.length-1].content, 
+								surveyFormat[surveyFormat.length-1].content, 
 								formItem.columntype
 							  );
 		if( ruleCheck != true){
 			dispatch(updateDefaultValueError(ruleCheck));
 		} else {
-			// console.log(value, formItem, formFormat[pageIndex].content);
 			// 進行該欄位的新值舊值更換
-			formItem = await FormUnit.updateFormValue( value, formItem, formFormat[pageIndex].content );
-			// console.log("formItem", formItem);
-			formFormat[pageIndex].content[editIndex] = formItem;
-			formFormat[formFormat.length-1].content[allIndex] = formItem;
+			formItem = await FormUnit.updateFormValue( value, formItem, surveyFormat[pageIndex].content );
+			surveyFormat[pageIndex].content[editIndex] = formItem;
+			// formFormat[formFormat.length-1].content[allIndex] = formItem;
 
 			// 判斷是否有url 的 action動作
+			/*
 			let	columnactionValue = await FormUnit.getColumnactionValue(
 										getState().UserInfo.UserInfo, 
 										formItem, 
 										formFormat[pageIndex].content 
 									);
-			// console.log(columnactionValue);
-
+			*/
+			/*
 			// 欄位隱藏或顯示控制
 			// 判斷該值是否填寫表單中顯示
-			// console.log(columnactionValue, formFormat[pageIndex].content);
-			formFormat[pageIndex].content = FormUnit.checkFormFieldShow(
+			surveyFormat[pageIndex].content = FormUnit.checkFormFieldShow(
 												columnactionValue, 
-												formFormat[pageIndex].content
+												surveyFormat[pageIndex].content
 											);
-			// console.log('formFormat[pageIndex].content', formFormat[pageIndex].content);
-
 			// 判斷該值是否全部表單中顯示
-			formFormat[formFormat.length-1].content = FormUnit.checkFormFieldShow(
+			surveyFormat[surveyFormat.length-1].content = FormUnit.checkFormFieldShow(
 														columnactionValue, 
-														formFormat[formFormat.length-1].content
+														surveyFormat[surveyFormat.length-1].content
 													  );	
-
-			dispatch(updateDefaultValue(formFormat));
+			*/
+			dispatch(updateDefaultValue(surveyFormat));
 		}
 	}
 }
@@ -208,12 +182,12 @@ function updateDefaultValueError(ruleCheckMessage){
 
 export function checkRequiredFormValue(pageIndex, gotoPageIndex = null){
 	return (dispatch, getState) => {
-		let formFormat = getState().CreateForm.formFormat; 
+		let formFormat = getState().Survey.surveyFormat; 
 		let formItems = formFormat[pageIndex].content;
 		let checkRequired = true; //有沒有通過驗證 
 
 		// 跳往下一頁要驗證，回前頁不用驗證
-		if ( gotoPageIndex == null || pageIndex < gotoPageIndex ) {
+		// if ( gotoPageIndex == null || pageIndex < gotoPageIndex ) {
 
 			for(let item of formItems){
 				if (item.required == "Y") {
@@ -225,19 +199,18 @@ export function checkRequiredFormValue(pageIndex, gotoPageIndex = null){
 					}
 				}
 			}
-		}
+		// }
 
 		formFormat[pageIndex].content = formItems;
-		dispatch(checkRequiredValue(formFormat, checkRequired, gotoPageIndex));
+		dispatch(checkRequiredValue(formFormat, checkRequired));
 	}
 }
 
-function checkRequiredValue(formFormat, checkRequired, gotoPageIndex){
+function checkRequiredValue(surveyFormat, checkRequired){
 	return {
 		type: types.CHECKREQUIREDVALUE,
-		formFormat,
-		checkRequired,
-		gotoPageIndex
+		surveyFormat,
+		checkRequired
 	}
 }
 
@@ -248,7 +221,7 @@ function isNull( str ){
 	return re.test(str);
 }
 
-export function closeCreateForm(){
+export function closeSurveyForm(){
 	return (dispatch, getState) => {
 		dispatch(closeForm());
 	}
@@ -256,45 +229,75 @@ export function closeCreateForm(){
 
 function closeForm() {
 	return {
-		type: types.CLOSECREATEFORM,
+		type: types.CLOSESURVEYFORM,
 	}
 }
 
-export function submitFormValue(){
+export function submitSurveyValue(){
 	return async (dispatch, getState) => {
+		
 		dispatch(
-			refresh(getState().Language.lang.CreateFormPage.Sending)
+			refresh(getState().Language.lang.SurveyPage.Sending)
 		); //顯示載入動態
-
-		let user       = getState().UserInfo.UserInfo;
-		let formFormat = getState().CreateForm.formFormat;
-		let formValue  = getState().CreateForm.formValue;
-		formValue.listComponent = FormUnit.formatSubmitFormValue(formFormat[formFormat.length-1].content);
-		// formValue.listComponent = formatSubmitFormValue(formFormat[formFormat.length-1].content);
-		// console.log(formValue);
-		// console.log("formValue",formValue);
-		UpdateDataUtil.registerForm(user, formValue).then((data)=>{
-			let message = getState().Language.lang.CreateFormPage.FormApplySucess;
+		
+		
+		let user         = getState().UserInfo.UserInfo;
+		let surveyFormat = getState().Survey.surveyFormat;
+		let surveyValue    = getState().Survey.surveyValue;
+		surveyValue.listComponent = FormUnit.formatSubmitSurveyValue(surveyFormat[surveyFormat.length-1].content);
+		surveyValue = formatSurveySubmitValue(surveyValue);
+		
+		UpdateDataUtil.registerSurvey(user, surveyValue).then((data)=>{
+			/*
 			if (!data.success) {
 				message = data.errorList[0];
 			}
+			*/
 
-			dispatch(registerFormResult(data.success, message));
+			let message = getState().Language.lang.SurveyPage.FormApplySucess;
+			// dispatch(registerSurveyResult(data.success, message));
+			dispatch(registerSurveyResult(true, message));
 		}).catch((e)=>{
-			LoggerUtil.addErrorLog("CreateFormAction submitFormValue", "APP Action", "ERROR", e);
+			LoggerUtil.addErrorLog("SurveyAction submitSurveyValue", "APP Action", "ERROR", e);
+
+			dispatch(renderFormFormatError(e)); //撈取中出現問題
 		})
 		
 	}
 }
 
-function registerFormResult(submitResult, msg){
+function formatSurveySubmitValue(surveyValue){
+	// 欄位格式
+	/*
+	{
+		'id':'B8BF35C543F2D569E050000A76006341',
+		'answer':{
+			'B8D2BFF2ED5BECE0E050000A76004D1A':'阳江',
+			}
+	}
+	*/
+	let value = {
+		id:surveyValue.id,
+		answer:{}
+	}
+
+	for(let item of surveyValue.listComponent){
+		value.answer[item.id] =  item.value;
+	}
+	return value;
+	// console.log(value);
+
+}
+
+function registerSurveyResult(submitResult, msg){
 	return {
-		type: types.REGISTERFORMRESULT,
+		type: types.REGISTERSURVEYRESULT,
 		submitResult, 
 		msg
 	}
 }
 
+/*
 export function defaultSubmitResult(){
 	return async (dispatch, getState) => {
 		dispatch({
@@ -302,7 +305,7 @@ export function defaultSubmitResult(){
 		});
 	}
 }
-
+*/
 function formatSubmitFormValue(allFormFormat = null) {
 	let formValue = [];
 	for(let item of allFormFormat){	
@@ -418,178 +421,15 @@ function formatSubmitFormValue(allFormFormat = null) {
 
 function refresh(info) {
 	return {
-		type: types.CREATEFORM_REFRESHING,
+		type: types.CREATESURVEY_REFRESHING,
 		info
 	}
 }
-
+/*
 export function logout(message = null) {
 	return {
 		type: LoginTypes.UNLOGIN,
 		message
 	};
-}
-
-/*
-	表單傳值的格式
-*/
-/*
-	{
-		"id": "G00010",
-		"empid": "A10433",
-		"proid": "PRO02121500359745951",
-		"astid": "AST04361500359745771",
-		"listComponent": [{
-			"columntype": "rdo",
-			"id": "rdoYes",
-			"value": "true"
-		}, {
-			"columntype": "rdo",
-			"id": "rdoNo",
-			"value": "false"
-		}, {
-			"columntype": "txt",
-			"id": "txtEndPlace",
-			"value": "中山志捷"
-		}, {
-			"columntype": "txt",
-			"id": "txtStratPlace",
-			"value": "中山志捷"
-		}, {
-			"columntype": "txt",
-			"id": "txtPhoneManName",
-			"value": "楊孟璋"
-		}, {
-			"columntype": "tar",
-			"id": "tarContent",
-			"value": "返台休假"
-		}, {
-			"columntype": "cbo",
-			"id": "cboApporveLevel",
-			"value": "45"
-		}, {
-			"columntype": "tab",
-			"id": "tabDispatchCarTime",
-			"value": [{
-				"ROWINDEX": "0",
-				"ITEM1": "2019/09/24",
-				"ITEM2": "04:45",
-				"ITEM3": ""
-			}, {
-				"ROWINDEX": "1",
-				"ITEM1": "2019/09/25",
-				"ITEM2": "04:45",
-				"ITEM3": ""
-			}]
-		}, {
-			"columntype": "tab",
-			"id": "tabManName",
-			"value": [{"ROWINDEX":"0","ITEM1":"1"},{"ROWINDEX":"1","ITEM1":"2"}]
-		}, {
-			"columntype": "tab",
-			"id": "tabManNameBack",
-			"value": [{"ROWINDEX":"0","ITEM1":"1"},{"ROWINDEX":"1","ITEM1":"2"}]
-		}]
-	}
-*/
-/*
-{
-	"id": "H00070",
-	"empid": "A10433",
-	"proid": "PRO04761515637264551",
-	"astid": "AST09071515637264275",
-	"listComponent": [{
-		"columntype": "hidetxt",
-		"id": "tfwAgentID",
-		"value": "1A5687"
-	}, {
-		"columntype": "txtwithaction",
-		"id": "txtAgentNM",
-		"value": "馮儀安"
-	}, {
-		"columntype": "cbo",
-		"id": "cboYear",
-		"value": "2019"
-	}, {
-		"columntype": "date",
-		"id": "calLeave",
-		"value": "2019/11/11"
-	}, {
-		"columntype": "date",
-		"id": "calBack",
-		"value": "2019/11/12"
-	}, {
-		"columntype": "txt",
-		"id": "tfwDestination",
-		"value": "台灣"
-	}, {
-		"columntype": "cbo",
-		"id": "cboApporveLevel",
-		"value": "45"
-	}, {
-		"columntype": "rdo",
-		"id": "rdoYes",
-		"value": "false"
-	}, {
-		"columntype": "rdo",
-		"id": "rdoNo",
-		"value": "true"
-	}, {
-		"columntype": "txtwithaction",
-		"id": "tfwGAD",
-		"value": ""
-	}, {
-		"columntype": "hidetxt",
-		"id": "txtGPlantID",
-		"value": null
-	}, {
-		"columntype": "txt",
-		"id": "txtLeaveDays",
-		"value": "2"
-	}, {
-		"columntype": "txt",
-		"id": "tfwRemainingDays",
-		"value": "2"
-	}, {
-		"columntype": "tar",
-		"id": "tarContent",
-		"value": "ooooooooo"
-	}, {
-		"columntype": "hidetxt",
-		"id": "tfwApplyingDays",
-		"value": "1"
-	}, {
-		"columntype": "hidetxt",
-		"id": "tfwTotalDays",
-		"value": "20"
-	}, {
-		"columntype": "tableave",
-		"id": "tabLeaveTimes",
-		"value": [{
-			"ROWINDEX": "0",
-			"ITEM1": "2019/11/11",
-			"ITEM2": "全天_@1@_Ad",
-			"ITEM3": "2019/11/11",
-			"ITEM4": "全天_@1@_Ad",
-			"ITEM5": "年假_@1@_10",
-			"ITEM6": "1"
-		}, {
-			"ROWINDEX": "1",
-			"ITEM1": "2019/11/12",
-			"ITEM2": "全天_@1@_Ad",
-			"ITEM3": "2019/11/12",
-			"ITEM4": "全天_@1@_Ad",
-			"ITEM5": "年假_@1@_10",
-			"ITEM6": "1"
-		}]
-	}, {
-		"columntype": "hidetxt",
-		"id": "tfwAnnualLeaveDays",
-		"value": "10"
-	}, {
-		"columntype": "hidetxt",
-		"id": "tfwAlreadyDays",
-		"value": "10"
-	}]
 }
 */

@@ -311,7 +311,8 @@ export function initialApi(user,way=false){
 			UpdateDataUtil.updatePermission(user),  //權限資料
 			UpdateDataUtil.updateEvent(user),		//事件表
 			UpdateDataUtil.updateBanner(user),		//Banner
-			UpdateDataUtil.updateModule(user)		//module
+			UpdateDataUtil.updateModule(user),		//module
+			UpdateDataUtil.setLoginInfo(user)
   		];
 
 	  	Promise.all(arr).then( async () => {
@@ -322,6 +323,10 @@ export function initialApi(user,way=false){
 			dispatch(login_done(true));				    //同步完成，跳至首頁	
 			dispatch(setAccountType()); 				//恢復輸入欄位初始值	
 			dispatch(cleanLoginChangeAccount()); 		//清除切換帳號的state資訊	
+			dispatch({									//恢復運行初始化程序
+				type: types.ENABLE_APP_INITIAL,
+				enable:true
+			});
 			NavigationService.navigate('HomeTabNavigator', {screen: 'Home'});
 
 	  	}).catch((e)=>{
@@ -351,7 +356,6 @@ export function initialApi(user,way=false){
   		//後期	            
 		UpdateDataUtil.updateVisitLogToServer(user);	//update功能訪問數量回Server	  	
   		UpdateDataUtil.updateRead(user);				//訊息讀取表       
-		UpdateDataUtil.setLoginInfo(user); 	
 	}
 }
 
@@ -383,8 +387,7 @@ async function loadBannerImagesIntoState(dispatch, getState){
 	
 
 	//如果沒有網路或是SQL查詢出錯，則做下面的處理
-	// if (data.length == 0) {
-	if (true) {
+	if (data.length == 0) {
 		let banner1, banner2, banner3, banner4, banner5, banner6, banner7, banner8, banner9, banner10;
 		switch(lang){
 			case "vi":
@@ -533,6 +536,7 @@ export function hotInitialApi( user, way=false ){
   			// UpdateDataUtil.updateMSG(user), 	//手機消息-執行最久
   			UpdateDataUtil.updateNotice(user),	//公告資訊				
 			UpdateDataUtil.updateBanner(user),	//Banner
+			UpdateDataUtil.setLoginInfo(user)
   		];
 
 	  	Promise.all(arr).then( async () => {
@@ -562,7 +566,17 @@ export function hotInitialApi( user, way=false ){
   		//後期	            
 		UpdateDataUtil.updateVisitLogToServer(user);	//update功能訪問數量回Server	  	
   		UpdateDataUtil.updateRead(user);				//訊息讀取表       
-		UpdateDataUtil.setLoginInfo(user); 	
+	}
+}
+
+// 熱起動時用戶選擇更新APP
+export function hotInitialUpgradAPP(){
+	return (dispatch, getState) => {
+		// 取消SplashPage運行初始化程序
+		dispatch({
+			type: types.ENABLE_APP_INITIAL,
+			enable:false
+		})
 	}
 }
 /*****配置結束*****/

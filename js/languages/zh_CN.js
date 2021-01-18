@@ -483,6 +483,20 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		NotEqual      : "不等于",
 		requireFirst  : "必须先行填写"
 	},
+	SurveyPage:{
+		Creating          :"问卷生成中...",
+		Sending           :"问卷传送中...",
+		FormApplySucess   :"问卷传送成功",
+		WrongData         :"输入资料错误",
+		GotIt             :"知道了",
+		renderingPageError:"问卷生成失败，请稍后在试。",
+		RequiredFieldAlert:"请完成所有必填资料",
+		Sucess            :"成功",
+		Fail              :"失败",
+		SurveyExplain     :"问卷说明",
+		SurveyWrite       :"开始填写",
+		Apply             :"送出",
+	},
 	ContactUsPage: {
 		ContactUs    : "联络我们",
 		YourName     : "您的姓名",

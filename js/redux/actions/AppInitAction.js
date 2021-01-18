@@ -10,7 +10,6 @@ import UpgradeDBTableUtil  from '../../utils/UpgradeDBTableUtil';
 import DeviceStorageUtil   from '../../utils/DeviceStorageUtil';
 import UpgradeAppVersionUtil from '../../utils/UpgradeAppVersionUtil';
 
-
 export function appInit(initActions, downloadProgressCallback) {
 	return async (dispatch, getState) => {
 
@@ -59,6 +58,8 @@ export function appInit(initActions, downloadProgressCallback) {
 					
 					if (!isVersionUpdate) intoAppProgress(initActions, getState());
 					initActions.setNoUpdateAlert(); // 設定不要顯示提醒框
+				}else{
+					DeviceStorageUtil.set("lastUpdateTime", new Date().getTime()); // localstorage記錄此次版本更新的時間
 				}
 			} else {
 				intoAppProgress(initActions, getState());
@@ -250,6 +251,31 @@ export function appHotInit(initActions){
 	return async (dispatch, getState) => {
 		initActions.setThemeState( null, getState().Network.networkStatus); // 設定APP主題風格
 		await initActions.hotInitialApi( getState().UserInfo.UserInfo ); // 集團公告、輪播圖 重新撈取
-    	initActions.loadInitialNoticeData(); // 集團公告重新自資料庫撈取           
+    	initActions.loadInitialNoticeData(); // 集團公告重新自資料庫撈取      
+
+    	await UpgradeDBTableUtil.UpgradeDBTable(); 	// 檢查DB表有無更新
+		await UpdateDataUtil.updateVersion();		// 檢查DB表有無APP版本號更新     
+
+		// 從localstorage取得上次版本更新提醒時間，如果至今距離4小時則以上，則顯示更新資訊，如果以內，則不顯示更新資訊
+		DeviceStorageUtil.get("lastUpdateTime").then( async (lastUpdateTime)=>{
+			lastUpdateTime = lastUpdateTime ? JSON.parse(lastUpdateTime) : Date().getTime();
+			let now = new Date().getTime();
+
+			if (( now - lastUpdateTime ) >= 14400000)  {
+
+				let isVersionUpdate = await UpgradeAppVersionUtil.checkBigUpdate(getState().Language.lang); // 版本更新檢查
+
+				if (!isVersionUpdate) {
+					DeviceStorageUtil.set("lastUpdateTime", new Date().getTime()); // localstorage記錄此次版本更新的時間
+				}else{
+					// ios更新不要跳至更新畫面，android需要
+					if (Platform.OS !== 'ios') {
+						initActions.hotInitialUpgradAPP(); // 開始更新
+						setTimeout( function(){ Navigation.goBackToTop(); }, 500);
+					}
+					DeviceStorageUtil.set("lastUpdateTime", new Date().getTime()); // localstorage記錄此次版本更新的時間
+				}
+			}
+		})
 	}
 }

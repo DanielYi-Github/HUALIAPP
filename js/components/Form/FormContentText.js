@@ -37,16 +37,16 @@ class FormContentText extends Component {
 				 	<Item fixedLabel 
 				 		style={[
 				 			this.props.style.CreateFormPageFiledItemWidth,
-				 			// this.props.style.fixCreateFormPageFiledItemWidth
+				 			this.props.style.fixCreateFormPageFiledItemWidth
 				 		]} 
 				 		error={this.props.data.requiredAlbert}>
 		 			   <Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
-		               <Label style={{flex: 0}}>{this.state.labelname}</Label>
+		               <Label style={{flex: 1}}>{this.state.labelname}</Label>
 		               <Input 
-		               		// multiline
+		               		multiline
                           	ref="focusInput"
 		               		value = {value}
-		               		style={{ textAlign: 'right'}}
+		               		style={{ textAlign: 'right', flex: 1}}
 		               		onEndEditing ={ async (text)=>{
 		               			await this.props.onPress(text.nativeEvent.text, this.props.data);
 		               			this.setState({ value:null });
@@ -83,7 +83,7 @@ class FormContentText extends Component {
 					  ]}
 				  >
 		 			<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
-				  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
+				  	<Label >{this.state.labelname}</Label>
 				    <Input 
 						multiline 
 						scrollEnabled = {false}

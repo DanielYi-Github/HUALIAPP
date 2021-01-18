@@ -112,9 +112,9 @@ class HomePage extends React.Component {
           containerStyle        ={this.props.style.container}
           innerContainerStyle   ={this.props.style.container}
           contentContainerStyle ={this.props.style.contentContainer}
-          alwaysShowTitle  ={false}
-          alwaysShowNavBar ={false}
-          scrollViewProps  ={{
+          alwaysShowTitle       ={false}
+          alwaysShowNavBar      ={false}
+          scrollViewProps       ={{
             onScroll:({nativeEvent}) => {
               this.setState({ contentOffset_Y:nativeEvent.contentOffset.y });
               if( this.isCloseToBottom(nativeEvent) && !this.props.state.Home.isRefreshing) {
