@@ -22,13 +22,11 @@ import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
 	強制切換回原本主題(預設為platform)
 	seasonThemeDisplay改為true	
 *****/
-export function setThemeState(theme = null) {
+export function setThemeState(theme = null, netStatus) {
 	return async (dispatch, getState) => {
-		let seasonThemeDisplayFromServer = await UpdateDataUtil.getSeasonThemeDisplay();
-		seasonThemeDisplayFromServer = true;
-		console.log(seasonThemeDisplayFromServer);
-
-
+		let seasonThemeDisplayFromServer = false;
+		if (netStatus) seasonThemeDisplayFromServer = await UpdateDataUtil.getSeasonThemeDisplay();
+		
 		let storageTheme = await DeviceStorageUtil.get('storageTheme').then( async (data)=>{
 			let defaultTheme = {
 				showTheme : "platform",

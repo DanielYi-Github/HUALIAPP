@@ -27,12 +27,13 @@ class ViewFilePage extends React.Component {
 
   componentDidMount() {
     let user = this.props.state.UserInfo.UserInfo;
+    console.log("this.state",this.state);
+
     UpdateDataUtil.getCreateFormDetailFormat(
       user,
       this.state.url,
       this.state.content
     ).then((data) => {
-      console.log(data);
       if (data == null || data.url == undefined) {
         Alert.alert(
           this.props.state.Language.lang.Common.Sorry,
@@ -51,7 +52,6 @@ class ViewFilePage extends React.Component {
         });
       }
     }).catch((data) => {
-      console.log("errpr1", data);
       Alert.alert(
         this.props.state.Language.lang.Common.Sorry,
         data ? data.message : this.props.state.Language.lang.Common.FileLoadingError, [{
@@ -93,6 +93,7 @@ class ViewFilePage extends React.Component {
                         // console.log(`current page: ${page}`);
                     }}
                     onError={(error)=>{
+                        console.log(error);
                         Alert.alert(
                           this.props.state.Language.lang.Common.Sorry,
                           this.props.state.Language.lang.Common.FileLoadingError,

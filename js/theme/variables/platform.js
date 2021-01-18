@@ -206,6 +206,7 @@ export default {
 
   //HomePageBannerTitle
   HomePageBannerTitle:56,
+  HomePageBannerBackgroundColor:"#47ACF2",
 
   ExplainText:{
     color:"#47ACF2",

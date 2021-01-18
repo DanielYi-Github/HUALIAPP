@@ -54,7 +54,8 @@ export default (variables /*: * */ = variable) => {
   	ItemHeight:{
   		height:variables.PageSize.height/10
   	},
-  	PageSize:variables.PageSize
+  	PageSize:variables.PageSize,
+  	HomePageBannerBackgroundColor:variables.HomePageBannerBackgroundColor
   };
 
   return homePageTheme;

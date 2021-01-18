@@ -169,7 +169,7 @@ class FormContentChkWithAction extends Component {
 			reorderInfo = (
 				<View style={{flexDirection: 'row', padding: 20, alignItems: 'center', justifyContent: 'center'}}>
 					<Label>{`${this.props.lang.FormSign.LongPress} `}</Label>
-            		<Icon name={Platform.OS =="ios" ? "reorder-two": "reorder"}/>
+            		<Icon name={"reorder-two"}/>
 					<Label>{` ${this.props.lang.FormSign.ReorderSequence}`}</Label>
 				</View>
 			);

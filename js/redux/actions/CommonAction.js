@@ -4,7 +4,9 @@ import * as MessageTypes   from '../actionTypes/MessageTypes';
 import * as SQLite         from '../../utils/SQLiteUtil';
 import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
 import * as LoggerUtil     from '../../utils/LoggerUtil';
+import * as DeviceInfo     from '../../utils/DeviceInfoUtil';
 import * as NavigationService   from '../../utils/NavigationService';
+import DeviceStorageUtil   from '../../utils/DeviceStorageUtil';
 import SearchInput, { createFilter } from 'react-native-search-filter';
 
 export function loadCompanyData_ContactCO(){
@@ -124,74 +126,6 @@ function setCompanyList_HrCO(dataKey,dataValue, defaultKey, defaultValue){
 	}
 }
 
-export function loadBannerImages(){
-	return async (dispatch, getState) => {
-		let data = [];
-		let lang = getState().Language.langStatus;
-
-		// 先判斷有沒有網路
-		if (getState().Network.networkStatus) {
-			let sql = `select * from THF_BANNER where LANG='${lang}' and STATUS='Y' order by SORT;`
-			
-			await SQLite.selectData( sql, []).then((result) => {	
-				// 如果少於3筆要加東西
-				if (result.raw().length < 3) data.push({ key:0 });
-				for(let i in result.raw()){
-					data.push({
-						key      : i+1,
-						source   : {uri: result.raw()[i].DOWNURL},
-						APPID    : result.raw()[i].APPID,
-						PORTALURL: result.raw()[i].PORTALURL
-					});
-				}
-			}).catch((e)=>{
-				LoggerUtil.addErrorLog("CommonAction loadBannerImages", "APP Action", "ERROR", e);
-			});
-		}
-
-		//如果沒有網路或是SQL查詢出錯，則做下面的處理
-		if (data.length == 0) {
-			let banne, banner2;
-			switch(lang){
-				case "vi":
-					banner1 = require(`../../image/banner/banner1_en.png`);
-					banner2 = require(`../../image/banner/banner2_en.png`);
-					break;				
-				case "en":
-					banner1 = require(`../../image/banner/banner1_en.png`);
-					banner2 = require(`../../image/banner/banner2_en.png`);
-					break;
-				case "zh-CN":
-					banner1 = require(`../../image/banner/banner1_zh-CN.png`);
-					banner2 = require(`../../image/banner/banner2_zh-CN.png`);
-					break;
-				case "zh-TW":
-					banner1 = require(`../../image/banner/banner1_zh-TW.png`);
-					banner2 = require(`../../image/banner/banner2_zh-TW.png`);
-					break;
-			}
-			data = [{
-				key: 0,	// 如果key為0，下面的source要拿掉
-			}, {
-				key: 1,
-				source: banner1,
-				APPID    : null,
-				PORTALURL: null
-			}, {
-				key: 2,
-				source: banner2,
-				APPID    : null,
-				PORTALURL: null
-			}];
-		}
-
-		dispatch({
-			type:types.SET_BANNERIMAGES,
-			data
-		}); 
-	}
-}
-
 export function loadWaterMarkViewConfig(){
 	return (dispatch, getState) => {
 		let sql = `select CLASS3 as pageId from THF_MASTERDATA where CLASS1='WaterMark' and CLASS4='Y' and STATUS='Y';`;
@@ -231,8 +165,8 @@ export function cleanNotificationContent(){
 // for Messages
 export function checkDirectorPage(data){
 	return async (dispatch, getState) => {
-		// 找出該訊息的EVENT 再進行調轉動作
 		
+		// 找出該訊息的EVENT 再進行調轉動作
 		let user = getState().UserInfo.UserInfo;
 		let OID  = data.oid ? data.oid: data.OID;
 		let sql  = `SELECT case when r.ISREAD is null then 'F' else r.ISREAD end ISREAD,
@@ -242,7 +176,9 @@ export function checkDirectorPage(data){
 		         	left join THF_EVENT e on e.OID=a.EVENTOID
 					left join THF_MSG_USERREAD r on r.MSGOID=a.OID 
 					WHERE a.STATUS='Y' AND a.OID='${OID}'`;
-		data = await SQLite.selectData(sql, []).then((result) => {return result.item(0)});
+		data = await SQLite.selectData(sql, []).then((result) => {
+			return result.item(0)
+		});
 
 		if (data.ISREAD == "F") updateMessageReadState(OID, user, dispatch, getState)
 
@@ -710,6 +646,110 @@ export function enableScreenShot(isEnable) {
 			type: types.ENABLE_SCREENSHOT,
 			isEnable
 		});
+	}
+}
+
+export function isShowAndroidChangeAPPMessage(){
+	return async (dispatch, getState) => {
+		let isShowAndroidChangeAPPMessage = await DeviceStorageUtil.get('isShowAndroidChangeAPPMessage').then(async (data)=>{
+			data = data=="" ? "Y": await JSON.parse(data)
+			if ( data === "N" ) {
+				return false;
+			}else{
+				return true;
+			}
+		});
+
+		if (isShowAndroidChangeAPPMessage) {
+			UpdateDataUtil.getAndroidChangeAppMessage(DeviceInfo.getVersion(), Platform.OS).then((result)=>{
+				dispatch({
+					type: types.SHOW_ANDROID_CHANGE_APP_MESSAGE,
+					result
+				});
+			});
+		}
+	}
+}
+
+export function noMoreShowAndroidChangeAPPMessage(){
+	return async (dispatch, getState) => {
+		DeviceStorageUtil.set('isShowAndroidChangeAPPMessage', "N");
+		let result = false;
+		dispatch({
+			type: types.SHOW_ANDROID_CHANGE_APP_MESSAGE,
+			result
+		});
+	}
+}
+
+export function loadBannerImages(){
+	return async (dispatch, getState) => {
+		let data = [];
+		let lang = getState().Language.langStatus;
+
+		
+		// 先判斷有沒有網路
+		if (getState().Network.networkStatus) {
+			let sql = `select * from THF_BANNER where LANG='${lang}' and STATUS='Y' order by SORT;`
+			
+			await SQLite.selectData( sql, []).then((result) => {	
+				// 如果少於3筆要加東西
+				if (result.raw().length < 3) data.push({ key:0 });
+				for(let i in result.raw()){
+					data.push({
+						key      : i+1,
+						source   : {uri: result.raw()[i].DOWNURL},
+						APPID    : result.raw()[i].APPID,
+						PORTALURL: result.raw()[i].PORTALURL
+					});
+				}
+			}).catch((e)=>{
+				LoggerUtil.addErrorLog("CommonAction loadBannerImages", "APP Action", "ERROR", e);
+			});
+		}
+		
+
+		//如果沒有網路或是SQL查詢出錯，則做下面的處理
+		if (data.length == 0) {
+			let banner1, banner2;
+			switch(lang){
+				case "vi":
+					banner1 = require(`../../image/banner/banner1_en.png`);
+					banner2 = require(`../../image/banner/banner2_en.png`);
+					break;				
+				case "en":
+					banner1 = require(`../../image/banner/banner1_en.png`);
+					banner2 = require(`../../image/banner/banner2_en.png`);
+					break;
+				case "zh-CN":
+					banner1 = require(`../../image/banner/banner1_zh-CN.png`);
+					banner2 = require(`../../image/banner/banner2_zh-CN.png`);
+					break;
+				case "zh-TW":
+					banner1 = require(`../../image/banner/banner1_zh-TW.png`);
+					// banner1 = require(`../../image/banner/banner_CN.png`);
+					banner2 = require(`../../image/banner/banner2_zh-TW.png`);
+					break;
+			}
+			data = [{
+				key: 0,	// 如果key為0，下面的source要拿掉
+			}, {
+				key: 1,
+				source: banner1,
+				APPID    : null,
+				PORTALURL: null
+			}, {
+				key: 2,
+				source: banner2,
+				APPID    : null,
+				PORTALURL: null
+			}];
+		}
+
+		dispatch({
+			type:types.SET_BANNERIMAGES,
+			data
+		}); 
 	}
 }
 

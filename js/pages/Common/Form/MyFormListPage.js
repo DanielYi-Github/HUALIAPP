@@ -96,7 +96,7 @@ class MyFormListPage extends React.Component {
   componentDidUpdate(){
     // 檢查是否有錯誤訊息
     if(this.props.state.MyForm.loadMessgae){
-      ToastUnit.show('error', error);
+      ToastUnit.show('error', this.props.state.MyForm.loadMessgae);
     }
   }
 
@@ -123,29 +123,21 @@ class MyFormListPage extends React.Component {
             title                 = {this.props.state.Language.lang.HomePage.MyForm}
             isTransparent         = {false}
           />
-
-          <FunctionPageBanner
-            explain         ={this.props.state.Language.lang.MyFormListPage.FunctionInfo}
-            isShowButton    ={false}
-            buttonText      ={null}
-            imageBackground ={require("../../../image/functionImage/myForm.jpg")}
-            onPress         ={null}
-          />
-
           {/*內容資料*/}
           {
             !this.props.state.MyForm.isRefreshing ?
               <FlatList
                   keyExtractor        ={(item, index) => index.toString()}
                   data                = {this.props.state.MyForm.Forms}
+                  ListHeaderComponent = {this.renderHeader}
                   renderItem          = {this.renderFormItem}
                   ListFooterComponent = {this.renderFooter}
                   refreshControl      ={
                     <RefreshControl
                       refreshing ={this.props.state.MyForm.isRefreshing}
                       onRefresh  ={this.handleOnRefresh.bind(this)}
-                      colors     ={['#3691ec']}
-                      progressBackgroundColor = "#fff"
+                      colors     ={[this.props.style.titleFontColor]}
+                      tintColor  ={this.props.style.titleFontColor}
                     />
                   }
               />
@@ -163,6 +155,18 @@ class MyFormListPage extends React.Component {
       <WaterMarkView 
         contentPage = {myFormListPage} 
         pageId = {"MyFormListPage"}
+      />
+    );
+  }
+
+  renderHeader = () => {
+    return(
+      <FunctionPageBanner
+        explain         ={this.props.state.Language.lang.MyFormListPage.FunctionInfo}
+        isShowButton    ={false}
+        buttonText      ={null}
+        imageBackground ={require("../../../image/functionImage/myForm.jpg")}
+        onPress         ={null}
       />
     );
   }
@@ -185,9 +189,11 @@ class MyFormListPage extends React.Component {
   }
 
   renderDrawerContent = () => {
+    let containerBgColor = this.props.state.Theme.theme.variables.containerBgColor; 
+    let contentStyle = this.props.state.Theme.theme.variables.contentStyle;
     if (Platform.OS === "ios") {
       return(
-        <Container>
+        <Container style={{backgroundColor: containerBgColor=="rgba(0,0,0,0)" ? contentStyle: containerBgColor }}>
           {/*標題列*/}
           <HeaderForGeneral
             isLeftButtonIconShow  = {true}
@@ -323,7 +329,7 @@ class MyFormListPage extends React.Component {
       );
     } else {
       return(
-        <Container>
+        <Container style={{backgroundColor: containerBgColor=="rgba(0,0,0,0)" ? contentStyle: containerBgColor }}>
           {/*標題列*/}
           <HeaderForGeneral
             isLeftButtonIconShow  = {true}

@@ -38,7 +38,6 @@ class HeaderForInitial extends Component {
 				</Button>
 			);
 		}
-		if (this.props.isRightButtonIconShow) {
 			rightButton_lang = (
 				<Button transparent onPress={this.props.rightButtonOnPress_lang}>
 				  <Icon 
@@ -49,7 +48,6 @@ class HeaderForInitial extends Component {
 				  />
 				</Button>
 			);
-		}
 
 		let title = (
 			<Title style = {{color: (this.state.isTransparent) ? this.props.style.colorForTransparent :this.props.style.color}}>

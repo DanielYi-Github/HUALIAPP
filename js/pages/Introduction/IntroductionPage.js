@@ -1,16 +1,18 @@
 import React from 'react';
-import { View, Image} from 'react-native';
-import { Container, Content, Text, Icon, connectStyle, Title, Card, CardItem, Body, Button/*, Toast*/} from 'native-base';
+import { View, Image, Platform} from 'react-native';
+import { Container, Content, Text, Icon, connectStyle, Title, Card, CardItem, Body, Button, Header, Left, Right, CheckBox, ListItem} from 'native-base';
 import { connect }           from 'react-redux';
 import { bindActionCreators }from 'redux';
 import ActionSheet           from 'react-native-actionsheet'
 import Carousel              from 'react-native-snap-carousel';
+import ModalWrapper          from "react-native-modal";
 
 import * as NavigationService from '../../utils/NavigationService';
 import ToastUnit              from '../../utils/ToastUnit';
 import HeaderForInitial       from '../../components/HeaderForInitial';
 import * as LanguageAction    from '../../redux/actions/LanguageAction';
 import * as LoginAction       from '../../redux/actions/LoginAction';
+import * as CommonAction      from '../../redux/actions/CommonAction';
 
 class IntroductionPage extends React.Component {
   constructor(props) {
@@ -28,10 +30,13 @@ class IntroductionPage extends React.Component {
       ],
       loginButton: false,
       bioMark: true,
+      isAlreadyShowAdvertisement:false,
+      isShowAdvertisementAgain:false
     }
   } 
 
   componentDidMount(){
+    Platform.OS == 'android' ? this.props.actions.isShowAndroidChangeAPPMessage(): null;
     // 用以顯示登出時出現的訊息提示，例如token error等等
     if(this.props.state.Login.logoutInfo !== null){
       ToastUnit.show('error', this.props.state.Login.logoutInfo);
@@ -61,16 +66,13 @@ class IntroductionPage extends React.Component {
         banner1 = require(`../../image/banner/banner1_zh-CN.png`);
         banner2 = require(`../../image/banner/banner2_zh-CN.png`);
     }
-
     return (
       <Container>
         <HeaderForInitial
-          // isLeftButtonIconShow    = {this.state.loginButton ? true : false}
           isLeftButtonIconShow    = {true}
           leftButtonIcon          = {{name:"menu"}}
           leftButtonOnPress       = {this.openDrawer} 
-          // isRightButtonIconShow   = {this.state.loginButton ? true : false}
-          isRightButtonIconShow   = {true}
+          isRightButtonIconShow   = {this.props.state.Network.networkStatus}
           rightButtonIcon         = {{name: "person-circle-sharp"}}
           rightButtonOnPress      = {this.loginWay}
           rightButtonOnPress_lang = {this.showActionSheet} 
@@ -98,6 +100,12 @@ class IntroductionPage extends React.Component {
             }
             {this.renderModalSelector()}
         </Content>
+        {
+          this.props.state.Common.isShowAndroidChangeAPPMessage && !this.state.isAlreadyShowAdvertisement ? 
+            this.showAdvertisement()
+            : 
+            null
+        }
       </Container>
     );
   }
@@ -183,7 +191,7 @@ class IntroductionPage extends React.Component {
   renderGroupIntroduction = (key) => {
     return (
       <View key={key}>
-        <Title style={{paddingTop:30, alignSelf: 'center', color:this.props.style.dynamicTitleColor}}>
+        <Title style={{paddingTop:30, alignSelf: 'center'}}>
           {this.props.state.Language.lang.InitialPage.GroupIntroduction}
         </Title>
         <Card>
@@ -224,7 +232,7 @@ class IntroductionPage extends React.Component {
   renderServiceItems = (key) => {
     return(
       <View key={key}>
-        <Title style={{paddingTop:30, alignSelf: 'center', color:this.props.style.dynamicTitleColor }}>{this.props.state.Language.lang.InitialPage.ServiceItems}</Title>
+        <Title style={{paddingTop:30, alignSelf: 'center'}}>{this.props.state.Language.lang.InitialPage.ServiceItems}</Title>
         <Card>
           <CardItem style={{height:this.props.style.InitialPageServiceImage.height}}>
             <Image
@@ -267,7 +275,7 @@ class IntroductionPage extends React.Component {
                           justifyContent: 'center'
                         }
                       } >
-                    <Icon name={Platform.OS === "ios" ? "cellular": "jet"}/>
+                    <Icon name={"cellular"}/>
                   </Button>
                   <Text style={{paddingTop:5}}>{this.props.state.Language.lang.InitialPage.ConsecutiveGrowth}</Text>
                 </Body>
@@ -295,7 +303,7 @@ class IntroductionPage extends React.Component {
   renderManagementIdea = (key) => {
     return(
       <View key={key}>
-        <Title style={{paddingTop:30, alignSelf: 'center', color:this.props.style.dynamicTitleColor}}>{this.props.state.Language.lang.InitialPage.ManagementIdea}</Title>
+        <Title style={{paddingTop:30, alignSelf: 'center'}}>{this.props.state.Language.lang.InitialPage.ManagementIdea}</Title>
         <Card>
           <CardItem>
             <Body>
@@ -338,6 +346,58 @@ class IntroductionPage extends React.Component {
       </View>
     );
   }
+
+  // 顯示重新安裝訊息
+  showAdvertisement = () => {
+    let lang = this.props.state.Language.lang.Common;
+    return(
+      <ModalWrapper 
+        isVisible={!this.state.isAlreadyShowAdvertisement}
+        onBackdropPress = {(e)=>{ this.setState({isAlreadyShowAdvertisement:true}) }}
+      >
+        <Content>
+        <Card style={{width: '100%'}}>
+          <CardItem style={{flexDirection: 'column'}}>
+            <Title>{lang.androidChangeAPPMessage1}</Title>
+            <Text></Text>
+            <Text>{lang.androidChangeAPPMessage2}<Text style={{color:"red"}}>{lang.androidChangeAPPMessage3}</Text>{lang.androidChangeAPPMessage4}<Text style={{color:"red"}}>{lang.androidChangeAPPMessage5}</Text>{lang.androidChangeAPPMessage6}</Text>
+            <Text></Text>
+            <Text>{lang.androidChangeAPPMessage7}<Text style={{color:"red"}}>{lang.androidChangeAPPMessage8}</Text>{lang.androidChangeAPPMessage9}<Text style={{color:"red"}}>{lang.androidChangeAPPMessage10}</Text>{lang.androidChangeAPPMessage11}</Text>
+            <Text></Text>
+            <Text>{lang.androidChangeAPPMessage12}</Text>
+            <Image  
+              style={{ 
+                width:this.props.style.PageSize.width*0.8, 
+                height:this.props.style.PageSize.width*734/1242*0.8
+              }} 
+              resizeMode={"contain"}
+              source={require(`../../image/changeAPP.png`)}
+            />
+            <Text></Text>
+            <ListItem >
+              <CheckBox 
+                checked={!this.state.isShowAdvertisementAgain} 
+                onPress={()=>{
+                  this.setState({isShowAdvertisementAgain:!this.state.isShowAdvertisementAgain});
+                }}
+              />
+                <Text>{lang.androidChangeAPPMessage13}</Text>
+            </ListItem>
+            <Button 
+              style={{alignSelf: 'center', width: '100%', alignContent: 'center', justifyContent: 'center'}}
+              onPress={()=>{
+                this.setState({isAlreadyShowAdvertisement:true})
+                if(!this.state.isShowAdvertisementAgain) this.props.actions.noMoreShowAndroidChangeAPPMessage();
+              }}
+            >
+              <Text>{lang.Close}</Text>
+            </Button>
+          </CardItem>          
+        </Card>
+        </Content>
+      </ModalWrapper>
+    );
+  }
 }
 
 let IntroductionPageStyle = connectStyle( 'Page.HomePage', {} )(IntroductionPage);
@@ -349,9 +409,9 @@ export default connect(
     actions: bindActionCreators({
       ...LanguageAction,
       ...LoginAction,
+      ...CommonAction,
       // ...NetworkAction,
       // ...UserInfoAction,
-      // ...CommonAction,
       // ...BiosUserInfoAction
     }, dispatch)
   })

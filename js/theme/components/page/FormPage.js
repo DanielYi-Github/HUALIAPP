@@ -31,6 +31,13 @@ export default (variables /*: * */ = variable) => {
       justifyContent: 'center',
       alignSelf:"center",
     },
+    tabStyle:{
+      backgroundColor:"transparent"
+    },
+    activeTabStyle:{
+      backgroundColor:"transparent" 
+    },
+    backgroundColor: variable.containerBgColor
   };
 
   return formPageTheme;

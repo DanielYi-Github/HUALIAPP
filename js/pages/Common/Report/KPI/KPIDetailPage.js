@@ -6,6 +6,8 @@ import { Modal, View , Platform , Dimensions, Alert} from "react-native";
 import * as UpdateDataUtil from '../../../../utils/UpdateDataUtil';
 
 import HeaderForGeneral       from '../../../../components/HeaderForGeneral';
+import MainPageBackground     from '../../../../components/MainPageBackground';
+
 import Echarts from 'native-echarts';
 import * as LoginAction      from '../../../../redux/actions/LoginAction';
 import { bindActionCreators }   from 'redux';
@@ -229,6 +231,7 @@ class KPIDetailPage extends React.Component {
     if (Platform.OS === "ios") {
         return (
           <Container>
+
             {/*標題列*/}
             <HeaderForGeneral
               isLeftButtonIconShow  = {true}
@@ -241,6 +244,12 @@ class KPIDetailPage extends React.Component {
               isTransparent         = {false}
             />
           <Content> 
+            {
+              (this.props.state.Theme.themeType == "season") ?
+                <MainPageBackground/>
+              :
+                null
+            }
 
              <View style={[{height:15}]}  />
                 {(this.state.data)?
@@ -267,6 +276,13 @@ class KPIDetailPage extends React.Component {
               isTransparent         = {false}
             />
             <Content> 
+              {
+                (this.props.state.Theme.themeType == "season") ?
+                  <MainPageBackground/>
+                :
+                  null
+              }
+
              <View style={[{height:15}]}  />
                 {(this.state.data)?
                     <Echarts option={option} width={charWidth} height={charHight} />

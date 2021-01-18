@@ -9,6 +9,7 @@ import { SafeAreaProvider, SafeAreaView }     from 'react-native-safe-area-conte
 import { NavigationContainer, useIsFocused }  from '@react-navigation/native';
 import { createStackNavigator, TransitionSpecs, CardStyleInterpolators, TransitionPresets } from '@react-navigation/stack';
 import { createDrawerNavigator }from '@react-navigation/drawer';
+import { withSecurityView }     from './components/WithSecurityView';
 import { createMyNavigator }    from './components/CustomBottomTabNavigation';
 import { navigationRef }        from './utils/NavigationService';
 
@@ -93,6 +94,7 @@ function IntroductionDrawer(props) {
   const [preventGoback, setPreventGoback] = useState(false);
   const IntroductionDrawerPages = useSelector(state => state.Common.IntroductionDrawerPages)
   const lang                    = useSelector(state => state.Language.lang)
+  const LabelColor              = useSelector(state => state.Theme.theme.variables.LabelColor)
 
   if (useIsFocused()) {
     if (!preventGoback) {
@@ -124,6 +126,7 @@ function IntroductionDrawer(props) {
     <Drawer.Navigator 
       initialRouteName ="Introduction" 
       drawerContent    ={ props => <IntroductionDrawerContent {...props} lang={lang}/>}
+      drawerContentOptions = {{ inactiveTintColor:LabelColor }}
     >
       {
         IntroductionDrawerPages.map( page => {
@@ -132,7 +135,7 @@ function IntroductionDrawer(props) {
               return <Drawer.Screen 
                       name      ={page.paramcode} 
                       component ={IntroductionPage} 
-                      options   ={{ drawerLabel:lang.SideBar.CompanyInformation  }}/>
+                      options   ={{ drawerLabel:lang.SideBar.CompanyInformation }} />
             case "Recruitment":
               return <Drawer.Screen 
                       name      ={page.paramcode} 
@@ -305,30 +308,6 @@ function MainStack(){
 }
 
 const RootStack = createStackNavigator();
-/*
-class Router extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (  
-      <Root>
-        <StyleProvider style={this.props.state.Theme.theme}>
-          <SafeAreaProvider>
-            <NavigationContainer ref={navigationRef}>
-              <RootStack.Navigator headerMode="none" mode="modal" >
-                <RootStack.Screen name="Main" component={MainStack} options={{ headerShown: false }}/>
-                <RootStack.Screen name="Authentication" component={AuthenticationView} />
-              </RootStack.Navigator>
-            </NavigationContainer>
-          </SafeAreaProvider>
-        </StyleProvider>
-      </Root>
-    );
-  }
-}
-*/
 function Router(props) {
   const theme  = useSelector(state => state.Theme.theme)
   return (  
@@ -351,8 +330,6 @@ function Router(props) {
                     </RootStack.Navigator>
                   </SafeAreaView>
               }
-
-                
               </NavigationContainer>
             </SafeAreaProvider>
           </StyleProvider>
@@ -360,8 +337,7 @@ function Router(props) {
       );
 }
 
-
-export default connect(
+const appRouter = connect(
   (state) => ({
     state: { ...state }
   }),
@@ -371,3 +347,5 @@ export default connect(
     }, dispatch)
   })
 )(Router);
+
+export default withSecurityView(appRouter);

@@ -201,6 +201,7 @@ export default {
   },
   //HomePageBannerTitle
   HomePageBannerTitle:56,
+  HomePageBannerBackgroundColor:"#cf8a31",
 
   ExplainText:{
     color:"#e52d2f",

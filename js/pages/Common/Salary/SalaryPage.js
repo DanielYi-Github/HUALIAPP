@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Easing, Modal, Alert, Platform} from 'react-native';
-import { Container, Content, Tabs, Tab, Spinner, connectStyle, Card, CardItem, Text, Title, Body, Button} from 'native-base';
+import { Container, Content, Tabs, Tab, Spinner, connectStyle, Card, CardItem, Text, Title, Body, Button, ScrollableTab} from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Drawer from 'react-native-drawer-menu';
 
@@ -117,11 +117,16 @@ class SalaryPage extends React.Component {
           <Tabs 
             // tabBarUnderlineStyle={this.props.style.TabBarUnderlineColor}
             tabBarUnderlineStyle={{ backgroundColor: '#FFF' }}
+            // tabBarUnderlineStyle={{ backgroundColor: 'rgba(255,255,255,0)' }}
+            // style={{backgroundColor: 'rgba(255,255,255,0)'}}
+            renderTabBar={()=> <ScrollableTab style={{backgroundColor: 'rgba(255,255,255,0)', borderBottomColor: 'rgba(255,255,255,0)'}}/>}
           >
             <Tab 
               heading         ={this.props.state.Language.lang.SalaryPage.Basic} 
               textStyle       ={this.props.style.subtitle}
               activeTextStyle ={this.props.style.title}
+              tabStyle        ={this.props.style.tabStyle}  
+              activeTabStyle  ={this.props.style.tabStyle}
             >
               {BASDAT}
             </Tab>
@@ -129,6 +134,8 @@ class SalaryPage extends React.Component {
               heading         ={this.props.state.Language.lang.SalaryPage.Attendance} 
               textStyle       ={this.props.style.subtitle}
               activeTextStyle ={this.props.style.title}
+              tabStyle        ={this.props.style.tabStyle}  
+              activeTabStyle  ={this.props.style.tabStyle}
             >
               {ATNDDAT}
             </Tab>
@@ -136,6 +143,8 @@ class SalaryPage extends React.Component {
               heading         ={this.props.state.Language.lang.SalaryPage.Payable} 
               textStyle       ={this.props.style.subtitle}
               activeTextStyle ={this.props.style.title}
+              tabStyle        ={this.props.style.tabStyle}  
+              activeTabStyle  ={this.props.style.tabStyle}
             >
               {MSGETTOT}
             </Tab>
@@ -143,6 +152,8 @@ class SalaryPage extends React.Component {
               heading         ={this.props.state.Language.lang.SalaryPage.Deduction} 
               textStyle       ={this.props.style.subtitle}
               activeTextStyle ={this.props.style.title}
+              tabStyle        ={this.props.style.tabStyle}  
+              activeTabStyle  ={this.props.style.tabStyle}
             >
               {MSDDSTOT}
             </Tab>
@@ -183,8 +194,10 @@ class SalaryPage extends React.Component {
   }
 
   renderDrawerContent = () => {
+    let containerBgColor = this.props.state.Theme.theme.variables.containerBgColor; 
+    let contentStyle = this.props.state.Theme.theme.variables.contentStyle;
     return(
-      <Container>
+      <Container style={{backgroundColor: containerBgColor=="rgba(0,0,0,0)" ? contentStyle: containerBgColor }}>
         {/*標題列*/}
         <HeaderForGeneral
           isLeftButtonIconShow  = {true}

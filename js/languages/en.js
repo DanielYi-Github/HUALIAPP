@@ -28,7 +28,20 @@ export default {
 		SysNotificationMsg :"Please go to the mobile system to open the notification authority of Huali APP",
 		Setting            :"Setting",
 		NoDate             :"No Data",
-		Changing           :"Changing..."
+		Changing           :"Changing...",
+		androidChangeAPPMessage1:"Important",
+		androidChangeAPPMessage2:"This upgrade is",
+		androidChangeAPPMessage3:" major update",
+		androidChangeAPPMessage4:". Now you're using",
+		androidChangeAPPMessage5:" the securer version.",
+		androidChangeAPPMessage6:" （ NO. 1.3.7 )",
+		androidChangeAPPMessage7:"If your phone screen show ",
+		androidChangeAPPMessage8:"two HUAIL app.",
+		androidChangeAPPMessage9:" Please",
+		androidChangeAPPMessage10:" uninstall the old one ",
+		androidChangeAPPMessage11:"and use the new one to operation.（There is a \"NEW\" word in the app icon.）。",
+		androidChangeAPPMessage12:"For example：",
+		androidChangeAPPMessage13:" Don't show again.",
 	},
 	InitialPage: {
 		Update: 'Update',		//更新

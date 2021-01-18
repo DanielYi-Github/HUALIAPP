@@ -2,6 +2,8 @@ import { Alert }  		   from 'react-native';
 import RNFetchBlob 		   from 'rn-fetch-blob'
 import * as types          from '../actionTypes/LoginTypes';
 import * as biometricTypes from '../actionTypes/BiometricTypes';
+import * as CommonTypes    from '../actionTypes/CommonTypes';
+
 import User                   from '../../object/User';
 import NetUtil                from '../../utils/NetUtil';
 import Common                 from '../../utils/Common';
@@ -313,6 +315,7 @@ export function initialApi(user,way=false){
   		];
 
 	  	Promise.all(arr).then( async () => {
+	  		loadBannerImagesIntoState(dispatch, getState);//撈取HomePage Banners資料
 	        user = certTips(dispatch, getState(), user); //判斷是否進行提示生物識別設定
 	  		user = await getUserInfoWithImage(user); 	//處理使用者圖片的後續處理
 			dispatch(setUserInfo(user));				//將資料存放在UserInfoReducer的state裡
@@ -350,6 +353,76 @@ export function initialApi(user,way=false){
   		UpdateDataUtil.updateRead(user);				//訊息讀取表       
 		UpdateDataUtil.setLoginInfo(user); 	
 	}
+}
+
+//撈取HomePage Banners資料
+async function loadBannerImagesIntoState(dispatch, getState){
+	let data = [];
+	let lang = getState().Language.langStatus;
+
+	
+	// 先判斷有沒有網路
+	if (getState().Network.networkStatus) {
+		let sql = `select * from THF_BANNER where LANG='${lang}' and STATUS='Y' order by SORT;`
+		
+		await SQLite.selectData( sql, []).then((result) => {	
+			// 如果少於3筆要加東西
+			if (result.raw().length < 3) data.push({ key:0 });
+			for(let i in result.raw()){
+				data.push({
+					key      : i+1,
+					source   : {uri: result.raw()[i].DOWNURL},
+					APPID    : result.raw()[i].APPID,
+					PORTALURL: result.raw()[i].PORTALURL
+				});
+			}
+		}).catch((e)=>{
+			LoggerUtil.addErrorLog("CommonAction loadBannerImages", "APP Action", "ERROR", e);
+		});
+	}
+	
+
+	//如果沒有網路或是SQL查詢出錯，則做下面的處理
+	if (data.length == 0) {
+		let banner1, banner2;
+		switch(lang){
+			case "vi":
+				banner1 = require(`../../image/banner/banner1_en.png`);
+				banner2 = require(`../../image/banner/banner2_en.png`);
+				break;				
+			case "en":
+				banner1 = require(`../../image/banner/banner1_en.png`);
+				banner2 = require(`../../image/banner/banner2_en.png`);
+				break;
+			case "zh-CN":
+				banner1 = require(`../../image/banner/banner1_zh-CN.png`);
+				banner2 = require(`../../image/banner/banner2_zh-CN.png`);
+				break;
+			case "zh-TW":
+				banner1 = require(`../../image/banner/banner1_zh-TW.png`);
+				// banner1 = require(`../../image/banner/banner_CN.png`);
+				banner2 = require(`../../image/banner/banner2_zh-TW.png`);
+				break;
+		}
+		data = [{
+			key: 0,	// 如果key為0，下面的source要拿掉
+		}, {
+			key: 1,
+			source: banner1,
+			APPID    : null,
+			PORTALURL: null
+		}, {
+			key: 2,
+			source: banner2,
+			APPID    : null,
+			PORTALURL: null
+		}];
+	}
+
+	dispatch({
+		type:CommonTypes.SET_BANNERIMAGES,
+		data
+	}); 
 }
 
 //判斷是否進行提示生物識別設定

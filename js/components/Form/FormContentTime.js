@@ -84,7 +84,7 @@ class FormContentTime extends Component {
 	 			<Item fixedLabel 
 	 				style={[
 	 					this.props.style.CreateFormPageFiledItemWidth,
-	 					ios_fixCreateFormPageFiledItemWidth,
+	 					// ios_fixCreateFormPageFiledItemWidth,
 	 					// {borderWidth:0}
 	 				]}
 	 				error={this.props.data.requiredAlbert ? true : false}>

@@ -6,6 +6,7 @@ let FormUnit = {
   language:{},
   // 欄位規則檢查
   formFieldRuleCheck(value, formItem, formContent, columntype){
+    console.log(value, formItem, formContent, columntype);
     if (formItem.rulesList == null) return true;                       // 馬上結束
     let compareResult = true;                                          // 比對結果
     
@@ -35,11 +36,9 @@ let FormUnit = {
     if ( editCheckItemIndex == 0 ) return compareResult;
 
     switch(parentItem.columntype) {
-      case "tableaveforlocal":
       /* 台籍幹部休假單的表格規則
          新一筆的起始時間不能小於前一筆的起迄時間
       */
-     
       case "tableave":
         if (parentItem.defaultvalue == null) return compareResult;  // 馬上結束
         if (parentItem.defaultvalue.length == 0) return compareResult;  // 馬上結束
@@ -89,6 +88,12 @@ let FormUnit = {
 
         }
         break;
+      /* 請假單的表格規則
+         新一筆的起始時間不能小於相同工號前一筆的起迄時間
+         起日ITEM4 迄日ITEM6 期間不能跨年 起日年份不等於迄日年份時提示不可跨年休假
+       */
+      // case "tableaveforlocal":
+
     }
 
     return compareResult;
@@ -450,6 +455,44 @@ let FormUnit = {
                 columntype:item.columntype,
                 id        :item.component.id,
                 value     :values
+                });
+            }
+            break;
+        case "tableaveforlocal":  // 休假單的表格欄位輸入
+            if ( item.defaultvalue==null || item.defaultvalue.length==0 ) {
+                formValue.push({
+                columntype:item.columntype,
+                id        :item.component.id,
+                value     :[]
+                });
+            } else {
+              let values=[];
+              for(let [i, temps] of item.defaultvalue.entries()){
+                let value = { ROWINDEX : i.toString() };
+                for(let [j, temp] of temps.entries()){ 
+                  // "ITEM1": "2019/11/12",
+                  // "ITEM2": "全天_@1@_Ad",
+                  // "ITEM3": "2019/11/12",
+                  // "ITEM4": "全天_@1@_Ad",
+                  // "ITEM5": "年假_@1@_10",
+                  // "ITEM6": "1"
+                  if (temp.columntype == "cbo") {
+                    value[temp.component.id] = "";
+                    for (let cboObject of temp.paramList) {
+                      if (temp.defaultvalue == cboObject.paramcode) {
+                        value[temp.component.id] = `${cboObject.paramname}_@1@_${temp.defaultvalue}`;
+                      }
+                    }
+                  } else {
+                    value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+                  }
+                }
+                values.push(value);
+              }
+                formValue.push({
+                  columntype:item.columntype,
+                  id        :item.component.id,
+                  value     :values
                 });
             }
             break;
