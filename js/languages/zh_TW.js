@@ -739,5 +739,8 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		vertifyToKeepGoing    :"驗證身分已繼續",
 		PwdNotNull            :"密碼不可為空",
 		PasswordError         :"密碼錯誤",
+	},
+	ItineraryCardPage:{
+		ItineraryCardTitle:"通信大數據行程卡"
 	}
 }

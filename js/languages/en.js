@@ -734,22 +734,8 @@ export default {
 		vertifyToKeepGoing    :"Vertify to keep going",
 		PwdNotNull            :"Password Error",
 		PasswordError         :"Password Error",
+	},
+	ItineraryCardPage:{
+		ItineraryCardTitle:"Communication big data travel card"
 	}
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

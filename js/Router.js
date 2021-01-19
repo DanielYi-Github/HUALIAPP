@@ -93,6 +93,9 @@ import BirthdayDetailPage       from './pages/Common/Birthday/BirthdayDetailPage
 import KPIDetailPage           from './pages/Common/Report/KPI/KPIDetailPage';
 import KPICategoryPage         from './pages/Common/Report/KPI/KPICategoryPage';
 
+import ItineraryCardPage              from './pages/Common/Survey/ItineraryCardPage';
+
+
 function ShowSplashPage(props){
   const isFocused = useIsFocused();
   return <SplashPage {...props} isFocused={isFocused}/>
@@ -312,6 +315,8 @@ function MainStack(){
 
       <AppStack.Screen name ="KPIDetail"    component={KPIDetailPage} />
       <AppStack.Screen name ="KPICategory"  component={KPICategoryPage} />
+
+      <AppStack.Screen name ="ItineraryCard"  component={ItineraryCardPage} />
 
     </AppStack.Navigator>
   )

@@ -737,5 +737,8 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		vertifyToKeepGoing    :"验证身分已继续",
 		PwdNotNull            :"密码不可为空",
 		PasswordError         :"密码错误",
+	},
+	ItineraryCardPage:{
+		ItineraryCardTitle:"通信大数据行程卡"
 	}
 }

@@ -734,5 +734,8 @@ export default {
 		vertifyToKeepGoing: "Vertify to keep going",
 		PwdNotNull: "Mật khẩu Lỗi",
 		PasswordError: "Mật khẩu Lỗi",
+	},
+	ItineraryCardPage:{
+		ItineraryCardTitle:"Thẻ thông hành thông tin lớn"
 	}
 }
