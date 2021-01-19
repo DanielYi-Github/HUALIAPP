@@ -17,7 +17,8 @@ const initialState = {
   loadingInfo              : null,    // 用來顯示登入時的相關資訊
   logoutInfo               : null,    // 用來顯示強制登出時的相關資訊
   showUpdateMessage        : true,    // 控制APP初始化時，是否要顯示更新資訊
-  loginChangeUserInfo      : {}       // 切換帳號時所記錄的帳號資訊
+  loginChangeUserInfo      : {},       // 切換帳號時所記錄的帳號資訊
+  enableAppInitialFunction : true     // 是否要進行APP初始化運行
 };
 
 export default function login(state = initialState, action = {}) {
@@ -109,13 +110,13 @@ export default function login(state = initialState, action = {}) {
         console.log("資料庫清空失敗",e);        
       });
       
-    return {
-      ...state,
-      loginPageMasking: false,
-      isLogin: false,
-      logoutInfo: action.message ? action.message : null,
-      checkAccType: null,
-    };
+      return {
+        ...state,
+        loginPageMasking: false,
+        isLogin: false,
+        logoutInfo: action.message ? action.message : null,
+        checkAccType: null,
+      };
       
     // 切換帳號
     case types.LOGIN_CHANGE_ACCOUNT:
@@ -127,6 +128,13 @@ export default function login(state = initialState, action = {}) {
       return {
         ...state,
         showUpdateMessage: false,
+      };
+
+    // 是否運行APP初始化程序
+    case types.ENABLE_APP_INITIAL:
+      return {
+        ...state,
+        enableAppInitialFunction: action.enable,
       };
     default:
       return state;

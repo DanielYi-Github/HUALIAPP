@@ -150,7 +150,8 @@ class CreateFormPage extends React.Component {
   }
 
   render() {
-    // console.log(this.props.state.CreateForm.formFormat);
+    console.log(this.props.state.CreateForm.formFormat);
+    // this.props.state.CreateForm.formFormat = survey;
     return (
       <Container>
         <MainPageBackground height={200} />

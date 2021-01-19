@@ -97,7 +97,7 @@ class FormContentDate extends Component {
 			            	(this.state.showDatePicker && (Platform.OS != "ios") ) ? 
 			            		<DateTimePicker 
 									value       ={value}
-									minimumDate ={new Date()}
+									// minimumDate ={new Date()}
 									mode        ={"date"}
 									is24Hour    ={true}
 									display     ="default"
@@ -138,7 +138,7 @@ class FormContentDate extends Component {
 		             			            <View>
 			            	            		<DateTimePicker 
 													value       ={value}
-													minimumDate = {new Date()}
+													// minimumDate = {new Date()}
 													mode        ={"date"}
 													is24Hour    ={true}
 													display     ="default"

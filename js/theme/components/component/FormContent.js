@@ -14,16 +14,19 @@ export default (variables /*: * */ = variable) => {
 		borderWidth:0,
 	},
 	fixCreateFormPageFiledItemWidth: Platform.OS === "ios" ? {
-		paddingTop:13,
-		paddingBottom:13
-	}:{},
+		paddingTop:5,
+		paddingBottom:5
+	}:{
+		paddingTop:5,
+		paddingBottom:15
+	},
 	CardStyle:{
 		width:variables.deviceWidth*0.95,
 		alignSelf: 'center',
 	},
 	CardItemStyle:{
 		borderRadius: 10,
-	}
+	},
   };
 
   return formContent;

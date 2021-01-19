@@ -469,16 +469,34 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		renderingPageError:"表單生成失敗，請稍後在試。"
 	},
 	FormUnit:{
+		and 		  : "與",
 		Connot        : "不能",
 		Previous      : "前一筆的",
+		PreviousSameName:"之前相同姓名的",
 		Including     : "不能含周日",
 		CrossWeek     : "不能跨周",
+		CrossYear     : "不能跨年",
 		Today         : "今天",
 		BiggerOrEqual : "大於或等於",
 		Bigger        : "大於",
 		SmallerOrEqual: "小於或等於",
 		Smaller       : "小於",
 		NotEqual      : "不等於",
+		requireFirst  : "必須先行填寫"
+	},
+	SurveyPage:{
+		Creating          :"問卷生成中...",
+		Sending           :"問卷傳送中...",
+		FormApplySucess   :"問卷傳送成功",
+		WrongData         :"輸入資料錯誤",
+		GotIt             :"知道了",
+		renderingPageError:"問卷生成失敗，請稍後在試。",
+		RequiredFieldAlert:"請完成所有必填資料",
+		Sucess            :"成功",
+		Fail              :"失敗",
+		SurveyExplain     :"問卷說明",
+		SurveyWrite       :"開始填寫",
+		Apply             :"送出",
 	},
 	ContactUsPage: {
 		ContactUs: "聯絡我們",
@@ -735,5 +753,8 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		vertifyToKeepGoing    :"驗證身分已繼續",
 		PwdNotNull            :"密碼不可為空",
 		PasswordError         :"密碼錯誤",
+	},
+	ItineraryCardPage:{
+		ItineraryCardTitle:"通信大數據行程卡"
 	}
 }

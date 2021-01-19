@@ -194,6 +194,7 @@ export default class FormInputContent extends Component {
 				);
 				break;
 			case "date":
+			case "answerdate":
 				inputComponent = (
 					<FormContentDate 
 						data     ={this.props.data} 

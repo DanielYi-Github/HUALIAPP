@@ -112,9 +112,9 @@ class HomePage extends React.Component {
           containerStyle        ={this.props.style.container}
           innerContainerStyle   ={this.props.style.container}
           contentContainerStyle ={this.props.style.contentContainer}
-          alwaysShowTitle  ={false}
-          alwaysShowNavBar ={false}
-          scrollViewProps  ={{
+          alwaysShowTitle       ={false}
+          alwaysShowNavBar      ={false}
+          scrollViewProps       ={{
             onScroll:({nativeEvent}) => {
               this.setState({ contentOffset_Y:nativeEvent.contentOffset.y });
               if( this.isCloseToBottom(nativeEvent) && !this.props.state.Home.isRefreshing) {
@@ -279,9 +279,9 @@ class HomePage extends React.Component {
     );
 
     {/*控制中間常用功能的數量*/}
-    let functionList = this.props.state.Home.FunctionData.slice(0, 4);
+    let functionList = this.props.state.Home.FunctionData.slice(0, this.props.state.Home.homeFunctionNumber);
     if (functionList.length != 0) {
-      for (var i = functionList.length ; i < 4; i++) functionList.push({ID:"SPACE"});
+      for (var i = functionList.length ; i < this.props.state.Home.homeFunctionNumber; i++) functionList.push({ID:"SPACE"});
     }
 
     return (

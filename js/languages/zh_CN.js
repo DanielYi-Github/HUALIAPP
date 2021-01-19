@@ -468,16 +468,34 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		renderingPageError:"表单生成失败，请稍后在试。"
 	},
 	FormUnit:{
+		and 		  : "與",
 		Connot        : "不能",
 		Previous      : "前一笔的",
+		PreviousSameName:"之前相同姓名的",
 		Including     : "不能含周日",
 		CrossWeek     : "不能跨周",
+		CrossYear     : "不能跨年",
 		Today         : "今天",
 		BiggerOrEqual : "大于或等于",
 		Bigger        : "大于",
 		SmallerOrEqual: "小于或等于",
 		Smaller       : "小于",
 		NotEqual      : "不等于",
+		requireFirst  : "必须先行填写"
+	},
+	SurveyPage:{
+		Creating          :"问卷生成中...",
+		Sending           :"问卷传送中...",
+		FormApplySucess   :"问卷传送成功",
+		WrongData         :"输入资料错误",
+		GotIt             :"知道了",
+		renderingPageError:"问卷生成失败，请稍后在试。",
+		RequiredFieldAlert:"请完成所有必填资料",
+		Sucess            :"成功",
+		Fail              :"失败",
+		SurveyExplain     :"问卷说明",
+		SurveyWrite       :"开始填写",
+		Apply             :"送出",
 	},
 	ContactUsPage: {
 		ContactUs    : "联络我们",
@@ -733,5 +751,8 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		vertifyToKeepGoing    :"验证身分已继续",
 		PwdNotNull            :"密码不可为空",
 		PasswordError         :"密码错误",
+	},
+	ItineraryCardPage:{
+		ItineraryCardTitle:"通信大数据行程卡"
 	}
 }

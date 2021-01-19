@@ -465,16 +465,34 @@ export default {
 		renderingPageError:"There is something error. Please try it later."
 	},
 	FormUnit:{
+		and 		  : "and",
 		Connot        : "can not ",
 		Previous      : "previous ",
+		PreviousSameName:"previous same name's ",
 		Including     : "can not be including Sunday ",
 		CrossWeek     : "can not across the weekend ",
+		CrossYear     : "can not across years ",
 		Today         : "Today",
 		BiggerOrEqual : "be more than or equal to ",
 		Bigger        : "be more  than to ",
 		SmallerOrEqual: "be less than or equal to ",
 		Smaller       : "be less than ",
 		NotEqual      : "be unequal to ",
+		requireFirst  : "have to write down first." 
+	},
+	SurveyPage:{
+		Creating          :"Creating...",
+		Sending           :"Sending...",
+		FormApplySucess   :"Sucess",
+		WrongData         :"Wrong Data",
+		GotIt             :"Got It",
+		renderingPageError:"There is something error. Please try it later.",
+		RequiredFieldAlert:"Please complete required fields",
+		Sucess            :"Sucess",
+		Fail              :"Fail",
+		SurveyExplain     :"Explain",
+		SurveyWrite       :"Write",
+		Apply             :"Send",
 	},
 	ContactUsPage: {
 		ContactUs: "Contact Us",
@@ -730,22 +748,8 @@ export default {
 		vertifyToKeepGoing    :"Vertify to keep going",
 		PwdNotNull            :"Password Error",
 		PasswordError         :"Password Error",
+	},
+	ItineraryCardPage:{
+		ItineraryCardTitle:"Communication big data travel card"
 	}
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

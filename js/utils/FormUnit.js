@@ -33,7 +33,6 @@ let FormUnit = {
     let compareResult = true;     // 比對結果
     //如果編輯資料為第一筆，直接離開
     if ( editCheckItemIndex == 0 ) return compareResult;
-
     switch(parentItem.columntype) {
       /* 台籍幹部休假單的表格規則
          新一筆的起始時間不能小於前一筆的起迄時間
@@ -61,7 +60,6 @@ let FormUnit = {
         if (parentItem.defaultvalue == null) return compareResult;      // 馬上結束
         if (parentItem.defaultvalue.length == 0) return compareResult;  // 馬上結束
         if (formItem.columntype == "date"){
-
             let editIndex = (editCheckItemIndex == -1) ? parentItem.defaultvalue.length : editCheckItemIndex;
             // 第一筆資料是不是星期天 或 新增資料不能是星期天
             let comparisonObject = parentItem.defaultvalue[editIndex-1][0];
@@ -88,11 +86,77 @@ let FormUnit = {
         }
         break;
       /* 請假單的表格規則
-         新一筆的起始時間不能小於相同工號前一筆的起迄時間
          起日ITEM4 迄日ITEM6 期間不能跨年 起日年份不等於迄日年份時提示不可跨年休假
-       */
-      // case "tableaveforlocal":
+         相同工號情況下，新一筆的起始時間不能小於前一筆的起迄時間
+      */
+      case "tableaveforlocal":
+        if (parentItem.defaultvalue.length != 0) {
+          // 強制先填寫性名
+          if (parentItem.listComponent[1].defaultvalue == null) {
+             return { message:`${parentItem.listComponent[1].component.name} ${this.language.requireFirst}`};
+          }
+          
+          let isWholeDay =  typeof parentItem.listComponent[4].defaultvalue == "String" ? 
+                              new Boolean(parentItem.listComponent[4].defaultvalue) :
+                              parentItem.listComponent[4].defaultvalue;
+          
 
+          // 請整天的情況下
+          if (isWholeDay) {
+            if (formItem.columntype == "date"){
+              for(let lastRecord of parentItem.defaultvalue){
+                // 是否同姓名
+                if (lastRecord[1].defaultvalue == parentItem.listComponent[1].defaultvalue) {
+
+                  // 被比對的對象是否整日
+
+                  /*
+                  // 是否起始時間早於上一筆起迄時間
+                  let compareLanguage  = this.getCompareLanguage(">");           // 取得比較字元的語言意思
+                  let comparisonObject = lastRecord[7];
+                  let compareResult    = this.compare( value, ">", comparisonObject.defaultvalue, formItem.columntype);
+                  
+                  if (compareResult != true) {
+                    return { message:`${formItem.component.name} ${this.language.Connot}${compareLanguage} ${this.language.PreviousSameName}${comparisonObject.component.name}`};
+                  }
+                  */
+                }
+              }
+            }
+            
+            // 比對起日ITEM4 迄日ITEM6 期間不能跨年
+            if (formItem.component.id == "ITEM4" || formItem.component.id == "ITEM6") {
+              let item4Value, item6Value;
+              if (formItem.component.id == "ITEM4") {
+                item4Value = value;
+                item6Value = parentItem.listComponent[7].defaultvalue;
+              } else {
+                item4Value = parentItem.listComponent[5].defaultvalue;
+                item6Value = value;
+              }
+              if ( item4Value == null || item6Value == null ) return compareResult;  // 馬上結束
+
+              item4Value = (new Date(`${item4Value}`)).getFullYear();
+              item6Value = (new Date(`${item6Value}`)).getFullYear();
+              if (item4Value !== item6Value) {
+                return { message:`${parentItem.listComponent[5].component.name} ${this.language.and} ${parentItem.listComponent[7].component.name} ${this.language.CrossYear}`};
+              }
+            }
+          } else {
+            // 一定要先選日期，才可選時間
+            if (formItem.columntype == "date"){
+              
+                for(let lastRecord of parentItem.defaultvalue){
+                  // 是否同姓名
+                  if (lastRecord[1].defaultvalue == parentItem.listComponent[1].defaultvalue) {
+                    // 被比對的對象是否整日
+                    
+                  }
+                }
+            }
+          }
+        }
+        break;
     }
 
     return compareResult;
@@ -202,6 +266,9 @@ let FormUnit = {
         formItem = value;       // 修改表格狀態
         break;
       case "tableave":
+        formItem = value;       // 修改表格狀態
+        break;
+      case "tableaveforlocal":
         formItem = value;       // 修改表格狀態
         break;
       case "rdo":
@@ -456,9 +523,174 @@ let FormUnit = {
         case "tableaveforlocal":  // 休假單的表格欄位輸入
             if ( item.defaultvalue==null || item.defaultvalue.length==0 ) {
                 formValue.push({
+                  columntype:item.columntype,
+                  id        :item.component.id,
+                  value     :[]
+                });
+            } else {
+              let values=[];
+              for(let [i, temps] of item.defaultvalue.entries()){
+                let value = { ROWINDEX : i.toString() };
+                for(let [j, temp] of temps.entries()){ 
+                  // "ITEM1": "2019/11/12",
+                  // "ITEM2": "全天_@1@_Ad",
+                  // "ITEM3": "2019/11/12",
+                  // "ITEM4": "全天_@1@_Ad",
+                  // "ITEM5": "年假_@1@_10",
+                  // "ITEM6": "1"
+                  if (temp.columntype == "cbo") {
+                    value[temp.component.id] = "";
+                    for (let cboObject of temp.paramList) {
+                      if (temp.defaultvalue == cboObject.paramcode) {
+                        value[temp.component.id] = `${cboObject.paramname}_@1@_${temp.defaultvalue}`;
+                      }
+                    }
+                  } else {
+                    value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+                  }
+                }
+                values.push(value);
+              }
+                formValue.push({
+                  columntype:item.columntype,
+                  id        :item.component.id,
+                  value     :values
+                });
+            }
+            break;
+        case "taboneitem":
+          // 修改taboneitem 的 formValue, type為tab ，value為 預設為空array
+            if (item.defaultvalue==null || item.defaultvalue.length==0) {
+                formValue.push({
+                columntype:"tab",
+                id        :item.component.id.substr(0, item.component.id.indexOf('.')),
+                value     :[]
+                });
+            } else {
+              let values = [];
+              let keyMap = Object.keys(item.actionValue.relationMap);
+              for (let [i, items] of item.defaultvalue.entries()) {
+                let value = {
+                  ROWINDEX: i.toString()
+                };
+                for (let [j, key] of keyMap.entries()) {
+                  value[`ITEM${j+1}`] = items[key];
+                }
+                values.push(value);
+              }
+
+              formValue.push({
+                columntype: "tab",
+                id: item.component.id.substr(0, item.component.id.indexOf('.')),
+                value: values
+              });
+            }
+
+            break;
+        case "tabwithmem":  // 選人時的多選欄位輸入
+          if (item.defaultvalue == null || item.defaultvalue.length == 0) {
+            formValue.push({
+              columntype: item.columntype,
+              id: item.component.id,
+              value: []
+            });
+          } else {
+            let values = [];
+            for (let [i, temps] of item.defaultvalue.entries()) {
+              values.push(temps.COLUMN1);
+            }
+            formValue.push({
+              columntype: item.columntype,
+              id: item.component.id,
+              value: values
+            });
+          }
+          break;
+        default:
+          formValue.push({
+            columntype:item.columntype,
+            id        :item.component.id,
+            value     :item.defaultvalue ? item.defaultvalue : ""
+          });
+      }
+    }
+    return formValue
+  },
+  // 整理問卷送值資料
+  formatSubmitSurveyValue(allFormFormat = null) {
+    let formValue = [];
+    for(let item of allFormFormat){ 
+      switch(item.columntype) {
+        case "tab":
+        case "tabcar":  // 派車單的表格欄位輸入
+          if (item.defaultvalue == null || item.defaultvalue.length == 0) {
+            formValue.push({
+              columntype: item.columntype,
+              id: item.component.id,
+              value: []
+            });
+          } else {
+            let values = [];
+            for (let [i, temps] of item.defaultvalue.entries()) {
+              let value = {
+                ROWINDEX: i.toString()
+              };
+              for (let [j, temp] of temps.entries()) {
+                value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+              }
+              values.push(value);
+            }
+            formValue.push({
+              columntype: item.columntype,
+              id: item.component.id,
+              value: values
+            });
+          }
+          break;
+        case "tableave":  // 台級休假單的表格欄位輸入
+            if ( item.defaultvalue==null || item.defaultvalue.length==0 ) {
+                formValue.push({
                 columntype:item.columntype,
                 id        :item.component.id,
                 value     :[]
+                });
+            } else {
+              let values=[];
+              for(let [i, temps] of item.defaultvalue.entries()){
+                let value = { ROWINDEX : i.toString() };
+                for(let [j, temp] of temps.entries()){ 
+                  // "ITEM1": "2019/11/12",
+                  // "ITEM2": "全天_@1@_Ad",
+                  // "ITEM3": "2019/11/12",
+                  // "ITEM4": "全天_@1@_Ad",
+                  // "ITEM5": "年假_@1@_10",
+                  // "ITEM6": "1"
+                  if (temp.columntype == "cbo") {
+                    value[temp.component.id] = "";
+                    for (let cboObject of temp.paramList) {
+                      if (temp.defaultvalue == cboObject.paramcode) {
+                        value[temp.component.id] = `${cboObject.paramname}_@1@_${temp.defaultvalue}`;
+                      }
+                    }
+                  } else {
+                    value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+                  }
+                }
+                values.push(value);
+              }
+                formValue.push({
+                columntype:item.columntype,
+                id        :item.component.id,
+                value     :values
+                });
+            }
+            break;
+        case "tableaveforlocal":  // 休假單的表格欄位輸入
+            if ( item.defaultvalue==null || item.defaultvalue.length==0 ) {
+                formValue.push({
+                  columntype:item.columntype,
+                  id        :item.component.id,
+                  value     :[]
                 });
             } else {
               let values=[];

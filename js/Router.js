@@ -60,7 +60,10 @@ import FormContentTextWithActionPage     from './components/Form/FormContentText
 import FormContentTextWithTagsPage       from './components/Form/FormContentTextWithTagsPage';
 import FormContentChkWithActionPage      from './components/Form/FormContentChkWithActionPage';
 import FormInputContentGridPageForDeputy from './components/Form/FormInputContentGridPageForDeputy';
+
 import SalaryPage              from './pages/Common/Salary/SalaryPage';
+import SurveyPage              from './pages/Common/Survey/SurveyPage';
+
 import PublishPage             from './pages/Common/Publish/PublishPage';
 import PublishEditPage         from './pages/Common/Publish/PublishEditPage';
 import PublishSubmitPage       from './pages/Common/Publish/PublishSubmitPage';
@@ -90,6 +93,9 @@ import BirthdayDetailPage       from './pages/Common/Birthday/BirthdayDetailPage
 import KPIDetailPage           from './pages/Common/Report/KPI/KPIDetailPage';
 import KPICategoryPage         from './pages/Common/Report/KPI/KPICategoryPage';
 
+import ItineraryCardPage              from './pages/Common/Survey/ItineraryCardPage';
+
+
 function ShowSplashPage(props){
   const isFocused = useIsFocused();
   return <SplashPage {...props} isFocused={isFocused}/>
@@ -101,8 +107,10 @@ function IntroductionDrawer(props) {
   const IntroductionDrawerPages = useSelector(state => state.Common.IntroductionDrawerPages)
   const lang                    = useSelector(state => state.Language.lang)
   const LabelColor              = useSelector(state => state.Theme.theme.variables.noticePageTextColor)
+  const state                   = useSelector(state => state)
 
-  if (useIsFocused()) {
+  // 介紹畫面正顯示且允許進行初始化程式才可增加返回監聽
+  if (useIsFocused() && state.Login.enableAppInitialFunction) {
     if (!preventGoback) {
       props.navigation.addListener('beforeRemove', (e) => {
         e.preventDefault(); // Prevent default behavior of leaving the screen
@@ -196,7 +204,8 @@ function HomeTabNavigator(props) {
   let theme = state.Theme.theme.['Component.BottomNavigation'];
   let dispatch = useDispatch();
 
-  if (useIsFocused()) {
+  // 導航欄正顯示且允許進行初始化程式才可增加返回監聽
+  if (useIsFocused() && state.Login.enableAppInitialFunction) {
     if (!preventGoback) {
       props.navigation.addListener('beforeRemove', (e) => {
         e.preventDefault(); // Prevent default behavior of leaving the screen
@@ -221,7 +230,7 @@ function HomeTabNavigator(props) {
       setPreventGoback(false);
     }
   }
-
+  
 
   React.useEffect(() => {
       const unsubscribe = props.navigation.addListener('focus', () => {
@@ -281,7 +290,8 @@ function MainStack(){
       <AppStack.Screen name ="FormContentChkWithAction"     component={FormContentChkWithActionPage} />
       <AppStack.Screen name ="FormInputContentGridPageForDeputy"  component={FormInputContentGridPageForDeputy} />
       <AppStack.Screen name ="Salary"               component={SalaryPage} />
-      
+      <AppStack.Screen name ="Survey"               component={SurveyPage} />
+
       <AppStack.Screen name ="Publish"              component={PublishPage} />
       <AppStack.Screen name ="PublishEdit"          component={PublishEditPage} />
       <AppStack.Screen name ="PublishSubmit"        component={PublishSubmitPage} />
@@ -308,6 +318,8 @@ function MainStack(){
 
       <AppStack.Screen name ="KPIDetail"    component={KPIDetailPage} />
       <AppStack.Screen name ="KPICategory"  component={KPICategoryPage} />
+
+      <AppStack.Screen name ="ItineraryCard"  component={ItineraryCardPage} />
 
     </AppStack.Navigator>
   )

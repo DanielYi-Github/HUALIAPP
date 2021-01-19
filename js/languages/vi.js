@@ -465,16 +465,34 @@ export default {
 		renderingPageError: "There is something error. Please try it later."
 	},
 	FormUnit: {
+		and  : "and",
 		Connot: "can not",
 		Previous: "previous",
+		PreviousSameName:"previous same name's ",
 		Including: "can not be including Sunday",
 		CrossWeek: "can not across the weekend",
+		CrossYear     : "can not across years ",
 		Today: "Today",
 		BiggerOrEqual: "be more or equal",
 		Bigger: "be more than",
 		SmallerOrEqual: "be less or equal",
 		Smaller: "be less than",
 		NotEqual: "be unequal to",
+		requireFirst  : "have to write down first." 
+	},
+	SurveyPage:{
+		Creating          : "Bảng câu hỏi đang được tạo ...",
+		Sending           : "Đang gửi bảng câu hỏi ...",
+		FormApplySucess   : "Đã gửi bảng câu hỏi thành công",
+		WrongData         : "Lỗi dữ liệu đầu vào",
+		GotIt             : "Đã hiểu",
+		renderingPageError: "Không thể tạo bảng câu hỏi, vui lòng thử lại sau.",
+		RequiredFieldAlert: "Vui lòng điền tất cả thông tin bắt buộc",
+		Sucess            : "Thành công",
+		Fail              : "Không thành công",
+		SurveyExplain     : "Mô tả bảng câu hỏi",
+		SurveyWrite       : "Bắt đầu điền vào",
+		Apply             : "Gửi",
 	},
 	ContactUsPage: {
 		ContactUs: "Contact Us",
@@ -730,5 +748,8 @@ export default {
 		vertifyToKeepGoing: "Vertify to keep going",
 		PwdNotNull: "Mật khẩu Lỗi",
 		PasswordError: "Mật khẩu Lỗi",
+	},
+	ItineraryCardPage:{
+		ItineraryCardTitle:"Thẻ thông hành thông tin lớn"
 	}
 }
