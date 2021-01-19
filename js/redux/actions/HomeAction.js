@@ -244,7 +244,7 @@ export function navigateFunctionPage(appID = null, userID = null) {
 					NavigationService.navigate("Authentication");
 				}
 				break;
-			case "ItineraryCard": //集團文件
+			case "ItineraryCard": //通行卡部分
 				NavigationService.navigate("ItineraryCard");
 				break;
 			default:
