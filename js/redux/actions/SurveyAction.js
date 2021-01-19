@@ -56,6 +56,7 @@ export function getSurveyFormat( surveyOID ){
 					let columnactionValue = await FormUnit.getColumnactionValue(user, columnData);   // 取得該欄位欲隱藏的欄位
 					columnData.actionValue = await FormUnit.getActionValue(user, columnData);	// 取得該欄位的動作
 
+
 					unShowColumns = unShowColumns.concat(columnactionValue);
 					apList[apListIndex].content.push(columnData);	
 					comfirmComponent.push(columnData);
@@ -84,7 +85,7 @@ export function getSurveyFormat( surveyOID ){
 						proid        : data.proid,
 						astid        : data.astid,
 						listComponent: formatSubmitFormValue(comfirmComponent),
-						// answerAPI    : data.answerapi
+						answerAPI    : data.answerapi
 					},
 				)
 			);
@@ -141,26 +142,22 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 			// formFormat[formFormat.length-1].content[allIndex] = formItem;
 
 			// 判斷是否有url 的 action動作
-			/*
 			let	columnactionValue = await FormUnit.getColumnactionValue(
 										getState().UserInfo.UserInfo, 
 										formItem, 
-										formFormat[pageIndex].content 
+										surveyFormat[pageIndex].content 
 									);
-			*/
+			
 			/*
-			// 欄位隱藏或顯示控制
 			// 判斷該值是否填寫表單中顯示
 			surveyFormat[pageIndex].content = FormUnit.checkFormFieldShow(
 												columnactionValue, 
 												surveyFormat[pageIndex].content
 											);
-			// 判斷該值是否全部表單中顯示
-			surveyFormat[surveyFormat.length-1].content = FormUnit.checkFormFieldShow(
-														columnactionValue, 
-														surveyFormat[surveyFormat.length-1].content
-													  );	
 			*/
+			// 欄位隱藏或顯示控制
+			// 判斷該值是否全部表單中顯示
+			surveyFormat[pageIndex].content = FormUnit.checkFormFieldShow( columnactionValue, surveyFormat[pageIndex].content );	
 			dispatch(updateDefaultValue(surveyFormat));
 		}
 	}
@@ -248,8 +245,7 @@ export function submitSurveyValue(){
 		surveyValue = formatSurveySubmitValue(surveyValue);
 
 		// console.log("surveyValue", surveyValue);
-		
-		UpdateDataUtil.registerSurvey(user, surveyValue).then((data)=>{
+		UpdateDataUtil.registerSurvey(user, surveyValue, getState().Survey.answerAPI).then((data)=>{
 			/*
 			if (!data.success) {
 				message = data.errorList[0];

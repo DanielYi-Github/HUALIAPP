@@ -154,7 +154,6 @@ class SurveyPage extends React.Component {
   }
   
   render() {
-    // console.log(this.props.state.Survey.surveyFormat);
     return (
       <Container>
         <MainPageBackground height={200} />
@@ -246,7 +245,9 @@ class SurveyPage extends React.Component {
     }
 
     let page = (
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView
+          extraScrollHeight={150}
+        >
           <Card>
             <CardItem style={{flexDirection: 'column'}}>     
               <Title style={{color:this.props.state.Theme.theme.variables.ExplainText.color, paddingTop: 5, paddingBottom: 5}}>
@@ -256,7 +257,7 @@ class SurveyPage extends React.Component {
             </CardItem>
           </Card>
 
-          <View style={{width: '100%', paddingTop:20, paddingBottom:40}}>          
+          <View style={{width: '100%', paddingTop:20, paddingBottom:100}}>          
             <Button 
               onPress = {() => this.props.actions.checkRequiredFormValue(this.state.currentPosition)}
               style = {[this.props.style.Button,{backgroundColor: '#20b11d'}]}

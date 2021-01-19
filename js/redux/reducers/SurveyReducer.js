@@ -13,7 +13,7 @@ const initialState = {
 	ruleCheckMessage: null,  	// 顯示欄位比對失敗的訊息
 	// gotoPageIndex   : null, 	// 即將跳轉的畫面
 	renderResult    : null,      // 紀錄是否畫面產生成功   
-	// answerAPI 		: null 		// 回傳結果的API
+	answerAPI 		: null 		// 回傳結果的API
 }
 
 export default function createSurvey(state = initialState, action) {
@@ -38,7 +38,7 @@ export default function createSurvey(state = initialState, action) {
 				surveyFormat : action.apList,
 				surveyValue  : action.formValue,
 				renderResult : true,
-				// answerAPI    : action.formValue.answerAPI
+				answerAPI    : action.formValue.answerAPI
 			}
 			break;
 		case types.RENDERSURVEYFORMATERROR:
