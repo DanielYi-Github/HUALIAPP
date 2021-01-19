@@ -22,6 +22,7 @@ import Theme   from './ThemeReducer';
 import Biometric from './BiometricReducer';
 import Deputy   from './DeputyReducer';
 import Salary   from './SalaryReducer';
+import Survey   from './SurveyReducer';
 
 const rootReducer = combineReducers({
 	// AppInit,
@@ -43,7 +44,8 @@ const rootReducer = combineReducers({
 	Theme,
 	Biometric,
 	Deputy,
-	Salary
+	Salary,
+	Survey
 });
 
 export default rootReducer;

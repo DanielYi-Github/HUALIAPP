@@ -616,6 +616,171 @@ let FormUnit = {
     }
     return formValue
   },
+  // 整理問卷送值資料
+  formatSubmitSurveyValue(allFormFormat = null) {
+    let formValue = [];
+    for(let item of allFormFormat){ 
+      switch(item.columntype) {
+        case "tab":
+        case "tabcar":  // 派車單的表格欄位輸入
+          if (item.defaultvalue == null || item.defaultvalue.length == 0) {
+            formValue.push({
+              columntype: item.columntype,
+              id: item.component.id,
+              value: []
+            });
+          } else {
+            let values = [];
+            for (let [i, temps] of item.defaultvalue.entries()) {
+              let value = {
+                ROWINDEX: i.toString()
+              };
+              for (let [j, temp] of temps.entries()) {
+                value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+              }
+              values.push(value);
+            }
+            formValue.push({
+              columntype: item.columntype,
+              id: item.component.id,
+              value: values
+            });
+          }
+          break;
+        case "tableave":  // 台級休假單的表格欄位輸入
+            if ( item.defaultvalue==null || item.defaultvalue.length==0 ) {
+                formValue.push({
+                columntype:item.columntype,
+                id        :item.component.id,
+                value     :[]
+                });
+            } else {
+              let values=[];
+              for(let [i, temps] of item.defaultvalue.entries()){
+                let value = { ROWINDEX : i.toString() };
+                for(let [j, temp] of temps.entries()){ 
+                  // "ITEM1": "2019/11/12",
+                  // "ITEM2": "全天_@1@_Ad",
+                  // "ITEM3": "2019/11/12",
+                  // "ITEM4": "全天_@1@_Ad",
+                  // "ITEM5": "年假_@1@_10",
+                  // "ITEM6": "1"
+                  if (temp.columntype == "cbo") {
+                    value[temp.component.id] = "";
+                    for (let cboObject of temp.paramList) {
+                      if (temp.defaultvalue == cboObject.paramcode) {
+                        value[temp.component.id] = `${cboObject.paramname}_@1@_${temp.defaultvalue}`;
+                      }
+                    }
+                  } else {
+                    value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+                  }
+                }
+                values.push(value);
+              }
+                formValue.push({
+                columntype:item.columntype,
+                id        :item.component.id,
+                value     :values
+                });
+            }
+            break;
+        case "tableaveforlocal":  // 休假單的表格欄位輸入
+            if ( item.defaultvalue==null || item.defaultvalue.length==0 ) {
+                formValue.push({
+                  columntype:item.columntype,
+                  id        :item.component.id,
+                  value     :[]
+                });
+            } else {
+              let values=[];
+              for(let [i, temps] of item.defaultvalue.entries()){
+                let value = { ROWINDEX : i.toString() };
+                for(let [j, temp] of temps.entries()){ 
+                  // "ITEM1": "2019/11/12",
+                  // "ITEM2": "全天_@1@_Ad",
+                  // "ITEM3": "2019/11/12",
+                  // "ITEM4": "全天_@1@_Ad",
+                  // "ITEM5": "年假_@1@_10",
+                  // "ITEM6": "1"
+                  if (temp.columntype == "cbo") {
+                    value[temp.component.id] = "";
+                    for (let cboObject of temp.paramList) {
+                      if (temp.defaultvalue == cboObject.paramcode) {
+                        value[temp.component.id] = `${cboObject.paramname}_@1@_${temp.defaultvalue}`;
+                      }
+                    }
+                  } else {
+                    value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+                  }
+                }
+                values.push(value);
+              }
+                formValue.push({
+                  columntype:item.columntype,
+                  id        :item.component.id,
+                  value     :values
+                });
+            }
+            break;
+        case "taboneitem":
+          // 修改taboneitem 的 formValue, type為tab ，value為 預設為空array
+            if (item.defaultvalue==null || item.defaultvalue.length==0) {
+                formValue.push({
+                columntype:"tab",
+                id        :item.component.id.substr(0, item.component.id.indexOf('.')),
+                value     :[]
+                });
+            } else {
+              let values = [];
+              let keyMap = Object.keys(item.actionValue.relationMap);
+              for (let [i, items] of item.defaultvalue.entries()) {
+                let value = {
+                  ROWINDEX: i.toString()
+                };
+                for (let [j, key] of keyMap.entries()) {
+                  value[`ITEM${j+1}`] = items[key];
+                }
+                values.push(value);
+              }
+
+              formValue.push({
+                columntype: "tab",
+                id: item.component.id.substr(0, item.component.id.indexOf('.')),
+                value: values
+              });
+            }
+
+            break;
+        case "tabwithmem":  // 選人時的多選欄位輸入
+          if (item.defaultvalue == null || item.defaultvalue.length == 0) {
+            formValue.push({
+              columntype: item.columntype,
+              id: item.component.id,
+              value: []
+            });
+          } else {
+            let values = [];
+            for (let [i, temps] of item.defaultvalue.entries()) {
+              values.push(temps.COLUMN1);
+            }
+            formValue.push({
+              columntype: item.columntype,
+              id: item.component.id,
+              value: values
+            });
+          }
+          break;
+        default:
+          formValue.push({
+            columntype:item.columntype,
+            id        :item.component.id,
+            value     :item.defaultvalue ? item.defaultvalue : ""
+          });
+      }
+    }
+    return formValue
+  },
   // deep clone
   deepClone(src) {
     return JSON.parse(JSON.stringify(src));

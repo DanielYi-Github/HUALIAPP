@@ -106,6 +106,7 @@ export function loadInitialNoticeData(page = 0, data = [], noticeType=null){
 		let FR_count  = `select count(*) as count from THF_NOTICE where NOTICEDATE is not null and TYPE='FR' and STATUS='Y'`;
 		let MT_count  = `select count(*) as count from THF_NOTICE where NOTICEDATE is not null and TYPE='MT' and STATUS='Y'`;
 		let AG_count  = `select count(*) as count from THF_NOTICE where NOTICEDATE is not null and TYPE='AG' and STATUS='Y'`;
+		let abc  = `select * from THF_NOTICE where NOTICEDATE is not null and TYPE='AG' and STATUS='Y'`;
 
 		let countArray = await Promise.all([
 			SQLite.selectData(ALL_count, []),
@@ -209,6 +210,12 @@ export function navigateFunctionPage(appID = null, userID = null) {
 				break;
 			case "Survey": //問券調查
 				NavigationService.navigate("Survey", {SurveyOID: "B8BF35C543F2D569E050000A76006341"});
+				break;
+			case "DaliyTempSurvey": //每日體溫回報
+				NavigationService.navigate("Survey", {SurveyOID: "B8FC46FC2A55661DE050000A76003F57"});
+				break;
+			case "OutDoorSurvey": //春節出行情況
+				NavigationService.navigate("Survey", {SurveyOID: "B936DC6D18263433E050000A760072A0"});
 				break;
 			case "Documents": //集團文件
 				NavigationService.navigate("DocumentCategories");

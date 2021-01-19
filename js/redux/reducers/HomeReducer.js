@@ -30,7 +30,8 @@ const initialState = {
   NoticeAGPage :0, 
   NoticeAGCount:0,
 
-  NoticeListState:null
+  NoticeListState:null,
+  homeFunctionNumber: 4
   // changingInfo: ''
 };
 
@@ -163,6 +164,11 @@ export default function submit(state = initialState, action = {}) {
         ...state,
         isRefreshing: false,
         isSuccess: false
+      };
+    case types.SET_HONE_FUNCTION_NUMBER:
+      return {
+        ...state,
+        homeFunctionNumber: parseInt(action.homeFunctionNumber)
       };
     default:
       return state;

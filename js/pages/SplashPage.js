@@ -28,9 +28,14 @@ class SplashPage extends React.Component {
   }
 
   componentDidMount(){
-    this.props.actions.appInit(this.props.actions, this.downloadProgressCallback); //APP初始化程序
-    this.addDownLoadFileListener();         // 新增檔案下載監聽器
-    SplashScreen.hide();
+    //是否允許APP進行初始化程序
+    if (this.props.state.Login.enableAppInitialFunction) {
+      this.props.actions.appInit(this.props.actions, this.downloadProgressCallback); //APP初始化程序
+      this.addDownLoadFileListener();         // 新增檔案下載監聽器
+      SplashScreen.hide();
+    } else {
+      
+    }
   }
 
   // 版本更新的下載進度條設定
@@ -56,8 +61,11 @@ class SplashPage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState){
-    if (!prevProps.isFocused && this.props.isFocused) {
-      this.props.actions.appInit(this.props.actions); //APP初始化程序
+    //是否允許APP進行初始化程序
+    if (this.props.state.Login.enableAppInitialFunction) {
+      if (!prevProps.isFocused && this.props.isFocused) {
+        this.props.actions.appInit(this.props.actions); //APP初始化程序
+      }
     }
   }
 
