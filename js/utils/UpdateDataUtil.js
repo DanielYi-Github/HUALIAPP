@@ -3948,3 +3948,27 @@ export async function getCreateSurvey(user, content){
 	});
 	return promise;
 }
+
+/**
+* 取得大數據行程卡網址
+* @param user資料
+*/
+export async function getItineraryCardUrl(user){
+	let promise = new Promise((resolve, reject) => {
+		let url = "data/getItineraryCardUrl";
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": null
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+ 			resolve(data);
+		})
+	});
+	return promise;
+}
