@@ -5,14 +5,32 @@ import HeaderForGeneral  from '../../../components/HeaderForGeneral';
 import { WebView } from 'react-native-webview';
 import  * as  NavigationService            from '../../../utils/NavigationService';
 import { connect } from 'react-redux';
+import * as UpdateDataUtil from '../../../utils/UpdateDataUtil';
 
 
 class ItineraryCardPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      webViewHeight: 0
+      webViewHeight: 0,
+      url:""
     }
+  }
+
+  componentDidMount() {
+       this.loadUrl();
+  }
+
+  loadUrl = () =>{
+    let user = this.props.state.UserInfo.UserInfo;
+    UpdateDataUtil.getItineraryCardUrl(user).then(async (data)=>{
+        this.setState({
+            url: data
+        });
+    }).catch((e)=>{
+        console.log("getItineraryCardUrl獲取異常",e);
+    }); 
+
   }
 
   onWebViewMessage = (event) => {
@@ -39,7 +57,8 @@ class ItineraryCardPage extends React.Component {
             <View style={{ height: this.state.webViewHeight }}>
               <WebView
                 originWhitelist={['*']}
-                source={{ uri: 'https://xc.caict.ac.cn' }}
+                // source={{ uri: 'https://xc.caict.ac.cn' }}
+                source={{ uri: this.state.url }}
                 injectedJavaScript='window.ReactNativeWebView.postMessage(document.documentElement.scrollHeight)'
                 onMessage={this.onWebViewMessage}
               />
