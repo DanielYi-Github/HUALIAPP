@@ -94,6 +94,8 @@ import KPIDetailPage           from './pages/Common/Report/KPI/KPIDetailPage';
 import KPICategoryPage         from './pages/Common/Report/KPI/KPICategoryPage';
 
 import ItineraryCardPage              from './pages/Common/Survey/ItineraryCardPage';
+import SurroundingInfoPage              from './pages/Common/Survey/SurroundingInfoPage';
+import InTimeDataPage              from './pages/Common/Survey/InTimeDataPage';
 
 
 function ShowSplashPage(props){
@@ -320,6 +322,8 @@ function MainStack(){
       <AppStack.Screen name ="KPICategory"  component={KPICategoryPage} />
 
       <AppStack.Screen name ="ItineraryCard"  component={ItineraryCardPage} />
+      <AppStack.Screen name ="SurroundingInfo"  component={SurroundingInfoPage} />
+      <AppStack.Screen name ="InTimeData"  component={InTimeDataPage} />
 
     </AppStack.Navigator>
   )

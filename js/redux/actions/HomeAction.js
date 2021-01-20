@@ -254,6 +254,12 @@ export function navigateFunctionPage(appID = null, userID = null) {
 			case "ItineraryCard": //通行卡部分
 				NavigationService.navigate("ItineraryCard");
 				break;
+			case "SurroundingInfo": //周遭疫情
+				NavigationService.navigate("SurroundingInfo");
+				break;
+			case "InTimeData": //及時大數據
+				NavigationService.navigate("InTimeData");
+				break;
 			default:
 				NavigationService.navigate(appID);
 				break;
