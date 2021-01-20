@@ -4001,18 +4001,17 @@ export async function getHomeIconNum(user, content = ""){
 	return promise;
 }
 
-
 /**
-* 取得大數據行程卡網址
+* 取得webView網址
 * @param user資料
 */
-export async function getItineraryCardUrl(user){
+export async function getWebViewUrlFromParam(user,content){
 	let promise = new Promise((resolve, reject) => {
-		let url = "data/getItineraryCardUrl";
+		let url = "data/getWebViewUrlFromParam";
 		let params = {
 			"token"  : Common.encrypt(user.token),
 			"userId" : Common.encrypt(user.loginID),
-			"content": null
+			"content": Common.encrypt(content)
 		};
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {
