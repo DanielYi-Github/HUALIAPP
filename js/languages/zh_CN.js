@@ -239,7 +239,8 @@ export default {
 		themeSeasion         :"节庆皮肤",
 		selectThemeMode      :"选择皮肤",
 		changeThemeNoticeText:"皮肤切换将会重新启动APP，请问确定是否继续?",
-		operationManual:"操作说明"
+		operationManual:"操作说明",
+		operationManualCovid19:"防疫专区说明"
 	},
 	MineDetailPage: {
 		Title                            :'我的信息',
@@ -446,7 +447,7 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		FinallComfirm     :"确认内容",
 		RequiredFieldAlert:"请完成所有必填资料",
 		Sucess            :"成功",
-		Fail              :"失败",
+		Fail              :"验证错误信息",
 		PrevPage          :"上一页",
 		NextPage          :"下一页",
 		Apply             :"立案",
