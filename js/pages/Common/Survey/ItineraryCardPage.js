@@ -1,6 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Container, Content} from 'native-base';
+import { Container} from 'native-base';
 import HeaderForGeneral  from '../../../components/HeaderForGeneral';
 import { WebView } from 'react-native-webview';
 import  * as  NavigationService            from '../../../utils/NavigationService';
@@ -12,7 +11,6 @@ class ItineraryCardPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      webViewHeight: 5,
       url:""
     }
   }
@@ -23,18 +21,14 @@ class ItineraryCardPage extends React.Component {
 
   loadUrl = () =>{
     let user = this.props.state.UserInfo.UserInfo;
-    UpdateDataUtil.getItineraryCardUrl(user).then(async (data)=>{
+    let content= "ItineraryCardUrl";
+    UpdateDataUtil.getWebViewUrlFromParam(user,content).then(async (data)=>{
         this.setState({
             url: data
         });
     }).catch((e)=>{
         console.log("getItineraryCardUrl獲取異常",e);
     }); 
-
-  }
-
-  onWebViewMessage = (event) => {
-    this.setState({ webViewHeight: Number(event.nativeEvent.data) });
   }
 
   render() {
@@ -52,19 +46,12 @@ class ItineraryCardPage extends React.Component {
           title                 = {this.props.state.Language.lang.ItineraryCardPage.ItineraryCardTitle}
           isTransparent         = {false}
         />
-        <Content> 
-          <View style={{ padding:5  ,flex: 1 }}>
-            <View style={{ height: this.state.webViewHeight }}>
-              <WebView
-                originWhitelist={['*']}
-                // source={{ uri: 'https://xc.caict.ac.cn' }}
-                source={{ uri: this.state.url }}
-                injectedJavaScript='window.ReactNativeWebView.postMessage(document.documentElement.scrollHeight)'
-                onMessage={this.onWebViewMessage}
-              />
-            </View>
-          </View>
-        </Content> 
+        <WebView
+          originWhitelist={['*']}
+          // source={{ uri: 'https://xc.caict.ac.cn' }}
+          source={{ uri: this.state.url }}
+          injectedJavaScript='window.ReactNativeWebView.postMessage(document.documentElement.scrollHeight)'
+        />
       </Container>  
     );
   }
