@@ -3931,10 +3931,11 @@ export async function getAndroidChangeAppMessage(version, platform) {
 */
 export async function getCreateSurvey(user, content){
 	let promise = new Promise((resolve, reject) => {
-		let url = "app/survey/getCreateSurvey";
+		let url = "data/survey/getCreateSurvey";
 		let params = {
 			"token"  : Common.encrypt(user.token),
 			"userId" : Common.encrypt(user.loginID),
+			"lang" : Common.encrypt(user.lang),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
 		NetUtil.getRequestContent(params, url).then((data)=>{
@@ -3948,6 +3949,57 @@ export async function getCreateSurvey(user, content){
 	});
 	return promise;
 }
+
+/**
+* 送出問卷
+* @param user資料
+* @param content
+*/
+export async function registerSurvey(user, content, url){
+	let promise = new Promise((resolve, reject) => {
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content))
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+			resolve(data);
+		})
+	});
+	return promise;
+}
+
+
+/**
+* 取得首頁常見功能要顯示幾個
+* @param user資料
+* @param content json包含 id、lang id例如 G00010
+*/
+export async function getHomeIconNum(user, content){
+	let promise = new Promise((resolve, reject) => {
+		let url = "data/getHomeIconNum";
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content))
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+			resolve(data);
+		})
+	});
+	return promise;
+}
+
 
 /**
 * 取得大數據行程卡網址

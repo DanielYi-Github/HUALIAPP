@@ -47,9 +47,12 @@ class FormContentRdo extends Component {
 
 		if (editable) {
 			renderItem = (
-	  				<Item fixedLabel style={this.props.style.CreateFormPageFiledItemWidth}>
+	  				<Item fixedLabel style={[
+	  					this.props.style.CreateFormPageFiledItemWidth, 
+	  					this.props.style.fixCreateFormPageFiledItemWidth
+	  				]}>
  			   		  <Label style={{flex: 0, color:"#FE1717"}}>{ required }</Label>
- 			   		  <Label style={{flex: 0 }}>{this.state.labelname}</Label>
+ 			   		  <Label style={{flex: 2}}>{this.state.labelname}</Label>
  			   		  <Text 
  			   		  	style={{
  			   		  		flex: 1, 
@@ -77,7 +80,7 @@ class FormContentRdo extends Component {
   				  ]}
   				  >
  			   		<Label style={{flex: 0, color:"#FE1717"}}>{ required }</Label>
-  				  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
+  				  	<Label >{this.state.labelname}</Label>
   				    <Input 
   				    	scrollEnabled = {false}
   				    	multiline 

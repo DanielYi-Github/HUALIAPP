@@ -484,6 +484,20 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		NotEqual      : "不等於",
 		requireFirst  : "必須先行填寫"
 	},
+	SurveyPage:{
+		Creating          :"問卷生成中...",
+		Sending           :"問卷傳送中...",
+		FormApplySucess   :"問卷傳送成功",
+		WrongData         :"輸入資料錯誤",
+		GotIt             :"知道了",
+		renderingPageError:"問卷生成失敗，請稍後在試。",
+		RequiredFieldAlert:"請完成所有必填資料",
+		Sucess            :"成功",
+		Fail              :"失敗",
+		SurveyExplain     :"問卷說明",
+		SurveyWrite       :"開始填寫",
+		Apply             :"送出",
+	},
 	ContactUsPage: {
 		ContactUs: "聯絡我們",
 		YourName: "您的姓名",

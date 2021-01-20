@@ -33,9 +33,9 @@ let UpgradeAppVersionUtil = {
 			    	if(data.length <= 0) return resolve(false); //搜尋資料為0則表示無更新
 
 					let version  = DeviceInfo.getVersion(); //目前的版本
-					let nVersion = data.item(0).NO;			//最新的版本
-					let url      = data.item(0).URL;
-					let isMust   = data.item(0).ISMUST;
+					let nVersion = data.item(data.length-1).NO;			//最新的版本
+					let url      = data.item(data.length-1).URL;
+					let isMust   = data.item(data.length-1).ISMUST;
 
 					if(nVersion <= version) return resolve(false);	//版本不符合則表示無更新
 
@@ -73,7 +73,7 @@ let UpgradeAppVersionUtil = {
 					      onPress: () => { 					  //更新
 					        this.doBigUpdate(url);
 					        if (platform == "I") {
-					        	return resolve(false);
+					        	return resolve(true);
 					        } else {
 					        	return resolve(true);
 					        }

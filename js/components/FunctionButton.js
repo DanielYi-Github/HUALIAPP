@@ -19,7 +19,7 @@ class FunctionButton extends Component {
 
 		if(icon){
 			return(
-				<Body style={{alignItems: 'center'}} > 
+				<Body style={{alignItems: 'center', paddingTop: 3, paddingBottom: 3}} > 
 					<Button 
 				    	rounded 
 						onPress={() => { this.props.onPress() }} 

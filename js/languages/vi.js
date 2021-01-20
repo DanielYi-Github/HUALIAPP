@@ -480,6 +480,20 @@ export default {
 		NotEqual: "be unequal to",
 		requireFirst  : "have to write down first." 
 	},
+	SurveyPage:{
+		Creating          : "Bảng câu hỏi đang được tạo ...",
+		Sending           : "Đang gửi bảng câu hỏi ...",
+		FormApplySucess   : "Đã gửi bảng câu hỏi thành công",
+		WrongData         : "Lỗi dữ liệu đầu vào",
+		GotIt             : "Đã hiểu",
+		renderingPageError: "Không thể tạo bảng câu hỏi, vui lòng thử lại sau.",
+		RequiredFieldAlert: "Vui lòng điền tất cả thông tin bắt buộc",
+		Sucess            : "Thành công",
+		Fail              : "Không thành công",
+		SurveyExplain     : "Mô tả bảng câu hỏi",
+		SurveyWrite       : "Bắt đầu điền vào",
+		Apply             : "Gửi",
+	},
 	ContactUsPage: {
 		ContactUs: "Contact Us",
 		YourName: "Your Name",

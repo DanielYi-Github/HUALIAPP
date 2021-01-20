@@ -17,9 +17,7 @@ export const RESET_STATUS      = 'RESET_STATUS'; 		//是否為初始化狀態
 export const LOGIN_MODE        = 'LOGIN_MODE'; 			//登陸模式 tab/single
 export const ACCOUNT_TYPE      = 'ACCOUNT_TYPE'; 		//賬號類型 
 export const LOGIN_CHANGE_ACCOUNT = 'LOGIN_CHANGE_ACCOUNT'; //更換登入帳號
-
-
-
+export const ENABLE_APP_INITIAL = 'ENABLE_APP_INITIAL'; //是否允許運行APP初始化程序
 
 export const RESET_MIX         = 'RESET_MIX'; 			//重置混合賬號登陸
 export const BACKBUTTON_STATUS = 'BACKBUTTON_STATUS'; 	//修改返回鍵狀態

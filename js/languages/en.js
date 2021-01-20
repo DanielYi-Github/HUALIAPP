@@ -480,6 +480,20 @@ export default {
 		NotEqual      : "be unequal to ",
 		requireFirst  : "have to write down first." 
 	},
+	SurveyPage:{
+		Creating          :"Creating...",
+		Sending           :"Sending...",
+		FormApplySucess   :"Sucess",
+		WrongData         :"Wrong Data",
+		GotIt             :"Got It",
+		renderingPageError:"There is something error. Please try it later.",
+		RequiredFieldAlert:"Please complete required fields",
+		Sucess            :"Sucess",
+		Fail              :"Fail",
+		SurveyExplain     :"Explain",
+		SurveyWrite       :"Write",
+		Apply             :"Send",
+	},
 	ContactUsPage: {
 		ContactUs: "Contact Us",
 		YourName: "Your Name",

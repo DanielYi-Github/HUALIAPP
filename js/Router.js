@@ -108,8 +108,10 @@ function IntroductionDrawer(props) {
   const IntroductionDrawerPages = useSelector(state => state.Common.IntroductionDrawerPages)
   const lang                    = useSelector(state => state.Language.lang)
   const LabelColor              = useSelector(state => state.Theme.theme.variables.noticePageTextColor)
+  const state                   = useSelector(state => state)
 
-  if (useIsFocused()) {
+  // 介紹畫面正顯示且允許進行初始化程式才可增加返回監聽
+  if (useIsFocused() && state.Login.enableAppInitialFunction) {
     if (!preventGoback) {
       props.navigation.addListener('beforeRemove', (e) => {
         e.preventDefault(); // Prevent default behavior of leaving the screen
@@ -203,7 +205,8 @@ function HomeTabNavigator(props) {
   let theme = state.Theme.theme.['Component.BottomNavigation'];
   let dispatch = useDispatch();
 
-  if (useIsFocused()) {
+  // 導航欄正顯示且允許進行初始化程式才可增加返回監聽
+  if (useIsFocused() && state.Login.enableAppInitialFunction) {
     if (!preventGoback) {
       props.navigation.addListener('beforeRemove', (e) => {
         e.preventDefault(); // Prevent default behavior of leaving the screen
@@ -228,7 +231,7 @@ function HomeTabNavigator(props) {
       setPreventGoback(false);
     }
   }
-
+  
 
   React.useEffect(() => {
       const unsubscribe = props.navigation.addListener('focus', () => {
