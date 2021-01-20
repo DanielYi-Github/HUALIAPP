@@ -23,7 +23,8 @@ class FormContentText extends Component {
 			}
 		}
 		let required = (this.props.data.required == "Y") ? "*" : "  ";
-		let value = this.props.lang.Common.None;
+		// let value = this.props.lang.Common.None;
+		let value = "";
 
 		if (editable) {
 			value = (this.props.data.defaultvalue == null ) ? null : this.props.data.defaultvalue;

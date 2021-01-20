@@ -131,67 +131,78 @@ class AboutPage extends React.Component {
               <Image source={require('../../image/QRcode.png')} style={{height: 200,width: 200}} />
             </Body>
 
-            <Card>
-              <CardItem button onPress={()=>{ NavigationService.navigate("Operation"); }}>
-                <Left /*style={{justifyContent: 'center'}}*/>
-                  <Text>{lang.MinePage.operationManual}</Text>
-                </Left>
-              {/*
-                <Body style={{flex: 6, flexDirection: 'row'}}>
-                  <Icon name="information"/>
-                </Body>
-                */}
-                <Right style={{flex: 0}}>
-                  <Icon name="arrow-forward"/>
-                </Right>
-              </CardItem>
+            <Body style={{flex:0}}>
+              <Card>
+                <CardItem button onPress={()=>{ 
+                  NavigationService.navigate("Operation"); 
+                }}>
+                  <Left>
+                    <Text>{lang.MinePage.operationManual}</Text>
+                  </Left>
+                  <Right style={{flex: 0}}>
+                    <Icon name="arrow-forward"/>
+                  </Right>
+                </CardItem>
+              </Card>  
 
-              <CardItem button onPress={()=>{ NavigationService.navigate("Operation"); }}>
-                <Left /*style={{justifyContent: 'center'}}*/>
-                  <Text>{lang.MinePage.operationManualCovid19}</Text>
-                </Left>
+              { this.props.state.Common.enable_APP_SurveySOP ? 
+                  <Card>
+                    <CardItem button onPress={()=>{ 
+                      NavigationService.navigate("ViewFile",{
+                        url: "data/getSurveySOP",
+                        content:{},
+                        pageTtile:lang.MinePage.operationManualCovid19
+                      }); 
+                    }}>
+                      <Left>
+                        <Text>{lang.MinePage.operationManualCovid19}</Text>
+                      </Left>
+                      <Right style={{flex: 0}}>
+                        <Icon name="arrow-forward"/>
+                      </Right>
+                    </CardItem>
+                  </Card> 
+                :
+                  null
+              }
+               
+            </Body>
+
               {/*
-                <Body style={{flex: 6, flexDirection: 'row'}}>
-                  <Icon name="information"/>
-                </Body>
-                */}
-                <Right style={{flex: 0}}>
-                  <Icon name="arrow-forward"/>
-                </Right>
-              </CardItem>
-          {/*
-              <CardItem button onPress={this.checkBigUpdate}>
-                <Left style={{justifyContent: 'center'}}>
-                  <Icon name="update" type="MaterialIcons"/>
-                </Left>
-                <Body style={{flex: 6, flexDirection: 'row'}}>
-                    {
-                      (this.state.checking)?
-                        <ActivityIndicator size="large" color="#3691ec"/>
-                      :
-                        <Title>{lang.AboutPage.UpdateCheck}</Title>
-                    }
-                </Body>
-                <Right style={{flex: 0}}>
-                  <Icon name="arrow-forward"/>
-                </Right>
-              </CardItem>
-            {/*
-              <CardItem button style={Styles.Transparent} 
-                // onPress={this.checkBigUpdate}
-                >
-                <Left style={{justifyContent: 'center'}}>
-                  <Icon name="help-circle" style={{color: '#485970'}}/>
-                </Left>
-                <Body style={{flex: 6, flexDirection: 'row'}}>
-                    <Title style={{color: '#485970'}}>{lang.AboutPage.Instruction}</Title>
-                </Body>
-                <Right style={{flex: 0}}>
-                  <Icon name="arrow-forward"/>
-                </Right>
-              </CardItem>
-              */}
-            </Card>  
+                <Card>
+
+                  <CardItem button onPress={this.checkBigUpdate}>
+                    <Left style={{justifyContent: 'center'}}>
+                      <Icon name="update" type="MaterialIcons"/>
+                    </Left>
+                    <Body style={{flex: 6, flexDirection: 'row'}}>
+                        {
+                          (this.state.checking)?
+                            <ActivityIndicator size="large" color="#3691ec"/>
+                          :
+                            <Title>{lang.AboutPage.UpdateCheck}</Title>
+                        }
+                    </Body>
+                    <Right style={{flex: 0}}>
+                      <Icon name="arrow-forward"/>
+                    </Right>
+                  </CardItem>
+                {/*
+                  <CardItem button style={Styles.Transparent} 
+                    // onPress={this.checkBigUpdate}
+                    >
+                    <Left style={{justifyContent: 'center'}}>
+                      <Icon name="help-circle" style={{color: '#485970'}}/>
+                    </Left>
+                    <Body style={{flex: 6, flexDirection: 'row'}}>
+                        <Title style={{color: '#485970'}}>{lang.AboutPage.Instruction}</Title>
+                    </Body>
+                    <Right style={{flex: 0}}>
+                      <Icon name="arrow-forward"/>
+                    </Right>
+                  </CardItem>
+                </Card>
+               */}
             <Title style={this.props.style.ExplainText}>@{DateFormat(new Date(), "yyyy")} Huali-group.com</Title>
           </Body>
         </Content>

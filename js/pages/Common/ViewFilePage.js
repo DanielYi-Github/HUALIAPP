@@ -21,18 +21,20 @@ class ViewFilePage extends React.Component {
         refreshing:true,
         file      :null,
         fileType  : "",
+        pageTtile:props.route.params.pageTtile?props.route.params.pageTtile:false
     }
   }
 
   componentDidMount() {
     let user = this.props.state.UserInfo.UserInfo;
-    console.log("this.state",this.state);
+    // console.log("this.state",this.state);
 
     UpdateDataUtil.getCreateFormDetailFormat(
       user,
       this.state.url,
       this.state.content
     ).then((data) => {
+      console.log(data);
       // 驗證資料的正確性
       let isUnvalid = false;
       switch(data.type) {
@@ -128,7 +130,7 @@ class ViewFilePage extends React.Component {
                 isRightButtonIconShow = {false}
                 rightButtonIcon       = {null}
                 rightButtonOnPress    = {null} 
-                title                 = {this.state.content.fileName}
+                title                 = {this.state.pageTtile ? this.state.pageTtile: this.state.content.fileName}
                 isTransparent         = {false}
               />
 
