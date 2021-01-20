@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View ,Dimensions } from 'react-native';
 import { Container, Content} from 'native-base';
 import HeaderForGeneral  from '../../../components/HeaderForGeneral';
 import { WebView } from 'react-native-webview';
@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import * as UpdateDataUtil from '../../../utils/UpdateDataUtil';
 
 
-class ItineraryCardPage extends React.Component {
+class SurroundingInfoPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,16 +49,16 @@ class ItineraryCardPage extends React.Component {
           isRightButtonIconShow = {false}
           rightButtonIcon       = {null}
           rightButtonOnPress    = {null} 
-          title                 = {this.props.state.Language.lang.ItineraryCardPage.ItineraryCardTitle}
+          title                 = {"周邊疫情"}
           isTransparent         = {false}
         />
         <Content> 
           <View style={{ padding:5  ,flex: 1 }}>
-            <View style={{ height: this.state.webViewHeight }}>
+            <View style={{ height:Dimensions.get('window').height }}>
               <WebView
                 originWhitelist={['*']}
-                // source={{ uri: 'https://xc.caict.ac.cn' }}
-                source={{ uri: this.state.url }}
+                source={{ uri: 'https://ugc.map.baidu.com/cube/ncp/homepage?from=dasouyiqing' }}
+                // source={{ uri: this.state.url }}
                 injectedJavaScript='window.ReactNativeWebView.postMessage(document.documentElement.scrollHeight)'
                 onMessage={this.onWebViewMessage}
               />
@@ -79,5 +79,4 @@ export default connect(
   (state) => ({
     state: {...state}
   })
-)(ItineraryCardPage);
-
+)(SurroundingInfoPage);
