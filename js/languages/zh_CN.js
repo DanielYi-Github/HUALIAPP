@@ -755,5 +755,11 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 	},
 	ItineraryCardPage:{
 		ItineraryCardTitle:"通信大数据行程卡"
+	},
+	InTimeDataPage:{
+		InTimeDataTitle:"疫情实时大数据"
+	},
+	SurroundingInfoPage:{
+		SurroundingInfoTitle:"周边疫情"
 	}
 }

@@ -752,5 +752,11 @@ export default {
 	},
 	ItineraryCardPage:{
 		ItineraryCardTitle:"Thẻ thông hành thông tin lớn"
+	},
+	InTimeDataPage:{
+		InTimeDataTitle:"Dữ liệu lớn về tình hình dịch bệnh"
+	},
+	SurroundingInfoPage:{
+		SurroundingInfoTitle:"Xung quanh tình trạng dịch."
 	}
 }

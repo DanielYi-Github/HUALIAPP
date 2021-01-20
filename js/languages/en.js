@@ -752,5 +752,11 @@ export default {
 	},
 	ItineraryCardPage:{
 		ItineraryCardTitle:"Communication big data travel card"
+	},
+	InTimeDataPage:{
+		InTimeDataTitle:"Real time big data of epidemic situation"
+	},
+	SurroundingInfoPage:{
+		SurroundingInfoTitle:"Surrounding epidemic situation"
 	}
 }

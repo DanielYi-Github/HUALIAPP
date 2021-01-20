@@ -757,5 +757,11 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 	},
 	ItineraryCardPage:{
 		ItineraryCardTitle:"通信大數據行程卡"
+	},
+	InTimeDataPage:{
+		InTimeDataTitle:"疫情實時大數據"
+	},
+	SurroundingInfoPage:{
+		SurroundingInfoTitle:"周邊疫情"
 	}
 }

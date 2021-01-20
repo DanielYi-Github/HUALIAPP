@@ -43,7 +43,7 @@ class InTimeDataPage extends React.Component {
           isRightButtonIconShow = {false}
           rightButtonIcon       = {null}
           rightButtonOnPress    = {null} 
-          title                 = {"疫情實時大數據"}
+          title                 = {this.props.state.Language.lang.SurroundingInfoPage.SurroundingInfoTitle}
           isTransparent         = {false}
         />
         <WebView
