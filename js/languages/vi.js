@@ -239,7 +239,8 @@ export default {
 		themeSeasion: "Chế độ lễ hội",
 		selectThemeMode: "Chọn chế độ chủ đề",
 		changeThemeNoticeText: "Chuyển đổi chế độ chủ đề sẽ khởi động lại APP, vui lòng xác nhận xem có tiếp tục không?",
-		operationManual: "Hướng dẫn vận hành"
+		operationManual: "Hướng dẫn vận hành",
+		operationManualCovid19:"Khảo sát sức khỏe Hướng dẫn vận hành"
 	},
 	MineDetailPage: {
 		Title: 'Thông tin của tôi ',
@@ -443,7 +444,7 @@ export default {
 		FinallComfirm: "Confirmation",
 		RequiredFieldAlert: "Please complete required fields",
 		Sucess: "Success",
-		Fail: "Fail",
+		Fail: "Oops!",
 		PrevPage: "Back",
 		NextPage: "Next",
 		Apply: "Apply",

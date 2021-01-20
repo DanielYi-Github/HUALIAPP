@@ -97,6 +97,7 @@ import ItineraryCardPage              from './pages/Common/Survey/ItineraryCardP
 import SurroundingInfoPage              from './pages/Common/Survey/SurroundingInfoPage';
 import InTimeDataPage              from './pages/Common/Survey/InTimeDataPage';
 
+
 function ShowSplashPage(props){
   const isFocused = useIsFocused();
   return <SplashPage {...props} isFocused={isFocused}/>

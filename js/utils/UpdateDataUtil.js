@@ -3980,7 +3980,7 @@ export async function registerSurvey(user, content, url){
 * @param user資料
 * @param content json包含 id、lang id例如 G00010
 */
-export async function getHomeIconNum(user, content){
+export async function getHomeIconNum(user, content = ""){
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/getHomeIconNum";
 		let params = {
@@ -3988,6 +3988,7 @@ export async function getHomeIconNum(user, content){
 			"userId" : Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
+		console.log("params", params);
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入

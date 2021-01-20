@@ -303,6 +303,18 @@ export function initialApi(user,way=false){
   		UpdateDataUtil.updateContact(user); //通訊錄	
   		UpdateDataUtil.updateMSG(user); 	//手機消息-執行最久
 
+  		//取得首頁常見功能要顯示幾個
+  		UpdateDataUtil.getHomeIconNum(user).then((data)=>{
+  			dispatch({									
+  				type: HomeTypes.SET_HONE_FUNCTION_NUMBER,
+  				homeFunctionNumber:data
+  			});
+  		}).catch(e=>{
+  			console.log(e);
+	  		// LoggerUtil.addErrorLog("LoginAction initialApi", "APP Action", "ERROR", e);
+  		})
+
+
   		//首頁必須出現 統一執行
 		let arr = [
 			UpdateDataUtil.updateAPP(user),
@@ -314,7 +326,7 @@ export function initialApi(user,way=false){
 			UpdateDataUtil.updateBanner(user),		//Banner
 			UpdateDataUtil.updateModule(user),		//module
 			UpdateDataUtil.setLoginInfo(user),
-			UpdateDataUtil.getHomeIconNum(user)     //取得首頁常見功能要顯示幾個
+			// UpdateDataUtil.getHomeIconNum(user)     //取得首頁常見功能要顯示幾個
   		];
 
 	  	Promise.all(arr).then( async (data) => {
@@ -329,11 +341,12 @@ export function initialApi(user,way=false){
 				type: types.ENABLE_APP_INITIAL,
 				enable:true
 			});
+			/*
 			dispatch({									//設定首頁常見功能要顯示幾個
 				type: HomeTypes.SET_HONE_FUNCTION_NUMBER,
 				homeFunctionNumber:data[9]
 			});
-
+			*/
 			NavigationService.navigate('HomeTabNavigator', {screen: 'Home'});
 
 	  	}).catch((e)=>{

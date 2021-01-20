@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">华利实业</string>
+    <!-- <string name="app_name">华利实业Test</string> -->
     <string name="android_auto_update_download_progress">Downing:%1$d%%</string>
     <!-- 正式機 -->
     <string moduleConfig="true" name="CodePushDeploymentKey">9ai2v7OA6K1iZDUAtCuCTm91aR6Y4ksvOXqog</string>

@@ -12,7 +12,7 @@ class ItineraryCardPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      webViewHeight: 5,
+      webViewHeight: 0,
       url:""
     }
   }
@@ -80,4 +80,3 @@ export default connect(
     state: {...state}
   })
 )(ItineraryCardPage);
-

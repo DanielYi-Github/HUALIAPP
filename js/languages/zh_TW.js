@@ -239,7 +239,8 @@ export default {
 		themeSeasion         :"節慶模式",
 		selectThemeMode      :"選擇主題模式",
 		changeThemeNoticeText:"主題模式切換將會重新啟動APP，請問確定是否繼續?",
-		operationManual:"操作說明"
+		operationManual:"操作說明",
+		operationManualCovid19:"防疫專區說明"
 	},
 	MineDetailPage: {
 		Title      : '我的資訊',
@@ -447,7 +448,7 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		FinallComfirm     :"確認內容",
 		RequiredFieldAlert:"請完成所有必填資料",
 		Sucess            :"成功",
-		Fail              :"失敗",
+		Fail              :"驗證錯誤資料",
 		PrevPage          :"上一頁",
 		NextPage          :"下一頁",
 		Apply             :"立案",

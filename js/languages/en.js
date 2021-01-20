@@ -239,7 +239,8 @@ export default {
 		themeSeasion         :"Season",
 		selectThemeMode      :"Select Themes",
 		changeThemeNoticeText:"Change the theme will reboot the app. Would you keep going?",
-		operationManual:"Operation Manual"
+		operationManual:"Operation Manual",
+		operationManualCovid19:"Health Survey Operation Manual"
 	},
 	MineDetailPage: {
 		Title      : 'My Information',
@@ -443,7 +444,7 @@ export default {
 		FinallComfirm     :"Confirmation",
 		RequiredFieldAlert:"Please complete required fields",
 		Sucess            :"Success",
-		Fail              :"Fail",
+		Fail              :"Oops!",
 		PrevPage          :"Back",
 		NextPage          :"Next",
 		Apply             :"Apply",

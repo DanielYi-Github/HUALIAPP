@@ -145,6 +145,20 @@ class AboutPage extends React.Component {
                   <Icon name="arrow-forward"/>
                 </Right>
               </CardItem>
+
+              <CardItem button onPress={()=>{ NavigationService.navigate("Operation"); }}>
+                <Left /*style={{justifyContent: 'center'}}*/>
+                  <Text>{lang.MinePage.operationManualCovid19}</Text>
+                </Left>
+              {/*
+                <Body style={{flex: 6, flexDirection: 'row'}}>
+                  <Icon name="information"/>
+                </Body>
+                */}
+                <Right style={{flex: 0}}>
+                  <Icon name="arrow-forward"/>
+                </Right>
+              </CardItem>
           {/*
               <CardItem button onPress={this.checkBigUpdate}>
                 <Left style={{justifyContent: 'center'}}>
