@@ -2,6 +2,7 @@
 import { Platform, Alert } from 'react-native';
 import NetInfo from "@react-native-community/netinfo";
 import * as AppInitTypes from '../actionTypes/AppInitTypes';
+import * as HomeTypes    from '../actionTypes/HomeTypes';
 
 import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
 import * as LoggerUtil     from '../../utils/LoggerUtil';
@@ -253,8 +254,24 @@ export function appHotInit(initActions){
 		await initActions.hotInitialApi( getState().UserInfo.UserInfo ); // 集團公告、輪播圖 重新撈取
     	initActions.loadInitialNoticeData(); // 集團公告重新自資料庫撈取      
 
-    	await UpgradeDBTableUtil.UpgradeDBTable(); 	// 檢查DB表有無更新
-		await UpdateDataUtil.updateVersion();		// 檢查DB表有無APP版本號更新     
+    	//取得首頁常見功能要顯示幾個
+    	UpdateDataUtil.getHomeIconNum(getState().UserInfo.UserInfo).then((data)=>{
+    		dispatch({									
+    			type: HomeTypes.SET_HONE_FUNCTION_NUMBER,
+    			homeFunctionNumber:data
+    		});
+    	}).catch(e=>{ console.log(e); })
+
+		let arr = [
+			UpgradeDBTableUtil.UpgradeDBTable(), 	// 檢查DB表有無更新
+			UpdateDataUtil.updateVersion()			// 檢查DB表有無APP版本號更新
+  		];
+
+	  	await Promise.all(arr).then( async (data) => {
+	  		return null
+	  	}).catch((e)=>{
+	  		console.log("e", e);
+	  	})	   
 
 		// 從localstorage取得上次版本更新提醒時間，如果至今距離4小時則以上，則顯示更新資訊，如果以內，則不顯示更新資訊
 		DeviceStorageUtil.get("lastUpdateTime").then( async (lastUpdateTime)=>{
@@ -277,5 +294,8 @@ export function appHotInit(initActions){
 				}
 			}
 		})
+
+
+				
 	}
 }

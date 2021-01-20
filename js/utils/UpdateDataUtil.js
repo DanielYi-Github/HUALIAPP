@@ -3882,7 +3882,9 @@ export async function getOperationSOP(user) {
 }
 
 export async function getSeasonThemeDisplay() {
-	let params = {};
+	let params = {
+		"content": "SeasonThemeDisplay"
+	};
 	let url = "data/getSeasonThemeDisplay";
 
 	let isConnected = await NetInfo.fetch().then((state) => {
@@ -4012,6 +4014,30 @@ export async function getWebViewUrlFromParam(user,content){
 			"token"  : Common.encrypt(user.token),
 			"userId" : Common.encrypt(user.loginID),
 			"content": Common.encrypt(content)
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+ 			resolve(data);
+		})
+	});
+	return promise;
+}
+
+
+
+/**
+* 取得是否顯示防疫專區SOP的按鈕
+* @param user資料
+*/
+export async function getSurveySOPSwitch(user){
+	let promise = new Promise((resolve, reject) => {
+		let url = "public/getSwitch";
+		let params = {
+			"content": "EpiHelp"
 		};
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {

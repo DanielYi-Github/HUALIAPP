@@ -3,7 +3,7 @@ import RNFetchBlob 		   from 'rn-fetch-blob'
 import * as types          from '../actionTypes/LoginTypes';
 import * as biometricTypes from '../actionTypes/BiometricTypes';
 import * as CommonTypes    from '../actionTypes/CommonTypes';
-import * as HomeTypes    from '../actionTypes/HomeTypes';
+import * as HomeTypes    	from '../actionTypes/HomeTypes';
 
 import User                   from '../../object/User';
 import NetUtil                from '../../utils/NetUtil';
@@ -311,9 +311,7 @@ export function initialApi(user,way=false){
   			});
   		}).catch(e=>{
   			console.log(e);
-	  		// LoggerUtil.addErrorLog("LoginAction initialApi", "APP Action", "ERROR", e);
   		})
-
 
   		//首頁必須出現 統一執行
 		let arr = [
@@ -326,7 +324,6 @@ export function initialApi(user,way=false){
 			UpdateDataUtil.updateBanner(user),		//Banner
 			UpdateDataUtil.updateModule(user),		//module
 			UpdateDataUtil.setLoginInfo(user),
-			// UpdateDataUtil.getHomeIconNum(user)     //取得首頁常見功能要顯示幾個
   		];
 
 	  	Promise.all(arr).then( async (data) => {
@@ -341,14 +338,7 @@ export function initialApi(user,way=false){
 				type: types.ENABLE_APP_INITIAL,
 				enable:true
 			});
-			/*
-			dispatch({									//設定首頁常見功能要顯示幾個
-				type: HomeTypes.SET_HONE_FUNCTION_NUMBER,
-				homeFunctionNumber:data[9]
-			});
-			*/
 			NavigationService.navigate('HomeTabNavigator', {screen: 'Home'});
-
 	  	}).catch((e)=>{
 	  		console.log("e", e);
 
@@ -370,12 +360,19 @@ export function initialApi(user,way=false){
 	  		    dispatch(logout());
 	  		}
 	  		LoggerUtil.addErrorLog("LoginAction initialApi", "APP Action", "ERROR", e);
-	  		
 	  	})	
 
   		//後期	            
-		UpdateDataUtil.updateVisitLogToServer(user);	//update功能訪問數量回Server	  	
-  		UpdateDataUtil.updateRead(user);				//訊息讀取表       
+		UpdateDataUtil.updateVisitLogToServer(user);			//update功能訪問數量回Server	  	
+  		UpdateDataUtil.updateRead(user);						//訊息讀取表       
+  		UpdateDataUtil.getSurveySOPSwitch(user).then((data)=>{ 	//是否顯示防疫專區SOP的按鈕
+  			dispatch({									//恢復運行初始化程序
+  				type: CommonTypes.ENABLE_APP_SurveySOP,
+  				enable:data
+  			});
+  		}).catch(e=>{
+  			console.log(e);
+  		})
 	}
 }
 
@@ -682,43 +679,6 @@ function cleanLoginChangeAccount(){
 		loginChangeUserInfo: {}
 	}
 } 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
