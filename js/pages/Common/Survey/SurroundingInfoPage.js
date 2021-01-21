@@ -47,7 +47,7 @@ class SurroundingInfoPage extends React.Component {
           isRightButtonIconShow = {false}
           rightButtonIcon       = {null}
           rightButtonOnPress    = {null} 
-          title                 = {this.props.state.Language.lang.InTimeDataPage.InTimeDataTitle}
+          title                 = {this.props.state.Language.lang.SurroundingInfoPage.SurroundingInfoTitle}
           isTransparent         = {false}
         />
         <WebView
