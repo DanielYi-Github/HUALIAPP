@@ -758,5 +758,8 @@ export default {
 	},
 	SurroundingInfoPage:{
 		SurroundingInfoTitle:"Surrounding epidemic situation"
+	},
+	IsolationPolicyPage:{
+		IsolationPolicyTitle:"Isolation policy query"
 	}
 }
