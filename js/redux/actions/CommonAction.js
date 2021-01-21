@@ -179,6 +179,7 @@ export function checkDirectorPage(data){
 		data = await SQLite.selectData(sql, []).then((result) => {
 			return result.item(0)
 		});
+		console.log(data);
 
 		if (data.ISREAD == "F") updateMessageReadState(OID, user, dispatch, getState)
 

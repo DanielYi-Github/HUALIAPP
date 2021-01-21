@@ -25,10 +25,18 @@ class ViewFilePage extends React.Component {
     }
   }
 
+  /*
+  {
+    url:
+    content:{}
+    pageTtile:
+  }
+  */
+
   componentDidMount() {
     let user = this.props.state.UserInfo.UserInfo;
     // console.log("this.state",this.state);
-
+    console.log(this.state.url, this.state.content);
     UpdateDataUtil.getCreateFormDetailFormat(
       user,
       this.state.url,

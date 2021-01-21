@@ -48,8 +48,8 @@ class InTimeDataPage extends React.Component {
         />
         <WebView
           originWhitelist={['*']}
-          // source={{ uri: 'https://voice.baidu.com/act/newpneumonia/newpneumonia/?from=osari_aladin_banner' }}
-          source={{ uri: this.state.url }}
+          source={{ uri: 'https://voice.baidu.com/act/newpneumonia/newpneumonia/?from=osari_aladin_banner' }}
+          // source={{ uri: this.state.url }}
           injectedJavaScript='window.ReactNativeWebView.postMessage(document.documentElement.scrollHeight)'
         />
       </Container>  

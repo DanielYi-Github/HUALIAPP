@@ -52,8 +52,8 @@ class SurroundingInfoPage extends React.Component {
         />
         <WebView
           originWhitelist={['*']}
-          // source={{ uri: 'https://ugc.map.baidu.com/cube/ncp/homepage?from=dasouyiqing' }}
-          source={{ uri: this.state.url }}
+          source={{ uri: 'https://ugc.map.baidu.com/cube/ncp/homepage?from=dasouyiqing' }}
+          // source={{ uri: this.state.url }}
           injectedJavaScript='window.ReactNativeWebView.postMessage(document.documentElement.scrollHeight)'
         />
       </Container>  
