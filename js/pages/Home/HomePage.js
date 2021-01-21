@@ -89,6 +89,18 @@ class HomePage extends React.Component {
     Platform.OS == 'android' ? props.actions.enableScreenShot(false) : null; //啟動禁止截圖的功能(android專屬)  
   }
 
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    // console.log("UNSAFE_componentWillReceiveProps", nextProps);
+    //進行指定跳頁動作
+    /*
+    if (nextProps.state.Common.notificationType !== null) {
+      this.props.actions.checkDirectorPage(nextProps.state.Common.notificationContent);
+      this.props.actions.cleanNotificationContent();
+    }
+    */
+  }
+
   componentDidMount() {
     AppState.addEventListener('change', this.onChangeAppState)
     if (this.props.state.Home.NoticeData.length == 0 && !this.props.state.Home.isRefreshing) {
