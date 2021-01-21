@@ -1,6 +1,6 @@
 // export const TOMCAT_HOST = 'http://app.hff-group.com/MobileApp/';		// 正式機
-export const TOMCAT_HOST = 'http://qasapp.hff-group.com/MobileApp/';		// 測試機
-// export const TOMCAT_HOST = 'http://10.0.0.116/MobileApp/';			    // 開發機
+// export const TOMCAT_HOST = 'http://qasapp.hff-group.com/MobileApp/';		// 測試機
+export const TOMCAT_HOST = 'http://10.0.0.116/MobileApp/';			    // 開發機
 // export const TOMCAT_HOST = 'http://10.0.20.24:8087/MobileApp/';			// 開發機
 // export const TOMCAT_HOST = 'http://10.0.96.250:8686/MobileApp/';			// 開發機
 
