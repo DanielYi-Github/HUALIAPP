@@ -254,14 +254,6 @@ export function appHotInit(initActions){
 		await initActions.hotInitialApi( getState().UserInfo.UserInfo ); // 集團公告、輪播圖 重新撈取
     	initActions.loadInitialNoticeData(); // 集團公告重新自資料庫撈取      
 
-    	//取得首頁常見功能要顯示幾個
-    	UpdateDataUtil.getHomeIconNum(getState().UserInfo.UserInfo).then((data)=>{
-    		dispatch({									
-    			type: HomeTypes.SET_HONE_FUNCTION_NUMBER,
-    			homeFunctionNumber:data
-    		});
-    	}).catch(e=>{ console.log(e); })
-
 		let arr = [
 			UpgradeDBTableUtil.UpgradeDBTable(), 	// 檢查DB表有無更新
 			UpdateDataUtil.updateVersion()			// 檢查DB表有無APP版本號更新
