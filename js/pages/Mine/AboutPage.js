@@ -134,7 +134,12 @@ class AboutPage extends React.Component {
             <Body style={{flex:0}}>
               <Card>
                 <CardItem button onPress={()=>{ 
-                  NavigationService.navigate("Operation"); 
+                  // NavigationService.navigate("Operation"); 
+                  NavigationService.navigate("ViewFile",{
+                    url: "data/getSOP",
+                    content:{},
+                    pageTtile:lang.MinePage.operationManual
+                  }); 
                 }}>
                   <Left>
                     <Text>{lang.MinePage.operationManual}</Text>

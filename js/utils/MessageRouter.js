@@ -13,7 +13,7 @@ let MessageRouter = {
 
 		// 接收推送通知
 		JPush.addNotificationListener((result) => {
-			// console.log(result);
+			// console.log("addNotificationListener",result);
 			if (result.notificationEventType == "notificationArrived"){
 				this.dealMessagesOriginalsource(result, props, true);
 			}else{
@@ -30,6 +30,8 @@ let MessageRouter = {
 
 		// 接收本地通知
 		JPush.addLocalNotificationListener((result) => {
+			// console.log("addLocalNotificationListener",result);
+
 			if (result.notificationEventType == "notificationArrived"){
 				DeviceEventEmitter.emit('loadMsgState');
 			}else{
@@ -37,7 +39,8 @@ let MessageRouter = {
 					"badge":0,
 					"appBadge":0
 				});
-			  	actions.storeNotificationContent(result.extras.type, result.extras) 
+			  	// actions.storeNotificationContent(result.extras.type, result.extras) 
+			  	actions.checkDirectorPage(result.extras);
 			}
 		});
 

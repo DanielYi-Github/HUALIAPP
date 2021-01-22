@@ -758,5 +758,8 @@ export default {
 	},
 	SurroundingInfoPage:{
 		SurroundingInfoTitle:"Xung quanh tình trạng dịch."
+	},
+	IsolationPolicyPage:{
+		IsolationPolicyTitle:"Câu hỏi chính sách"
 	}
 }

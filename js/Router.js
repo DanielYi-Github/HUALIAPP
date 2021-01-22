@@ -97,6 +97,8 @@ import ItineraryCardPage              from './pages/Common/Survey/ItineraryCardP
 import SurroundingInfoPage              from './pages/Common/Survey/SurroundingInfoPage';
 import InTimeDataPage              from './pages/Common/Survey/InTimeDataPage';
 
+import IsolationPolicyPage              from './pages/Common/Survey/IsolationPolicyPage';
+
 
 function ShowSplashPage(props){
   const isFocused = useIsFocused();
@@ -325,6 +327,8 @@ function MainStack(){
       <AppStack.Screen name ="SurroundingInfo"  component={SurroundingInfoPage} />
       <AppStack.Screen name ="InTimeData"  component={InTimeDataPage} />
 
+      <AppStack.Screen name ="IsolationPolicy"  component={IsolationPolicyPage} />
+      
     </AppStack.Navigator>
   )
 }

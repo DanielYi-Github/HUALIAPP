@@ -548,21 +548,24 @@ export function hotInitialApi( user, way=false ){
 	return (dispatch, getState) => {
 		LoggerUtil.uploadLocalDBErrorLog(user); 	// 將資料庫的log上傳至server
 
+		//取得首頁常見功能要顯示幾個
+		UpdateDataUtil.getHomeIconNum(user).then((data)=>{
+			dispatch({									
+				type: HomeTypes.SET_HONE_FUNCTION_NUMBER,
+				homeFunctionNumber:data
+			});
+		}).catch(e=>{ console.log(e); })
+
 		// 輪播圖、公告資訊、消息 進行重新獲取
 		let arr = [
   			// UpdateDataUtil.updateMSG(user), 	//手機消息-執行最久
   			UpdateDataUtil.updateNotice(user),	//公告資訊				
 			UpdateDataUtil.updateBanner(user),	//Banner
 			UpdateDataUtil.setLoginInfo(user),
-			UpdateDataUtil.getHomeIconNum(user)     //取得首頁常見功能要顯示幾個
   		];
 
 	  	Promise.all(arr).then( async (data) => {
 	  		loadBannerImagesIntoState(dispatch, getState);//撈取HomePage Banners資料
-	  		dispatch({									//設定首頁常見功能要顯示幾個
-	  			type: HomeTypes.SET_HONE_FUNCTION_NUMBER,
-	  			homeFunctionNumber:data[3]
-	  		});
 	  	}).catch((e)=>{
 	  		switch(way) {
 	  		  case "token":

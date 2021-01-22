@@ -761,5 +761,8 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 	},
 	SurroundingInfoPage:{
 		SurroundingInfoTitle:"周边疫情"
+	},
+	IsolationPolicyPage:{
+		IsolationPolicyTitle:"隔离政策查询"
 	}
 }
