@@ -48,8 +48,8 @@ class ItineraryCardPage extends React.Component {
         />
         <WebView
           originWhitelist={['*']}
-          // source={{ uri: 'https://xc.caict.ac.cn' }}
-          source={{ uri: this.state.url }}
+          source={{ uri: 'https://xc.caict.ac.cn' }}
+          // source={{ uri: this.state.url }}
           injectedJavaScript='window.ReactNativeWebView.postMessage(document.documentElement.scrollHeight)'
         />
       </Container>  

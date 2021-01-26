@@ -98,6 +98,8 @@ import SurroundingInfoPage              from './pages/Common/Survey/SurroundingI
 import InTimeDataPage              from './pages/Common/Survey/InTimeDataPage';
 
 import CreateWebViewPage             from './pages/Common/CreateWebViewPage';
+import IsolationPolicyPage              from './pages/Common/Survey/IsolationPolicyPage';
+
 
 
 function ShowSplashPage(props){
@@ -328,9 +330,8 @@ function MainStack(){
       <AppStack.Screen name ="InTimeData"  component={InTimeDataPage} />
 
       <AppStack.Screen name ="CreateWebView"  component={CreateWebViewPage} />
-
+      <AppStack.Screen name ="IsolationPolicy"  component={IsolationPolicyPage} />
       
-
     </AppStack.Navigator>
   )
 }

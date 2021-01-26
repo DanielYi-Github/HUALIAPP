@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import * as UpdateDataUtil from '../../../utils/UpdateDataUtil';
 
 
-class SurroundingInfoPage extends React.Component {
+class IsolationPolicyPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,7 +21,7 @@ class SurroundingInfoPage extends React.Component {
 
   loadUrl = () =>{
     let user = this.props.state.UserInfo.UserInfo;
-    let content= "SurroundingInfo";
+    let content= "IsolationPolicy";
     UpdateDataUtil.getWebViewUrlFromParam(user,content).then(async (data)=>{
         this.setState({
             url: data
@@ -47,12 +47,12 @@ class SurroundingInfoPage extends React.Component {
           isRightButtonIconShow = {false}
           rightButtonIcon       = {null}
           rightButtonOnPress    = {null} 
-          title                 = {this.props.state.Language.lang.SurroundingInfoPage.SurroundingInfoTitle}
+          title                 = {this.props.state.Language.lang.IsolationPolicyPage.IsolationPolicyTitle}
           isTransparent         = {false}
         />
         <WebView
           originWhitelist={['*']}
-          source={{ uri: 'https://ugc.map.baidu.com/cube/ncp/homepage?from=dasouyiqing' }}
+          source={{ uri: 'http://m.bj.bendibao.com/news/gelizhengce/all.php' }}
           // source={{ uri: this.state.url }}
           injectedJavaScript='window.ReactNativeWebView.postMessage(document.documentElement.scrollHeight)'
         />
@@ -70,4 +70,4 @@ export default connect(
   (state) => ({
     state: {...state}
   })
-)(SurroundingInfoPage);
+)(IsolationPolicyPage);

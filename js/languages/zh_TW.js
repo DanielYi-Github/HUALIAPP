@@ -763,5 +763,8 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 	},
 	SurroundingInfoPage:{
 		SurroundingInfoTitle:"周邊疫情"
+	},
+	IsolationPolicyPage:{
+		IsolationPolicyTitle:"隔離政策查詢"
 	}
 }

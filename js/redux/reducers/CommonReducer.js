@@ -32,7 +32,8 @@ const initialState = {
   isAuthenticateApprove:false,
   navigatePage         :null,
   enableScreenShot     :false,
-  isShowAndroidChangeAPPMessage:false
+  isShowAndroidChangeAPPMessage:false,
+  enable_APP_SurveySOP:false,
 };
 
 export default function common(state = initialState, action = {}) {
@@ -178,6 +179,11 @@ export default function common(state = initialState, action = {}) {
       return {
         ...state,
         isShowAndroidChangeAPPMessage:action.result
+      }
+    case types.ENABLE_APP_SurveySOP:
+      return {
+        ...state,
+        enable_APP_SurveySOP:action.enable
       }
     default:
       return state;

@@ -23,6 +23,7 @@ export const AUTHENTICATE_APPROVE     = 'AUTHENTICATE_APPROVE';     // 身分驗
 export const AUTHENTICATE_DISAPPROVE  = 'AUTHENTICATE_DISAPPROVE';  // 身分驗證取消
 export const ENABLE_SCREENSHOT        = 'ENABLE_SCREENSHOT';  		// 是否開啟截圖功能
 export const SHOW_ANDROID_CHANGE_APP_MESSAGE = 'SHOW_ANDROID_CHANGE_APP_MESSAGE'; // 是否顯示安卓更換APP提示訊息
+export const ENABLE_APP_SurveySOP = 'ENABLE_APP_SurveySOP'; // 是否顯示防疫專區的SOP
 
 
 

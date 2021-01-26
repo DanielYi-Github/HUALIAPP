@@ -267,6 +267,9 @@ export function navigateFunctionPage(appID = null, userID = null) {
 				case "InTimeData": //及時大數據
 					NavigationService.navigate("InTimeData");
 					break;
+				case "IsolationPolicy": //隔离政策查詢
+					NavigationService.navigate("IsolationPolicy");
+					break;
 				default:
 					NavigationService.navigate(appID);
 					break;
