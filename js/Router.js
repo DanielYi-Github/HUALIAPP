@@ -93,12 +93,7 @@ import BirthdayDetailPage       from './pages/Common/Birthday/BirthdayDetailPage
 import KPIDetailPage           from './pages/Common/Report/KPI/KPIDetailPage';
 import KPICategoryPage         from './pages/Common/Report/KPI/KPICategoryPage';
 
-import ItineraryCardPage              from './pages/Common/Survey/ItineraryCardPage';
-import SurroundingInfoPage              from './pages/Common/Survey/SurroundingInfoPage';
-import InTimeDataPage              from './pages/Common/Survey/InTimeDataPage';
-
 import CreateWebViewPage             from './pages/Common/CreateWebViewPage';
-import IsolationPolicyPage              from './pages/Common/Survey/IsolationPolicyPage';
 
 
 
@@ -325,12 +320,7 @@ function MainStack(){
       <AppStack.Screen name ="KPIDetail"    component={KPIDetailPage} />
       <AppStack.Screen name ="KPICategory"  component={KPICategoryPage} />
 
-      <AppStack.Screen name ="ItineraryCard"  component={ItineraryCardPage} />
-      <AppStack.Screen name ="SurroundingInfo"  component={SurroundingInfoPage} />
-      <AppStack.Screen name ="InTimeData"  component={InTimeDataPage} />
-
       <AppStack.Screen name ="CreateWebView"  component={CreateWebViewPage} />
-      <AppStack.Screen name ="IsolationPolicy"  component={IsolationPolicyPage} />
       
     </AppStack.Navigator>
   )

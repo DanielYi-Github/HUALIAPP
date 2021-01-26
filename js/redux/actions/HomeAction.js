@@ -209,10 +209,8 @@ export function navigateFunctionPage(appID = null, userID = null) {
 		//判斷是否帶有WebView關鍵字來作為是否開啟WebView共用模板
 		if(appID.includes('WebView')){
 			let urlData=await getWebViewUrl(getState().UserInfo.UserInfo,appID);
-			console.log("存在",urlData);
 			NavigationService.navigate("CreateWebView", {WebViewID:appID, urlData:urlData});
 		}else{
-			console.log("不存在");
 			switch (appID) {
 				case "Sign":
 					NavigationService.navigate("FormTypeList");
