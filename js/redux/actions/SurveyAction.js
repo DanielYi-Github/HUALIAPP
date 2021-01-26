@@ -5,6 +5,22 @@ import * as LoggerUtil     from '../../utils/LoggerUtil';
 import FormUnit            from '../../utils/FormUnit';
 import ToastUnit 		   from '../../utils/ToastUnit';
 
+export function refreshing(enable){
+	return (dispatch, getState) => {
+		if (enable) {
+			dispatch({
+				type: types.SURVEY_REFRESHING,
+				info: getState().Language.lang.SurveyPage.Creating
+			})
+		} else {
+			dispatch({
+				type: types.SURVEY_REFRESHING_END,
+				info: getState().Language.lang.SurveyPage.Creating
+			})
+		}
+	}
+}
+
 export function getSurveyFormat( surveyOID ){
 	return (dispatch, getState) => {
 		//顯示載入動態
