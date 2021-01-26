@@ -41,7 +41,8 @@ export default {
         androidChangeAPPMessage10:"舊APP進行卸載",
         androidChangeAPPMessage11:"，使用新版APP進行操作（APP圖標有NEW字樣）。",
         androidChangeAPPMessage12:"圖標說明：",
-        androidChangeAPPMessage13:"不再顯示",
+		androidChangeAPPMessage13:"不再顯示",
+		WebViewUrlError:"網站地址獲取異常"
 	},
 	InitialPage: {
 		Update: '更新',

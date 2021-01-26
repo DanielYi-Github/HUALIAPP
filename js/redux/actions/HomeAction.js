@@ -180,14 +180,37 @@ export function loadNoticeData(page = 0, data = [], noticeType=null){
 	}
 }
 
+/**
+ * 跳轉CreateWebView前需要先撈出thf_param中的url值傳遞
+ * 先跳轉後撈取會不定期導致webview加載異常
+ *
+ * @param   {[type]}  user       [user資料]
+ * @param   {[type]}  WebViewID  [thf_param中param_type為WebViewUrl中對應的param_code]
+ *
+ * @return  {[type]}             [thf_param中的desc_name的url地址]
+ */
+async function getWebViewUrl(user,WebViewID){
+
+	let webViewUrl=null;
+    let urlParam=WebViewID.replace("WebView", "Url");
+	await UpdateDataUtil.getWebViewUrlFromParamAbout(user,urlParam).then(async (data)=>{
+		webViewUrl=data;
+		return data;
+    }).catch((e)=>{
+		console.log("getItineraryCardUrl獲取異常",e);
+		return null;
+	}); 
+	return webViewUrl;
+  }
+
 export function navigateFunctionPage(appID = null, userID = null) {
 	return async (dispatch, getState) => {
 		let recordHitCount = true;
-		console.log("navigateFunctionPage——111",appID);
-		console.log("navigateFunctionPage——222",appID.includes('000'));
+		//判斷是否帶有WebView關鍵字來作為是否開啟WebView共用模板
 		if(appID.includes('WebView')){
-			NavigationService.navigate("CreateWebView", {WebViewID: appID});
-			console.log("存在");
+			let urlData=await getWebViewUrl(getState().UserInfo.UserInfo,appID);
+			console.log("存在",urlData);
+			NavigationService.navigate("CreateWebView", {WebViewID:appID, urlData:urlData});
 		}else{
 			console.log("不存在");
 			switch (appID) {

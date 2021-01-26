@@ -42,6 +42,7 @@ export default {
         androidChangeAPPMessage11:"，使用新版APP进行操作（APP图标有NEW字样）。",
         androidChangeAPPMessage12:"图标说明：",
         androidChangeAPPMessage13:"不再显示",
+		WebViewUrlError:"网站地址获取异常"
 	},
 	InitialPage: {
 		Update                   :'更新',

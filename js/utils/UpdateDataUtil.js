@@ -4050,3 +4050,36 @@ export async function getSurveySOPSwitch(user){
 	});
 	return promise;
 }
+
+/**
+共用模板
+* 取得webView網址
+* @param user資料
+* @param content thf_app中 帶webview的id 例：InTimeDataWebView
+*/
+export async function getWebViewUrlFromParamAbout(user,content){
+
+	content ={
+		"urlCode":content,
+		// "urlCode":"aaa",
+		"lang":user.lang
+	}
+	let promise = new Promise((resolve, reject) => {
+		let url = "data/getWebViewUrlFromParamAbout";
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+			"lang" : Common.encrypt(user.lang)
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+ 			resolve(data);
+		})
+	});
+	return promise;
+}

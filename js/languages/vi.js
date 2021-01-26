@@ -42,6 +42,7 @@ export default {
 		androidChangeAPPMessage11:"，使用新版APP进行操作（APP图标有NEW字样）。",
 		androidChangeAPPMessage12:"图标说明：",
 		androidChangeAPPMessage13:"不再显示",
+		WebViewUrlError:"khác mua địa chỉ trang web"
 	},
 	InitialPage: {
 		Update: 'Cập nhật', //更新
