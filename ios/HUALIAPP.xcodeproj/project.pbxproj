@@ -748,23 +748,23 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODEPUSH_KEY = AJhlSYXl4E1Vhy1XxvQN6Q0IsDKl4ksvOXqog;
-				CODEPUSH_URL = "http://qasapp.hff-group.com:3000";
+				CODEPUSH_KEY = pTMusJbFgikGtX7cgHKDGQl1JiYP4ksvOXqog;
+				CODEPUSH_URL = "http://app.hff-group.com:3000";
 				CODE_SIGN_ENTITLEMENTS = HUALIAPP/HUALIAPP.entitlements;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3GFGZ9XDRF;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HUALIAPP/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.3.9;
+				MARKETING_VERSION = 1.4.0;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.hff.HUALIAPP.test;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.hff.HUALIAPP;
 				PRODUCT_NAME = HUALIAPP;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -779,22 +779,22 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODEPUSH_KEY = AJhlSYXl4E1Vhy1XxvQN6Q0IsDKl4ksvOXqog;
-				CODEPUSH_URL = "http://qasapp.hff-group.com:3000";
+				CODEPUSH_KEY = pTMusJbFgikGtX7cgHKDGQl1JiYP4ksvOXqog;
+				CODEPUSH_URL = "http://app.hff-group.com:3000";
 				CODE_SIGN_ENTITLEMENTS = HUALIAPP/HUALIAPP.entitlements;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3GFGZ9XDRF;
 				INFOPLIST_FILE = HUALIAPP/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.3.9;
+				MARKETING_VERSION = 1.4.0;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.hff.HUALIAPP.test;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.hff.HUALIAPP;
 				PRODUCT_NAME = HUALIAPP;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

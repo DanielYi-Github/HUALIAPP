@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>華利實業Test</string>
+	<string>華利實業</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -25,7 +25,7 @@
 	<key>CodePushDeploymentKey</key>
 	<string>$(CODEPUSH_KEY)</string>
 	<key>CodePushServerURL</key>
-	<string>$(CODEPUSH_HOST)</string>
+	<string>$(CODEPUSH_URL)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<string>call phone for driver</string>
 	<key>LSRequiresIPhoneOS</key>
