@@ -105,8 +105,10 @@ class AccountSafePage extends React.Component {
     );
   }
 
-  switchBios = (user, biometricEnable) => {
+  switchBios = async (user, biometricEnable) => {
     if (biometricEnable) {
+      //開啟和關閉之前都需要檢查server是否存在imei，來及時更新isServerExist狀態
+      await this.props.actions.loadIemiExist(this.props.state.Biometric.iemi);
       ReactNativeBiometrics.simplePrompt({ promptMessage: this.props.state.Language.lang.Common.BiosAuth }).then((resultObject) => {
         let { success, error } = resultObject
         if (success) {
@@ -132,7 +134,7 @@ class AccountSafePage extends React.Component {
         
       })
     } else {
-      this.props.actions.setIsBiometricEnable(user, biometricEnable);       //删除生物識別資訊
+        this.props.actions.setIsBiometricEnable(user, biometricEnable);       //删除生物識別資訊
     }
   }
 

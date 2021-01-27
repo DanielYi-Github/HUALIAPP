@@ -50,6 +50,11 @@ export default function biometricReducer(state = initialState, action = {}) {
         biosUser: action.biosUser,
         isServerExist: action.isServer
       };
+    case types.BIOS_SERVER_EXIST:
+      return {
+        ...state,
+        isServerExist: action.isExist
+      }; 
           
     /*
     

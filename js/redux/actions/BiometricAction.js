@@ -71,10 +71,21 @@ export function bios_error_msg(available, errorMsg, systemVersion) {
 	}
 }
 
+//查詢imei是否存在server
+export function loadIemiExist(iemi) {
+	return async (dispatch, getState) => {
+        await UpdateDataUtil.getIemiExist(iemi).then( async (data) => {
+			dispatch(bios_server_exist(data.content)); //結束載入資料畫面
+        }).catch((e)=>{
+			dispatch(bios_server_exist(false)); //結束載入資料畫面
+
+        })  
+	}
+}
+
 // 檢查設備有無使用者生物識別資訊
 export function biometricInfo_check(){
 	return async (dispatch, getState) => {
-
 	 	// 設備有無使用者生物驗證資訊
     	let biosUser = await DeviceStorageUtil.get('UserBiometricInfomation');
 	 	biosUser = biosUser ? JSON.parse(biosUser) : false;
@@ -110,7 +121,6 @@ export function setIsBiometricEnable(user, biometricEnable){
 	return async (dispatch, getState) => {
 
 		let iemi = (getState().Biometric.iemi != "") ? getState().Biometric.iemi : user.iemi;
-		console.log("iemi", iemi);
 		if (biometricEnable) {
 			let biosUser = {
 				biometricEnable:biometricEnable,
@@ -119,34 +129,50 @@ export function setIsBiometricEnable(user, biometricEnable){
 				sex            :user.sex,
 				iemi 		   :iemi
 			}
+		//getState().Biometric.isServerExist代表server是否存在該imei
+		if(!getState().Biometric.isServerExist){
+			//不存在則新增
 			UpdateDataUtil.setBiosUserIemi(user, iemi).then(async (data) => {
-				dispatch( setBiosUserInfo(biosUser, true) );
-				//生物識別成功提示
-				setTimeout(() => {
-					Alert.alert(
-					  getState().Language.lang.BiosForLoginPage.BiosSuccessTitle,
-					  getState().Language.lang.BiosForLoginPage.BiosSuccessTips, 
-					  [{ text: 'OK',onPress: () => {}}], 
-					  { cancelable: false }
-					)
-				}, 200);
-			}).catch((e) => {
-				if (e.code == 0) {
-					// 在其他地方登入了 直接登出，並清空本地生物認證資訊
-					dispatch(setBiosUserInfo({}, false));
-					dispatch(logout( e.message ));
-				} else {
-					//無法連線，請確定網路連線狀況
+					dispatch( setBiosUserInfo(biosUser, true) );
+					//生物識別成功提示
 					setTimeout(() => {
 						Alert.alert(
-							getState().Language.lang.CreateFormPage.Fail,
-							getState().Language.lang.Common.NoInternetAlert, 
-							[{ text: 'OK', onPress: () => {}}], 
-							{ cancelable: false }
+						getState().Language.lang.BiosForLoginPage.BiosSuccessTitle,
+						getState().Language.lang.BiosForLoginPage.BiosSuccessTips, 
+						[{ text: 'OK',onPress: () => {}}], 
+						{ cancelable: false }
 						)
 					}, 200);
-				}
-			});
+				}).catch((e) => {
+					if (e.code == 0) {
+						// 在其他地方登入了 直接登出，並清空本地生物認證資訊
+						dispatch(setBiosUserInfo({}, false));
+						dispatch(logout( e.message ));
+					} else {
+						//無法連線，請確定網路連線狀況
+						setTimeout(() => {
+							Alert.alert(
+								getState().Language.lang.CreateFormPage.Fail,
+								getState().Language.lang.Common.NoInternetAlert, 
+								[{ text: 'OK', onPress: () => {}}], 
+								{ cancelable: false }
+							)
+						}, 200);
+					}
+				});
+			}else{
+				//存在則提示+保存本地資料
+					dispatch( setBiosUserInfo(biosUser, true) );
+					//生物識別成功提示
+					setTimeout(() => {
+						Alert.alert(
+						getState().Language.lang.BiosForLoginPage.BiosSuccessTitle,
+						getState().Language.lang.BiosForLoginPage.BiosSuccessTips, 
+						[{ text: 'OK',onPress: () => {}}], 
+						{ cancelable: false }
+						)
+					}, 200);
+			}
 		} else {
 			UpdateDataUtil.setBiosUserIemi(user, iemi, true).then(async (data) => {
 				dispatch(setBiosUserInfo({}, false)); 
