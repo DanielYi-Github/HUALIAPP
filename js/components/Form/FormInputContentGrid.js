@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Header, Left, Content, Right, Item, Label, Input, Body, Card, CardItem, Title, Button, Icon, Text, CheckBox, Toast, connectStyle } from 'native-base';
+import { Container, Header, Left, Content, Right, Item, Label, Input, Body, Card, CardItem, Title, Button, Icon, Text, CheckBox, Toast, connectStyle, Spinner } from 'native-base';
 import { View, FlatList, TextField, Alert, Platform, AlertIOS }from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import FormInputContent          from './FormInputContent';
@@ -29,6 +29,8 @@ class FormInputContentGrid extends Component {
 			editCheckItem: false,
 			editCheckItemIndex: -1,
 			editCheckItemRecord: [], // 用來記錄被checkBox勾選的項目值是true/false 例如[true, false, false],
+
+			loadingMark:false,
 		};
 	}
 
@@ -64,41 +66,28 @@ class FormInputContentGrid extends Component {
 	            	>
 		 			  	<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 		                <Label>{this.state.labelname}</Label>
+
 		                {
-		                	(this.state.data.enableCreateData != false) ? 
+		                	(this.state.loadingMark) ? 
+        		                <Label style={{textAlign: 'right'}}>{this.props.lang.ListFooter.Loading}</Label>
+		                	:
+		                		null
+		                }
+
+		                {
+		                	(this.state.loadingMark) ? 
+        		                <Spinner  style={{height: 32}}/>
+		                	:
+		                		null
+		                }
+
+		                {
+		                	(this.state.data.enableCreateData != false && !this.state.loadingMark) ? 
         		                <Icon 
         							name  ="add-circle" 
         							type  ="MaterialIcons" 
         							style ={{fontSize:30, color: '#20b11d'}}
-        		                	onPress={ async ()=>{
-        		                		// 原
-        		                		/*
-        		                		let data = this.state.data;
-    		                			data.listComponent[i].actionValue = await FormUnit.getActionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);	// 取得該欄位的動作
-										this.showEditModal(data); // 直接開啟編輯葉面
-										*/
-									
-    		                			// 修改後
-    		                			let data = this.state.data;
-										let unShowColumns	 = []; 	//暫時紀錄不顯示的欄位
-        		                		for(let i in data.listComponent){
-											data.listComponent[i].show = true; 	   		   		// 該欄位要不要顯示
-											data.listComponent[i].requiredAlbert = false; 	    // 該欄位空值警告
-											
-											for(let unShowColumn of unShowColumns){
-												if (unShowColumn.id == data.listComponent[i].component.id) {
-													data.listComponent[i].defaultvalue = unShowColumn.value;
-													data.listComponent[i].paramList    = unShowColumn.paramList;
-													data.listComponent[i].show         = (unShowColumn.visible || unShowColumn.visible == "true") ? true : false;
-													data.listComponent[i].required     = (unShowColumn.required) ? "Y" : "F";
-												}
-											}
-											let columnactionValue = await FormUnit.getColumnactionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);   // 取得該欄位欲隱藏的欄位
-											unShowColumns = unShowColumns.concat(columnactionValue);
-    		                				data.listComponent[i].actionValue = await FormUnit.getActionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);	// 取得該欄位的動作
-        		                		}
-										this.showEditModal(data); // 直接開啟編輯葉面
-        		                	}}
+        		                	onPress={this.getEditField}
         		                />
 		                	:
 		                		null
@@ -184,6 +173,38 @@ class FormInputContentGrid extends Component {
 		}
 
 		return renderItem;
+	}
+
+	getEditField = async() => {
+		this.setState({loadingMark:true});
+		// 原
+		/*
+		let data = this.state.data;
+		data.listComponent[i].actionValue = await FormUnit.getActionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);	// 取得該欄位的動作
+		this.showEditModal(data); // 直接開啟編輯葉面
+		*/
+	
+		// 修改後
+		let data = this.state.data;
+		let unShowColumns	 = []; 	//暫時紀錄不顯示的欄位
+		for(let i in data.listComponent){
+			data.listComponent[i].show = true; 	   		   		// 該欄位要不要顯示
+			data.listComponent[i].requiredAlbert = false; 	    // 該欄位空值警告
+			
+			for(let unShowColumn of unShowColumns){
+				if (unShowColumn.id == data.listComponent[i].component.id) {
+					data.listComponent[i].defaultvalue = unShowColumn.value;
+					data.listComponent[i].paramList    = unShowColumn.paramList;
+					data.listComponent[i].show         = (unShowColumn.visible || unShowColumn.visible == "true") ? true : false;
+					data.listComponent[i].required     = (unShowColumn.required) ? "Y" : "F";
+				}
+			}
+			let columnactionValue = await FormUnit.getColumnactionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);   // 取得該欄位欲隱藏的欄位
+			unShowColumns = unShowColumns.concat(columnactionValue);
+			data.listComponent[i].actionValue = await FormUnit.getActionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);	// 取得該欄位的動作
+		}
+		this.setState({ loadingMark:false });
+		this.showEditModal(data); // 直接開啟編輯葉面
 	}
 
 	rendercheckItem = (item) => {

@@ -193,29 +193,43 @@ export function cancelEmpidFirstLoginState(){
 /*****密碼更新結束*****/
 
 /*****登入方式*****/
-export function loginByAD(account, password, biosUserIsChange = false) {
+export function loginByAD(account, password) {
 	//AD賬號登錄
-	return (dispatch, getState) => {
+	return async (dispatch, getState) => {
 		dispatch(login_doing());						//開始顯示載入資料畫面
 		var user = new User(); 							//使用者初始化
 		user.setLoginID(account.toLowerCase());			//大寫轉小寫
 		user.setPassword(Common.encrypt(password));
 		
-		//賬號驗證
-		UpdateDataUtil.loginByAD(user).then((data) => {
-			user      = data.Value.user;				// 登入成功
+		let checkResult = await checkLoginByAD(user);	
+		if (checkResult.result) {
+			user      = checkResult.content.Value.user;				// 登入成功
 			user.lang = getState().Language.langStatus;	//給定手機語系
 			this.initialApi(user,"ad");
 			dispatch( setBiosUserInfo({}, false) );
-
-		}).catch((e)=>{
-			dispatch(login_done(false, e)); 			//登入失敗，顯示訊息  
-		})	
-
+		} else {
+			dispatch(login_done(false, checkResult.content)); 			//登入失敗，顯示訊息  
+		}
 	}
 }
 
-export function loginByEmpid(empid, passwordEmp, biosUserIsChange = false) {
+async function checkLoginByAD(user){
+	//賬號驗證
+	let result = await UpdateDataUtil.loginByAD(user).then((data) => {
+		return {
+			result :true,
+			content:data
+		}
+	}).catch((e)=>{
+		return {
+			result :false,
+			content:e
+		}
+	})
+	return result;
+}
+
+export function loginByEmpid(empid, passwordEmp) {
 	return async (dispatch, getState) => {
 		dispatch(login_doing()); //開始顯示載入資料畫面
 
@@ -224,34 +238,53 @@ export function loginByEmpid(empid, passwordEmp, biosUserIsChange = false) {
 		user.setLoginID(empid); //工號登陸需將login內容改為id內容
 		user.setPassword(passwordEmp);
 
-		let loginByEmpidResult = await UpdateDataUtil.loginByEmpid(user, lang).then((data) => {
-			return data;
-		}).catch((e) => {
-			return {
-				Message: "Fail_Connect"
-			};
-		})
-		switch (loginByEmpidResult.Message) {
-			case "initialEmp":
-				// 跳頁至修改密碼畫面				
-				NavigationService.navigate('InitialPassword', {
-					empid: empid,
-					empPassword: passwordEmp,
-					basicData: loginByEmpidResult.basicData
-				});
-				dispatch(login_done(true));
-				break;
-			case "success":
-				dispatch( setBiosUserInfo({}, false) );
-				this.initialApi(user, "empid");
-				break;
-			case "Fail_Connect":
-				dispatch(login_done(false, loginByEmpidResult.Message));
-				break;
-			default:
-				dispatch(login_done(false, loginByEmpidResult.message));
+		let checkResult = await checkLoginByEmpid(user, lang);
+
+		if (checkResult.result) {
+			switch (checkResult.content.Message) {
+				case "initialEmp":
+					// 跳頁至修改密碼畫面				
+					NavigationService.navigate('InitialPassword', {
+						empid: empid,
+						empPassword: passwordEmp,
+						basicData: checkResult.content.basicData
+					});
+					dispatch(login_done(true));
+					break;
+				case "success":
+					dispatch( setBiosUserInfo({}, false) );
+					this.initialApi(user, "empid");
+					break;
+				default:
+				dispatch(login_done(false, checkResult.content.Message));
+			}
+		} else {
+			dispatch(login_done(false, checkResult.content.message));
 		}
 	}
+}
+
+async function checkLoginByEmpid(user, lang){
+	//賬號驗證
+	let result = await UpdateDataUtil.loginByEmpid(user, lang).then((data) => {
+		if (data.code == "11") {
+			return {
+				result :false,
+				content:data
+			}
+		} else {
+			return {
+				result :true,
+				content:data
+			}
+		}
+	}).catch((e)=>{
+		return {
+			result :false,
+			content:e
+		}
+	})
+	return result;
 }
 
 export function loginByToken(user) {
@@ -653,25 +686,59 @@ function setBiosUserInfo(biosUser, isServer = true) {
 }
 
 // 更換帳號登入切換
-export function loginChangeAccount(account, password, checkAccType){
-	return (dispatch, getState) => {
-		// 先註記需要更換帳號的資訊
-		dispatch(
-			{
-				type: types.LOGIN_CHANGE_ACCOUNT,
-				loginChangeUserInfo: {
-					account     :account,
-					password    :password,
-					checkAccType:checkAccType
+export function loginChangeAccount(account, password, checkAccType, actions, biometricEnable){
+	return async (dispatch, getState) => {
+		let checkResult;
+		let lang = getState().Language.langStatus;
+		var userChange = new User(); //使用者初始化
+
+		switch (checkAccType) {
+		  case "AD":
+		  	userChange.setLoginID(account.toLowerCase());			
+		  	userChange.setPassword(Common.encrypt(password));
+		    checkResult = await checkLoginByAD(userChange);
+		    break;
+		  case "EMPID":
+			userChange.setLoginID(account); 						
+			userChange.setPassword(password);
+			checkResult = await checkLoginByEmpid(userChange, lang);
+		    break;
+		  default:
+		};
+
+		if (checkResult.result) {
+			biometricEnable ? actions.setIsBiometricEnable(user, false) : null;  //删除生物識別資訊
+			actions.deleteAllForms();                                            //消除所有清單內容
+
+			// 先註記需要更換帳號的資訊
+			dispatch(
+				{
+					type: types.LOGIN_CHANGE_ACCOUNT,
+					loginChangeUserInfo: {
+						account     :account,
+						password    :password,
+						checkAccType:checkAccType
+					}
 				}
-			}
-		);
-		
-		// 再來進行實際的帳號登出狀況
-		dispatch({
-			type: types.UNLOGIN,
-			userLogout: true,
-		});
+			);
+			
+			// 再來進行實際的帳號登出狀況
+			dispatch({
+				type: types.UNLOGIN,
+				userLogout: true,
+			});
+			
+		} else {
+			switch (checkAccType) {
+			  case "AD":
+			  	dispatch(login_done(false, checkResult.content));
+			    break;
+			  case "EMPID":
+				dispatch(login_done(false, checkResult.content.message));
+			    break;
+			  default:
+			};
+		}
 	}
 }
 
@@ -682,10 +749,6 @@ function cleanLoginChangeAccount(){
 		loginChangeUserInfo: {}
 	}
 } 
-
-
-
-
 
 function setLang(lang) {
 	DeviceStorageUtil.set("locale", lang);

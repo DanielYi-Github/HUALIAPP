@@ -92,14 +92,14 @@ let FormUnit = {
       case "tableaveforlocal":
         if (parentItem.defaultvalue.length != 0) {
           // 強制先填寫性名
-          if (parentItem.listComponent[1].defaultvalue == null) {
-             return { message:`${parentItem.listComponent[1].component.name} ${this.language.requireFirst}`};
+          if (formItem.component.id != "ITEM2" && parentItem.listComponent[1].defaultvalue == null) {
+            return { message:`${parentItem.listComponent[1].component.name} ${this.language.requireFirst}`};
           }
           
+          // 是否自己是整天的狀況下填寫的
           let isWholeDay =  typeof parentItem.listComponent[4].defaultvalue == "String" ? 
                               new Boolean(parentItem.listComponent[4].defaultvalue) :
-                              parentItem.listComponent[4].defaultvalue;
-          
+                              parentItem.listComponent[4].defaultvalue;          
 
           // 請整天的情況下
           if (isWholeDay) {
@@ -107,53 +107,87 @@ let FormUnit = {
               for(let lastRecord of parentItem.defaultvalue){
                 // 是否同姓名
                 if (lastRecord[1].defaultvalue == parentItem.listComponent[1].defaultvalue) {
-
                   // 被比對的對象是否整日
-
-                  /*
-                  // 是否起始時間早於上一筆起迄時間
-                  let compareLanguage  = this.getCompareLanguage(">");           // 取得比較字元的語言意思
-                  let comparisonObject = lastRecord[7];
-                  let compareResult    = this.compare( value, ">", comparisonObject.defaultvalue, formItem.columntype);
-                  
-                  if (compareResult != true) {
-                    return { message:`${formItem.component.name} ${this.language.Connot}${compareLanguage} ${this.language.PreviousSameName}${comparisonObject.component.name}`};
+                  if(lastRecord[4].defaultvalue == "true"){
+                    // 起始日必須晚於上一筆起迄日
+                    let compareLanguage  = this.getCompareLanguage(">");           // 取得比較字元的語言意思
+                    let comparisonObject = lastRecord[7];
+                    let compareResult    = this.compare( value, ">", comparisonObject.defaultvalue, formItem.columntype);
+                    
+                    if (compareResult != true) {
+                      return { message:`${formItem.component.name} ${this.language.Connot}${compareLanguage} ${this.language.PreviousSameName}${comparisonObject.component.name}`};
+                    }
+                  }else{
+                    // 起始日必須晚於上一筆起始日
+                    let compareLanguage  = this.getCompareLanguage(">");           // 取得比較字元的語言意思
+                    let comparisonObject = lastRecord[7];
+                    let compareResult    = this.compare( value, ">", comparisonObject.defaultvalue, formItem.columntype);
+                    
+                    if (compareResult != true) {
+                      return { message:`${formItem.component.name} ${this.language.Connot}${compareLanguage} ${this.language.PreviousSameName}${comparisonObject.component.name}`};
+                    }
                   }
-                  */
                 }
-              }
-            }
-            
-            // 比對起日ITEM4 迄日ITEM6 期間不能跨年
-            if (formItem.component.id == "ITEM4" || formItem.component.id == "ITEM6") {
-              let item4Value, item6Value;
-              if (formItem.component.id == "ITEM4") {
-                item4Value = value;
-                item6Value = parentItem.listComponent[7].defaultvalue;
-              } else {
-                item4Value = parentItem.listComponent[5].defaultvalue;
-                item6Value = value;
-              }
-              if ( item4Value == null || item6Value == null ) return compareResult;  // 馬上結束
-
-              item4Value = (new Date(`${item4Value}`)).getFullYear();
-              item6Value = (new Date(`${item6Value}`)).getFullYear();
-              if (item4Value !== item6Value) {
-                return { message:`${parentItem.listComponent[5].component.name} ${this.language.and} ${parentItem.listComponent[7].component.name} ${this.language.CrossYear}`};
               }
             }
           } else {
             // 一定要先選日期，才可選時間
             if (formItem.columntype == "date"){
-              
                 for(let lastRecord of parentItem.defaultvalue){
                   // 是否同姓名
                   if (lastRecord[1].defaultvalue == parentItem.listComponent[1].defaultvalue) {
                     // 被比對的對象是否整日
-                    
+                    if(lastRecord[4].defaultvalue == "true"){
+                      // 起始日必須晚於上一筆起迄日
+                      let compareLanguage  = this.getCompareLanguage(">");           // 取得比較字元的語言意思
+                      let comparisonObject = lastRecord[7];
+                      let compareResult    = this.compare( value, ">", comparisonObject.defaultvalue, formItem.columntype);
+                      
+                      if (compareResult != true) {
+                        return { message:`${formItem.component.name} ${this.language.Connot}${compareLanguage} ${this.language.PreviousSameName}${comparisonObject.component.name}`};
+                      }
+                    }
                   }
                 }
             }
+
+            if (formItem.columntype == "time"){
+                for(let lastRecord of parentItem.defaultvalue){
+                  // 是否同姓名
+                  if (lastRecord[1].defaultvalue == parentItem.listComponent[1].defaultvalue) {
+                    // 是否是同一日，是，則起時不能早於上一筆的迄時：否則沒差
+                    if (lastRecord[5].defaultvalue == parentItem.listComponent[5].defaultvalue ) {
+                      // 否起始時間早於上一筆起迄時間
+                      let compareLanguage  = this.getCompareLanguage(">");           // 取得比較字元的語言意思
+                      let comparisonObject = lastRecord[8];
+                      let compareResult    = this.compare( value, ">", comparisonObject.defaultvalue, formItem.columntype);
+                      
+                      if (compareResult != true) {
+                        return { message:`${formItem.component.name} ${this.language.Connot}${compareLanguage} ${this.language.PreviousSameName}${comparisonObject.component.name}`};
+                      }
+                    }
+                  }
+                }
+            }
+          }
+        }
+
+        // 比對起日ITEM4 迄日ITEM6 期間不能跨年
+        if (formItem.component.id == "ITEM4" || formItem.component.id == "ITEM6") {
+          let item4Value, item6Value;
+          if (formItem.component.id == "ITEM4") {
+            item4Value = value;
+            item6Value = parentItem.listComponent[7].defaultvalue;
+          } else {
+            item4Value = parentItem.listComponent[5].defaultvalue;
+            item6Value = value;
+          }
+          if ( item4Value == null || item6Value == null ) return compareResult;  // 馬上結束
+
+          item4Value = (new Date(`${item4Value}`)).getFullYear();
+          item6Value = (new Date(`${item6Value}`)).getFullYear();
+          if (item4Value !== item6Value) {
+            return { message:`${parentItem.listComponent[5].component.name} ${this.language.and} ${parentItem.listComponent[7].component.name} ${this.language.CrossYear}`};
           }
         }
         break;

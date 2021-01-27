@@ -63,7 +63,6 @@ export default function createSurvey(state = initialState, action) {
 				ruleCheckMessage: action.ruleCheckMessage.message
 			}
 			break;
-
 		case types.CHECKREQUIREDVALUE:
 			return {
 				...state,
@@ -72,7 +71,6 @@ export default function createSurvey(state = initialState, action) {
 				// gotoPageIndex: action.gotoPageIndex,
 			}
 			break;
-		
 		case types.REGISTERSURVEYRESULT:
 
 			return {
@@ -83,9 +81,21 @@ export default function createSurvey(state = initialState, action) {
 				checkRequired : null
 			}	
 			break;
-		
 		case types.CLOSESURVEYFORM:
 			return initialState;
+			break;
+		case types.SURVEY_REFRESHING:
+			return {
+				...state,
+				refreshing: true,
+				refreshInfo:action.info,
+			}
+			break;
+		case types.SURVEY_REFRESHING_END:
+			return {
+				...state,
+				refreshing: false,
+			}
 			break;
 		/*
 		case types.DEFAULTSUBMITRESULT:

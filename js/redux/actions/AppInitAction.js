@@ -50,12 +50,13 @@ export function appInit(initActions, downloadProgressCallback) {
 				isVersionUpdate = await UpgradeAppVersionUtil.checkBigUpdate(lang); // 版本更新檢查
 
 				if (!isVersionUpdate) {
-					
+					isVersionUpdate = await UpgradeAppVersionUtil.checkHotUpdate(lang, downloadProgressCallback); // 熱更新檢查
+					/*
 					isVersionUpdate = Platform.OS == 'ios' ? 
 							isVersionUpdate 
 						: 
 							await UpgradeAppVersionUtil.checkHotUpdate(lang, downloadProgressCallback); // 熱更新檢查
-					
+					*/
 					
 					if (!isVersionUpdate) intoAppProgress(initActions, getState());
 					initActions.setNoUpdateAlert(); // 設定不要顯示提醒框
