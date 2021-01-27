@@ -11,7 +11,7 @@ import * as NavigationService from '../../utils/NavigationService';
 import ToastUnit              from '../../utils/ToastUnit';
 import LoginSingleItem        from '../../components/LoginSingleItem';
 import LoginTabsItem          from '../../components/LoginTabsItem';
-
+import User                   from '../../object/User';
 
 
 class LoginPage extends React.Component {
@@ -129,9 +129,14 @@ class LoginPage extends React.Component {
     let checkAccType    = this.props.Login.checkAccType;
     let biometricEnable = this.props.Biometric.biosUser.biometricEnable;
 
-    biometricEnable ? this.props.actions.setIsBiometricEnable(user, false) : null;  //删除生物識別資訊
-    this.props.actions.deleteAllForms();                                            //消除所有清單內容
-    this.props.actions.loginChangeAccount(account, password, checkAccType)          //進行變更帳號登入的動作  
+    //進行變更帳號登入的動作
+    this.props.actions.loginChangeAccount(
+      account, 
+      password, 
+      checkAccType, 
+      this.props.actions, 
+      biometricEnable
+    )            
   }
 
   forgetPassword = (accountType, account) => {

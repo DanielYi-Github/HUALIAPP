@@ -113,7 +113,11 @@ let UpgradeAppVersionUtil = {
 			});
 
 			//檢查更新
+			// CodePush.checkForUpdate("AJhlSYXl4E1Vhy1XxvQN6Q0IsDKl4ksvOXqog").then((remotePackage) => {
+			console.log("CODE_PUSH_KEY", CODE_PUSH_KEY);
 			CodePush.checkForUpdate(CODE_PUSH_KEY).then((remotePackage) => {
+				console.log(remotePackage);
+				/*
 				if(remotePackage == null) return resolve(false);
 
 				//從THF_VERSION找出，比檢查到的版本小 比目前的版本大的裡面有沒有 必須更新的，如果有就顯示提示框，沒有就自動更新
@@ -189,7 +193,7 @@ let UpgradeAppVersionUtil = {
 						);
 					}
 				})
-
+				*/
 			}).catch((error) => {
 			  LoggerUtil.addErrorLog("checkForUpdate 熱更新失敗", "APP Page in InitialPage", "WARN", error);
 			  return resolve(false);

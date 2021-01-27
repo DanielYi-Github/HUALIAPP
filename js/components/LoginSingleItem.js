@@ -58,7 +58,11 @@ class LoginSingleItem extends React.PureComponent  {
               <Body style={{flexDirection:'row',marginTop:this.props.style.PageSize.height*.08}}>
                   <Button bordered light 
                     style   = {{flex:1,justifyContent:'center'}}
-                    onPress = {() => this.props.checkBySingle(this.state.account)}                        
+                    onPress = {() => {
+                      var account = this.state.account.replace(/\s*/g,"");
+                      this.setState({account:account})
+                      this.props.checkBySingle(account);
+                    }}                        
                   >
                     {
                       (this.props.Login.checkloading) ?

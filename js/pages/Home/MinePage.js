@@ -53,6 +53,12 @@ class MinePage extends React.Component {
         selectThemeName = lang.MinePage.themeLight; 
     }
 
+    // 是否顯示代理人設定
+    let isShowBpmDeputySetting = false;
+    for(let FunctionData of this.props.state.Home.FunctionData){
+      if (FunctionData.ID == "Sign") isShowBpmDeputySetting = true;
+    }
+
     return (
       <Container>
        <MainPageBackground height={200}/>
@@ -121,7 +127,7 @@ class MinePage extends React.Component {
             />
 
             {/*BPM代理人設定*/}
-            {(user.id!=user.loginID)?
+            {(user.id!=user.loginID && isShowBpmDeputySetting)?
               <MineItem
                 title    = {this.props.state.Language.lang.DeputyPage.BpmDeputySetting}
                 iconBackgroundColor = {"#FF00FF"}
