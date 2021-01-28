@@ -49,7 +49,7 @@ export function loadFunctionType(lang) {
 }
 
 export function loadFunctionData(lang) {
-	return dispatch => {
+	return  (dispatch, getState) => {
 		
 		
 		let data = [];
@@ -86,8 +86,14 @@ export function loadFunctionData(lang) {
 					ORDER BY POSITION`;
 		}
 		SQLite.selectData(sql, []).then((result) => {
-      		for (let i = 0; i < result.length; i++) data.push(result.item(i));
-      		// console.log(data);
+      		for (let i = 0; i < result.length; i++) {
+      			// if (getState().UserInfo.UserInfo.id == "A10480" && result.item(i).MODULE_OID == "B967A3FE6887E9E1E050A8C0BA1E2BED") {
+
+      			// } else {
+      				data.push(result.item(i));
+      			// }
+      		}
+      		
 			dispatch( loadFunctionIntoState(data) );
     	}).catch((e)=>{
 			LoggerUtil.addErrorLog("HomeAction loadFunctionData", "APP Action", "ERROR", e);

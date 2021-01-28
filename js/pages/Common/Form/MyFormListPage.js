@@ -193,6 +193,16 @@ class MyFormListPage extends React.Component {
   renderDrawerContent = () => {
     let containerBgColor = this.props.state.Theme.theme.variables.containerBgColor; 
     let contentStyle = this.props.state.Theme.theme.variables.contentStyle;
+    let bpmFunctionEnable = false;
+
+    for(let functiondata of this.props.state.Home.FunctionData){
+      if ( functiondata.ID == "Sign" ) {
+        bpmFunctionEnable = true;
+        break;
+      }
+    }
+
+
     if (Platform.OS === "ios") {
       return(
         <Container style={{backgroundColor: containerBgColor=="rgba(0,0,0,0)" ? contentStyle: containerBgColor }}>
@@ -208,20 +218,27 @@ class MyFormListPage extends React.Component {
             isTransparent         = {false}
           />
           <Content>
-            <MyFormSelectListButton
-              text={this.props.state.Language.lang.MyFormListPage.FormState}   //表單狀態
-              defaultData={this.state.defaultFormState} 
-              data={this.state.FormStateList}
-              onPress={(item, index) => {
-                for (var i in this.state.FormStateList) {
-                  if (this.state.FormStateList[i].label == item) {
-                    this.setState({
-                      defaultFormState: this.state.FormStateList[i]
-                    });
-                  }
-                }
-              }}
-            />
+
+            {
+              bpmFunctionEnable ? 
+                <MyFormSelectListButton
+                  text={this.props.state.Language.lang.MyFormListPage.FormState}   //表單狀態
+                  defaultData={this.state.defaultFormState} 
+                  data={this.state.FormStateList}
+                  onPress={(item, index) => {
+                    for (var i in this.state.FormStateList) {
+                      if (this.state.FormStateList[i].label == item) {
+                        this.setState({
+                          defaultFormState: this.state.FormStateList[i]
+                        });
+                      }
+                    }
+                  }}
+                />
+              :
+                null
+            }
+            
 
             <MyFormSelectListButton
               text={this.props.state.Language.lang.MyFormListPage.FormTime}   //時間長度
@@ -253,69 +270,82 @@ class MyFormListPage extends React.Component {
               }}
             />
 
-            <MyFormSelectListButton
-              text={this.props.state.Language.lang.MyFormListPage.FormType}  //表單主類
-              defaultData={this.state.defaultMainFormType} 
-              data={this.props.state.MyForm.FormTypes}
-              onPress={(item, index) => {
-                index = 0;
-                for (var i in this.props.state.MyForm.FormTypes) {
-                  if (this.props.state.MyForm.FormTypes[i].label == item) {
-                    index=i;
-                  }
-                }
+            {
+              bpmFunctionEnable ?
+                <MyFormSelectListButton
+                  text={this.props.state.Language.lang.MyFormListPage.FormType}  //表單主類
+                  defaultData={this.state.defaultMainFormType} 
+                  data={this.props.state.MyForm.FormTypes}
+                  onPress={(item, index) => {
+                    index = 0;
+                    for (var i in this.props.state.MyForm.FormTypes) {
+                      if (this.props.state.MyForm.FormTypes[i].label == item) {
+                        index=i;
+                      }
+                    }
 
-                if (index != 0) {
-                  this.setState({
-                    defaultMainFormType: this.props.state.MyForm.FormTypes[index],
-                    defaultFormType: {  
-                      key  : "all",
-                      label: this.props.lang.MyFormListPage.FormTypeAll
-                    },
-                    FormTypes:[
-                      {
-                        key  : "all",
-                        label: this.props.lang.MyFormListPage.FormTypeAll
-                      }, 
-                      ...this.props.state.MyForm.FormTypes[index].content
-                    ],
-                    enabledFormTypesSelect: true
-                  });
-                } else {
-                  this.setState({
-                    defaultMainFormType: this.props.state.MyForm.FormTypes[index],
-                    defaultFormType: {  
-                      key  : "all",
-                      label: this.props.lang.MyFormListPage.FormTypeAll
-                    },
-                    FormTypes:[{
-                        key  : "all",
-                        label: this.props.lang.MyFormListPage.FormTypeAll
-                      }],
-                    enabledFormTypesSelect: false
-                  });
-                }
-                
-              }}
-            />
+                    if (index != 0) {
+                      this.setState({
+                        defaultMainFormType: this.props.state.MyForm.FormTypes[index],
+                        defaultFormType: {  
+                          key  : "all",
+                          label: this.props.lang.MyFormListPage.FormTypeAll
+                        },
+                        FormTypes:[
+                          {
+                            key  : "all",
+                            label: this.props.lang.MyFormListPage.FormTypeAll
+                          }, 
+                          ...this.props.state.MyForm.FormTypes[index].content
+                        ],
+                        enabledFormTypesSelect: true
+                      });
+                    } else {
+                      this.setState({
+                        defaultMainFormType: this.props.state.MyForm.FormTypes[index],
+                        defaultFormType: {  
+                          key  : "all",
+                          label: this.props.lang.MyFormListPage.FormTypeAll
+                        },
+                        FormTypes:[{
+                            key  : "all",
+                            label: this.props.lang.MyFormListPage.FormTypeAll
+                          }],
+                        enabledFormTypesSelect: false
+                      });
+                    }
+                    
+                  }}
+                />
+              :
+                null
+            }
 
-            <MyFormSelectListButton
-              enabled     ={this.state.enabledFormTypesSelect}
-              text        ={this.props.state.Language.lang.MyFormListPage.FormSubType}   //表單子類
-              defaultData ={this.state.defaultFormType} 
-              data        ={this.state.FormTypes}
-              onPress={(item, index) => {
-                for (var i in this.state.FormTypes) {
-                  if (this.state.FormTypes[i].label == item) {
-                    this.setState({
-                      defaultFormType: this.state.FormTypes[i]
-                    });
-                  }
-                }
+            {
+              bpmFunctionEnable ?
+                <MyFormSelectListButton
+                  enabled     ={this.state.enabledFormTypesSelect}
+                  text        ={this.props.state.Language.lang.MyFormListPage.FormSubType}   //表單子類
+                  defaultData ={this.state.defaultFormType} 
+                  data        ={this.state.FormTypes}
+                  onPress={(item, index) => {
+                    for (var i in this.state.FormTypes) {
+                      if (this.state.FormTypes[i].label == item) {
+                        this.setState({
+                          defaultFormType: this.state.FormTypes[i]
+                        });
+                      }
+                    }
 
-              }}
-              enabledFormTypesSelect = {this.state.enabledFormTypesSelect}
-            />
+                  }}
+                  enabledFormTypesSelect = {this.state.enabledFormTypesSelect}
+                />
+              :
+                null
+            }
+            
+
+            
 
             <Body style={{height:this.props.style.PageSize.height*0.1}}/>
             <Button block info 
