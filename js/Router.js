@@ -353,7 +353,9 @@ class Router extends React.Component {
       !showSecurityScreenFromAppState(nextAppState) 
     ) {
       let user = await DeviceStorageUtil.get('User');
-      if (user !== "") this.props.actions.appHotInit(this.props.actions);
+      if (user !== "") {
+        this.props.actions.appHotInit(this.props.actions);
+      }
     }
   }  
   

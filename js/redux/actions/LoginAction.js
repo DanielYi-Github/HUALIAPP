@@ -317,7 +317,14 @@ export function loginByImei(biosInfo,langStatus) {
 		UpdateDataUtil.getMBUserInfoByImei(biosInfo,langStatus).then((user) => {
 			if (user) {
 				this.initialApi(user,"imei");
-				DeviceStorageUtil.set('User', user); //存在客戶端
+
+				setTimeout(
+					function(){
+				 		// alert("Hello"); 
+				 		DeviceStorageUtil.set('User', user); //存在客戶端
+				 	}, 
+				3000);
+				// DeviceStorageUtil.set('User', user); //存在客戶端
 			} else {
 				dispatch(login_done(false));  //登入失敗，跳至登入頁
 			}
