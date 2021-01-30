@@ -33,17 +33,19 @@ export default class DocumentContentItem extends React.PureComponent  {
 		return(
 			<Card style={{alignSelf: 'center'}}>
 				<CardItem button onPress={this.props.onPress}>
-					<Button 	
-					rounded		    	 
-							onPress={() => {}} 
-					    	style={{
-								height         : 55,
-								width          : 55, 
-								backgroundColor: backgroundColor				
-					    	}}
-					    >
-						  <Icon name={icon} style={{color:color}} type={iconType}/>
-					</Button>
+					<Left style={{flex:0}}>
+						<Button 	
+						rounded		    	 
+								onPress={() => {}} 
+								style={{
+									height         : 55,
+									width          : 55, 
+									backgroundColor: backgroundColor			
+								}}
+							>
+							<Icon name={icon} style={{color:color}} type={iconType}/>
+						</Button>
+					</Left>
 				    <Body style={{paddingLeft:10}}>
 						<Text >{selectedInfo.detail}</Text>
 				    	<Body style={{flexDirection: 'row', alignSelf: 'flex-start'}}>
