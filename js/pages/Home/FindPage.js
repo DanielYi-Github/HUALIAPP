@@ -50,7 +50,7 @@ class FindPage extends React.Component {
       for(var typeI in this.props.state.Home.FunctionType){
         let tempItemList = [];
         for(var j in filteredData){
-            if(filteredData[j].MODULE_OID==this.props.state.Home.FunctionType[typeI].OID){
+            if(filteredData[j].MODULE_OID==this.props.state.Home.FunctionType[typeI].oid){
               tempItemList.push(filteredData[j]);
             }
         }
