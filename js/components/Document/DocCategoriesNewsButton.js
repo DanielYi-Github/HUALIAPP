@@ -42,7 +42,7 @@ export default class DocCategoriesNewsButton extends PureComponent{
 							backgroundColor: backgroundColor				
 				    	}}
 				    >
-					  <Icon name={icon} style={{color:color,paddingLeft:3}} type={iconType}/>
+					  <Icon name={icon} style={{color:color}} type={iconType}/>
 				</Button>
 			    <Body style={{paddingLeft:10}}>
 					<Text >{this.props.title}</Text>

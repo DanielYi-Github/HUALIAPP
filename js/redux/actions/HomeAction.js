@@ -34,8 +34,8 @@ export function HomePageRefresh(user) {
 export function loadFunctionType(lang) {
 	return dispatch => {
 		let data = [];
-		let sql = `select a.oid,a.parentoid,a.layer,a.id,a.name,a.explain,a.icon,a.sort,ifnull(b.LANGCONTENT,a.NAME) as NAME,ifnull(c.LANGCONTENT,a.EXPLAIN) as EXPLAIN from thf_module a
-      	left join (select LANGID,LANGCONTENT from THF_LANGUAGE b where LANGTYPE='${lang}' and STATUS='Y') b on a.LANGID=b.LANGID
+		let sql = `select a.oid as oid,a.parentoid as parentoid,a.layer as layer,a.id as id,a.name as name2,a.explain as explain,a.icon as icon,a.sort as sort,ifnull(b.LANGCONTENT,a.NAME) as NAME,ifnull(c.LANGCONTENT,a.EXPLAIN) as EXPLAIN from thf_module a
+		left join (select LANGID,LANGCONTENT from THF_LANGUAGE b where LANGTYPE='${lang}' and STATUS='Y') b on a.LANGID=b.LANGID
 		left join (select LANGID,LANGCONTENT from THF_LANGUAGE c where LANGTYPE='${lang}' and STATUS='Y') c on a.LANGID||'_DESC'=c.LANGID
 		order by layer,sort
 		`;
@@ -76,24 +76,19 @@ export function loadFunctionData(lang) {
 		// for ios11
 		if (platform==="ios" & version>=11 && version<12) {
 			sql = `select 
-			          d.layer,d.id as type,d.name as typename,d.icon as typeicon,d.sort,
-			          a.OID,a.ID,ifnull(b.LANGCONTENT,a.NAME) as NAME,a.TYPE,ifnull(c.LANGCONTENT,a.EXPLAIN) as EXPLAIN,
-			          a.MODULE_OID,a.POSITION,a.PACKAGENAME,a.DOWNURL,a.ICON,a.WEBTITLE,a.WEBURL,a.APPURL,a.LANGID      
+			          d.layer as layer,d.id as type,d.name as typename,d.icon as typeicon,d.sort as sort,
+			          a.OID as OID,a.ID as ID, ifnull(b.LANGCONTENT,a.NAME) as NAME,a.TYPE as TYPE,ifnull(c.LANGCONTENT,a.EXPLAIN) as EXPLAIN,
+			          a.MODULE_OID as MODULE_OID,a.POSITION as POSITION,a.PACKAGENAME as PACKAGENAME,a.DOWNURL as DOWNURL,a.ICON as ICON,a.WEBTITLE as WEBTITLE,a.WEBURL as WEBURL,a.APPURL as APPURL,a.LANGID as LANGID    
                   	from thf_module d 
       		 		left join THF_APP a on a.MODULE_OID=d.oid
 					left join (select b.LANGID,b.LANGCONTENT from THF_LANGUAGE b where b.LANGTYPE='${lang}' and STATUS='Y') b on a.LANGID=b.LANGID
 					left join (select c.LANGID,c.LANGCONTENT from THF_LANGUAGE c where c.LANGTYPE='${lang}' and STATUS='Y') c on a.LANGID||'_DESC'=c.LANGID
 					ORDER BY POSITION`;
 		}
-		SQLite.selectData(sql, []).then((result) => {
+			SQLite.selectData(sql, []).then((result) => {
       		for (let i = 0; i < result.length; i++) {
-      			// if (getState().UserInfo.UserInfo.id == "A10480" && result.item(i).MODULE_OID == "B967A3FE6887E9E1E050A8C0BA1E2BED") {
-
-      			// } else {
-      				data.push(result.item(i));
-      			// }
-      		}
-      		
+				  if(result.item(i).TYPE!=null) data.push(result.item(i))
+			  }
 			dispatch( loadFunctionIntoState(data) );
     	}).catch((e)=>{
 			LoggerUtil.addErrorLog("HomeAction loadFunctionData", "APP Action", "ERROR", e);
@@ -284,18 +279,6 @@ export function navigateFunctionPage(appID = null, userID = null) {
 						});
 						NavigationService.navigate("Authentication");
 					}
-					break;
-				case "ItineraryCard": //通行卡部分
-					NavigationService.navigate("ItineraryCard");
-					break;
-				case "SurroundingInfo": //周遭疫情
-					NavigationService.navigate("SurroundingInfo");
-					break;
-				case "InTimeData": //及時大數據
-					NavigationService.navigate("InTimeData");
-					break;
-				case "IsolationPolicy": //隔离政策查詢
-					NavigationService.navigate("IsolationPolicy");
 					break;
 				default:
 					NavigationService.navigate(appID);

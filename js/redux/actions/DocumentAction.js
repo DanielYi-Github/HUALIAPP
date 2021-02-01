@@ -72,7 +72,7 @@ function getGroupFileDetail(user, dataT){
 async function getGroupFileTypes(key, value, lang, tid) {
 	let list = [];
 
-	var sql = `select  a.CLASS3,a.CLASS4,a.CLASS5,a.LEN,ifnull(b.LANGCONTENT,a.CONTENT) as CONTENT from THF_MASTERDATA a
+	var sql = `select  a.CLASS3 as CLASS3,a.CLASS4 as CLASS4,a.CLASS5 as CLASS5,a.LEN,ifnull(b.LANGCONTENT,a.CONTENT) as CONTENT from THF_MASTERDATA a
               left join (select LANGID,LANGCONTENT from THF_LANGUAGE where LANGTYPE='${lang}' and STATUS='Y') b on a.OID=b.LANGID
 			  where a.STATUS='Y' and  ${key}='${value}'`;
 				if(tid){
