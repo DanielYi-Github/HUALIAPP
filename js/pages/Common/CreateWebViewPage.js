@@ -40,6 +40,7 @@ class CreateWebViewPage extends React.Component {
               //   </View>
               // )}//loading效果
               // allowsInlineMediaPlayback={true}
+              originWhitelist={['*']}
               javaScriptEnabled={true}//是否执行js代码
               injectedJavaScript='window.ReactNativeWebView.postMessage(document.documentElement.scrollHeight)'//插入的js代码，必须是字符串，
               // source={{uri: 'file:///android_asset/detail.html'}}        //本地的html代码需要放在安卓目录的静态文件下
