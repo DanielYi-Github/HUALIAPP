@@ -4,6 +4,8 @@ import { Container, Content, Text, Icon, Left, Button, Body, Right, Title, Card,
 
 import MessageRouter   from '../../utils/MessageRouter';
 import * as Navigation from '../../utils/NavigationService';
+import JPush           from '../../utils/JpushUtil';
+
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -106,6 +108,12 @@ class HomePage extends React.Component {
     if (this.props.state.Home.NoticeData.length == 0 && !this.props.state.Home.isRefreshing) {
       this.props.actions.loadInitialNoticeData(); //撈取公告列表資料 
     }
+
+    // 暫時將APP的通知數字歸零，之後修正要改成該數字要搭配APP的未讀訊息數量
+    JPush.setBadge({
+      "badge":0,
+      "appBadge":0
+    });
   }
 
   render() {

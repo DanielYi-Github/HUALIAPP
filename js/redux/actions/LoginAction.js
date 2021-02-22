@@ -203,12 +203,12 @@ export function loginByAD(account, password) {
 		
 		let checkResult = await checkLoginByAD(user);	
 		if (checkResult.result) {
-			user      = checkResult.content.Value.user;				// 登入成功
+			user      = checkResult.content.Value.user;	// 登入成功
 			user.lang = getState().Language.langStatus;	//給定手機語系
 			this.initialApi(user,"ad");
 			dispatch( setBiosUserInfo({}, false) );
 		} else {
-			dispatch(login_done(false, checkResult.content)); 			//登入失敗，顯示訊息  
+			dispatch(login_done(false, checkResult.content)); //登入失敗，顯示訊息  
 		}
 	}
 }
@@ -364,6 +364,7 @@ export function initialApi(user,way=false){
 			UpdateDataUtil.updateBanner(user),		//Banner
 			UpdateDataUtil.updateModule(user),		//module
 			UpdateDataUtil.setLoginInfo(user),
+  			UpdateDataUtil.updateRead(user)			//訊息讀取表       
   		];
 
 	  	Promise.all(arr).then( async (data) => {
@@ -404,7 +405,6 @@ export function initialApi(user,way=false){
 
   		//後期	            
 		UpdateDataUtil.updateVisitLogToServer(user);			//update功能訪問數量回Server	  	
-  		UpdateDataUtil.updateRead(user);						//訊息讀取表       
   		UpdateDataUtil.getSurveySOPSwitch(user).then((data)=>{ 	//是否顯示防疫專區SOP的按鈕
   			dispatch({									//恢復運行初始化程序
   				type: CommonTypes.ENABLE_APP_SurveySOP,
