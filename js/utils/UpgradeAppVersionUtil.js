@@ -99,10 +99,10 @@ let UpgradeAppVersionUtil = {
 			NativeModules.upgrade.openAPPStore(url); 	//開啟APP store  AppId = 上架的APPID
 		}
 	},
-	async checkHotUpdate(lang, downloadProgressCallback) {
+	async checkHotUpdate(lang, isColdActive, downloadProgressCallback) {
 		let promise = new Promise( async (resolve, reject) => {
 			//通知codepush server 本地使否已完成更新安裝
-			CodePush.notifyAppReady();                        
+			// CodePush.notifyAppReady();                        
 
 			//從Metadata找出目前是哪個版本，如果沒有就是空
 			let oLabel = await CodePush.getUpdateMetadata(CodePush.UpdateState.RUNNING).then((metadata) => {
@@ -111,10 +111,12 @@ let UpgradeAppVersionUtil = {
 				LoggerUtil.addErrorLog("getUpdateMetadata 熱更新失敗", "APP Page in InitialPage", "WARN", error);
 				return resolve(false);
 			});
+			console.log("oLabel", oLabel);
 
 			//檢查更新
 			CodePush.checkForUpdate(CODE_PUSH_KEY).then((remotePackage) => {
-				
+				console.log("remotePackage", remotePackage);
+
 				if(remotePackage == null) return resolve(false);
 
 				//從THF_VERSION找出，比檢查到的版本小 比目前的版本大的裡面有沒有 必須更新的，如果有就顯示提示框，沒有就自動更新
@@ -135,7 +137,7 @@ let UpgradeAppVersionUtil = {
 					if (
 						data.length > 0 && 
 						data.raw()[0].ISMUST == "N" && 
-						!remotePackage.isMandatory
+						!remotePackage.isMandatory 
 					) {
 						let size = remotePackage.packageSize / 1024;
 						CodePush.sync(
@@ -143,10 +145,10 @@ let UpgradeAppVersionUtil = {
 								deploymentKey: CODE_PUSH_KEY,
 								installMode: CodePush.InstallMode.IMMEDIATE, //立即安裝
 								updateDialog: {
-									title: lang.InitialPage.FindNewHotPatch, //檢查到有更新包
-									optionalUpdateMessage: `File Size ${size.toFixed(2)}KB `,
-									optionalInstallButtonLabel: lang.InitialPage.Update, //立即更新
-									optionalIgnoreButtonLabel: lang.InitialPage.IgnoreUpdate // 下次再說
+									title                     : lang.InitialPage.FindNewHotPatch, 	//檢查到有更新包
+									optionalUpdateMessage     : `File Size ${size.toFixed(2)}KB `,
+									optionalInstallButtonLabel: lang.InitialPage.Update, 			//立即更新
+									optionalIgnoreButtonLabel : lang.InitialPage.IgnoreUpdate 		// 下次再說
 								},
 							},
 							(status) => {
@@ -165,29 +167,105 @@ let UpgradeAppVersionUtil = {
 										break;
 								}
 							},
-							downloadProgressCallback
+							downloadProgressCallback.bind(this, remotePackage.isMandatory)
 						);
 					} else {
-						//一定需要更新
-						CodePush.sync({
-								deploymentKey: CODE_PUSH_KEY,
-								installMode: CodePush.InstallMode.IMMEDIATE, //立即安裝
-							},
-							(status) => {
-								switch (status) {
-									case CodePush.SyncStatus.DOWNLOADING_PACKAGE: // 確定更新
-										return resolve(true);
-										break;
-									case CodePush.SyncStatus.UNKNOWN_ERROR: //更新錯誤
-										return resolve(false);
-										break;
-									case CodePush.SyncStatus.UP_TO_DATE:
-										return resolve(false);
-										break;
+						let size = remotePackage.packageSize / 1024;
+						
+						//是否是強制安裝
+						if (remotePackage.isMandatory) {
+							// 如果冷啟動直接更新，如果熱起動要顯示更新按鈕
+							let updateDialog = null;
+							if (!isColdActive) {
+								updateDialog = {
+									appendReleaseDescription    : false,
+									title                       : lang.InitialPage.FindNewHotPatch, 	//檢查到有更新包
+									mandatoryUpdateMessage      : `File Size ${size.toFixed(2)}KB ` , 	//强制更新时的信息.
+									mandatoryContinueButtonLabel: lang.InitialPage.Update, 				//强制更新按钮文字，默认为continue
+									// optionalUpdateMessage       : `File Size ${size.toFixed(2)}KB `,
+									// optionalInstallButtonLabel  : lang.InitialPage.Update, 			//立即更新
+									// optionalIgnoreButtonLabel   : lang.InitialPage.IgnoreUpdate 		//下次再說
 								}
-							},
-							downloadProgressCallback
-						);
+							}
+							
+							CodePush.sync({
+									deploymentKey       : CODE_PUSH_KEY,
+									mandatoryInstallMode: CodePush.InstallMode.IMMEDIATE, //強制更新
+									updateDialog        : updateDialog
+									// installMode         : CodePush.InstallMode.IMMEDIATE, //可選擇是否立即更新
+								},
+								(status) => {
+									switch (status) {
+										case CodePush.SyncStatus.DOWNLOADING_PACKAGE: // 確定更新
+											return resolve(true);
+											break;
+										case CodePush.SyncStatus.UNKNOWN_ERROR: //更新錯誤
+											return resolve(false);
+											break;
+										case CodePush.SyncStatus.UP_TO_DATE:
+											return resolve(false);
+											break;
+										case CodePush.SyncStatus.UPDATE_IGNORED: //下次更新
+											return resolve(false);
+											break;
+									}
+								},
+							    downloadProgressCallback.bind(this, remotePackage.isMandatory)
+							);
+						} else {
+							//下一次啟動直接更新
+							CodePush.sync(
+							    {
+							      deploymentKey: CODE_PUSH_KEY,
+							      installMode: CodePush.InstallMode.ON_NEXT_RESUME,
+							    },
+							    (status) => {
+									switch (status) {
+									    case CodePush.SyncStatus.CHECKING_FOR_UPDATE:
+									      // 0 - 正在查询CodePush服务器以进行更新。
+									      console.info('[CodePush] Checking for update.');
+									      break;
+									    case CodePush.SyncStatus.AWAITING_USER_ACTION:
+									      // 1 - 有可用的更新，并且向最终用户显示了一个确认对话框。（仅在updateDialog使用时适用）
+									      console.info('[CodePush] Awaiting user action.');
+									      break;
+									    case CodePush.SyncStatus.DOWNLOADING_PACKAGE:
+									      // 2 - 正在从CodePush服务器下载可用更新。
+									      console.info('[CodePush] Downloading package.');
+									      return resolve(false);
+									      break;
+									    case CodePush.SyncStatus.INSTALLING_UPDATE:
+									      // 3 - 已下载一个可用的更新，并将其安装。
+									      console.info('[CodePush] Installing update.');
+									      break;
+									    case CodePush.SyncStatus.UP_TO_DATE:
+									      // 4 - 应用程序已配置的部署完全最新。
+									      console.info('[CodePush] App is up to date.');
+									      return resolve(false);
+									      break;
+									    case CodePush.SyncStatus.UPDATE_IGNORED:
+									      // 5 该应用程序具有可选更新，最终用户选择忽略该更新。（仅在updateDialog使用时适用）
+									      console.info('[CodePush] User cancelled the update.');
+									      return resolve(false);
+									      break;
+									    case CodePush.SyncStatus.UPDATE_INSTALLED:
+									      // 6 - 安装了一个可用的更新，它将根据 SyncOptions 中的 InstallMode指定在 syncStatusChangedCallback 函数返回后立即或在下次应用恢复/重新启动时立即运行。
+									      console.info('[CodePush] Installed update.');
+									      break;
+									    case CodePush.SyncStatus.SYNC_IN_PROGRESS:
+									      // 7 - 正在执行的 sync 操作
+									      console.info('[CodePush] Sync already in progress.');
+									      break;
+									    case CodePush.SyncStatus.UNKNOWN_ERROR:
+									      // -1 - 同步操作遇到未知错误。
+									      console.info('[CodePush] An unknown error occurred.');
+									      return resolve(false);
+									      break;
+									}
+								},
+							    downloadProgressCallback.bind(this, remotePackage.isMandatory)
+							);
+						}
 					}
 				})
 				
@@ -198,7 +276,50 @@ let UpgradeAppVersionUtil = {
 
 		});
 		return promise;
+	},
+	//熱更新狀態變換的所有狀況，暫時沒用到
+	/*
+	codePushStatusDidChange(syncStatus){
+	  switch (syncStatus) {
+	    case CodePush.SyncStatus.CHECKING_FOR_UPDATE:
+	      // 0 - 正在查询CodePush服务器以进行更新。
+	      console.info('[CodePush] Checking for update.');
+	      break;
+	    case CodePush.SyncStatus.AWAITING_USER_ACTION:
+	      // 1 - 有可用的更新，并且向最终用户显示了一个确认对话框。（仅在updateDialog使用时适用）
+	      console.info('[CodePush] Awaiting user action.');
+	      break;
+	    case CodePush.SyncStatus.DOWNLOADING_PACKAGE:
+	      // 2 - 正在从CodePush服务器下载可用更新。
+	      console.info('[CodePush] Downloading package.');
+	      break;
+	    case CodePush.SyncStatus.INSTALLING_UPDATE:
+	      // 3 - 已下载一个可用的更新，并将其安装。
+	      console.info('[CodePush] Installing update.');
+	      break;
+	    case CodePush.SyncStatus.UP_TO_DATE:
+	      // 4 - 应用程序已配置的部署完全最新。
+	      console.info('[CodePush] App is up to date.');
+	      break;
+	    case CodePush.SyncStatus.UPDATE_IGNORED:
+	      // 5 该应用程序具有可选更新，最终用户选择忽略该更新。（仅在updateDialog使用时适用）
+	      console.info('[CodePush] User cancelled the update.');
+	      break;
+	    case CodePush.SyncStatus.UPDATE_INSTALLED:
+	      // 6 - 安装了一个可用的更新，它将根据 SyncOptions 中的 InstallMode指定在 syncStatusChangedCallback 函数返回后立即或在下次应用恢复/重新启动时立即运行。
+	      console.info('[CodePush] Installed update.');
+	      break;
+	    case CodePush.SyncStatus.SYNC_IN_PROGRESS:
+	      // 7 - 正在执行的 sync 操作
+	      console.info('[CodePush] Sync already in progress.');
+	      break;
+	    case CodePush.SyncStatus.UNKNOWN_ERROR:
+	      // -1 - 同步操作遇到未知错误。
+	      console.info('[CodePush] An unknown error occurred.');
+	      break;
+	  }
 	}
+	*/
 }
 
 export default UpgradeAppVersionUtil;

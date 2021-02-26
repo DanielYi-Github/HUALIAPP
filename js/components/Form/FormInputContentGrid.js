@@ -64,8 +64,8 @@ class FormInputContentGrid extends Component {
 	            		style={{borderBottomWidth: 0, paddingTop: 15, paddingBottom: 15}} 
 	            		error={this.props.data.requiredAlbert}
 	            	>
-		 			  	<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
-		                <Label>{this.state.labelname}</Label>
+		  				<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
+		  				<Label>{this.state.labelname}</Label>
 
 		                {
 		                	(this.state.loadingMark) ? 

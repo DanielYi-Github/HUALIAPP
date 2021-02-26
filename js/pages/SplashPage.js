@@ -30,14 +30,18 @@ class SplashPage extends React.Component {
   componentDidMount(){
     //是否允許APP進行初始化程序
     if (this.props.state.Login.enableAppInitialFunction) {
-      this.props.actions.appInit(this.props.actions, this.downloadProgressCallback); //APP初始化程序
-      this.addDownLoadFileListener();         // 新增檔案下載監聽器
+      this.props.actions.appInit( this.props.actions );      // APP初始化程序
       SplashScreen.hide();
+
+      // 需要測試版本更新，會不會受到影響
+      // this.props.actions.appInit(this.props.actions, this.downloadProgressCallback); //APP初始化程序
+      // this.addDownLoadFileListener();                        // 新增檔案下載監聽器
     } else {
       
     }
   }
 
+  /*
   // 版本更新的下載進度條設定
   addDownLoadFileListener = () => {
     DeviceEventEmitter.addListener('LOAD_PROGRESS', (msg) => {
@@ -49,7 +53,9 @@ class SplashPage extends React.Component {
       if (msg == 100) this.props.actions.userSkipDigUpdate(this.props.actions);  // 避免下載APK後不更新，直接進入啟動畫面
     });
   }
-
+  */
+ 
+  /*
   // 熱更新的下載進度條設定
   downloadProgressCallback = (event) => {
     let percent = Math.round((event.receivedBytes / event.totalBytes) * 100);
@@ -59,6 +65,7 @@ class SplashPage extends React.Component {
       upgradeMessage: `Progressing... ${percent}%`,
     });
   }
+  */
 
   componentDidUpdate(prevProps, prevState){
     //是否允許APP進行初始化程序
@@ -74,14 +81,14 @@ class SplashPage extends React.Component {
       <Container style={{ alignItems: 'center',  justifyContent: 'center' }}>
         <Image style={{ width:250, height:250 }} source ={require("../image/login/icon-noback.png")} />
           {
-            this.state.showUpdateProgress ?
+            this.props.state.AppInit.showUpdateProgress ?
               <View style={{width:"80%", zIndex:1, position: 'absolute', bottom: "15%"}}>
                 <Progress.Bar
                   style         = {{ width: "100%" }}
-                  progress      = { this.state.downloadProgress }
+                  progress      = { this.props.state.AppInit.downloadProgress }
                   indeterminate = { false }
                 />
-                <Text style = {{marginTop: 5}} >{this.state.upgradeMessage}</Text>            
+                <Text style = {{marginTop: 5}} >{this.props.state.AppInit.upgradeMessage}</Text>            
               </View>
             :
               <Spinner 

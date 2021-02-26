@@ -2,7 +2,7 @@
 
 import { combineReducers } from 'redux';
 
-// import AppInit from './AppInitReducer'
+import AppInit from './AppInitReducer'
 import Login    from './LoginReducer';
 import Language from './LanguageReducer';
 import Network  from './NetworkReducer';
@@ -25,7 +25,7 @@ import Salary   from './SalaryReducer';
 import Survey   from './SurveyReducer';
 
 const rootReducer = combineReducers({
-	// AppInit,
+	AppInit,
 	Login,
 	Language,
 	Network,
