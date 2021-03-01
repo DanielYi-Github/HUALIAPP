@@ -111,11 +111,10 @@ let UpgradeAppVersionUtil = {
 				LoggerUtil.addErrorLog("getUpdateMetadata 熱更新失敗", "APP Page in InitialPage", "WARN", error);
 				return resolve(false);
 			});
-			console.log("oLabel", oLabel);
 
 			//檢查更新
 			CodePush.checkForUpdate(CODE_PUSH_KEY).then((remotePackage) => {
-				console.log("remotePackage", remotePackage);
+				// console.log("remotePackage", remotePackage);
 
 				if(remotePackage == null) return resolve(false);
 

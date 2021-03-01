@@ -764,7 +764,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.hff.HUALIAPP.test;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.hff.HUALIAPP;
 				PRODUCT_NAME = HUALIAPP;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -794,7 +794,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.hff.HUALIAPP.test;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.hff.HUALIAPP;
 				PRODUCT_NAME = HUALIAPP;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

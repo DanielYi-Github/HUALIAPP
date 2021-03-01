@@ -275,7 +275,6 @@ export function appHotInit(initActions){
 			lastUpdateTime = lastUpdateTime ? JSON.parse(lastUpdateTime) : new Date().getTime();
 
 			let now = new Date().getTime();
-
 			if (( now - lastUpdateTime ) >= 300000)  { 
 			// if (true)  {
 				let isVersionUpdate = await UpgradeAppVersionUtil.checkBigUpdate(getState().Language.lang); // 版本更新檢查
@@ -308,6 +307,8 @@ export function appHotInit(initActions){
 					DeviceStorageUtil.set("lastUpdateTime", new Date().getTime()); // localstorage記錄此次版本更新的時間
 				}
 			}
+
+			DeviceStorageUtil.set("lastUpdateTime", new Date().getTime()); // localstorage記錄此次版本更新的時間
 		})
 				
 	}

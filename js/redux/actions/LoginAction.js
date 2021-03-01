@@ -380,6 +380,7 @@ export function initialApi(user,way=false){
 				enable:true
 			});
 			NavigationService.navigate('HomeTabNavigator', {screen: 'Home'});
+			DeviceStorageUtil.set("lastUpdateTime", new Date().getTime()); // localstorage記錄此次版本更新的時間
 	  	}).catch((e)=>{
 	  		console.log("e", e);
 
