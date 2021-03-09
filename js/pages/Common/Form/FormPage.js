@@ -780,8 +780,6 @@ class FormPage extends React.Component {
       </Body>
     );
   }
-
-
 }
 
 export let FormPageStyle = connectStyle( 'Page.FormPage', {} )(FormPage);

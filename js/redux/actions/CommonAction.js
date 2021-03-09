@@ -15,8 +15,21 @@ export function loadCompanyData_ContactCO(){
 		let {co, plantID} = getState().UserInfo.UserInfo;
 		let defaultCO     = getState().Common.defaultCO;	 //還沒找到預設公司=false
 
+		let appOid, functionData = getState().Home.FunctionData;
+		for(let i in functionData){
+			if (functionData[i].ID == "Contact") {
+				appOid = functionData[i].OID
+				break;
+			}
+		}
+
 		let sql = `select * from THF_MASTERDATA 
-				   where CLASS1='ContactCO' and STATUS='Y' and OID in ( select DATA_OID from THF_PERMISSION where DATA_TYPE='masterdata') 
+				   where CLASS1='ContactCO' and STATUS='Y' and OID in 
+				   ( 
+				   	select DATA_OID 
+				   	from THF_PERMISSION 
+				   	where DATA_TYPE='masterdata' and FUNC_OID='${appOid}'
+				   ) 
 				   order by SORT;`
 		SQLite.selectData( sql, []).then((result) => {		
 			//如果沒有找到資料，不顯示任何資料
@@ -40,9 +53,21 @@ export function loadCompanyData_CarCO(){
 		let data          = [];
 		let {co, plantID} = getState().UserInfo.UserInfo;
 		let defaultCO     = getState().Common.defaultCO;	//還沒找到預設公司=false
+
+		let appOid, functionData = getState().Home.FunctionData;
+		for(let i in functionData){
+			if (functionData[i].ID == "Car") {
+				appOid = functionData[i].OID
+				break;
+			}
+		}
 		
 		let sql = ` select * from THF_MASTERDATA 
-					where CLASS1='CarCO' and STATUS='Y' and OID in (select DATA_OID from THF_PERMISSION where DATA_TYPE='masterdata') 
+					where CLASS1='CarCO' and STATUS='Y' and OID in (
+						select DATA_OID 
+						from THF_PERMISSION 
+						where DATA_TYPE='masterdata' and FUNC_OID='${appOid}'
+					) 
 					order by SORT;`
 		SQLite.selectData( sql, []).then((result) => {	
 			//如果沒有找到資料，不顯示任何資料
@@ -74,8 +99,21 @@ export function loadCompanyData_HrCO(){
 		let { co, plantID } = getState().UserInfo.UserInfo;
 		let defaultValue    = getState().Common.defaultValue; //還沒找到預設公司=false
 		let defaultKey      = getState().Common.defaultKey; //還沒找到預設公司=false
+
+		let appOid, functionData = getState().Home.FunctionData;
+		for(let i in functionData){
+			if (functionData[i].ID == "Birthday") {
+				appOid = functionData[i].OID
+				break;
+			}
+		}
+
 		let sql = `select * from THF_MASTERDATA 
-				   where CLASS1='HRCO' and STATUS='Y' and OID in (select DATA_OID from THF_PERMISSION where DATA_TYPE='masterdata') 
+				   where CLASS1='HRCO' and STATUS='Y' and OID in (
+				   	select DATA_OID 
+				   	from THF_PERMISSION 
+				   	where DATA_TYPE='masterdata' and FUNC_OID='${appOid}'
+				   ) 
 				   order by SORT;`
 		SQLite.selectData( sql, []).then((result) => {
 			//如果沒有找到資料，不顯示任何資料

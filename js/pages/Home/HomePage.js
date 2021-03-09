@@ -555,13 +555,7 @@ class HomePage extends React.Component {
     this.setState({
       isLoadFunctionDataRelateData:true
     });
-    // console.log(this.props.state.Home.FunctionData);
-    /*
-      props.actions.loadCompanyData_CarCO();                 //撈取APP共用資料_派車查詢公司
-      props.actions.loadCompanyData_HrCO();                  //撈取APP共用資料_Hr查詢公司
-      props.actions.loadFormTypeIntoState(user, langStatus); //取得表單簽核資料_表單簽核公司清單
-      props.actions.myFormInitial(user);                     //撈取我的表單資料
-     */
+
     let user         = this.props.state.UserInfo.UserInfo;
     let {langStatus} = this.props.state.Language;
     for(let functionItem of this.props.state.Home.FunctionData){

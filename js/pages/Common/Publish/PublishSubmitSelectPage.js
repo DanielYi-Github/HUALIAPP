@@ -42,7 +42,25 @@ class PublishSubmitSelectPage extends React.Component {
 		let { co, plantID } = this.props.state.UserInfo.UserInfo;
 		let defaultCO = null;
 
-		await SQLite.selectData(`select * from THF_MASTERDATA where CLASS1='HRCO' order by sort`, []).then((result) => {
+		let appOid, functionData = this.props.state.Home.FunctionData;
+		for(let i in functionData){
+			if (functionData[i].ID == "Publish") {
+				appOid = functionData[i].OID
+				break;
+			}
+		}
+
+		await SQLite.selectData(`
+			select * 
+			from THF_MASTERDATA 
+			where CLASS1='HRCO' and STATUS='Y' and OID in (
+			   	select DATA_OID 
+			   	from THF_PERMISSION 
+			   	where DATA_TYPE='masterdata' and FUNC_OID='${appOid}'
+			) 
+			order by sort`, 
+			[]
+			).then((result) => {
 			result.raw().forEach((item, index, array)=>{
 				let company = {
 				  key  : item.CLASS3,

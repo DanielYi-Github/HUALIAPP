@@ -57,6 +57,7 @@ let UpgradeDBTableUtil = {
 		  }
 		});
 		//檢查有無表單
+		/*
 		SQLite.checkTable("THF_PERMISSION").then((data)=>{
 		  if (!data) {
 		    //檢查沒有進行新增表單
@@ -66,6 +67,25 @@ let UpgradeDBTableUtil = {
 		                        PRIMARY KEY( DATA_OID)
 		                      )`;
 		     SQLite.createTable(createTable).then((data)=>{});
+		  }
+		});
+		*/
+		//檢查該表單有無此欄位
+		SQLite.checkTableField("THF_PERMISSION", "FUNC_OID").then((data)=>{
+		  if (!data) {
+		    SQLite.dropTable("THF_PERMISSION").then((result)=>{
+		      if (result) {
+		        let createTable = `CREATE TABLE THF_PERMISSION (
+		                        DATA_OID  TEXT NOT NULL,
+		                        DATA_TYPE TEXT NOT NULL,
+		                        FUNC_OID VARCHAR ( 32 ),
+		                        CONSTRAINT OID PRIMARY KEY (DATA_OID, FUNC_OID)
+		                      )`;
+		         SQLite.createTable(createTable).then((e)=>{
+		            console.log(e);
+		         });
+		      }
+		    });
 		  }
 		});
 		//檢查該表單有無此欄位

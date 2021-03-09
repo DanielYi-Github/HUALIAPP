@@ -217,13 +217,32 @@ class KPICategoryPage extends React.Component {
       let defaultYear= null;
       let defaultMon= null;
       //初始化執行
-      await SQLite.selectData(`select * from THF_MASTERDATA where CLASS1 in ('HRCO','ReportKpiYear') and STATUS='Y' and OID in 
-        (select DATA_OID from THF_PERMISSION where DATA_TYPE='masterdata') order by CLASS1,SORT;`, []).then( (result) => {        
+      //
+      
+      let appOid, functionData = this.props.state.Home.FunctionData;
+      for(let i in functionData){
+        if (functionData[i].ID == "KPICategory") {
+          appOid = functionData[i].OID
+          break;
+        }
+      }
+      
+      await SQLite.selectData(`
+        select * 
+        from THF_MASTERDATA 
+        where CLASS1 in ('HRCO','ReportKpiYear') and STATUS='Y' and OID in 
+        (
+          select DATA_OID 
+          from THF_PERMISSION 
+          where DATA_TYPE='masterdata' and FUNC_OID='${appOid}'
+        ) 
+        order by CLASS1,SORT;`, []).then( (result) => {        
         //如果沒有找到資料，不顯示任何資料
         for(let i in result.raw()){
             data.push(result.raw()[i]);
         }
       });
+     
       //Param 年份-月份-公司別
       if(data.length!=0){
           data.forEach(param => {

@@ -7,18 +7,28 @@ import * as LoggerUtil     from '../../utils/LoggerUtil';
 import FormUnit            from '../../utils/FormUnit';
 import ToastUnit 		   from '../../utils/ToastUnit';
 
-
-
 export function loadFormTypeIntoState(user,lang) {
 	return async (dispatch, getState) => {
 		// 載入語系給FormUnit元件
 		FormUnit.language = getState().Language.lang.FormUnit;
+
+		let appOid, functionData = getState().Home.FunctionData;
+		for(let i in functionData){
+			if (functionData[i].ID == "Sing") {
+				appOid = functionData[i].OID
+				break;
+			}
+		}
 		
 		// 取得開單公司清單
 		let companies = null;
 		let sql =  `select * 
 					from THF_MASTERDATA 
-					where CLASS1='HRCO' and STATUS='Y' and OID in (select DATA_OID from THF_PERMISSION where DATA_TYPE='masterdata') 
+					where CLASS1='HRCO' and STATUS='Y' and OID in (
+						select DATA_OID 
+						from THF_PERMISSION 
+						where DATA_TYPE='masterdata' and FUNC_OID='${appOid}'
+					) 
 					order by SORT;`
 		SQLite.selectData( sql, [] ).then((result) => {	
 			let data          = [];
@@ -218,6 +228,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 				}
 			}
 
+			console.log("表單具體內容開始");
 			// 表單具體內容
 			tmpList = value[0] ? value[0].comList : []; 
 			for(var i in tmpList){
@@ -230,7 +241,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					apList.push(temp);
 					apListIndex++;
 				} else {
-					// tmpList[i].isedit = "Y"; 	   	
+					// tmpList[i].isedit = "Y"; 	
 					// 整理成可編輯的表格格式
 					if ( tmpList[i].isedit == "Y" ) {
 						tmpList[i] = await FormUnit.formatEditalbeFormField(tmpList[i]);	// 取得該欄位的動作
@@ -242,6 +253,8 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					apList[apListIndex].content.push(tmpList[i]);					
 				}
 			}
+
+			console.log("表單具體內容結束");
 			
 			// 判斷附件有沒有值
 			tmpList = value[0] ? value[0].tmpBotomList : []; 
@@ -272,7 +285,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					return result;
 				});
 			}	
-			
+
 			dispatch( 
 				loadFormContent( 
 					apList, 
@@ -288,6 +301,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 			); 
 			
 		}).catch((err) => {
+			// console.log(err);
 			LoggerUtil.addErrorLog("FormAction loadFormContentIntoState", "APP Action", "ERROR", err);
 			if (err.code == "0") {
 				dispatch(logout()); //已在其他裝置登入，強制登出

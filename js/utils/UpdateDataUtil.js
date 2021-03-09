@@ -1903,6 +1903,7 @@ export async function getBPMForm(user,content){
 			"userId" : Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
+		
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
@@ -2735,8 +2736,8 @@ export async function updatePermission(user) {
 			"userId":Common.encrypt(user.loginID),
 			"content": Common.encrypt(user.id)
 		};
+		
 		NetUtil.getRequestContent(params, url).then((data) => {
-			// console.log(data);
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -2748,13 +2749,14 @@ export async function updatePermission(user) {
 			for (let i in data) {
 				i = parseInt(i);
 				if (i == data.length - 1) {
-					lInsert += "(?,?)";
+					lInsert += "(?,?,?)";
 				} else {
-					lInsert += "(?,?),";
+					lInsert += "(?,?,?),";
 				}
 				iArray = iArray.concat([
 					data[i].dataOid,
-					data[i].dataType
+					data[i].dataType,
+					data[i].funcOid
 				]);
 			}
 

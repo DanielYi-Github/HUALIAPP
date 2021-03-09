@@ -828,8 +828,25 @@ export function paramInit(){
       	let data = [];
 	    let deputyRuleComParam=true;
 
-		let sql=`select * from THF_MASTERDATA where CLASS1 in ('DeputyRules','DeputyRelation','DeputyWay') and STATUS='Y' and OID in 
-		    (select DATA_OID from THF_PERMISSION where DATA_TYPE='masterdata') order by CLASS1,SORT;`
+	    /*
+	    let sql=`
+	    	select * 
+	    	from THF_MASTERDATA 
+	    	where CLASS1 in ('DeputyRules','DeputyRelation','DeputyWay') and STATUS='Y' and OID in 
+		    (
+		    	select DATA_OID 
+		    	from THF_PERMISSION 
+		    	where DATA_TYPE='masterdata'
+		    ) 
+		    order by CLASS1,SORT;`
+		*/
+
+
+		let sql=`
+			select * 
+			from THF_MASTERDATA 
+			where CLASS1 in ('DeputyRules','DeputyRelation','DeputyWay') and STATUS='Y'
+		    order by CLASS1,SORT;`
 		//初始化執行
 		await SQLite.selectData(sql, []).then((result) => {
 			//如果沒有找到資料，不顯示任何資料

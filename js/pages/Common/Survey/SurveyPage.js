@@ -113,7 +113,7 @@ class SurveyPage extends React.Component {
     
     if (nextProps.state.Survey.submitResult != null) {
       let Survey = nextProps.state.Survey;
-
+      
       setTimeout(()=>{
         Alert.alert(
           Survey.submitResult ? this.props.state.Language.lang.SurveyPage.Sucess : this.props.state.Language.lang.SurveyPage.Fail,
@@ -132,6 +132,7 @@ class SurveyPage extends React.Component {
           { cancelable: false }
         )
       },200);
+      
     }
 
     if(nextProps.state.Survey.renderResult == false){
