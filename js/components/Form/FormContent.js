@@ -62,7 +62,6 @@ export default class FormContent extends Component {
 		// 是否可進行編輯
 		let onPress = null;
 		let editable = false;
-		console.log(item);
 		if(typeof this.props.onPress != "undefined" ){
 			onPress = this.props.onPress;
 			editable = null;

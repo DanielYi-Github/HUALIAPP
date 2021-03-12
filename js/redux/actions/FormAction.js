@@ -14,12 +14,12 @@ export function loadFormTypeIntoState(user,lang) {
 
 		let appOid, functionData = getState().Home.FunctionData;
 		for(let i in functionData){
-			if (functionData[i].ID == "Sing") {
+			if (functionData[i].ID == "Sign") {
 				appOid = functionData[i].OID
 				break;
 			}
 		}
-		
+
 		// 取得開單公司清單
 		let companies = null;
 		let sql =  `select * 
@@ -245,6 +245,9 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					// 整理成可編輯的表格格式
 					if ( tmpList[i].isedit == "Y" ) {
 						tmpList[i] = await FormUnit.formatEditalbeFormField(tmpList[i]);	// 取得該欄位的動作
+						for(let j in tmpList[i].listComponent){
+							tmpList[i].listComponent[j].defaultvalue = null;
+						}
 					}
 
 					tmpList[i].show = true; 	   		   // 該欄位要不要顯示
@@ -253,9 +256,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					apList[apListIndex].content.push(tmpList[i]);					
 				}
 			}
-
 			console.log("表單具體內容結束");
-			
 			// 判斷附件有沒有值
 			tmpList = value[0] ? value[0].tmpBotomList : []; 
 			if (

@@ -29,7 +29,6 @@ class FormInputContentGrid extends Component {
 			editCheckItem: false,
 			editCheckItemIndex: -1,
 			editCheckItemRecord: [], // 用來記錄被checkBox勾選的項目值是true/false 例如[true, false, false],
-
 			loadingMark:false,
 		};
 	}
@@ -56,16 +55,29 @@ class FormInputContentGrid extends Component {
 	render() {
 		let required = (this.props.data.required == "Y") ? "*" : "  ";
 		let renderItem = null;
+		let showLabelname = (this.state.labelname == "null" || this.state.labelname == null) ? false : true;
 		if (this.state.editable) {
 			renderItem = (
 				<View style={{width: '100%'}}>
 	            	<Item 
 	            		fixedLabel 
-	            		style={{borderBottomWidth: 0, paddingTop: 15, paddingBottom: 15}} 
+	            		style={{borderBottomWidth: 0, paddingTop: showLabelname ? 15: 0, paddingBottom: 15}} 
 	            		error={this.props.data.requiredAlbert}
 	            	>
-		  				<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
-		  				<Label>{this.state.labelname}</Label>
+		                {
+		                	(showLabelname) ? 
+        		                <Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
+		                	:
+		                		null
+		                }
+
+		                {
+		                	(showLabelname) ? 
+		  						<Label>{this.state.labelname}</Label>
+		                	:
+		                		null
+		                }
+		  				
 
 		                {
 		                	(this.state.loadingMark) ? 
@@ -87,7 +99,8 @@ class FormInputContentGrid extends Component {
         							name  ="add-circle" 
         							type  ="MaterialIcons" 
         							style ={{fontSize:30, color: '#20b11d'}}
-        		                	onPress={this.getEditField}
+        		                	// onPress={this.getEditField}
+        		                	onPress={()=>{this.showEditModal(this.state.data)}}
         		                />
 		                	:
 		                		null
@@ -175,18 +188,13 @@ class FormInputContentGrid extends Component {
 		return renderItem;
 	}
 
+		/*
 	getEditField = async() => {
 		this.setState({loadingMark:true});
-		// 原
-		/*
-		let data = this.state.data;
-		data.listComponent[i].actionValue = await FormUnit.getActionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);	// 取得該欄位的動作
-		this.showEditModal(data); // 直接開啟編輯葉面
-		*/
-	
+
 		// 修改後
 		let data = this.state.data;
-		let unShowColumns	 = []; 	//暫時紀錄不顯示的欄位
+		let unShowColumns = []; 	//暫時紀錄不顯示的欄位
 		for(let i in data.listComponent){
 			data.listComponent[i].show = true; 	   		   		// 該欄位要不要顯示
 			data.listComponent[i].requiredAlbert = false; 	    // 該欄位空值警告
@@ -206,6 +214,7 @@ class FormInputContentGrid extends Component {
 		this.setState({ loadingMark:false });
 		this.showEditModal(data); // 直接開啟編輯葉面
 	}
+		*/
 
 	rendercheckItem = (item) => {
 		let index = item.index;
@@ -269,7 +278,17 @@ class FormInputContentGrid extends Component {
 		}
 	}
 
-	showEditModal = (data, editCheckItemIndex = -1) => {
+	showEditModal = async (data, editCheckItemIndex = -1) => {
+		this.setState({loadingMark:true});
+
+		//檢視一下要編輯的項目有沒有進行過可編輯化
+		if (!data.listComponent[0].hasOwnProperty("show")) {
+			data = await this.editablelize(data);
+		}
+
+		this.setState({ loadingMark:false });
+
+
 		NavigationService.navigate("FormInputContentGridPage", {
 			propsData         : this.props.data,
 			data              : data,
@@ -278,6 +297,7 @@ class FormInputContentGrid extends Component {
 			confirmOnPress    : this.confirmFormData,
 			editCheckItemIndex: editCheckItemIndex
 		});
+		
 	}
 
 	confirmFormData = async (value) => {
@@ -348,6 +368,28 @@ class FormInputContentGrid extends Component {
 	deepClone(src) {
 		return JSON.parse(JSON.stringify(src));
 	}
+
+	editablelize = async (data) => {
+		let unShowColumns	 = []; 	//暫時紀錄不顯示的欄位
+		for(let i in data.listComponent){
+			data.listComponent[i].show = true; 	   		   		// 該欄位要不要顯示
+			data.listComponent[i].requiredAlbert = false; 	    // 該欄位空值警告
+			
+			for(let unShowColumn of unShowColumns){
+				if (unShowColumn.id == data.listComponent[i].component.id) {
+					data.listComponent[i].defaultvalue = unShowColumn.value;
+					data.listComponent[i].paramList    = unShowColumn.paramList;
+					data.listComponent[i].show         = (unShowColumn.visible || unShowColumn.visible == "true") ? true : false;
+					data.listComponent[i].required     = (unShowColumn.required) ? "Y" : "F";
+				}
+			}
+			let columnactionValue = await FormUnit.getColumnactionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);   // 取得該欄位欲隱藏的欄位
+			unShowColumns = unShowColumns.concat(columnactionValue);
+			data.listComponent[i].actionValue = await FormUnit.getActionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);	// 取得該欄位的動作
+		}
+		return data;
+	}
+	
 }
 
 export default connectStyle( 'Component.FormContent', {} )(FormInputContentGrid);
