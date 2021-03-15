@@ -1,13 +1,13 @@
 <resources>
-    <string name="app_name">华利实业</string>
-    <!-- <string name="app_name">华利实业Beta</string> -->
+    <!-- <string name="app_name">华利实业</string> -->
+    <string name="app_name">华利实业Beta</string>
     <!-- <string name="app_name">华利实业Dev</string> -->
     <string name="android_auto_update_download_progress">Downing:%1$d%%</string>
     <!-- 正式機 -->
-    <string moduleConfig="true" name="CodePushDeploymentKey">9ai2v7OA6K1iZDUAtCuCTm91aR6Y4ksvOXqog</string>
-    <string moduleConfig="true" name="CodePushServerUrl">http://app.hff-group.com:3000/</string>
+    <!-- <string moduleConfig="true" name="CodePushDeploymentKey">9ai2v7OA6K1iZDUAtCuCTm91aR6Y4ksvOXqog</string> -->
+    <!-- <string moduleConfig="true" name="CodePushServerUrl">http://app.hff-group.com:3000/</string> -->
     
     <!-- 測試機 -->
-    <!-- <string moduleConfig="true" name="CodePushDeploymentKey">onpNlKOEeSLvZybeEKXPVQVHmc6O4ksvOXqog</string> -->
-    <!-- <string moduleConfig="true" name="CodePushServerUrl">http://qasapp.hff-group.com:3000/</string> -->
+    <string moduleConfig="true" name="CodePushDeploymentKey">onpNlKOEeSLvZybeEKXPVQVHmc6O4ksvOXqog</string>
+    <string moduleConfig="true" name="CodePushServerUrl">http://qasapp.hff-group.com:3000/</string>
 </resources>
