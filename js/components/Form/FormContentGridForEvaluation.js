@@ -7,7 +7,7 @@ import FormInputContentGridLabel from './FormInputContentGridLabel';
 import * as NavigationService         from '../../utils/NavigationService';
 import FormUnit                  from '../../utils/FormUnit';
 
-class FormInputContentGrid extends Component {
+class FormContentGridForEvaluation extends Component {
 	constructor(props) {
 		super(props);
 		// FormInputGrid類不將editable移至render裡，因為有其他function要用到this.state.editable
@@ -28,11 +28,55 @@ class FormInputContentGrid extends Component {
 			editCheckItem      : false,
 			editCheckItemIndex : -1,
 			editCheckItemRecord: [], // 用來記錄被checkBox勾選的項目值是true/false 例如[true, false, false],
-			loadingMark        :false,
+			loadingMark        : false,
+			isShowTabButtons   : false, // 要不要顯示表格資料上方的按鈕
+			tabButtons 		: []
 		};
 	}
 
+	componentDidMount(){
+		// 處理載入上期按鈕
+		let isShowTabButtons = this.state.data.listButtons.length == 0 ? false : true;
+		let tabButtons = [];
+		for(let i in this.state.data.listButtons){
+			switch(this.state.data.listButtons[i].columntype) {
+			  case "btn":
+			    tabButtons.push(
+			    	<Button 
+			    		iconLeft 
+			    		bordered
+			    		onPress = {()=>{
+			    			this.activeColumnaction(this.state.data.listButtons[i], i);
+			    		}} 
+			    	>
+	    				<Icon name='cloud-download-outline' />
+	    	            <Text>載入前期分數</Text>
+	    	        </Button>
+    			);
+			    break;
+			  default:
+			    break;
+			}
+		} 
 
+		this.setState({
+			isShowTabButtons : isShowTabButtons,
+			tabButtons : tabButtons
+		});
+	}
+
+	activeColumnaction = async (button, index) => {
+		console.log(button, index, this.props.data);
+		/*
+		let columnactionValue = await FormUnit.getColumnactionValueForButton(
+			this.props.user, 
+			this.state.data.listComponent,
+			button,
+			this.props.data.listComponent
+		);
+		console.log("columnactionValue", columnactionValue);
+		*/
+	}
 
 	shouldComponentUpdate(nextProps, nextState) {
 		nextProps.data.defaultvalue = (nextProps.data.defaultvalue == null) ? [] : nextProps.data.defaultvalue; 
@@ -57,14 +101,13 @@ class FormInputContentGrid extends Component {
 		let required = (this.props.data.required == "Y") ? "*" : "  ";
 		let renderItem = null;
 		let showLabelname = (this.state.labelname == "null" || this.state.labelname == null) ? false : true;
-
 		if (this.state.editable) {
 			renderItem = (
 				<View style={{width: '100%'}}>
 	            	<Item 
-						fixedLabel 
-						style ={{borderBottomWidth: 0, paddingTop: showLabelname ? 15: 0, paddingBottom: 15}} 
-						error ={this.props.data.requiredAlbert}
+	            		fixedLabel 
+	            		style={{borderBottomWidth: 0, paddingTop: showLabelname ? 15: 0, paddingBottom: 15, borderWidth: 5 }} 
+	            		error={this.props.data.requiredAlbert}
 	            	>
 		                {
 		                	(showLabelname) ? 
@@ -79,7 +122,6 @@ class FormInputContentGrid extends Component {
 		                	:
 		                		null
 		                }
-		  				
 
 		                {
 		                	(this.state.loadingMark) ? 
@@ -95,12 +137,21 @@ class FormInputContentGrid extends Component {
 		                		null
 		                }
 
+		                {  	/*控制顯示表格上方的按鈕*/
+		                	(this.state.isShowTabButtons) ? 
+        		                this.state.tabButtons
+		                	:
+		                	 	null
+		                }
+
+		                <Body style={{flexDirection: 'row', alignContent: 'flex-end', justifyContent: 'flex-end' }}>
 		                {
 		                	(this.state.data.enableCreateData != false && !this.state.loadingMark) ? 
         		                <Icon 
         							name  ="add-circle" 
         							type  ="MaterialIcons" 
         							style ={{fontSize:30, color: '#20b11d'}}
+        		                	// onPress={this.getEditField}
         		                	onPress={()=>{this.showEditModal(this.state.data)}}
         		                />
 		                	:
@@ -123,13 +174,14 @@ class FormInputContentGrid extends Component {
 		                	:
 		                		null
 		                }
+		                </Body>
 		            </Item>
 
 		            {
 		            	( this.props.data.defaultvalue == null || this.props.data.defaultvalue.length == 0  ) ?
          					<Item fixedLabel error={this.props.data.requiredAlbert}/>
 		            	:
-		            		<View style={{borderRadius: 10, borderWidth:0.6, borderColor:"#D9D5DC", width: '98%'}}>
+		            		<View style={{borderRadius: 10, borderWidth:0.6, borderColor:"#D9D5DC", width: '98%', }}>
 		            			<FlatList
 		            				keyExtractor={(item, index) => index.toString()}
         							extraData     = {this.state}
@@ -188,34 +240,6 @@ class FormInputContentGrid extends Component {
 
 		return renderItem;
 	}
-
-		/*
-	getEditField = async() => {
-		this.setState({loadingMark:true});
-
-		// 修改後
-		let data = this.state.data;
-		let unShowColumns = []; 	//暫時紀錄不顯示的欄位
-		for(let i in data.listComponent){
-			data.listComponent[i].show = true; 	   		   		// 該欄位要不要顯示
-			data.listComponent[i].requiredAlbert = false; 	    // 該欄位空值警告
-			
-			for(let unShowColumn of unShowColumns){
-				if (unShowColumn.id == data.listComponent[i].component.id) {
-					data.listComponent[i].defaultvalue = unShowColumn.value;
-					data.listComponent[i].paramList    = unShowColumn.paramList;
-					data.listComponent[i].show         = (unShowColumn.visible || unShowColumn.visible == "true") ? true : false;
-					data.listComponent[i].required     = (unShowColumn.required) ? "Y" : "F";
-				}
-			}
-			let columnactionValue = await FormUnit.getColumnactionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);   // 取得該欄位欲隱藏的欄位
-			unShowColumns = unShowColumns.concat(columnactionValue);
-			data.listComponent[i].actionValue = await FormUnit.getActionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);	// 取得該欄位的動作
-		}
-		this.setState({ loadingMark:false });
-		this.showEditModal(data); // 直接開啟編輯葉面
-	}
-		*/
 
 	rendercheckItem = (item) => {
 		let index = item.index;
@@ -298,7 +322,6 @@ class FormInputContentGrid extends Component {
 			confirmOnPress    : this.confirmFormData,
 			editCheckItemIndex: editCheckItemIndex
 		});
-		
 	}
 
 	confirmFormData = async (value) => {
@@ -390,7 +413,6 @@ class FormInputContentGrid extends Component {
 		}
 		return data;
 	}
-	
 }
 
-export default connectStyle( 'Component.FormContent', {} )(FormInputContentGrid);
+export default connectStyle( 'Component.FormContent', {} )(FormContentGridForEvaluation);

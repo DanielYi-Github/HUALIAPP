@@ -69,8 +69,9 @@ import birthdayPageTheme from "./page/BirthdayPage";
 import reportPageTheme from "./page/ReportPage";
 import homeRootPageTheme from "./page/HomeRootPage";
 import loginPageTheme from "./page/LoginPage";
-import DocComponentTheme from "./component/DocComponent";
-import BirthdayComponentTheme from "./component/BirthdayComponent";
+import docComponentTheme from "./component/DocComponent";
+import birthdayComponentTheme from "./component/BirthdayComponent";
+import recruitItemTheme from "./component/RecruitItem";
 import variable from "./../variables/platform";
 
 export default (variables /*: * */ = variable) => {
@@ -85,54 +86,42 @@ export default (variables /*: * */ = variable) => {
     "NativeBase.Body": {
       ...bodyTheme(variables)
     },
-
     "NativeBase.Header": {
       ...headerTheme(variables)
     },
-
     "NativeBase.Button": {
       ...buttonTheme(variables)
     },
-
     "NativeBase.Title": {
       ...titleTheme(variables)
     },
     "NativeBase.Subtitle": {
       ...subtitleTheme(variables)
     },
-
     "NativeBase.InputGroup": {
       ...inputGroupTheme(variables)
     },
-
     "NativeBase.Input": {
       ...inputTheme(variables)
     },
-
     "NativeBase.Badge": {
       ...badgeTheme(variables)
     },
-
     "NativeBase.CheckBox": {
       ...checkBoxTheme(variables)
     },
-
     "NativeBase.Radio": {
       ...radioTheme(variables)
     },
-
     "NativeBase.Card": {
       ...cardTheme(variables)
     },
-
     "NativeBase.CardItem": {
       ...cardItemTheme(variables)
     },
-
     "NativeBase.Toast": {
       ...toastTheme(variables)
     },
-
     "NativeBase.H1": {
       ...h1Theme(variables)
     },
@@ -145,34 +134,27 @@ export default (variables /*: * */ = variable) => {
     "NativeBase.Form": {
       ...formTheme(variables)
     },
-
     "NativeBase.Container": {
       ...containerTheme(variables)
     },
     "NativeBase.Content": {
       ...contentTheme(variables)
     },
-
     "NativeBase.Footer": {
       ...footerTheme(variables)
     },
-
     "NativeBase.Tabs": {
       flex: 1
     },
-
     "NativeBase.FooterTab": {
       ...footerTabTheme(variables)
     },
-
     "NativeBase.ListItem": {
       ...listItemTheme(variables)
     },
-
     "NativeBase.ListItem1": {
       ...listItemTheme(variables)
     },
-
     "NativeBase.Icon": {
       ...iconTheme(variables)
     },
@@ -185,38 +167,30 @@ export default (variables /*: * */ = variable) => {
     "NativeBase.Spinner": {
       ...spinnerTheme(variables)
     },
-
     "NativeBase.Fab": {
       ...fabTheme(variables)
     },
-
     "NativeBase.Item": {
       ...itemTheme(variables)
     },
-
     "NativeBase.Label": {
       ...labelTheme(variables)
     },
-
     "NativeBase.Textarea": {
       ...textAreaTheme(variables)
     },
-
     "NativeBase.PickerNB": {
       ...pickerTheme(variables),
       "NativeBase.Button": {
         "NativeBase.Text": {}
       }
     },
-
     "NativeBase.Tab": {
       ...tabTheme(variables)
     },
-
     "NativeBase.Segment": {
       ...segmentTheme(variables)
     },
-
     "NativeBase.TabBar": {
       ...tabBarTheme(variables)
     },
@@ -278,10 +252,13 @@ export default (variables /*: * */ = variable) => {
       ...waterMarkViewTheme(variables)
     },
     "Component.DocComponent":{
-      ...DocComponentTheme(variables)
+      ...docComponentTheme(variables)
     },
     "Component.BirthdayComponent":{
-      ...BirthdayComponentTheme(variables)
+      ...birthdayComponentTheme(variables)
+    },
+    "Component.RecruitItem":{
+      ...recruitItemTheme(variables)
     },
     "Page.HomePage":{
       ...homePageTheme(variables)

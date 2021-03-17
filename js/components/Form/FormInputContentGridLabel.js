@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Label } from 'native-base';
 import DateFormat from  'dateformat';	//	https://www.npmjs.com/package/dateformat
+import { View }from 'react-native';
+
 
 
 export default class FormInputContentGridLabel extends Component {
@@ -35,7 +37,15 @@ export default class FormInputContentGridLabel extends Component {
 
 		value = (value == null || value == "null" || value == "" || value == " " ) ? " " : value;
 		return(
-			<Label>{`${this.props.data.component.name}:${value}`}</Label>
+			<View style = {{width: '100%', flexDirection: 'row'}}>
+				<View style={{flex:1.5}}>
+					<Label>{`${this.props.data.component.name}`}</Label>
+				</View>
+				<Label>:</Label>
+				<View style={{flex:1}}>
+					<Label>{`${value}`}</Label>
+				</View>
+			</View>
 		);
 	}
 }

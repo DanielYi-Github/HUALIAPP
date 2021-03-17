@@ -1,6 +1,5 @@
 import React,{PureComponent } from 'react';
 import { Icon, Text, Card, CardItem, Left, Right, Body, Button} from 'native-base';
-// import Styles from '../../styles/Basic';
 import Common from '../../utils/Common';
 
 export default class ReportCategoriesNewsButton extends PureComponent{

@@ -19,7 +19,8 @@ import FormDrawSignImage         from './FormDrawSignImage';
 import FormContentFile           from './FormContentFile';
 import FormContentGrid     		 from './FormContentGrid';
 import FormInputContentGrid      from './FormInputContentGrid';
-import FormInputContentGridForDeputy  from './FormInputContentGridForDeputy';
+import FormContentGridForEvaluation  from './FormContentGridForEvaluation';
+import FormInputContentGridForDeputy from './FormInputContentGridForDeputy';
 import FormContentTabRdo            from './FormContentTabRdo';
 
 
@@ -117,6 +118,29 @@ export default class FormInputContent extends Component {
 				} else {
 					inputComponent = (
 						<FormInputContentGrid 
+							data     ={this.props.data} 
+							editable ={this.props.editable} 
+							onPress  ={this.props.onPress}
+							lang 	 ={this.props.lang}
+              				user 	 ={this.props.user}
+			  			/>
+			  		);
+				}
+				break;
+			case "tabForEvaluation":
+				if ( this.props.data.isedit == "N") {
+					inputComponent = (
+						<FormInputContentGrid 
+							data     ={this.props.data} 
+							editable ={this.props.editable} 
+							onPress  ={this.props.onPress}
+							lang 	 ={this.props.lang}
+              				user 	 ={this.props.user}
+			  			/>
+			  		);
+				} else {
+					inputComponent = (
+						<FormContentGridForEvaluation
 							data     ={this.props.data} 
 							editable ={this.props.editable} 
 							onPress  ={this.props.onPress}

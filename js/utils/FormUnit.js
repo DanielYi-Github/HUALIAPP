@@ -424,6 +424,107 @@ let FormUnit = {
     }
     return returnValue;
   },
+  // 取得欄位columnaction資料
+  async getColumnactionValueForButton(user, item, buttonItem, parentItem = []){
+    let returnValue = [];
+    if (buttonItem.columnaction) {
+      let columnactionObject = {};
+      let isGetColumnactionValueFromObject = false; // 用來確認最後的取直方式
+      for(let column of buttonItem.columnactionColumn){     
+          switch( item.columntype ) {
+            /*
+            case "rdo":
+              let isMatch = false;
+              for(let it of item.listComponent){
+                if(column == it.component.id){
+                  isMatch = true;
+                  columnactionObject[column] = it.defaultvalue;
+                } 
+              }
+              if (!isMatch) {
+                if (column == item.component.id) {
+                  columnactionObject[column] = item.defaultvalue; 
+                } else {
+                  for(let pItem of parentItem){
+                    if (column == pItem.component.id) columnactionObject[column] = pItem.defaultvalue;
+                  }
+                }
+              }
+              break;
+            */
+           /*
+            case "tableave":
+              if (item.defaultvalue.length != 0) {
+                let values = [];
+                for (let [i, temps] of item.defaultvalue.entries()) {
+                  let value = {
+                    ROWINDEX: i.toString()
+                  };
+                  for (let [j, temp] of temps.entries()) {
+                    value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+                  }
+                  values.push(value);
+                }
+                columnactionObject[column] = values; 
+              }
+              break;
+            */
+            case "tab":
+              if (item.defaultvalue.length != 0) {
+                let values = [];
+                for (let [i, temps] of item.defaultvalue.entries()) {
+                  let value = {
+                    ROWINDEX: i.toString()
+                  };
+                  for (let [j, temp] of temps.entries()) {
+                    value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+                  }
+                  values.push(value);
+                }
+                columnactionObject[column] = values; 
+              }
+              break;
+            default:
+              isGetColumnactionValueFromObject = true;
+              //是否取值欄位自己擁有，沒有的話去上層parentItem找
+              if (column == item.component.id) {
+                columnactionObject[column] = {
+                  value :item.defaultvalue,
+                  required: item.required == "Y" ? true : false
+                }; 
+              } else {
+                /*
+                for(let pItem of parentItem){
+                  if (column == pItem.component.id) {
+                    columnactionObject[column] = {
+                      value :pItem.defaultvalue,
+                      required: pItem.required == "Y" ? true : false
+                    }
+                  }
+                }
+                */
+              }
+          }
+      }
+
+      // 只要有一個key值為空就不發request，改成
+      // for(var index in columnactionObject) if(columnactionObject[index] == null) return returnValue;
+      if (isGetColumnactionValueFromObject) {
+        // 所有必填欄位有值才會觸發
+        for (let [key, value] of Object.entries(columnactionObject)) {
+          if (value.required && value.value == null) { return returnValue; }
+          else{ columnactionObject[key] = value.value; }
+        }
+      } else {
+        for(var index in columnactionObject) if(columnactionObject[index] == null) return returnValue;
+      }
+
+      await UpdateDataUtil.getCreateFormDetailFormat(user, item.columnaction, columnactionObject).then((data)=>{
+        returnValue = data;
+      }); 
+    }
+    return returnValue;
+  },
   // 欄位顯示隱藏檢查
   checkFormFieldShow(columnactionValue, formFormat){
     for(let actionValue of columnactionValue){
@@ -455,6 +556,7 @@ let FormUnit = {
   formatEditalbeFormField(item){
     switch(item.columntype) {
       case "tab":
+      case "tabForEvaluation":
         let defaultvalues = [];
         let defaultvaluesCount = item.listComponent[0].defaultvalue.length;
         let tempDefaultvalues = this.deepClone(item.listComponent);

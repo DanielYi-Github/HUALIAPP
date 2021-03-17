@@ -89,7 +89,6 @@ export default connectStyle( 'Component.CarItem', {} )(CarItem);
 // 加入動畫效果
 // import React, { Component } from 'react';
 // import { Card } from 'native-base';
-// import Styles from '../styles/Basic';
 // import CarAnimated from '../animateds/CarAnimated'; //派車顯示
 // import Animated from './Animateds'; //動畫模板
 

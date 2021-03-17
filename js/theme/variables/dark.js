@@ -22,7 +22,6 @@
 
 import color from "color";
 import { Platform, Dimensions, PixelRatio } from "react-native";
-// import Basic from '../../styles/Basic';
 
 const window        = Dimensions.get('window');
 const bannerHeight  = window.width*182/455;

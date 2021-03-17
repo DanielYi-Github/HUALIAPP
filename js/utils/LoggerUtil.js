@@ -29,6 +29,7 @@ export async function addErrorLog(url, position = null, level = "ERROR", msg){
 	
 	// 如果有網路傳直到server,沒網路就寫進資料庫
 	if (isConnected) {
+		console.log("傳送錯誤至server", user.loginID, position, level, msg.msg);
 		UpdateDataUtil.setErrorLog([user], [position], [level], [msg]).then((result)=>{
 			console.log("傳送錯誤至server 成功");
 		}).catch((e)=>{

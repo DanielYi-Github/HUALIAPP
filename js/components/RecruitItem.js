@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Card, CardItem, Left, Thumbnail, Body, Right, Icon, Text } from 'native-base';
-import Styles from '../styles/Basic';
+import { Card, CardItem, Left, Thumbnail, Body, Right, Icon, Text, connectStyle } from 'native-base';
 
-export default class RecruitItem extends React.PureComponent  {
+class RecruitItem extends React.PureComponent  {
 	constructor(props) {
 		super(props);
 	}
@@ -17,8 +16,8 @@ export default class RecruitItem extends React.PureComponent  {
 
 	render() {
 		return(
-		<Card style={[Styles.CardStyle,{alignSelf: 'center'}]}>
-			<CardItem style={Styles.CardItemStyle} button onPress={this.props.onPress}>
+		<Card style={[this.props.style.CardStyle,{alignSelf: 'center'}]}>
+			<CardItem style={this.props.style.CardItemStyle} button onPress={this.props.onPress}>
 			    <Body>
 					<Text >{this.props.recruitInfo.title}</Text>
 			    	<Body style={{flexDirection: 'row', alignSelf: 'flex-start'}}>
@@ -38,3 +37,5 @@ export default class RecruitItem extends React.PureComponent  {
 		)
 	}
 }
+
+export default connectStyle( 'Component.RecruitItem', {} )(RecruitItem);
