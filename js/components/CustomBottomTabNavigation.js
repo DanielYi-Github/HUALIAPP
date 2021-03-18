@@ -20,49 +20,23 @@ let renderIcon = (icon, iconIsImage, activeIconColor, inactiveIconColor) => ({ i
   }
 }
 
-function RenderTab(style, Message, { tab, isActive }){
-  if (isActive) {
-     return(
-       <FullTab
-          isActive   ={isActive}
-          key        ={tab.key}
-          label      ={tab.label}
-          labelStyle ={{color:style.activeLabelColor}}
-          renderIcon ={renderIcon(tab.icon, style.iconIsImage, style.activeIconColor, style.inactiveIconColor)}
-          showBadge  ={tab.key === 'message'}
-          renderBadge={() =>{
-             if (Message.UnMessage.length == 0) {
-               return null;
-             } else {
-               return <Badge>{Message.UnMessage.length}</Badge>
-             }
-            } 
-           }
-          style={{justifyContent: 'center', alignItems: 'center'}}
+function renderBadge(badgeCount){
+  return <Badge>{badgeCount}</Badge>
+}
 
-       />
-     )
-  } else {
-     return(
-       <FullTab
-          isActive   ={isActive}
-          key        ={tab.key}
-          label      ={tab.label}
-          labelStyle ={{color:style.inactiveLabelColor}}
-          renderIcon ={renderIcon(tab.icon, style.iconIsImage, style.activeIconColor, style.inactiveIconColor)}
-          showBadge  ={tab.key === 'message'}
-          renderBadge={() =>{
-             if (Message.UnMessage.length == 0) {
-               return null;
-             } else {
-               return <Badge>{Message.UnMessage.length}</Badge>
-             }
-           }
-          }
-          style={{justifyContent: 'center', alignItems: 'center'}}
-       />
-     )
-  }
+function RenderTab(style, Message, { tab, isActive }){
+  return(
+    <FullTab
+       isActive    ={isActive}
+       key         ={tab.key}
+       label       ={tab.label}
+       labelStyle  ={{color: isActive ? style.activeLabelColor : style.inactiveLabelColor}}
+       renderIcon  ={renderIcon(tab.icon, style.iconIsImage, style.activeIconColor, style.inactiveIconColor)}
+       showBadge   ={tab.name === 'Messages'}
+       style       ={{justifyContent: 'center', alignItems: 'center'}}
+       renderBadge={renderBadge.bind(this, Message.UnMessage.length)}
+    />
+  )
 }
 
 function TabNavigator({ initialRouteName, children, screenOptions, tabBarStyle, contentStyle}) {

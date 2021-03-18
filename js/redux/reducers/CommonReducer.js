@@ -21,8 +21,6 @@ const initialState = {
   directionType        :null,
   directionValue       :null,
   keywordSearchResult  :[],
-  notificationType     :null,
-  notificationContent  :null,
   waterViewConfig      :[],
   bannerImages         :[],     //首頁banner的圖片資料
   turnOnAppleVerify    :false,  //蘋果驗證機制
@@ -108,18 +106,6 @@ export default function common(state = initialState, action = {}) {
       return {
         ...state,
         keywordSearchResult:state.keywordSearchResult
-      };
-    case types.STORENOTIFYCONTNT:
-      return {
-        ...state,
-        notificationType: action.messageType,
-        notificationContent: action.messageContent
-      };
-    case types.CLEANNOTIFYCONTNT:
-      return {
-        ...state,
-        notificationType: null,
-        notificationContent: null
       };
     case types.SET_WATERMARKVIEW_CONFIG:
       return {

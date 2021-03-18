@@ -182,24 +182,6 @@ export function loadWaterMarkViewConfig(){
 	}
 }
 
-export function storeNotificationContent(type, message){
-	return (dispatch, getState) => {
-		dispatch({
-			type:types.STORENOTIFYCONTNT,
-			messageType:type,
-			messageContent:message
-		}); 
-	}
-}
-
-export function cleanNotificationContent(){
-	return (dispatch, getState) => {
-		dispatch({
-			type:types.CLEANNOTIFYCONTNT,
-		}); 
-	}
-}
-
 // for Messages
 export function checkDirectorPage(data){
 	return async (dispatch, getState) => {
