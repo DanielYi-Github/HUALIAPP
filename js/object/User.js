@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 export default class User extends Component {
-
     constructor(props) {
         super(props);
         this.state     = {};
@@ -103,7 +102,6 @@ export default class User extends Component {
     setPlantName = (plantName) => {
         this.plantName = plantName;
     }
-
     getRegID(){
         return this.regID;
     }

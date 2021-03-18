@@ -1,6 +1,5 @@
 import { Platform }      from 'react-native';
 import NetInfo           from "@react-native-community/netinfo";
-import JPush          	 from './JpushUtil';
 import DeviceStorageUtil from './DeviceStorageUtil';
 import * as SQLite       from './SQLiteUtil';
 import * as Device       from './DeviceInfoUtil';
@@ -50,16 +49,11 @@ export async function setErrorLog(user, position, level, msg) {
  * @return promise
  */
 export async function loginByAD(user){
-	
-    await JPush.getRegistrationID( result => {
-    	user.setRegID(result.registerID) 	
-    });
-    
-
 	let lang;
 	await DeviceStorageUtil.get('locale').then((data) => {
 		lang = data ? JSON.parse(data) : data;
 	})
+
 	let promise = new Promise((resolve, reject) => {
 		let version  = Device.getVersion();
 		let url = "login/loginByAD";
@@ -117,45 +111,11 @@ export async function loginByAD(user){
 }
 
 /**
- * 利用token取得MB人員資料
- * @param String loginID
- * @return Promise
- */
-export async function getMBUserInfoByToken(user){
-	let promise = new Promise((resolve, reject) => {
-		let url = "org/getUserByToken";
-		let version  = Device.getVersion();
-		let content = {
-			"appversion":version,
-			"platform":Platform.OS
-		}
-
-		let params = {
-			"lang"  :  user.lang,
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
-			"content": Common.encrypt(JSON.stringify(content))
-		};
-
-		NetUtil.getRequestContent(params, url).then((data)=>{
-			if (data.code == 200) {
-				resolve(data.content)
-			}else{
-				reject(data.message);
-			}
-		});
-	});
-	return promise;
-}
-
-/**
  * EMPID帳號登入,驗證成功後會把token兩邊保存和把登入資訊存在server,並會取得人員基本資料
  * @param user User
  * @return promise
  */
 export async function loginByEmpid(user, lang) {
-    await JPush.getRegistrationID( result => user.setRegID(result.registerID) );
-
 	let params = {};
 	let promise = new Promise((resolve, reject) => {
 		let version  = Device.getVersion();
@@ -165,11 +125,11 @@ export async function loginByEmpid(user, lang) {
 			"lang": lang,
 			"token": "",
 			"content": {
-				"userid": Common.encrypt(user.loginID),
-				"pwd": Common.encrypt(user.password),
-				"regid": user.regID,
-				"appversion":version,
-				"platform":Platform.OS
+				"userid"    : Common.encrypt(user.loginID),
+				"pwd"       : Common.encrypt(user.password),
+				"regid"     : user.regID,
+				"appversion": version,
+				"platform"  : Platform.OS
 			}
 		};
 
@@ -221,6 +181,38 @@ export async function loginByEmpid(user, lang) {
 			}else {
 				// reject(data);
 				resolve(data);
+			}
+		});
+	});
+	return promise;
+}
+
+/**
+ * 利用token取得MB人員資料
+ * @param String loginID
+ * @return Promise
+ */
+export async function getMBUserInfoByToken(user){
+	let promise = new Promise((resolve, reject) => {
+		let url = "org/getUserByToken";
+		let version  = Device.getVersion();
+		let content = {
+			"appversion":version,
+			"platform":Platform.OS
+		}
+
+		let params = {
+			"lang"  :  user.lang,
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+		};
+
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code == 200) {
+				resolve(data.content)
+			}else{
+				reject(data.message);
 			}
 		});
 	});

@@ -18,7 +18,9 @@ const initialState = {
   logoutInfo               : null,    // 用來顯示強制登出時的相關資訊
   showUpdateMessage        : true,    // 控制APP初始化時，是否要顯示更新資訊
   loginChangeUserInfo      : {},       // 切換帳號時所記錄的帳號資訊
-  enableAppInitialFunction : true     // 是否要進行APP初始化運行
+  enableAppInitialFunction : true,     // 是否要進行APP初始化運行
+  jpushRegistrationID      : null,    // Jpush的註冊ID
+  
 };
 
 export default function login(state = initialState, action = {}) {
@@ -28,6 +30,12 @@ export default function login(state = initialState, action = {}) {
       return {
         ...state,
         mode: action.mode
+      };
+    // 取得Jpush的註冊ID
+    case types.JPUSH_REGISTRATION_ID:
+      return {
+        ...state,
+        jpushRegistrationID: action.registerID
       };
     // 登入的帳號是屬哪一種類別ＡＤ或ＥＭＰ
     case types.ACCOUNT_TYPE:

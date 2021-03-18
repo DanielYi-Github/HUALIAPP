@@ -39,6 +39,7 @@ export function appInit(initActions/*, downloadProgressCallback*/) {
 
 		if (netStatus) {
 			initActions.loadLoginMode();  					// 檢核登陸模式 tab/single
+			initActions.getJpushRegistrationID();  			// 取得Jpush的註冊ID
 			initActions.setThemeState( null, netStatus );  	// 設定APP主題風格
     		initActions.bios_check(); 						// 檢查設備是否支持生物識別
     		initActions.biometricInfo_check();				// 檢查server與設備有無使用者生物識別資訊且一致

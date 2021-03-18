@@ -6,6 +6,7 @@ import * as CommonTypes    from '../actionTypes/CommonTypes';
 import * as HomeTypes    	from '../actionTypes/HomeTypes';
 
 import User                   from '../../object/User';
+import JPush          	   	  from '../../utils/JpushUtil';
 import NetUtil                from '../../utils/NetUtil';
 import Common                 from '../../utils/Common';
 import DeviceStorageUtil      from '../../utils/DeviceStorageUtil';
@@ -35,6 +36,24 @@ function setLoginMode(mode="single") {
 		mode
 	}
 }
+/***** 登入方式設置結束 *****/
+
+/***** 取得Jpush的註冊ID *****/
+export function getJpushRegistrationID() {
+	return async (dispatch, getState) => {
+        JPush.getRegistrationID( result => {
+        	dispatch(setRegistrationID(result.registerID)); 
+        });
+	}
+}
+
+function setRegistrationID(registerID) {
+	return {
+		type: types.JPUSH_REGISTRATION_ID,
+		registerID
+	}
+}
+
 /***** 登入方式設置結束 *****/
 
 // 查看single登入的帳號是哪一種
@@ -198,6 +217,7 @@ export function loginByAD(account, password) {
 	return async (dispatch, getState) => {
 		dispatch(login_doing());						//開始顯示載入資料畫面
 		var user = new User(); 							//使用者初始化
+		user.setRegID(getState().Login.jpushRegistrationID);
 		user.setLoginID(account.toLowerCase());			//大寫轉小寫
 		user.setPassword(Common.encrypt(password));
 		
@@ -235,6 +255,7 @@ export function loginByEmpid(empid, passwordEmp) {
 
 		let lang = getState().Language.langStatus;
 		var user = new User(); //使用者初始化
+		user.setRegID(getState().Login.jpushRegistrationID);
 		user.setLoginID(empid); //工號登陸需將login內容改為id內容
 		user.setPassword(passwordEmp);
 

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Container, Header, Left, Content, Right, Item, Label, Input, Body, Card, CardItem, Title, Button, Icon, Text, CheckBox, Toast, connectStyle, Spinner } from 'native-base';
 import { View, FlatList, TextField, Alert, Platform, AlertIOS }from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import FormInputContent          from './FormInputContent';
-import FormInputContentGridLabel from './FormInputContentGridLabel';
-import * as NavigationService         from '../../utils/NavigationService';
-import FormUnit                  from '../../utils/FormUnit';
+import { KeyboardAwareScrollView }        from 'react-native-keyboard-aware-scroll-view'
+import FormInputContent                   from './FormInputContent';
+import FormInputContentGridLabel          from './FormInputContentGridLabel';
+import FormContentGridForEvaluationButton from './FormContentGridForEvaluationButton';
+import * as NavigationService             from '../../utils/NavigationService';
+import FormUnit                           from '../../utils/FormUnit';
 
 class FormContentGridForEvaluation extends Component {
 	constructor(props) {
@@ -42,17 +43,23 @@ class FormContentGridForEvaluation extends Component {
 			switch(this.state.data.listButtons[i].columntype) {
 			  case "btn":
 			    tabButtons.push(
-			    	<Button 
-			    		iconLeft 
-			    		bordered
+			    	<FormContentGridForEvaluationButton
+			    		label={"載入前期分數"}
 			    		onPress = {()=>{
 			    			this.activeColumnaction(this.state.data.listButtons[i], i);
 			    		}} 
-			    	>
-	    				<Icon name='cloud-download-outline' />
-	    	            <Text>載入前期分數</Text>
-	    	        </Button>
+			    	/>
     			);
+
+				tabButtons.push(
+					<FormContentGridForEvaluationButton
+						label={"更新排序"}
+						onPress = {()=>{
+							this.activeColumnaction(this.state.data.listButtons[i], i);
+						}} 
+					/>
+				);
+
 			    break;
 			  default:
 			    break;
@@ -109,7 +116,7 @@ class FormContentGridForEvaluation extends Component {
 	            		style={{borderBottomWidth: 0, paddingTop: showLabelname ? 15: 0, paddingBottom: 15, borderWidth: 5 }} 
 	            		error={this.props.data.requiredAlbert}
 	            	>
-		                {
+		                {/*
 		                	(showLabelname) ? 
         		                <Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 		                	:
@@ -121,7 +128,7 @@ class FormContentGridForEvaluation extends Component {
 		  						<Label>{this.state.labelname}</Label>
 		                	:
 		                		null
-		                }
+		                */}
 
 		                {
 		                	(this.state.loadingMark) ? 
