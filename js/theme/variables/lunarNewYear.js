@@ -214,7 +214,7 @@ export default {
     icon5      :require("./lunarNewYear/5.png"),
     icon6      :require("./lunarNewYear/6.png")
   },
-  separator:{
+  Separator:{
     height: 1, 
     backgroundColor: '#e6e6e6'
   },

@@ -218,7 +218,7 @@ export default {
     icon8      :require("./moonFestival/8.png"),
     icon9      :require("./moonFestival/9.png")
   },
-  separator:{
+  Separator:{
     height: 1, 
     backgroundColor: '#e6e6e6'
   },

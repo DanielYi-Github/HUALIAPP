@@ -462,8 +462,6 @@ async function loadBannerImagesIntoState(dispatch, getState){
 			LoggerUtil.addErrorLog("CommonAction loadBannerImages", "APP Action", "ERROR", e);
 		});
 	}
-	
-	
 
 	//如果沒有網路或是SQL查詢出錯，則做下面的處理
 	if (data.length == 0) {

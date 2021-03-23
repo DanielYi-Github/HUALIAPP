@@ -37,29 +37,19 @@ class FormContentGridForEvaluation extends Component {
 
 	componentDidMount(){
 		// 處理載入上期按鈕
-		let isShowTabButtons = this.state.data.listButtons.length == 0 ? false : true;
+		let isShowTabButtons = this.state.data.listButton.length == 0 ? false : true;
 		let tabButtons = [];
-		for(let i in this.state.data.listButtons){
-			switch(this.state.data.listButtons[i].columntype) {
+		for(let i in this.state.data.listButton){
+			switch(this.state.data.listButton[i].columntype) {
 			  case "btn":
 			    tabButtons.push(
 			    	<FormContentGridForEvaluationButton
-			    		label={"載入前期分數"}
+			    		label={this.state.data.listButton[i].component.name}
 			    		onPress = {()=>{
-			    			this.activeColumnaction(this.state.data.listButtons[i], i);
+			    			this.activeColumnaction(this.state.data.listButton[i], i);
 			    		}} 
 			    	/>
     			);
-
-				tabButtons.push(
-					<FormContentGridForEvaluationButton
-						label={"更新排序"}
-						onPress = {()=>{
-							this.activeColumnaction(this.state.data.listButtons[i], i);
-						}} 
-					/>
-				);
-
 			    break;
 			  default:
 			    break;
@@ -113,7 +103,12 @@ class FormContentGridForEvaluation extends Component {
 				<View style={{width: '100%'}}>
 	            	<Item 
 	            		fixedLabel 
-	            		style={{borderBottomWidth: 0, paddingTop: showLabelname ? 15: 0, paddingBottom: 15, borderWidth: 5 }} 
+	            		style={{
+	            			borderBottomWidth: 0, 
+	            			paddingTop: showLabelname ? 15: 0, 
+	            			paddingBottom: 15, 
+	            			borderWidth: 5 
+	            		}} 
 	            		error={this.props.data.requiredAlbert}
 	            	>
 		                {/*
@@ -130,19 +125,6 @@ class FormContentGridForEvaluation extends Component {
 		                		null
 		                */}
 
-		                {
-		                	(this.state.loadingMark) ? 
-        		                <Label style={{textAlign: 'right'}}>{this.props.lang.ListFooter.Loading}</Label>
-		                	:
-		                		null
-		                }
-
-		                {
-		                	(this.state.loadingMark) ? 
-        		                <Spinner  style={{height: 32}}/>
-		                	:
-		                		null
-		                }
 
 		                {  	/*控制顯示表格上方的按鈕*/
 		                	(this.state.isShowTabButtons) ? 
@@ -151,7 +133,22 @@ class FormContentGridForEvaluation extends Component {
 		                	 	null
 		                }
 
+		                
+
 		                <Body style={{flexDirection: 'row', alignContent: 'flex-end', justifyContent: 'flex-end' }}>
+		                {
+		                	(this.state.loadingMark) ? 
+        		                <Label style={{textAlign: 'right'}}>{this.props.lang.ListFooter.Loading}</Label>
+		                	:
+		                		null
+		                }
+		                {
+		                	(this.state.loadingMark) ? 
+        		                <Spinner  style={{height: 30}}/>
+		                	:
+		                		null
+		                }
+
 		                {
 		                	(this.state.data.enableCreateData != false && !this.state.loadingMark) ? 
         		                <Icon 
@@ -164,7 +161,6 @@ class FormContentGridForEvaluation extends Component {
 		                	:
 		                		null
 		                }
-
 		                {
 		                	(this.state.editCheckItemRecord.length == 0 || this.state.data.enableCreateData == false) ?
 		                		null
@@ -188,13 +184,14 @@ class FormContentGridForEvaluation extends Component {
 		            	( this.props.data.defaultvalue == null || this.props.data.defaultvalue.length == 0  ) ?
          					<Item fixedLabel error={this.props.data.requiredAlbert}/>
 		            	:
-		            		<View style={{borderRadius: 10, borderWidth:0.6, borderColor:"#D9D5DC", width: '98%', }}>
+		            		<View style={{borderRadius: 10, borderWidth:0.6, borderColor:"#D9D5DC", width: '100%', }}>
 		            			<FlatList
 		            				keyExtractor={(item, index) => index.toString()}
         							extraData     = {this.state}
-		            				data          = {this.props.data.defaultvalue}
+		            				data          = {this.props.data.defaultvalue.slice(0,3)}
 		            				renderItem    = {this.rendercheckItem}
 									ItemSeparatorComponent ={this.renderSeparator}
+						  	  		ListFooterComponent = {this.props.data.defaultvalue.length > 3 ? this.renderFooter : null}    //尾巴
 		            			/>
 		            		</View>
 		            }
@@ -255,15 +252,22 @@ class FormContentGridForEvaluation extends Component {
 		let labels = [];
 		for (let i in item) {
 			// 沒有值得話不做顯示
-			if(item[i].defaultvalue !== null) labels.push(<FormInputContentGridLabel key={i} data={item[i]}/>);
+			if(item[i].outsidevisible == "Y"){
+				labels.push(<FormInputContentGridLabel key={i} data={item[i]}/>);
+			}
 		}
 
 		if (this.state.editable) {
 			return (
-				<Body style={{flexDirection: 'row', paddingLeft: 5, paddingRight: 20, marginTop: 10, marginBottom: 10}}>
-					<Left style={{flex:0, paddingRight: 30}}>
-						{
-							(this.state.data.enableDeleteData || typeof this.state.data.enableDeleteData == "undefined" ) ? 
+				<Body style={{
+					flexDirection: 'row', 
+					marginTop: 10, 
+					marginBottom: 10, 
+					width: '90%'
+				}}>
+					{
+						(this.state.data.enableDeleteData || typeof this.state.data.enableDeleteData == "undefined" ) ? 
+							<Left style={{flex:0, paddingRight: 30, borderWidth: 0}}>
 								<CheckBox 
 									checked={this.state.editCheckItemRecord[index]} 
 									color={this.state.editCheckItemRecord[index] ? "#EA4C88" : "#aaa" } 
@@ -275,10 +279,10 @@ class FormContentGridForEvaluation extends Component {
 										});
 									}} 
 								/>
-							:
-								null
-						}
-					</Left>
+							</Left>
+						:
+							null
+					}
 					<Body style={{alignItems: 'flex-start'}}>
 						{labels}
 					</Body>
@@ -319,8 +323,6 @@ class FormContentGridForEvaluation extends Component {
 		}
 
 		this.setState({ loadingMark:false });
-
-
 		NavigationService.navigate("FormInputContentGridPage", {
 			propsData         : this.props.data,
 			data              : data,
@@ -357,6 +359,28 @@ class FormContentGridForEvaluation extends Component {
 		this.modalWrapperClose();
 	}
 	
+	renderFooter = () => {
+		return (
+			<View>
+				<View style={[this.props.style.Separator, {width: '90%', alignSelf: 'center'}]}/>
+				<CardItem button						
+					style={{flexDirection: 'row', alignItems: 'flex-start'}}
+					// onPress = {()=>{ this.setModalListVisible(!this.state.modalListVisible); }}
+					onPress = {()=>{
+						NavigationService.navigate("FormContentGridDataTable", { 
+							data : this.props.data, 
+							lang : this.props.lang,
+							user : this.props.user,
+							onPress : this.props.onPress
+						});
+					}}
+				>
+					<Text>{this.props.lang.Common.ViewMore}</Text>
+				</CardItem>
+			</View>
+		);
+	}
+
 	modalWrapperClose = () => {
 		// this.state.data 變回原本的state
 		let value = this.state.data;

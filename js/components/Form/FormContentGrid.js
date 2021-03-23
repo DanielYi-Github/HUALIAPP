@@ -63,21 +63,21 @@ class FormContentGrid extends Component {
 
 				return (
 					<Content contentContainerStyle={{width:this.props.style.PageSize.width*0.86, borderWidth:0}}>
-		  		  <Item fixedLabel style={this.props.style.CreateFormPageFiledItemWidth}>
-		   			<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
-		  		  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
-		  		    <Input 
-		  		    	multiline 
-		  		    	value={value} 
-		  		    	editable={editable} 
-		  		    	style={{textAlign: 'right'}}
-		  		    />
-		  		  </Item>
-				</Content>
+			  		  <Item fixedLabel style={this.props.style.CreateFormPageFiledItemWidth}>
+			   			<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
+			  		  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
+			  		    <Input 
+			  		    	multiline 
+			  		    	value={value} 
+			  		    	editable={editable} 
+			  		    	style={{textAlign: 'right'}}
+			  		    />
+			  		  </Item>
+					</Content>
 				);
 			} else {
 				return (
-					<Content contentContainerStyle={{width:this.props.style.PageSize.width*0.88, alignItems: 'flex-start'}}>
+					<Content contentContainerStyle={{width:this.props.style.PageSize.width*0.86, alignItems: 'flex-start'}}>
 		              	<Item fixedLabel style={{borderBottomWidth: 0, paddingTop: 15, paddingBottom: 15}}>
 		  	 			  	<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 		  	                <Label>{this.state.labelname}</Label>
@@ -89,7 +89,7 @@ class FormContentGrid extends Component {
 							paddingLeft : "3%", 
 							paddingRight: "3%",
 							alignSelf   : 'flex-start', 
-							borderRadius:10
+							borderRadius: 10
 					    }]}>
 					    	<FlatList
 		  	  	  			  listKey={(item, index) => 'D' + index.toString()}
@@ -183,7 +183,7 @@ class FormContentGrid extends Component {
 		if ( this.state.data.length > 3 ) {
 			return (
 				<View>
-					<View style={{height: 1, backgroundColor: '#DDD'}} />
+					<View style={[this.props.style.Separator, {width: '90%', alignSelf: 'center'}]}/>
 					<CardItem button						
 						style={{flexDirection: 'row', alignItems: 'flex-start'}}
 						onPress = {()=>{ this.setModalListVisible(!this.state.modalListVisible); }}
@@ -335,7 +335,7 @@ class FormContentGrid extends Component {
 	}
 
 	renderItemSeparatorComponent = () => {
-		return <View style={{height: 1, backgroundColor: '#DDD'}} />
+		return <View style={[this.props.style.Separator, {width: '90%', alignSelf: 'center'}]}/>
 	}
 }
 

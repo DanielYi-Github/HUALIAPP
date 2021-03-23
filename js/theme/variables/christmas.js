@@ -223,7 +223,7 @@ export default {
     icon9      :require("./chrismaxNewYear/12.png"),
     icon9      :require("./chrismaxNewYear/13.png"),
   },
-  separator:{
+  Separator:{
     height: 1, 
     backgroundColor: '#e6e6e6'
   },

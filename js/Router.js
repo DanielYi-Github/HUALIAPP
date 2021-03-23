@@ -59,6 +59,7 @@ import FormInputContentGridPage          from './components/Form/FormInputConten
 import FormContentTextWithActionPage     from './components/Form/FormContentTextWithActionPage';
 import FormContentTextWithTagsPage       from './components/Form/FormContentTextWithTagsPage';
 import FormContentChkWithActionPage      from './components/Form/FormContentChkWithActionPage';
+import FormContentGridDataTablePage      from './components/Form/FormContentGridDataTablePage';
 import FormInputContentGridPageForDeputy from './components/Form/FormInputContentGridPageForDeputy';
 
 import SalaryPage              from './pages/Common/Salary/SalaryPage';
@@ -289,6 +290,7 @@ function MainStack(){
       <AppStack.Screen name ="FormContentTextWithAction"    component={FormContentTextWithActionPage} />
       <AppStack.Screen name ="FormContentTextWithTags"      component={FormContentTextWithTagsPage} />
       <AppStack.Screen name ="FormContentChkWithAction"     component={FormContentChkWithActionPage} />
+      <AppStack.Screen name ="FormContentGridDataTable"     component={FormContentGridDataTablePage} />
       <AppStack.Screen name ="FormInputContentGridPageForDeputy"  component={FormInputContentGridPageForDeputy} />
       <AppStack.Screen name ="Salary"               component={SalaryPage} />
       <AppStack.Screen name ="Survey"               component={SurveyPage} />

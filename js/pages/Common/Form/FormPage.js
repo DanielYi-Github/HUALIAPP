@@ -195,7 +195,6 @@ class FormPage extends React.Component {
   }
 
   render() {
-    console.log(this.state.content);
     let formPage = (
       <Container>
         <MainPageBackground />

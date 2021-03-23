@@ -253,32 +253,6 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					tmpList[i].requiredAlbert = false; 	   // 該欄位空值警告
 					tmpList[i].actionValue = await FormUnit.getActionValue(userData, tmpList[i]);	// 取得該欄位的動作
 					apList[apListIndex].content.push(tmpList[i]);	
-
-					// 開始自制listButtons
-					if (tmpList[i].columntype == "tabForEvaluation" ) {
-						tmpList[i].listButtons = [];
-						tmpList[i].listButtons.push(
-							{
-								action            : null,
-								actionColumn      : [],
-								actionValue       : null,
-								columnaction      : "action/columnaction/loadLastScoreForH00210",
-								columnactionColumn: ["tabDepStaff", "txtAssessCOID", "txtAssessPZID", "tfwAssessDepID", "tfwAssessMonth"],
-								columnsubtype     : null,
-								columntype        : "btn",
-								component         : {name: "載入前期分數", id: "LoadLastScore"},
-								defaultvalue      : null,
-								isedit            : "N",
-								listComponent     : null,
-								paramList         : null,
-								required          : "N",
-								requiredAlbert    : false,
-								rulesList         : null,
-								show              : true	
-							}
-						)
-					}	
-					
 				}
 			}
 			console.log("表單具體內容結束");

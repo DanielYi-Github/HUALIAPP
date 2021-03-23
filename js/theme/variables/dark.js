@@ -214,7 +214,7 @@ export default {
   ExplainIcon:{
     iconIsImage:false,
   },
-  separator:{
+  Separator:{
     height: 1, 
     backgroundColor: '#e6e6e6'
   },
