@@ -255,9 +255,6 @@ export function navigateFunctionPage(appID = null, userID = null) {
 				case "Birthday": //生日祝福
 					NavigationService.navigate("BirthdayWeek");
 					break;
-				case "ReportCenter": //报表中心
-					NavigationService.navigate("ReportCategories");
-					break;
 				case "Mail":
 					navigateMailFunction(getState(), dispatch);				
 					break;

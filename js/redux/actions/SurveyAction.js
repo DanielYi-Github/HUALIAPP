@@ -37,7 +37,7 @@ export function getSurveyFormat( surveyOID ){
 		FormUnit.language = getState().Language.lang.FormUnit;
 		
 		UpdateDataUtil.getCreateSurvey(user, content).then( async (data)=>{
-			console.log("getCreateSurvey",data);
+			// console.log("getCreateSurvey",data);
 			let stepsTitle       = [];
 			let apList           = [];
 			let apListIndex      = -1;

@@ -36,7 +36,7 @@ class ViewFilePage extends React.Component {
   componentDidMount() {
     let user = this.props.state.UserInfo.UserInfo;
     // console.log("this.state",this.state);
-    console.log(this.state.url, this.state.content);
+    // console.log(this.state.url, this.state.content);
     UpdateDataUtil.getCreateFormDetailFormat(
       user,
       this.state.url,
@@ -72,6 +72,7 @@ class ViewFilePage extends React.Component {
         });
       }
     }).catch((data) => {
+      console.log(data);
       Alert.alert(
         this.props.state.Language.lang.Common.Sorry,
         data ? data.message : this.props.state.Language.lang.Common.FileLoadingError, [{
@@ -85,6 +86,7 @@ class ViewFilePage extends React.Component {
   }
 
   render() {
+    console.log(this.state.file);
         let pdf = null;
         if(this.state.refreshing == false){
           switch(this.state.fileType) {

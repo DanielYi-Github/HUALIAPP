@@ -648,12 +648,6 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		EndTimeNeedMoreStart:"結束時間需大於起始時間",
 		SaveNotVTime:"已保存，失效的代理時間"
 	},
-	ReportCategoriesPage:{
-		ReportCenter:"報表中心",
-		Introduction:"主題報表集中管理，實現數據圖表化從而達到數據的直觀分析",
-		NewsReports:"最新報表",
-		ReportClassify:"報表分類"
-	},
 	KPICategoryPage:{
 		Total:"總合",
 		Year:"年",

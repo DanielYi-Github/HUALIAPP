@@ -27,6 +27,9 @@ export default (variables /*: * */ = variable) => {
 	CardItemStyle:{
 		borderRadius: 10,
 	},
+	fixFormContentGridModalListWrapperCloseButton:{
+		paddingTop: variables.isIphoneX ? 20 : null
+	}
   };
 
   return formContent;

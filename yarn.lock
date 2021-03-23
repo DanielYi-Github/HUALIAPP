@@ -6640,6 +6640,11 @@ react-native-swipe-list-view@^3.2.5:
   resolved "https://registry.npm.taobao.org/react-native-swipe-list-view/download/react-native-swipe-list-view-3.2.5.tgz#e10297ae53c9df79a5ef93bd01f47c47ad5dc23b"
   integrity sha1-4QKXrlPJ33ml75O9AfR8R61dwjs=
 
+react-native-table-component@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.npm.taobao.org/react-native-table-component/download/react-native-table-component-1.2.1.tgz#5f1e0f159b1dff9df0d5601c4a5ab99d1aa99a25"
+  integrity sha1-Xx4PFZsd/53w1WAcSlq5nRqpmiU=
+
 react-native-tags-input@^1.0.10:
   version "1.0.10"
   resolved "https://registry.npm.taobao.org/react-native-tags-input/download/react-native-tags-input-1.0.10.tgz#84f3f3f208d5dffa1ba77ff4a7ff8eaa9539d523"

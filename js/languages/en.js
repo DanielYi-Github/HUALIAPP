@@ -644,12 +644,6 @@ export default {
 		EndTimeNeedMoreStart:"End time needs to be greater than start time",
 		SaveNotVTime:"Saved, agent time retired"
 	},
-	ReportCategoriesPage:{
-		ReportCenter:"Report Center",
-		Introduction:"",
-		NewsReports:"Latest Report",
-		ReportClassify:"Report Classification"
-	},
 	KPICategoryPage:{
 		Total:"Total",
 		Year:"Year",

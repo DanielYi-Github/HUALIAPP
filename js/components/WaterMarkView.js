@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Dimensions } from 'react-native';
 import {Card, CardItem, Left, Body, Right, Icon, Text, Button, connectStyle } from 'native-base';
-import { WatermarkView } from 'react-native-watermark-component';
+import CustomWatermarkView from "../extendThirdModule/CustomWatermarkView";
 import { connect } from 'react-redux';
 
 class WaterMarkView extends Component {
@@ -17,12 +17,6 @@ class WaterMarkView extends Component {
 			itemHeight: 120,
 			rotateZ   : -25,
 			watermarkTextStyle:this.props.style.watermarkTextStyle
-			/*
-			watermarkTextStyle:{
-				fontSize:17,
-				color:"rgba(0,0,0,.15)"
-			}
-			*/
 		};
 
 		let showWaterMark = false, waterMarkArray = this.props.state.Common.waterViewConfig; 
@@ -35,7 +29,7 @@ class WaterMarkView extends Component {
 
 		if (showWaterMark) {
 			return(
-				<WatermarkView
+				<CustomWatermarkView
 				    foreground ={(this.props.foreground == "N") ? false : true}
 				    watermark  ={watermarkerconfig.watermark}
 				    itemWidth  ={watermarkerconfig.itemWidth}
@@ -46,7 +40,7 @@ class WaterMarkView extends Component {
 				    watermarkTextStyle={watermarkerconfig.watermarkTextStyle }
 				>
 					  {this.props.contentPage}
-				</WatermarkView>
+				</CustomWatermarkView>
 			);
 		} else {
 			return this.props.contentPage

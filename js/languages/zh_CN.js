@@ -647,12 +647,6 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		StartTimeNotMoreEnd:"起始时间须大于结束时间",
 		SaveNotVTime:"已保存，失效的代理时间"
 	},
-	ReportCategoriesPage:{
-		ReportCenter:"报表中心",
-		Introduction:"主题报表集中管理，实现数据图表化从而达到数据的直观分析",
-		NewsReports:"最新报表",
-		ReportClassify:"报表分类"
-	},
 	KPICategoryPage:{
 		Total:"总合",
 		Year:"年",

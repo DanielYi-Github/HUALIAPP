@@ -214,7 +214,7 @@ class FormContentGrid extends Component {
 	  let items = this.state.data[this.state.itemIndex];
 	  let component = ( 
 	  	  <Container style={{backgroundColor:"rga(0,0,0,1)", flex:1}}>
-  	  		<View>
+  	  		<View style={this.props.style.fixFormContentGridModalListWrapperCloseButton}>
   	  		  <Button transparent onPress={() =>{this.setState({ modalVisible:false }); }}>
   	  		    <Icon name="close" style={{color:"#FFF"}}/>
   	  		  </Button>
@@ -245,7 +245,7 @@ class FormContentGrid extends Component {
 	showModalListWrapper = () => {
 		let component = (
 			<Container style={{backgroundColor:"rga(0,0,0,0)", flex:1}}>
-				<View>
+				<View style={this.props.style.fixFormContentGridModalListWrapperCloseButton}>
 				  <Button transparent onPress={() =>{this.setState({ modalListVisible:false }); }}>
 				    <Icon name="close" style={{color:"#FFF"}}/>
 				  </Button>

@@ -29,6 +29,8 @@ class CarsPage extends React.Component {
 		if (Companies_Car.companyList.length != 0) {
 		  Companies_Car.defaultCO = typeof Companies_Car.defaultCO == 'undefined' ? { label:'none', value:false } : Companies_Car.defaultCO;
 		  Companies_Car.defaultCO = Companies_Car.defaultCO.value ? Companies_Car.defaultCO : Companies_Car.companyList[0];
+		}else{
+			Companies_Car.defaultCO = { label:'none', value:false }
 		}
 
 		this.state = {

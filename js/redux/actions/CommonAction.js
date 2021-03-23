@@ -207,7 +207,7 @@ export function checkDirectorPage(data){
 			case "FormTypeList": 		// 表單簽核分類清單
 			case "MyFormList": 			// 我的表單清單
 			case "ManageDocument": 		// 管理文章
-			case "ReportCategories": 	// KPI報表
+			case "KPICategory": 		// KPI報表
 			case "BirthdayWeek": 		// 生日祝福
 			case "Operation": 			// APP操作說明
 			case "ViewFile":  			// 集團文件、任一文件
@@ -224,49 +224,6 @@ export function checkDirectorPage(data){
 				NavigationService.navigate("MessageDetail", { data: data });
 				break;
 		}
-
-
-
-		/*		
-			let appid = data.APPID ? data.APPID: "Messages";
-			let user  = getState().UserInfo.UserInfo;
-			// 執行跳頁動作
-			switch (appid) {
-				case "Sign":
-					NavigationService.navigate("FormTypeList");
-					break;
-				case "MyForm":
-					NavigationService.navigate("MyFormList");
-					break;
-				case "G00010": //派車單
-					NavigationService.navigate("CreateForm", {FormID: "G00010"});
-					break;
-				case "H00070": //台籍幹部休假單
-					NavigationService.navigate("CreateForm", {FormID: "H00070"});
-					break;
-				case "M00030": //重要事項通報申請單
-					NavigationService.navigate("CreateForm", {FormID: "M00030"});
-					break;
-				case "Documents": //集團文件
-					getDoucmentData(user,data);
-					break;
-				case "ManageDocuments": //管理文章
-					NavigationService.navigate("ManageDocument");
-					break;
-				case "Birthday": //生日祝福
-					NavigationService.navigate("BirthdayWeek");
-					break;
-				case "ReportCenter": //报表中心
-					NavigationService.navigate("ReportCategories");
-					break;
-				case "Messages":
-					messageNavigation(data, user, getState, dispatch);
-					break;
-				default:
-					NavigationService.navigate(appid);
-					break;
-			}
-		*/
 	}
 }
 

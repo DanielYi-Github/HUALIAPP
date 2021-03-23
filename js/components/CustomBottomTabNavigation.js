@@ -32,7 +32,7 @@ function RenderTab(style, Message, { tab, isActive }){
        label       ={tab.label}
        labelStyle  ={{color: isActive ? style.activeLabelColor : style.inactiveLabelColor}}
        renderIcon  ={renderIcon(tab.icon, style.iconIsImage, style.activeIconColor, style.inactiveIconColor)}
-       showBadge   ={tab.name === 'Messages'}
+       showBadge   ={(tab.name === 'Messages' && Message.UnMessage.length != 0 )}
        style       ={{justifyContent: 'center', alignItems: 'center'}}
        renderBadge={renderBadge.bind(this, Message.UnMessage.length)}
     />

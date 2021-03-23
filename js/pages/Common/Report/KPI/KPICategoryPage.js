@@ -51,151 +51,6 @@ class KPICategoryPage extends React.Component {
     }
   }
 
-  loadReportKPI = async (coObj,yearObj,monthObj) => {  
-    let user = this.props.state.UserInfo.UserInfo;
-    this.setState({
-      isSubmitting:true
-    });
-    await this.loadReportManKPIData(user,coObj,yearObj,monthObj);
-    await this.loadReportProKPIData(user,coObj,yearObj,monthObj);
-    if(this.state.tokenError){
-      this.errorTip(true);
-    }else if(this.state.netError){
-      this.errorTip();
-    }
-  }
-
-  loadReportManKPIData = async (user,coObj,yearObj,monthObj) => {      
-
-    await UpdateDataUtil.getReportManKPIData(user,coObj.key,yearObj.key,monthObj.key).then(async (data)=>{
-        if(data){
-            let manTotal=0;
-            // let resLabel1=coObj.label+" "+yearObj.label+monthObj.label+" ";
-            let resLabel1=coObj.label+" "+yearObj.key+"/"+monthObj.key+" ";
-            for(let i in data){
-              let tempName="";
-              data[i].label=data[i].kpi;
-              manTotal=manTotal+data[i].kpi; 
-              for(let j=0;j<data[i].idname.length;j++){
-                if(j==0){
-                  tempName=data[i].idname[j];   
-                }else{
-                  //解決換行問題
-                  tempName=tempName+"\\nn"+data[i].idname[j];       
-                }
-              }
-              data[i].vidname=tempName;
-              // data[i].vidname=data[i].idname;
-            }
-            let resLabel2=this.props.state.Language.lang.KPICategoryPage.Total+" "+manTotal.toFixed(2);
-
-            this.setState({
-                managerKPI: data,
-                manLabel1: resLabel1,
-                manLabel2: resLabel2,
-                // isSubmitting:false
-            });
-        }
-    }).catch((e)=>{
-      if(e.code==0){
-        this.setState({
-          tokenError:true
-        });
-      }else{
-        this.setState({
-          netError:true
-        });
-      }
-      console.log(e);
-    }); 
-  }
-
-
-  loadReportProKPIData = (user,coObj,yearObj,monthObj) => {  
-      UpdateDataUtil.getReportProKPIData(user,coObj.key,yearObj.key,monthObj.key).then(async (data)=>{
-          if(data){
-            let proTotal=0;
-            // let resLabel1=coObj.label+" "+yearObj.label+monthObj.label+" ";
-            let resLabel1=coObj.label+" "+yearObj.key+"/"+monthObj.key+" ";
-            for(let i in data){
-              let tempName="";
-              data[i].label=data[i].kpi;
-              proTotal=proTotal+data[i].kpi;
-              for(let j=0;j<data[i].idname.length;j++){
-                if(j==0){
-                  tempName=data[i].idname[j];   
-                }else{
-                  //解決換行問題
-                  tempName=tempName+"\\nn"+data[i].idname[j];       
-                }
-              }
-              data[i].vidname=tempName;
-              // data[i].vidname=data[i].idname;
-            }
-
-            let resLabel2=this.props.state.Language.lang.KPICategoryPage.Total+" "+proTotal.toFixed(2);
-
-            this.setState({
-                productKPI: data,
-                proLabel1: resLabel1,
-                proLabel2: resLabel2,
-                isSubmitting:false
-            });
-          }
-      }).catch((e)=>{
-          if(e.code==0){
-            this.setState({
-              tokenError:true
-            });
-          }else{
-            this.setState({
-              netError:true
-            });
-          }
-          console.log(e);
-      }); 
-  }
-
-  errorTip=(tokenError=false)=>{
-        if(tokenError){
-            this.props.actions.logout("token Error", true);
-        }else{
-          //無法連線，請確定網路連線狀況
-          setTimeout(() => {
-            Alert.alert(
-              this.props.state.Language.lang.CreateFormPage.Fail,
-              this.props.state.Language.lang.Common.NoInternetAlert, [{
-                text: 'OK',
-                onPress: () => {
-                  NavigationService.goBack();
-                }
-              }], {
-                cancelable: false
-              }
-            )
-          }, 200);
-          this.setState({
-            isSubmitting:false
-          });
-        }       
-  }
-
-  renderActivityIndicator = () => {
-    if (this.state.isSubmitting) {
-      return (
-        <Modal
-            animationType="none"
-            transparent={true}
-            visible={true}
-            onRequestClose={() => {}}>
-            <Container style={{justifyContent: 'center', alignItems: 'center', backgroundColor:'rgba(255,255,255,.7)'}}>
-              <Spinner color={this.props.style.SpinnerColor}/>
-            </Container>
-        </Modal>
-      );
-    }
-  }
-
   paramInit = async () =>{
     let coList=[];
     let yearList=[];
@@ -311,6 +166,159 @@ class KPICategoryPage extends React.Component {
         defaultMon:defaultMon,
         iniComParam:true
       });
+    }
+  }
+
+  loadReportKPI = async (coObj,yearObj,monthObj) => {  
+    let user = this.props.state.UserInfo.UserInfo;
+    this.setState({
+      isSubmitting:true
+    });
+    await this.loadReportManKPIData(user,coObj,yearObj,monthObj);
+    await this.loadReportProKPIData(user,coObj,yearObj,monthObj);
+    if(this.state.tokenError){
+      this.errorTip(true);
+    }else if(this.state.netError){
+      this.errorTip();
+    }
+  }
+
+  loadReportManKPIData = async (user,coObj,yearObj,monthObj) => {      
+    try {
+      await UpdateDataUtil.getReportManKPIData(user,coObj.key,yearObj.key,monthObj.key).then(async (data)=>{
+          if(data){
+              let manTotal=0;
+              // let resLabel1=coObj.label+" "+yearObj.label+monthObj.label+" ";
+              let resLabel1=coObj.label+" "+yearObj.key+"/"+monthObj.key+" ";
+              for(let i in data){
+                let tempName="";
+                data[i].label=data[i].kpi;
+                manTotal=manTotal+data[i].kpi; 
+                for(let j=0;j<data[i].idname.length;j++){
+                  if(j==0){
+                    tempName=data[i].idname[j];   
+                  }else{
+                    //解決換行問題
+                    tempName=tempName+"\\nn"+data[i].idname[j];       
+                  }
+                }
+                data[i].vidname=tempName;
+                // data[i].vidname=data[i].idname;
+              }
+              let resLabel2=this.props.state.Language.lang.KPICategoryPage.Total+" "+manTotal.toFixed(2);
+
+              this.setState({
+                  managerKPI: data,
+                  manLabel1: resLabel1,
+                  manLabel2: resLabel2,
+                  // isSubmitting:false
+              });
+          }
+      }).catch((e)=>{
+        if(e.code==0){
+          this.setState({
+            tokenError:true
+          });
+        }else{
+          this.setState({
+            netError:true
+          });
+        }
+        console.log(e);
+      }); 
+    } catch (error) {
+      console.error(error);
+      this.errorTip();
+    }
+  }
+
+  loadReportProKPIData = async (user,coObj,yearObj,monthObj) => {  
+      try {
+        await UpdateDataUtil.getReportProKPIData(user,coObj.key,yearObj.key,monthObj.key).then(async (data)=>{
+            if(data){
+              let proTotal=0;
+              // let resLabel1=coObj.label+" "+yearObj.label+monthObj.label+" ";
+              let resLabel1=coObj.label+" "+yearObj.key+"/"+monthObj.key+" ";
+              for(let i in data){
+                let tempName="";
+                data[i].label=data[i].kpi;
+                proTotal=proTotal+data[i].kpi;
+                for(let j=0;j<data[i].idname.length;j++){
+                  if(j==0){
+                    tempName=data[i].idname[j];   
+                  }else{
+                    //解決換行問題
+                    tempName=tempName+"\\nn"+data[i].idname[j];       
+                  }
+                }
+                data[i].vidname=tempName;
+                // data[i].vidname=data[i].idname;
+              }
+
+              let resLabel2=this.props.state.Language.lang.KPICategoryPage.Total+" "+proTotal.toFixed(2);
+
+              this.setState({
+                  productKPI: data,
+                  proLabel1: resLabel1,
+                  proLabel2: resLabel2,
+                  isSubmitting:false
+              });
+            }
+        }).catch((e)=>{
+            if(e.code==0){
+              this.setState({
+                tokenError:true
+              });
+            }else{
+              this.setState({
+                netError:true
+              });
+            }
+            console.log(e);
+        }); 
+      } catch (error) {
+        console.error(error);
+        this.errorTip();
+      }
+  }
+
+  errorTip=(tokenError=false)=>{
+        if(tokenError){
+            this.props.actions.logout("token Error", true);
+        }else{
+          //無法連線，請確定網路連線狀況
+          setTimeout(() => {
+            Alert.alert(
+              this.props.state.Language.lang.CreateFormPage.Fail,
+              this.props.state.Language.lang.Common.NoInternetAlert, [{
+                text: 'OK',
+                onPress: () => {
+                  NavigationService.goBack();
+                }
+              }], {
+                cancelable: false
+              }
+            )
+          }, 200);
+          this.setState({
+            isSubmitting:false
+          });
+        }       
+  }
+
+  renderActivityIndicator = () => {
+    if (this.state.isSubmitting) {
+      return (
+        <Modal
+            animationType="none"
+            transparent={true}
+            visible={true}
+            onRequestClose={() => {}}>
+            <Container style={{justifyContent: 'center', alignItems: 'center', backgroundColor:'rgba(255,255,255,.7)'}}>
+              <Spinner color={this.props.style.SpinnerColor}/>
+            </Container>
+        </Modal>
+      );
     }
   }
 

@@ -644,12 +644,6 @@ export default {
 		EndTimeNeedMoreStart: "Thời gian kết thúc cần phải lớn hơn thời gian bắt đầu",
 		SaveNotVTime: "tiết kiệm, tạm thời nghỉ"
 	},
-	ReportCategoriesPage: {
-		ReportCenter: "giới hạn rộng mở.",
-		Introduction: "Phân chia chi tiết, mô tả dữ liệu và phân tích thấu đáo dữ liệu",
-		NewsReports: "Tin mới nhất",
-		ReportClassify: "Hạng báo"
-	},
 	KPICategoryPage: {
 		Total: "Tổng",
 		Year: "Năm",
