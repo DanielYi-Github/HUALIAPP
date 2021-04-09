@@ -15,7 +15,7 @@ import com.hualiapp.CustomPreventScreenshotPackage;
 import com.reactnativecommunity.picker.RNCPickerPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.hualiapp.ExitPackage;
-
+import org.wonday.orientation.OrientationActivityLifecycle;
 
 public class MainApplication extends Application implements ReactApplication {
   private boolean SHUTDOWN_TOAST = false; // 设置为 true 将不会弹出 toast
@@ -64,6 +64,7 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    registerActivityLifecycleCallbacks(OrientationActivityLifecycle.getInstance());
     JPushModule.registerActivityLifecycle(this);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }

@@ -8,6 +8,7 @@ import * as DeviceInfo     from '../../utils/DeviceInfoUtil';
 import * as NavigationService   from '../../utils/NavigationService';
 import DeviceStorageUtil   from '../../utils/DeviceStorageUtil';
 import SearchInput, { createFilter } from 'react-native-search-filter';
+import Orientation from 'react-native-orientation-locker';
 
 export function loadCompanyData_ContactCO(){
 	return (dispatch, getState) => {
@@ -664,7 +665,6 @@ export function loadBannerImages(){
 		let data = [];
 		let lang = getState().Language.langStatus;
 
-		
 		// 先判斷有沒有網路
 		if (getState().Network.networkStatus) {
 			let sql = `select * from THF_BANNER where LANG='${lang}' and STATUS='Y' order by SORT;`
@@ -685,7 +685,6 @@ export function loadBannerImages(){
 			});
 		}
 		
-
 		//如果沒有網路或是SQL查詢出錯，則做下面的處理
 		if (data.length == 0) {
 			let banner1, banner2;
@@ -730,6 +729,26 @@ export function loadBannerImages(){
 	}
 }
 
+export function isEnableOrientation(currentRoute){
+	return async (dispatch, getState) => {
+		switch(currentRoute) {
+		     case "Notice":
+		     case "FormOrigionalForm":
+		     case "FormContentGridDataTable":
+		     case "Operation":
+		     case "ViewFile":
+		     case "KPIDetail":
+		     case "CreateWebView":
+		     	// 開放所有方向選轉
+		     	Orientation.unlockAllOrientations();
+		        break;
+		     default:
+		     	// 鎖定只能豎屏
+		        Orientation.lockToPortrait();
+		} 
+	}
+}
+
 /*
 function refreshing() {
 	return {
@@ -749,4 +768,58 @@ function setUser_error(){
 		type: types.SET_ERROR
 	}
 }
+*/
+/*
+	Splash
+	IntroductionDrawer
+	RecruitDetail
+	AuthStack
+	HomeTabNavigator
+	Notice
+	FindDetailList
+	MessageDetail
+	MineDetail
+	MineDetailEdit
+	Contact
+	ContactDetail
+	Car
+	FormTypeList
+	FormList
+	Form
+	FormOrigionalForm
+	FormDrawSign
+	FormAllowAdd
+	MyFormList
+	MyForm
+	CreateForm
+	FormInputContentGridPage
+	FormContentTextWithAction
+	FormContentTextWithTags
+	FormContentChkWithAction
+	FormContentGridDataTable
+	FormInputContentGridPageForDeputy
+	Salary
+	Survey
+	Publish
+	PublishEdit
+	PublishSubmit
+	PublishSubmitSelect
+	Deputy
+	Advices
+	Operation
+	About
+	AccountSafe
+	UpdatePassword
+	ChangeAccount
+	ManageDocument
+	ViewFile
+	DocumentCategories
+	DocumentContent
+	DocumentDetail
+	DocumentNewsContent
+	BirthdayWeek
+	BirthdayDetail
+	KPIDetail
+	KPICategory
+	CreateWebView
 */

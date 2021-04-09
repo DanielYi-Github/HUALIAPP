@@ -6,7 +6,7 @@ const isIphoneX = variable.isIphoneX;
 const isIOS = Platform.OS == 'ios' ? true: false;
 
 let ToastUnit = {
-	show(type = 'info', text = 'Hello', isAuthPage = false ){
+	show(type = 'info', text = 'Hello', isAuthPage = false, LoadFormError = null){
 		let topOffset = 30
 		if (isIOS) {
 			if (isIphoneX) {
@@ -24,7 +24,14 @@ let ToastUnit = {
 			type: type,
 			position: 'top',
 			text1: text,
-			topOffset: topOffset
+			topOffset: topOffset,
+			onHide: () => {
+				if (LoadFormError) {
+					LoadFormError();
+				} else {
+					null
+				}
+			},
 		});
 		/*
 		Toast.show({

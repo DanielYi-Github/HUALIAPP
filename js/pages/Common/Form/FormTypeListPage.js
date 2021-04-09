@@ -49,8 +49,16 @@ class FormTypeListPage extends React.Component {
   }
 
   //檢查是否發生錯誤訊息
-  //
-  isLoadError(error){ if(error) ToastUnit.show('error', error); }
+  isLoadError(error){ 
+    if(error){
+      ToastUnit.show(
+        'error', 
+        error,
+        false,
+        this.props.actions.LoadFormError
+      );
+    }
+  }
 
   // 公司清單的篩選
   filterCompany = (forms) => {

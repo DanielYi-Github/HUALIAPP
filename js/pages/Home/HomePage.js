@@ -72,6 +72,7 @@ class HomePage extends React.Component {
 
       contentOffset_Y:0,
       isLoadFunctionDataRelateData:false, // 是否已撈取Function模組關聯所有資料,
+      isLoadCompanyData_ContactCO:false, // 是否已撈取CompanyData_ContactCO模組關聯所有資料,
     }
 
     MessageRouter.initial(this.props.state, this.props.actions);// 處理訊息分流的類別
@@ -87,11 +88,16 @@ class HomePage extends React.Component {
     props.actions.messageInitial(user);                    //撈取全部的消息資料，並放置在redux的state中
     props.actions.loadWaterMarkViewConfig();               //撈取APP共用資料_浮水印顯示畫面控制
     props.actions.getIsAppNotificationEnable(user);        //檢查手機ＡＰＰ的通知是否開啟
-    props.actions.loadCompanyData_ContactCO();             //撈取APP共用資料_通訊錄公司
     Platform.OS == 'android' ? props.actions.enableScreenShot(false) : null; //啟動禁止截圖的功能(android專屬)  
   }
 
+  onChange = ({ window, screen }) => {
+    
+  };
+
   componentDidMount() {
+    Dimensions.addEventListener("change", this.onChange);
+
     AppState.addEventListener('change', this.onChangeAppState);
     if (this.props.state.Home.NoticeData.length == 0 && !this.props.state.Home.isRefreshing) {
       this.props.actions.loadInitialNoticeData(); //撈取公告列表資料 
@@ -102,6 +108,14 @@ class HomePage extends React.Component {
       "badge":0,
       "appBadge":0
     });
+  }
+
+  componentDidUpdate(){
+    // 撈取CompanyData_ContactCO模組關聯所有資料
+    if (this.props.state.Home.FunctionData.length != 0 && this.state.isLoadCompanyData_ContactCO == false) {
+      this.props.actions.loadCompanyData_ContactCO();   //撈取APP共用資料_通訊錄公司
+      this.setState({isLoadCompanyData_ContactCO:true})
+    }
   }
 
   render() {

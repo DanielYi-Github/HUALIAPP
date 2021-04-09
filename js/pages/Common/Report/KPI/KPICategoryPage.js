@@ -101,23 +101,26 @@ class KPICategoryPage extends React.Component {
       //Param 年份-月份-公司別
       if(data.length!=0){
           data.forEach(param => {
+              // console.log(param);
               let tempCo=null;
               switch(param.CLASS1){
                 case "HRCO":
-                tempCo={
-                  key:param.CLASS4+"",label:param.CONTENT,hrco:param.CLASS3
-                }
-                coList.push(tempCo);
-                break;
+                  tempCo={
+                    key:param.CLASS4+"",label:param.CONTENT,hrco:param.CLASS3
+                  }
+                  coList.push(tempCo);
+                  break;
+
                 case "ReportKpiYear":
                 for(let i=0;i<param.CONTENT;i++){
-                  let tempYear={
-                    // key:String(nowYear-i),label:nowYear-i+this.props.state.Language.lang.KPICategoryPage.Year
-                    key:String(nowYear-i),label:String(nowYear-i)
+                    let tempYear={
+                      // key:String(nowYear-i),label:nowYear-i+this.props.state.Language.lang.KPICategoryPage.Year
+                      key:String(nowYear-i),label:String(nowYear-i)
+                    }
+                    // console.log(tempYear);
+                    yearList.push(tempYear);
                   }
-                  yearList.push(tempYear);
-                }
-                break;                
+                  break;                
               }
           })
           for(let i=0;i<12;i++){
@@ -157,6 +160,7 @@ class KPICategoryPage extends React.Component {
         defaultData:defaultCo,
         text:this.props.state.Language.lang.KPICategoryPage.Company
       }
+      
       this.setState({
         monObj:tempMonObj,
         yearObj:tempYearObj,
@@ -340,6 +344,7 @@ class KPICategoryPage extends React.Component {
     let containerBgColor = this.props.state.Theme.theme.variables.containerBgColor; 
     let contentStyle = this.props.state.Theme.theme.variables.contentStyle;
     if (Platform.OS === "ios") {
+      // console.log(this.props.state.Language.lang.KPICategoryPage.Year2, this.state.defaultYear, this.state.yearObj.data);
       return(
         <Container style={{backgroundColor: containerBgColor=="rgba(0,0,0,0)" ? contentStyle: containerBgColor }}>
           {/*標題列*/}

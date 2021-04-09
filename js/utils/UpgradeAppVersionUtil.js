@@ -102,7 +102,7 @@ let UpgradeAppVersionUtil = {
 	async checkHotUpdate(lang, isColdActive, downloadProgressCallback) {
 		let promise = new Promise( async (resolve, reject) => {
 			//通知codepush server 本地使否已完成更新安裝
-			// CodePush.notifyAppReady();                        
+			CodePush.notifyAppReady();                   
 
 			//從Metadata找出目前是哪個版本，如果沒有就是空
 			let oLabel = await CodePush.getUpdateMetadata(CodePush.UpdateState.RUNNING).then((metadata) => {
@@ -114,9 +114,10 @@ let UpgradeAppVersionUtil = {
 
 			//檢查更新
 			CodePush.checkForUpdate(CODE_PUSH_KEY).then((remotePackage) => {
-				// console.log("remotePackage", remotePackage);
-
-				if(remotePackage == null) return resolve(false);
+				if(remotePackage == null){
+					CodePush.notifyApplicationReady();
+					return resolve(false);	
+				} 
 
 				//從THF_VERSION找出，比檢查到的版本小 比目前的版本大的裡面有沒有 必須更新的，如果有就顯示提示框，沒有就自動更新
 				let { appVersion, label } = remotePackage;

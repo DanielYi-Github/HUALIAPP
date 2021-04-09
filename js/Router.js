@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Platform, Alert, NativeModules, AppState } from 'react-native';
 import { Icon, Text, StyleProvider, Root, connectStyle} from 'native-base';
 import { connect, useSelector, useDispatch}from 'react-redux';
@@ -17,7 +17,6 @@ import { withSecurityView }     from './components/WithSecurityView';
 import { createMyNavigator }    from './components/CustomBottomTabNavigation';
 import { navigationRef }        from './utils/NavigationService';
 import DeviceStorageUtil        from './utils/DeviceStorageUtil';
-
 
 import SplashPage                from './pages/SplashPage';
 import IntroductionDrawerContent from './components/IntroductionDrawerContent';
@@ -81,12 +80,11 @@ import ChangeAccountPage  from './pages/Mine/ChangeAccountPage';
 import ViewFilePage       from './pages/Common/ViewFilePage';
 import AuthenticationView from './components/AuthenticationView';
 
-import ManageDocumentPage from './pages/Common/ManageDocument/ManageDocumentPage';
-
 import DocumentCategoriesPage   from './pages/Common/Document/DocumentCategoriesPage';
 import DocumentContentPage      from './pages/Common/Document/DocumentContentPage';
 import DocumentDetailPage       from './pages/Common/Document/DocumentDetailPage';
 import DocumentNewsContentPage  from './pages/Common/Document/DocumentNewsContentPage';
+import ManageDocumentPage       from './pages/Common/ManageDocument/ManageDocumentPage';
 
 import BirthdayWeekPage         from './pages/Common/Birthday/BirthdayWeekPage';
 import BirthdayDetailPage       from './pages/Common/Birthday/BirthdayDetailPage';
@@ -94,9 +92,7 @@ import BirthdayDetailPage       from './pages/Common/Birthday/BirthdayDetailPage
 import KPIDetailPage           from './pages/Common/Report/KPI/KPIDetailPage';
 import KPICategoryPage         from './pages/Common/Report/KPI/KPICategoryPage';
 
-import CreateWebViewPage             from './pages/Common/CreateWebViewPage';
-
-
+import CreateWebViewPage       from './pages/Common/CreateWebViewPage';
 
 function ShowSplashPage(props){
   const isFocused = useIsFocused();
@@ -256,7 +252,7 @@ function HomeTabNavigator(props) {
 }
 
 const AppStack  = createStackNavigator();
-function MainStack(){
+function MainStack(props){
   return(
     <AppStack.Navigator headerMode="none" >
       <AppStack.Screen name ="Splash"               component={ShowSplashPage}/>
@@ -367,7 +363,12 @@ class Router extends React.Component {
           <Root>
             <StyleProvider style={theme}>
               <SafeAreaProvider>
-                <NavigationContainer ref={navigationRef}>
+                <NavigationContainer 
+                  ref={navigationRef}
+                  onStateChange={async () => {
+                    this.props.actions.isEnableOrientation(navigationRef.current.getCurrentRoute().name);
+                  }}
+                >
                 {
                   Platform.OS == 'ios' ?
                     <RootStack.Navigator headerMode="none" mode="modal" >

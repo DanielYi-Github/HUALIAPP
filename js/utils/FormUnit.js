@@ -552,6 +552,34 @@ let FormUnit = {
     }
     return formFormat;
   },
+  // 針對listButtom的值進行整理
+  formatListButtonOfForm(items){
+    for(let item of items){
+      let usefulItem = false;
+      usefulItem = item.listButton != null ? true : false;
+      usefulItem = ( usefulItem && item.listButton.length != 0 ) ? true : false;
+      if (usefulItem) {
+        for(let button of item.listButton){
+          let columnactionColumnParam = {}
+          for(let columnactionColumn of button.columnactionColumn){
+            for(let itemm of items){
+              if (columnactionColumn == itemm.component.id) {
+                columnactionColumnParam[columnactionColumn] = itemm.defaultvalue
+              }else if( itemm.columntype == "txtwithtxt" ){
+                for(let itemmm of itemm.listComponent){
+                  if (columnactionColumn == itemmm.component.id) {
+                    columnactionColumnParam[columnactionColumn] = itemmm.defaultvalue
+                  }
+                }
+              }
+            }
+          }
+          button.columnactionColumnParam = columnactionColumnParam;
+        }
+      }
+    }
+    // return items;
+  },
   // 整理成可編輯的欄位格式
   formatEditalbeFormField(item){
     switch(item.columntype) {

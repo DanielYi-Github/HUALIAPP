@@ -63,7 +63,7 @@ class FormContentGridForEvaluation extends Component {
 	}
 
 	activeColumnaction = async (button, index) => {
-		console.log(button, index, this.props.data);
+		console.log(this.state.data);
 		/*
 		let columnactionValue = await FormUnit.getColumnactionValueForButton(
 			this.props.user, 
@@ -133,8 +133,6 @@ class FormContentGridForEvaluation extends Component {
 		                	 	null
 		                }
 
-		                
-
 		                <Body style={{flexDirection: 'row', alignContent: 'flex-end', justifyContent: 'flex-end' }}>
 		                {
 		                	(this.state.loadingMark) ? 
@@ -155,7 +153,6 @@ class FormContentGridForEvaluation extends Component {
         							name  ="add-circle" 
         							type  ="MaterialIcons" 
         							style ={{fontSize:30, color: '#20b11d'}}
-        		                	// onPress={this.getEditField}
         		                	onPress={()=>{this.showEditModal(this.state.data)}}
         		                />
 		                	:
@@ -205,11 +202,12 @@ class FormContentGridForEvaluation extends Component {
 			let defaultvalue = ( this.props.data.defaultvalue == null ) ? [] : this.props.data.defaultvalue;
 			if ( defaultvalue.length == 0 ) {
 				renderItem =
-					<Item fixedLabel 
-					style={[
-						this.props.style.CreateFormPageFiledItemWidth,
-						this.props.style.fixCreateFormPageFiledItemWidth
-					]}
+					<Item 
+						fixedLabel 
+						style={[
+							this.props.style.CreateFormPageFiledItemWidth,
+							this.props.style.fixCreateFormPageFiledItemWidth
+						]}
 					>
 			 			<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 					  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
@@ -230,12 +228,12 @@ class FormContentGridForEvaluation extends Component {
 			            </Item>
 	            		<View style={{borderRadius: 10, borderWidth:0.6, borderColor:"#D9D5DC", width: '98%'}}>
 	            			<FlatList
-  				    			scrollEnabled = {false}
-	            				keyExtractor={(item, index) => index.toString()}
-								extraData     = {this.state}
-	            				data          = {this.props.data.defaultvalue}
-	            				renderItem    = {this.rendercheckItem}
-								ItemSeparatorComponent ={this.renderSeparator}
+								scrollEnabled          = {false}
+								keyExtractor           = {(item, index) => index.toString()}
+								extraData              = {this.state}
+								data                   = {this.props.data.defaultvalue}
+								renderItem             = {this.rendercheckItem}
+								ItemSeparatorComponent = {this.renderSeparator}
 	            			/>
 	            		</View>
 		            </View>

@@ -7,8 +7,10 @@ class FormContentNumber extends Component {
 
 		// 名稱、值、參數、能否編輯、強制編輯、欄位資料
 		this.state = {
-			labelname: props.data.component.name,
-			value:null,
+			labelname: props.data.component.name,	//API回傳預設的值
+			value    : "",							//組件的值
+			editValue: "",							//編輯中要顯示在畫面得值
+			isEditing: false                        //是否在編輯中
 		};
 	}
 	
@@ -22,17 +24,14 @@ class FormContentNumber extends Component {
 				editable = false;
 			}
 		}
+
 		let required = (this.props.data.required == "Y") ? "*" : "  ";
-		let value = this.props.lang.Common.None;
+		let value = this.props.lang.Common.None; //預設文字內容為"無"
 
 		if (editable) {
-			value = (this.props.data.defaultvalue == null ) ? null : this.props.data.defaultvalue;
-			if (value == null) {
-				value = (value == this.state.value) ? value : this.state.value;
-			} else {
-				value = (this.state.value == null) ? value : this.state.value; 
-			}
-
+			value = (this.props.data.defaultvalue == null || this.props.data.defaultvalue == "") ? value : this.props.data.defaultvalue;
+			value = (this.state.value != "") ? this.state.value : value;
+			
 			return(
 				 	<Item fixedLabel 
 				 		style={[
@@ -43,20 +42,34 @@ class FormContentNumber extends Component {
 		 			   <Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 		               <Label style={{flex: 0}}>{this.state.labelname}</Label>
 		               <Input 
-		               		// multiline
-                          	ref="focusInput"
-                          	keyboardType = "numeric"
-		               		value = { value ? value.toString() :"" }
-		               		style={{ textAlign: 'right'}}
+							ref          ="focusInput"
+							keyboardType = "numeric"
+							value        = { this.state.isEditing ? this.state.editValue : value }
+							style        ={{ textAlign: 'right'}}
 		               		onEndEditing ={ async (text)=>{
-		               			await this.props.onPress(text.nativeEvent.text, this.props.data);
-		               			this.setState({ value:null });
+		               			if (text.nativeEvent.text == "") {
+		               				this.setState({ 
+										isEditing: false,
+										editValue: ""
+		               				});
+		               			} else {
+		               				this.setState({ 
+										isEditing: false,
+										value    : "", 
+										editValue: ""
+		               				});
+		               				await this.props.onPress(this.state.editValue, this.props.data);
+		               			}
+		               			
+		               			
 		               		}}
 		               		onFocus = {(e)=>{
-		               			// this.setState({ value:value });
+		               			this.setState({ 
+		               				isEditing:true
+		               			});
 		               		}}
 		               		onChangeText ={(text)=>{
-		               			this.setState({ value:text });
+		               			this.setState({ editValue:text });
 		               		}}
 		               	/>
 		               	<Icon 
@@ -77,7 +90,7 @@ class FormContentNumber extends Component {
 		} else {		
 			value = (this.props.data.defaultvalue == null || this.props.data.defaultvalue == "") ? value : this.props.data.defaultvalue;
 			return(
-				  <Item fixedLabel 
+				  <Item fixedLabel
 				  style={[
 				  	this.props.style.CreateFormPageFiledItemWidth,
 				  	this.props.style.fixCreateFormPageFiledItemWidth
@@ -86,11 +99,12 @@ class FormContentNumber extends Component {
 		 			<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 				  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
 				    <Input 
-  				    	scrollEnabled = {false}
-				    	multiline 
-				    	value={value.toString()} 
-				    	editable={editable} 
-				    	style={{textAlign: 'right'}}
+						scrollEnabled = {false}
+						multiline     = {false}
+						value         ={value.toString()} 
+						// placeholder={value.toString()}
+						editable      ={editable} 
+						style         ={{textAlign: 'right'}}
 				    />
 				  </Item>
 			);

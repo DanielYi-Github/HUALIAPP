@@ -127,7 +127,8 @@ class FormInputContentGrid extends Component {
 
 		            {
 		            	( this.props.data.defaultvalue == null || this.props.data.defaultvalue.length == 0  ) ?
-         					<Item fixedLabel error={this.props.data.requiredAlbert}/>
+         					// <Item fixedLabel error={this.props.data.requiredAlbert}/>
+         					null
 		            	:
 		            		<View style={{borderRadius: 10, borderWidth:0.6, borderColor:"#D9D5DC", width: '98%'}}>
 		            			<FlatList

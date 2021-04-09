@@ -4,6 +4,8 @@ import { Container, Header, Icon, Left, Button, Body, Right, Title, Content, Tex
 import ActionButton from 'react-native-action-button';
 import ModalWrapper from "react-native-modal";
 import ActionSheet  from 'react-native-actionsheet';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -91,16 +93,17 @@ class FormPage extends React.Component {
       Form.tskid
     );
 
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => this.keyboardDidShow(event));
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', (event) => this.keyboardDidHide(event));
+    // this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => this.keyboardDidShow(event));
+    // this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', (event) => this.keyboardDidHide(event));
   }
 
-  keyboardDidShow = (event) => this.setState({ keyboardShow: true, keyboardHeight: event.endCoordinates.height > 100 ? (Platform.OS == 'ios' ? event.endCoordinates.height : 0) : 0 })
-  keyboardDidHide = (event) => this.setState({ keyboardShow: false, keyboardHeight: 0 })
+  // keyboardDidShow = (event) => this.setState({ keyboardShow: true, keyboardHeight: event.endCoordinates.height > 100 ? (Platform.OS == 'ios' ? event.endCoordinates.height : 0) : 0 })
+  // keyboardDidHide = (event) => this.setState({ keyboardShow: false, keyboardHeight: 0 })
 
   componentWillUnmount() {
-    this.keyboardDidShowListener.remove();
-    this.keyboardDidHideListener.remove();
+    // this.keyboardDidShowListener.remove();
+    // this.keyboardDidHideListener.remove();
+    this.props.actions.setInitialState();
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -120,7 +123,6 @@ class FormPage extends React.Component {
         bpmImage  :nextProps.state.Form.bpmImage   
       });
     }
-
     if (nextProps.state.Form.submitResult && nextProps.state.Form.isSignDone) {
        let SignSuccess = this.state.signState ? this.props.Language.SignApproveSuccess : this.props.Language.SignRejectSuccess ;
        let SignFailure = this.state.signState ? this.props.Language.SignApproveFailure : this.props.Language.SignRejectFailure ;
@@ -163,6 +165,7 @@ class FormPage extends React.Component {
     }
 
     //顯示錯誤提示
+      /*
     if(nextProps.state.Form.loadMessgae != null){
       setTimeout(()=>{
         Alert.alert(
@@ -174,24 +177,9 @@ class FormPage extends React.Component {
             cancelable: false
           }
         )
-
-        /* 舊的寫法之後來確認是否可行
-        Alert.alert(
-          this.props.lang.CreateFormPage.WrongData,
-          nextProps.state.Form.loadMessgae.message, [{
-            text: this.props.lang.CreateFormPage.GotIt,
-            onPress: () => {}
-          }], {
-            cancelable: false
-          }
-        )
-        */
-      },200);
+      },200);   
     }
-  }
-
-  componentWillUnmount(){
-    this.props.actions.setInitialState();
+      */
   }
 
   render() {
@@ -209,12 +197,14 @@ class FormPage extends React.Component {
           title                 = {this.state.Form.processname}
           isTransparent         = {true}
         />
-        <Content>
+      {/*<Content>*/}
+          <KeyboardAwareScrollView>
           {/*表單主旨*/}
           {this.renderFormkeyword()}
 
           {/*表單內容*/}
           {(this.state.content && this.state.content.length) ? this.renderFormContent() : null}
+
 
           {/*顯示查看表單的完整圖片按鍵*/}
           {(this.state.bpmImage) ? this.renderFormDetailImage() : null}
@@ -233,8 +223,9 @@ class FormPage extends React.Component {
 
           {/*顯示 下方空白區域*/}
           { (this.state.Form.isGroupSign == "true") ? <Body style={{width:"100%", height:100}}/> : null }
-                              
-        </Content>
+          </KeyboardAwareScrollView>
+      {/*</Content>*/}
+
 
         {/*簽核按鈕*/}
         {/*this.state.signBtns ? this.renderSignBtns() : null*/}
@@ -269,7 +260,6 @@ class FormPage extends React.Component {
           :
             null
         }
-
       </Container>
     );
 
@@ -317,6 +307,7 @@ class FormPage extends React.Component {
             />
         );  
       } 
+      
     }
     return ( app );
   }

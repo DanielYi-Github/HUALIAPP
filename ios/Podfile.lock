@@ -258,6 +258,8 @@ PODS:
     - React-Core
   - react-native-netinfo (5.9.9):
     - React-Core
+  - react-native-orientation-locker (1.2.0):
+    - React
   - react-native-pdf (6.2.2):
     - React-Core
   - react-native-progress-bar-android (1.0.4):
@@ -410,6 +412,7 @@ DEPENDENCIES:
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-pdf (from `../node_modules/react-native-pdf`)
   - "react-native-progress-bar-android (from `../node_modules/@react-native-community/progress-bar-android`)"
   - "react-native-progress-view (from `../node_modules/@react-native-community/progress-view`)"
@@ -508,6 +511,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-orientation-locker:
+    :path: "../node_modules/react-native-orientation-locker"
   react-native-pdf:
     :path: "../node_modules/react-native-pdf"
   react-native-progress-bar-android:
@@ -610,6 +615,7 @@ SPEC CHECKSUMS:
   react-native-contacts: 81059c05ae61884092dade66536987274b81aed9
   react-native-image-picker: c6d75c4ab2cf46f9289f341242b219cb3c1180d3
   react-native-netinfo: 0212ce8604e88edf686f1481b925b17a42a52449
+  react-native-orientation-locker: 47aaa55d59bfc1613804dc22f159e6bb1cca5f30
   react-native-pdf: 4b5a9e4465a6a3b399e91dc4838eb44ddf716d1f
   react-native-progress-bar-android: be43138ab7da30d51fc038bafa98e9ed594d0c40
   react-native-progress-view: 21b1e29e70c7559c16c9e0a04c4adc19fce6ede2

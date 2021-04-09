@@ -195,6 +195,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 
 		Promise.all([p1, p2, p3]).then( async (value) => {
 			console.log(value);	
+
 			let handsign         = value[0] ? value[0].handsign : false;			//是否需要手寫板簽名
 			let showsign         = value[0] ? value[0].showsign : false;			//是否需要顯示核決層級
 			let signresult       = value[0] ? value[0].signresult : false;			//是否需要顯示回簽
@@ -228,7 +229,6 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 				}
 			}
 
-			console.log("表單具體內容開始");
 			// 表單具體內容
 			tmpList = value[0] ? value[0].comList : []; 
 			for(var i in tmpList){
@@ -255,7 +255,15 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					apList[apListIndex].content.push(tmpList[i]);	
 				}
 			}
-			console.log("表單具體內容結束");
+			
+			// 針對listButton要取直的資料進行整理
+			let columns = [];
+			for(let index in apList){
+				columns.push(...apList[index].content);
+			}
+			// 先進行listButton的資料處理
+			await FormUnit.formatListButtonOfForm(columns);
+
 
 			// 判斷附件有沒有值
 			tmpList = value[0] ? value[0].tmpBotomList : []; 
@@ -299,6 +307,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					allowAddAnnounce,
 				) 
 			); 
+			
 			
 		}).catch((err) => {
 			// console.log(err);
@@ -448,6 +457,8 @@ export function submitSignForm(user, form, info, allowAddValue){
 		} else { 
 			data = await UpdateDataUtil.goBackTask(user, sign) 
 		}
+		console.log(data);
+		
 		
 		dispatch( submitResult(data, form) ); 
 		dispatch( { type: types.FORMSIGNDONE } ); 
@@ -456,6 +467,7 @@ export function submitSignForm(user, form, info, allowAddValue){
 				removeResultInFindPageList(indexInFindPageSections, indexInFindPage)
 			);	
 		}
+		
 	}
 }
 
@@ -474,7 +486,7 @@ export function logout(message = null) {
 	};
 }
 
-function LoadFormError(message = null){
+export function LoadFormError(message = null){
 	return {
 		type: types.LOADFORMTYPESERROR,
 		message
@@ -512,6 +524,7 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 		let formFormat = getState().Form.FormContent;
 		let editIndex  = formFormat[pageIndex].content.indexOf(formItem);
 		
+
 		// 欄位自己的規則比較
 		let ruleCheck = await FormUnit.formFieldRuleCheck(
 								value, 
@@ -520,8 +533,9 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 								formItem.columntype
 							  );
 		if( ruleCheck != true){
-			dispatch(updateDefaultValueError(ruleCheck));
+			dispatch(updateDefaultValueError(ruleCheck.message));
 		} else {
+			
 			// 進行該欄位的新值舊值更換
 			formItem = await FormUnit.updateFormValue( value, formItem, formFormat[pageIndex].content );
 			formFormat[pageIndex].content[editIndex] = formItem;
@@ -532,12 +546,14 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 										formItem, 
 										formFormat[pageIndex].content 
 									);
+			
 			// 欄位隱藏或顯示控制
 			// 判斷該值是否填寫表單中顯示
 			formFormat[pageIndex].content = FormUnit.checkFormFieldShow(
 												columnactionValue, 
 												formFormat[pageIndex].content
 											);	
+			
 			dispatch(updateDefaultValue(formFormat));
 		}
 		
