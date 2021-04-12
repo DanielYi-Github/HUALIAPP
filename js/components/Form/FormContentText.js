@@ -90,7 +90,7 @@ class FormContentText extends Component {
 						scrollEnabled = {false}
 						value         ={value} 
 						editable      ={editable} 
-						style         ={{textAlign: 'right', backgroundColor: 'rgba(0,0,0,0)'}}
+						style         ={{textAlign: 'right', backgroundColor: 'rgba(0,0,0,0)', color:this.props.style.labelColor}}
 				    />
 				  </Item>
 			);

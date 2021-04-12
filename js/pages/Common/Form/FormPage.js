@@ -78,7 +78,6 @@ class FormPage extends React.Component {
       fabActive   :false,   // 顯示簽核的元件
       // showSignModal:false   // 顯示簽核案件的背景圖
       bpmImage : false,    // 顯示表單的完整圖片
-      keyboardHeight: 0
     }
   }
 
@@ -93,16 +92,9 @@ class FormPage extends React.Component {
       Form.tskid
     );
 
-    // this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => this.keyboardDidShow(event));
-    // this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', (event) => this.keyboardDidHide(event));
   }
 
-  // keyboardDidShow = (event) => this.setState({ keyboardShow: true, keyboardHeight: event.endCoordinates.height > 100 ? (Platform.OS == 'ios' ? event.endCoordinates.height : 0) : 0 })
-  // keyboardDidHide = (event) => this.setState({ keyboardShow: false, keyboardHeight: 0 })
-
   componentWillUnmount() {
-    // this.keyboardDidShowListener.remove();
-    // this.keyboardDidHideListener.remove();
     this.props.actions.setInitialState();
   }
 
@@ -197,14 +189,12 @@ class FormPage extends React.Component {
           title                 = {this.state.Form.processname}
           isTransparent         = {true}
         />
-      {/*<Content>*/}
-          <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView>
           {/*表單主旨*/}
           {this.renderFormkeyword()}
 
           {/*表單內容*/}
           {(this.state.content && this.state.content.length) ? this.renderFormContent() : null}
-
 
           {/*顯示查看表單的完整圖片按鍵*/}
           {(this.state.bpmImage) ? this.renderFormDetailImage() : null}
@@ -223,8 +213,7 @@ class FormPage extends React.Component {
 
           {/*顯示 下方空白區域*/}
           { (this.state.Form.isGroupSign == "true") ? <Body style={{width:"100%", height:100}}/> : null }
-          </KeyboardAwareScrollView>
-      {/*</Content>*/}
+        </KeyboardAwareScrollView>
 
 
         {/*簽核按鈕*/}
@@ -637,7 +626,6 @@ class FormPage extends React.Component {
   }
 
   showFormSignTextInput = () => {
-    let marginFromBottom = (this.state.keyboardHeight == 0) ? 0 : this.state.keyboardHeight
     return (
       <ModalWrapper 
         isVisible={this.state.showFormSignTextInput}
@@ -648,8 +636,6 @@ class FormPage extends React.Component {
           width: '100%', 
           paddingTop:20, 
           paddingBottom:15, 
-          marginBottom:marginFromBottom,
-          maxHeight:this.props.style.PageSize.height-marginFromBottom-150
         }}>
           <CardItem>
             <Item floatingLabel>

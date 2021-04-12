@@ -75,7 +75,7 @@ class FormContentCbo extends Component {
   				    	scrollEnabled = {false}
   				    	value={(paramname != null) ? paramname : defaultvalue } 
   				    	editable={editable} 
-  				    	style={{textAlign: 'right'}}
+  				    	style={{textAlign: 'right', color:this.props.style.labelColor}}
   				    />
   				  </Item>
 			);

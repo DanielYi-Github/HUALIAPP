@@ -246,9 +246,7 @@ class SurveyPage extends React.Component {
     }
 
     let page = (
-        <KeyboardAwareScrollView
-          extraScrollHeight={150}
-        >
+        <KeyboardAwareScrollView>
           <Card>
             <CardItem style={{flexDirection: 'column'}}>     
               <Title style={{color:this.props.state.Theme.theme.variables.ExplainText.color, paddingTop: 5, paddingBottom: 5}}>

@@ -171,7 +171,7 @@ class FormContentDate extends Component {
 				    	multiline 
 				    	value={text} 
 				    	editable={editable} 
-				    	style={{textAlign: 'right'}}
+				    	style={{textAlign: 'right',color:this.props.style.labelColor}}
 				    />
 				  </Item>
 			);

@@ -104,7 +104,7 @@ class FormContentNumber extends Component {
 						value         ={value.toString()} 
 						// placeholder={value.toString()}
 						editable      ={editable} 
-						style         ={{textAlign: 'right'}}
+						style         ={{textAlign: 'right', color:this.props.style.labelColor}}
 				    />
 				  </Item>
 			);

@@ -90,7 +90,7 @@ class FormContentTabOneItem extends Component {
 					    	multiline 
 					    	value={value} 
 					    	editable={editable} 
-					    	style={{textAlign: 'right'}}
+					    	style={{textAlign: 'right', color:this.props.style.labelColor}}
 					    />
 					  </Item>
 			} else {

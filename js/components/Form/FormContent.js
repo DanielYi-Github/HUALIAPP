@@ -18,6 +18,7 @@ export default class FormContent extends Component {
 					renderHeader  ={this.renderHeader}
 					renderContent ={this.renderContent}
 					style         ={{ borderRadius: 10 }}
+					scrollEnabled = {false}
 				/>
 			</Card>
 		);

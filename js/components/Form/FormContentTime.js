@@ -155,7 +155,7 @@ class FormContentTime extends Component {
 		            		      			this.setState({showDatePicker:false})
 		            		      		}}
 		            		      	>
-		            		      		{"取消"}
+		            		      		{this.props.lang.Common.Cancel}
 		            		      	</Text>
 		            		      	<Text 
 		            		      		style={{color: '#008577'}} 
@@ -166,7 +166,7 @@ class FormContentTime extends Component {
 		            		      			})
 		            		      		}}
 		            		      	>
-		            		      		{"確定"}
+		            		      		{this.props.lang.FormSign.Comfirm}
 		            		      	</Text>
 		            		      </View>
 		            		    </View>
@@ -242,7 +242,7 @@ class FormContentTime extends Component {
 				    	multiline 
 				    	value={text} 
 				    	editable={editable} 
-				    	style={{textAlign: 'right'}}
+				    	style={{textAlign: 'right', color:this.props.style.labelColor}}
 				    />
 				  </Item>
 			);

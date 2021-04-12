@@ -29,7 +29,8 @@ export default (variables /*: * */ = variable) => {
 	},
 	fixFormContentGridModalListWrapperCloseButton:{
 		paddingTop: variables.isIphoneX ? 20 : null
-	}
+	},
+	labelColor:variables.LabelColor
   };
 
   return formContent;

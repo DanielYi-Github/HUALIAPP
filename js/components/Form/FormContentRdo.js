@@ -86,7 +86,7 @@ class FormContentRdo extends Component {
   				    	multiline 
   				    	value={paramname} 
   				    	editable={editable} 
-  				    	style={{textAlign: 'right'}}
+  				    	style={{textAlign: 'right', color:this.props.style.labelColor}}
   				    />
   				  </Item>
 			);
