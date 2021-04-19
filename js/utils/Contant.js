@@ -3,7 +3,7 @@
 // export const TOMCAT_HOST = 'http://qasapp.hff-group.com/MobileApp/';		// 測試機
 // export const TOMCAT_HOST = 'http://192.168.30.39:8080/MobileApp/';		// 測試機
 export const TOMCAT_HOST = 'http://10.0.0.116:8080/MobileApp/';			// 開發機
-// export const TOMCAT_HOST = 'http://10.0.96.45:8686/MobileApp/';			// 開發機
+// export const TOMCAT_HOST = 'http://10.0.96.80:8686/MobileApp/';			// 開發機
 
 //AES加密
 export const AES_KEY = 'HFFGROUP20180313';

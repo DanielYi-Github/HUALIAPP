@@ -4,8 +4,13 @@ import variable from './../variables/platform';
 
 export default (variables /*: * */ = variable) => {
   const inputTheme = {
+    /*
     '.multiline': {
       height: null,
+    },
+    */
+    '.multiline': {
+      height: variables.inputHeightBase
     },
     height: variables.inputHeightBase,
     color: variables.inputColor,

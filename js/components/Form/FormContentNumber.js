@@ -36,7 +36,7 @@ class FormContentNumber extends Component {
 				 	<Item fixedLabel 
 				 		style={[
 				 			this.props.style.CreateFormPageFiledItemWidth,
-				 			// this.props.style.fixCreateFormPageFiledItemWidth
+				 			this.props.style.fixCreateFormPageFiledItemWidth
 				 		]} 
 				 		error={this.props.data.requiredAlbert}>
 		 			   <Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
@@ -72,6 +72,7 @@ class FormContentNumber extends Component {
 		               			this.setState({ editValue:text });
 		               		}}
 		               	/>
+
 		               	<Icon 
 		               		name='edit' 
 		               		type='MaterialIcons'
@@ -100,7 +101,7 @@ class FormContentNumber extends Component {
 				  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
 				    <Input 
 						scrollEnabled = {false}
-						multiline     = {false}
+						// multiline     = {false}
 						value         ={value.toString()} 
 						// placeholder={value.toString()}
 						editable      ={editable} 

@@ -210,6 +210,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 			let apList      = [];
 			let apListIndex = -1;
 			
+			// console.log(1);
 			// 整理申請人資訊、更多申請人資訊
 			var tmpList = value[0] ? value[0].tmpList : []; 
 			for(var i in tmpList){
@@ -228,6 +229,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					}
 				}
 			}
+			// console.log(2);
 
 			// 表單具體內容
 			tmpList = value[0] ? value[0].comList : []; 
@@ -255,6 +257,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					apList[apListIndex].content.push(tmpList[i]);	
 				}
 			}
+			// console.log(3);
 			
 			// 針對listButton要取直的資料進行整理
 			let columns = [];
@@ -264,6 +267,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 			// 先進行listButton的資料處理
 			await FormUnit.formatListButtonOfForm(columns);
 
+			// console.log(4);
 
 			// 判斷附件有沒有值
 			tmpList = value[0] ? value[0].tmpBotomList : []; 
@@ -286,14 +290,21 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					}
 				}
 			}		
+			// console.log(5);
 
 			// 是否要取得BPM圖片
 			let bpmImage = false; 
+			// console.log(value[0].formview);
+			/*
 			if (value[0].formview == "Y") {
 				bpmImage = await UpdateDataUtil.getBPMTaskImage(userData, rootid, tskid).then((result)=>{
 					return result;
 				});
 			}	
+			*/
+			
+			// console.log(6);
+
 			dispatch( 
 				loadFormContent( 
 					apList, 
@@ -418,10 +429,12 @@ export function submitSignForm(user, form, info, allowAddValue){
 		let FormContent = getState().Form.FormContent;
 		for (let i = 2, length = FormContent.length; i < length; i++) {
 			for(let content of FormContent[i].content){
-				if (content.isedit == "Y") listComponent.push(content);
+				// if (content.isedit == "Y") listComponent.push(content);
+				listComponent.push(content);
 			}
 		}
 		listComponent = await FormUnit.formatSubmitFormValue(listComponent);
+
 		/**
 		* 簽核送出
 		* {
@@ -437,6 +450,7 @@ export function submitSignForm(user, form, info, allowAddValue){
 		* }
 		*/
 
+		
 		let sign = {
 			proid        : form.id,  	
 			tskid        : form.tskid,  
@@ -457,8 +471,6 @@ export function submitSignForm(user, form, info, allowAddValue){
 		} else { 
 			data = await UpdateDataUtil.goBackTask(user, sign) 
 		}
-		console.log(data);
-		
 		
 		dispatch( submitResult(data, form) ); 
 		dispatch( { type: types.FORMSIGNDONE } ); 

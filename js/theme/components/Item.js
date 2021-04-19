@@ -108,7 +108,9 @@ export default (variables /*: * */ = variable) => {
     },
     "NativeBase.Input": {
       ".multiline": {
-        height: null
+        height: null,
+        paddingTop: 12.5,
+        paddingBottom: 12.5
       },
       height: variables.inputHeightBase,
       color: variables.inputColor,

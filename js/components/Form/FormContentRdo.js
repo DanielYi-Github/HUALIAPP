@@ -83,7 +83,7 @@ class FormContentRdo extends Component {
   				  	<Label >{this.state.labelname}</Label>
   				    <Input 
   				    	scrollEnabled = {false}
-  				    	multiline 
+  				    	// multiline 
   				    	value={paramname} 
   				    	editable={editable} 
   				    	style={{textAlign: 'right', color:this.props.style.labelColor}}

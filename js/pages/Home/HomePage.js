@@ -19,7 +19,7 @@ import * as DocumentAction from '../../redux/actions/DocumentAction';
 import * as BirthdayAction from '../../redux/actions/BirthdayAction';
 import * as ReportAction   from '../../redux/actions/ReportAction';
 
-import ReactNativeParallaxHeader from 'react-native-parallax-header';
+import ReactNativeParallaxHeader from '../../extendThirdModule/CustomRNParallax';
 import HomePageBanner            from '../../components/HomePageBanner';
 import FunctionButton            from '../../components/FunctionButton';
 import NoticeTabList             from '../../components/NoticeTabList';

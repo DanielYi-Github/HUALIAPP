@@ -39,7 +39,10 @@ class FormContentCbo extends Component {
 
 		if (editable) {
 			renderItem = (
-	  				<Item fixedLabel style={[this.props.style.CreateFormPageFiledItemWidth, this.props.style.fixCreateFormPageFiledItemWidth]}>
+	  				<Item fixedLabel style={[
+	  					this.props.style.CreateFormPageFiledItemWidth, 
+	  					this.props.style.fixCreateFormPageFiledItemWidth
+	  				]}>
  			   		  <Label style={{flex: 0, color:"#FE1717"}}>{ required }</Label>
  			   		  <Label style={{flex: 0 }}>{this.state.labelname}</Label>
  			   		  <Text 
@@ -71,7 +74,7 @@ class FormContentCbo extends Component {
  			   		<Label style={{flex: 0, color:"#FE1717"}}>{ required }</Label>
   				  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
   				    <Input 
-  				    	multiline 
+  				    	// multiline 
   				    	scrollEnabled = {false}
   				    	value={(paramname != null) ? paramname : defaultvalue } 
   				    	editable={editable} 

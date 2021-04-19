@@ -92,7 +92,7 @@ class FormContentDateTime extends Component {
 		 				fixedLabel 
 		 				style={[
 		 					this.props.style.CreateFormPageFiledItemWidth,
-		 					// ios_fixCreateFormPageFiledItemWidth,
+		 					ios_fixCreateFormPageFiledItemWidth,
 		 				]}
 		 				error={this.props.data.requiredAlbert}
 		 			>
@@ -260,7 +260,7 @@ class FormContentDateTime extends Component {
 				  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
 				    <Input 
   				    	scrollEnabled = {false}
-				    	multiline 
+				    	// multiline 
 				    	value={text} 
 				    	editable={editable} 
 				    	style={{textAlign: 'right', color:this.props.style.labelColor}}

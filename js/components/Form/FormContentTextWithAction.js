@@ -31,7 +31,8 @@ class FormContentTextWithAction extends Component {
 			renderItem = (
 	  				<Item fixedLabel 
 	  				style={[
-	  					this.props.style.CreateFormPageFiledItemWidth
+	  					this.props.style.CreateFormPageFiledItemWidth,
+				 		this.props.style.fixCreateFormPageFiledItemWidth
 	  				]}
 	  				error={this.props.data.requiredAlbert}>
  			   		  <Label style={{flex: 0, color:"#FE1717"}}>{ required }</Label>
@@ -72,7 +73,7 @@ class FormContentTextWithAction extends Component {
   				  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
   				    <Input 
   				    	scrollEnabled = {false}
-  				    	multiline 
+  				    	// multiline 
   				    	value={defaultvalue} 
   				    	editable={editable} 
   				    	style={{textAlign: 'right'}}/>

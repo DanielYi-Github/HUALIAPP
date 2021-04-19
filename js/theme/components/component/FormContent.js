@@ -14,11 +14,11 @@ export default (variables /*: * */ = variable) => {
 		borderWidth:0,
 	},
 	fixCreateFormPageFiledItemWidth: Platform.OS === "ios" ? {
-		paddingTop:5,
-		paddingBottom:5
+		paddingTop:0,
+		paddingBottom:0
 	}:{
-		paddingTop:5,
-		paddingBottom:15
+		paddingTop:0,
+		paddingBottom:0
 	},
 	CardStyle:{
 		width:variables.deviceWidth*0.95,

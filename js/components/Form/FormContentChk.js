@@ -99,7 +99,7 @@ class FormContentChk extends Component {
 					  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
 					    <Input 
   				    		scrollEnabled = {false}
-					    	multiline 
+					    	// multiline 
 					    	value={value} 
 					    	editable={editable} 
 					    	style={{textAlign: 'right', color:this.props.style.labelColor}}
