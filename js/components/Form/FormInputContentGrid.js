@@ -32,8 +32,6 @@ class FormInputContentGrid extends Component {
 		};
 	}
 
-
-
 	shouldComponentUpdate(nextProps, nextState) {
 		nextProps.data.defaultvalue = (nextProps.data.defaultvalue == null) ? [] : nextProps.data.defaultvalue; 
 		nextState.data.defaultvalue = (nextState.data.defaultvalue == null) ? [] : nextState.data.defaultvalue;

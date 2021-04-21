@@ -80,6 +80,7 @@ export default class FormContent extends Component {
 					editable ={editable}
 					lang     ={this.props.lang}
               		user   	 ={this.props.user}
+              		formActions = {this.props.formActions ? this.props.formActions : null}
 				/>
 			);
 		}

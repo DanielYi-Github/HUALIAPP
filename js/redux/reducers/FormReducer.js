@@ -85,7 +85,8 @@ export default function Form(state = initialState, action = {}) {
       return {
         ...state,
         FormContent : action.FormContent,
-        loadMessgae : action.isRequiredAlert ? action.isRequiredAlert : null
+        loadMessgae : action.isRequiredAlert ? action.isRequiredAlert : null,
+        isRefreshing:false,
       };
     case types.UPDATEDEFAULTVALUEERROR_FOR_FORMSIGN:
       return {

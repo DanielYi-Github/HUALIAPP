@@ -62,11 +62,15 @@ class FormContentGrid extends Component {
 				let value = this.props.lang.Common.None;
 
 				return (
-					<Content contentContainerStyle={{width:this.props.style.PageSize.width*0.86, borderWidth:0}}>
+					<Content 
+						scrollEnabled = {false}
+						contentContainerStyle={{width:this.props.style.PageSize.width*0.86, borderWidth:0}}
+					>
 			  		  <Item fixedLabel style={this.props.style.CreateFormPageFiledItemWidth}>
 			   			<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 			  		  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
 			  		    <Input 
+  				    		scrollEnabled = {false}
 			  		    	multiline 
 			  		    	value={value} 
 			  		    	editable={editable} 
@@ -77,7 +81,10 @@ class FormContentGrid extends Component {
 				);
 			} else {
 				return (
-					<Content contentContainerStyle={{width:this.props.style.PageSize.width*0.86, alignItems: 'flex-start'}}>
+					<Content 
+						scrollEnabled = {false}
+						contentContainerStyle={{width:this.props.style.PageSize.width*0.86, alignItems: 'flex-start'}}
+					>
 		              	<Item fixedLabel style={{borderBottomWidth: 0, paddingTop: 15, paddingBottom: 15}}>
 		  	 			  	<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 		  	                <Label>{this.state.labelname}</Label>

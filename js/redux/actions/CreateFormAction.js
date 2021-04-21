@@ -82,7 +82,7 @@ export function getFormFormat(formID){
 					columnData.actionValue = await FormUnit.getActionValue(user, columnData);	// 取得該欄位的動作
 
 					unShowColumns = unShowColumns.concat(columnactionValue);
-					apList[apListIndex].content.push(columnData);	
+					apList[apListIndex].content.push(columnData);
 					comfirmComponent.push(columnData);
 				}
 			}

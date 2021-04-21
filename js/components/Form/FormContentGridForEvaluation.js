@@ -63,16 +63,13 @@ class FormContentGridForEvaluation extends Component {
 	}
 
 	activeColumnaction = async (button, index) => {
-		console.log(this.state.data);
-		/*
-		let columnactionValue = await FormUnit.getColumnactionValueForButton(
+		// 獲取載入前期分數
+		this.props.formActions.reloadFormContentIntoState_fromGetColumnactionValue(
 			this.props.user, 
 			this.state.data.listComponent,
 			button,
 			this.props.data.listComponent
 		);
-		console.log("columnactionValue", columnactionValue);
-		*/
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -98,6 +95,7 @@ class FormContentGridForEvaluation extends Component {
 		let required = (this.props.data.required == "Y") ? "*" : "  ";
 		let renderItem = null;
 		let showLabelname = (this.state.labelname == "null" || this.state.labelname == null) ? false : true;
+
 		if (this.state.editable) {
 			renderItem = (
 				<View style={{width: '100%'}}>
@@ -246,11 +244,10 @@ class FormContentGridForEvaluation extends Component {
 	rendercheckItem = (item) => {
 		let index = item.index;
 		item = item.item;
-
 		let labels = [];
+
 		for (let i in item) {
-			// 沒有值得話不做顯示
-			if(item[i].outsidevisible == "Y"){
+			if(item[i].outsidevisible == "Y"){	// 沒有值得話不做顯示
 				labels.push(<FormInputContentGridLabel key={i} data={item[i]}/>);
 			}
 		}

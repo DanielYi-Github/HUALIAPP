@@ -428,11 +428,20 @@ let FormUnit = {
   async getColumnactionValueForButton(user, item, buttonItem, parentItem = []){
     let returnValue = [];
     if (buttonItem.columnaction) {
-      let columnactionObject = {};
-      let isGetColumnactionValueFromObject = false; // 用來確認最後的取直方式
+      await UpdateDataUtil.getCreateFormDetailFormat(
+        user, 
+        buttonItem.columnaction, 
+        buttonItem.columnactionColumnParam
+      ).then((data)=>{
+        returnValue = data;
+      }); 
+    }
+    return returnValue;
+
+    /*
       for(let column of buttonItem.columnactionColumn){     
           switch( item.columntype ) {
-            /*
+            
             case "rdo":
               let isMatch = false;
               for(let it of item.listComponent){
@@ -451,8 +460,7 @@ let FormUnit = {
                 }
               }
               break;
-            */
-           /*
+            
             case "tableave":
               if (item.defaultvalue.length != 0) {
                 let values = [];
@@ -468,7 +476,7 @@ let FormUnit = {
                 columnactionObject[column] = values; 
               }
               break;
-            */
+            
             case "tab":
               if (item.defaultvalue.length != 0) {
                 let values = [];
@@ -493,16 +501,6 @@ let FormUnit = {
                   required: item.required == "Y" ? true : false
                 }; 
               } else {
-                /*
-                for(let pItem of parentItem){
-                  if (column == pItem.component.id) {
-                    columnactionObject[column] = {
-                      value :pItem.defaultvalue,
-                      required: pItem.required == "Y" ? true : false
-                    }
-                  }
-                }
-                */
               }
           }
       }
@@ -518,12 +516,7 @@ let FormUnit = {
       } else {
         for(var index in columnactionObject) if(columnactionObject[index] == null) return returnValue;
       }
-
-      await UpdateDataUtil.getCreateFormDetailFormat(user, item.columnaction, columnactionObject).then((data)=>{
-        returnValue = data;
-      }); 
-    }
-    return returnValue;
+    */
   },
   // 欄位顯示隱藏檢查
   checkFormFieldShow(columnactionValue, formFormat){
@@ -535,8 +528,9 @@ let FormUnit = {
           content.show         = actionValue.visible;
           content.required     = (actionValue.required) ? "Y" : "F";
 
+          // 需要加入判斷，確認vo是array還是object，如果是array表示要修改的資料為表格grid
           if (actionValue.voList) {
-            for(let vo of actionValue.voList){              
+            for(let vo of actionValue.voList){     
               for(let com of content.listComponent){
                 if (vo.id == com.component.id) {
                   com.visible   = vo.visible;
@@ -547,6 +541,7 @@ let FormUnit = {
               }
             }
           }
+
         }
       }
     }

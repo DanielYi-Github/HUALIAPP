@@ -38,11 +38,11 @@ export default class FormInputContentGridLabel extends Component {
 		value = (value == null || value == "null" || value == "" || value == " " ) ? " " : value;
 		return(
 			<View style = {{width: '100%', flexDirection: 'row'}}>
-				<View style={{flex:1.5}}>
+				<View style={{flex:3.7}}>
 					<Label>{`${this.props.data.component.name}`}</Label>
 				</View>
 				<Label>:</Label>
-				<View style={{flex:1}}>
+				<View style={{flex:6.3}}>
 					<Label>{`${value}`}</Label>
 				</View>
 			</View>

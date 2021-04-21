@@ -210,7 +210,6 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 			let apList      = [];
 			let apListIndex = -1;
 			
-			// console.log(1);
 			// 整理申請人資訊、更多申請人資訊
 			var tmpList = value[0] ? value[0].tmpList : []; 
 			for(var i in tmpList){
@@ -229,7 +228,6 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					}
 				}
 			}
-			// console.log(2);
 
 			// 表單具體內容
 			tmpList = value[0] ? value[0].comList : []; 
@@ -257,7 +255,6 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					apList[apListIndex].content.push(tmpList[i]);	
 				}
 			}
-			// console.log(3);
 			
 			// 針對listButton要取直的資料進行整理
 			let columns = [];
@@ -266,8 +263,6 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 			}
 			// 先進行listButton的資料處理
 			await FormUnit.formatListButtonOfForm(columns);
-
-			// console.log(4);
 
 			// 判斷附件有沒有值
 			tmpList = value[0] ? value[0].tmpBotomList : []; 
@@ -290,20 +285,14 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					}
 				}
 			}		
-			// console.log(5);
 
 			// 是否要取得BPM圖片
 			let bpmImage = false; 
-			// console.log(value[0].formview);
-			/*
 			if (value[0].formview == "Y") {
 				bpmImage = await UpdateDataUtil.getBPMTaskImage(userData, rootid, tskid).then((result)=>{
 					return result;
 				});
 			}	
-			*/
-			
-			// console.log(6);
 
 			dispatch( 
 				loadFormContent( 
@@ -319,9 +308,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 				) 
 			); 
 			
-			
 		}).catch((err) => {
-			// console.log(err);
 			LoggerUtil.addErrorLog("FormAction loadFormContentIntoState", "APP Action", "ERROR", err);
 			if (err.code == "0") {
 				dispatch(logout()); //已在其他裝置登入，強制登出
@@ -558,7 +545,6 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 										formItem, 
 										formFormat[pageIndex].content 
 									);
-			
 			// 欄位隱藏或顯示控制
 			// 判斷該值是否填寫表單中顯示
 			formFormat[pageIndex].content = FormUnit.checkFormFieldShow(
@@ -584,6 +570,53 @@ function updateDefaultValueError(ruleCheckMessage){
 	return {
 		type: types.UPDATEDEFAULTVALUEERROR_FOR_FORMSIGN,
 		ruleCheckMessage
+	}
+}
+
+export function	reloadFormContentIntoState_fromGetColumnactionValue(
+		user, 
+		stateDataListComponent, 
+		button, 
+		propsDataListComponent
+	){
+	return async (dispatch, getState) => {
+		//顯示載入動態
+		dispatch(refresh());
+
+		// 獲取載入前期分數
+		let columnactionValueList = await FormUnit.getColumnactionValueForButton(
+			user, 
+			stateDataListComponent, 
+			button, 
+			propsDataListComponent
+		);
+
+		// 進行資料整理
+		let formFormat = getState().Form.FormContent;
+		for(let formContent of formFormat){
+			for(let content of formContent.content){
+				for(let columnactionValue of columnactionValueList){
+
+					if (content.component.id == columnactionValue.id) {
+						for (let [i, value] of content.defaultvalue.entries()) {
+							for(let voGrid of columnactionValue.voGrid[i]){
+								for(let item of value){
+									if(voGrid.id == item.component.id){
+										item.defaultvalue = voGrid.value;
+									}
+								}
+							}
+						}
+					}
+
+				}
+			}
+		}
+
+		// 回傳結果
+		dispatch(updateDefaultValue(formFormat));
+		// dispatch(updateDefaultValue(formFormat));
+		// 新增提示字
 	}
 }
 

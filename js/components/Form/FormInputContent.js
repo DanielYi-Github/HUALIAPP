@@ -146,6 +146,7 @@ export default class FormInputContent extends Component {
 							onPress  ={this.props.onPress}
 							lang 	 ={this.props.lang}
               				user 	 ={this.props.user}
+              				formActions = {this.props.formActions ? this.props.formActions : null}
 			  			/>
 			  		);
 				}

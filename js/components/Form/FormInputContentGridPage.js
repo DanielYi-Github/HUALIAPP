@@ -24,7 +24,6 @@ class FormInputContentGridPage extends Component {
 	}
 
 	render() {
-		// console.log(this.state.data.listComponent);
 		let listComponent = [];
 		let items = this.state.data.listComponent;
 		for (let i in items) {
@@ -81,7 +80,7 @@ class FormInputContentGridPage extends Component {
 					      {this.state.lang.FormSign.Comfirm}
 					    </Text>
 					</Button>
-
+					<Body style={{width:"100%", height:100}}/>
 				</KeyboardAwareScrollView>
 			</Container>
 		);

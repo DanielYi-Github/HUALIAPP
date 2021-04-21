@@ -91,7 +91,6 @@ class FormPage extends React.Component {
       this.props.state.Language.langStatus,
       Form.tskid
     );
-
   }
 
   componentWillUnmount() {
@@ -293,6 +292,7 @@ class FormPage extends React.Component {
               lang   ={this.props.lang }
               user   ={this.props.state.UserInfo.UserInfo}
               onPress={this.updateFormData.bind(this, index)} //預留修改後回傳值的接口
+              formActions = {this.props.actions} //有關於Formpage的redux actions
             />
         );  
       } 

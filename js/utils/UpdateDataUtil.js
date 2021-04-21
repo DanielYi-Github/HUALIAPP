@@ -1895,7 +1895,7 @@ export async function getBPMForm(user,content){
 			"userId" : Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		
+
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
@@ -2700,7 +2700,6 @@ export async function getBPMTaskImage(user,rootid,tskid){
 			"userId" : Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		console.log("params", params);
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
@@ -2813,6 +2812,8 @@ export async function getCreateFormDetailFormat(user, url, content = {}){
 			"userId" :Common.encrypt(user.loginID),
 			"content":Common.encrypt(content)
 		}
+
+		// console.log("params", params);
 
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {
