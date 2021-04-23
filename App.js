@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Container, Header, Content, Accordion } from "native-base";
-import SplashScreen           from 'react-native-splash-screen';
+import SplashScreen from 'react-native-splash-screen';
 
 const dataArray = [
   { title: "First Element", content: "Lorem ipsum dolor sit amet" },

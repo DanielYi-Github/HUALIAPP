@@ -38,22 +38,24 @@ class FormTypeListPage extends React.Component {
     if (this.props.state.Form.loadMessgae) {
       this.props.actions.loadFormTypeIntoState( this.props.state.UserInfo.UserInfo, this.props.state.Language.langStatus );
     } else {
-      this.isLoadError(this.props.state.Form.loadMessgae);
+      this.showLoadMessage(this.props.state.Form.loadMessgae);
       // 重新仔入表單
       if (this.props.state.Form.isLoadDone) this.props.actions.loadAllFormsIntoState();
     }
   }
 
   componentDidUpdate(){
-    this.isLoadError(this.props.state.Form.loadMessgae);
+    let message = this.props.state.Form.loadMessgae;
+    let messageType = this.props.state.Form.loadMessgaeType ? this.props.state.Form.loadMessgaeType : 'info'
+    this.showLoadMessage(message, messageType);
   }
 
   //檢查是否發生錯誤訊息
-  isLoadError(error){ 
-    if(error){
+  showLoadMessage( message, type = 'error'){ 
+    if(message){
       ToastUnit.show(
-        'error', 
-        error,
+        type,
+        message,
         false,
         this.props.actions.LoadFormError
       );

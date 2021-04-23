@@ -756,5 +756,9 @@ export default {
 	},
 	IsolationPolicyPage:{
 		IsolationPolicyTitle:"Câu hỏi chính sách"
+	},
+	FormContentGridForEvaluation:{
+		loadPreviousScore_Success:"Success",
+		loadPreviousScore_Failure:"Failure",
 	}
 }

@@ -81,12 +81,6 @@ class FormListPage extends React.Component {
     } else {
       filteredData = [];
     }
-
-    /*
-    // 過濾資料
-    let filteredData = (this.state.DefaultFormSelect.key=="all") 
-        ? FormData : FormData.filter(createFilter(this.state.DefaultFormSelect.key, KEYS_TO_FILTERS));
-    */
    
     let formListPage = (
         <Container>

@@ -393,7 +393,7 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		ReviewBPMImage:'檢視完整表單',
 		Content      : '內容',
 		AlreadySelect: "已經選擇",
-		Members      : "人"
+		Members      : "人",
 	},
 	FormFile:{
 	 	FileName: "檔案名稱",
@@ -698,7 +698,6 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		BiosSuccessTips:`透過指紋或Face ID驗證功能已開啟，可使用場景如下：${'\n'}1、登出後的生物識別登錄${'\n'}2、薪資查詢身分驗證`,
 		BiosCancelTitle:'指紋/FaceID驗證設定已取消',
 		BiosCancelTips:'透過指紋或Face ID驗證功能已關閉'
-
 	},
 	OperationPage:{
 		OperationManual:'操作手册',
@@ -761,5 +760,9 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 	},
 	IsolationPolicyPage:{
 		IsolationPolicyTitle:"隔離政策查詢"
+	},
+	FormContentGridForEvaluation:{
+		loadPreviousScore_Success:"載入前期分數 成功",
+		loadPreviousScore_Failure:"載入前期分數 失敗",
 	}
 }

@@ -11,21 +11,22 @@ const initialState = {
   },
 
   // 表單畫面
-  FormContent :{},
-  FormRecords :[],
-  FormSignBtns:null,
-  isRefreshing:false,
-  isLoadDone  :false,  // 是否已經全部撈取完畢
-  isSignDone  :false,  // 簽核過程是否已結束
-  submitResult:null,
+  FormContent        :{},
+  FormRecords        :[],
+  FormSignBtns       :null,
+  isRefreshing       :false,
+  isLoadDone         :false,    // 是否已經全部撈取完畢
+  isSignDone         :false,    // 簽核過程是否已結束
+  submitResult       :null,
   submitResultMessage:null,
-  handsign    :null,    // 是否需要手寫板簽名
-  showsign    :null,    // 是否需要顯示核決層級
-  signresult  :null,    // 是否需要顯示回簽
-  allowAddSign:false,   // 是否需要加簽
-  allowAddAnnounce:false, // 是否需要加會
-  loadMessgae :null,
-  bpmImage    :false 
+  handsign           :null,     // 是否需要手寫板簽名
+  showsign           :null,     // 是否需要顯示核決層級
+  signresult         :null,     // 是否需要顯示回簽
+  allowAddSign       :false,    // 是否需要加簽
+  allowAddAnnounce   :false,    // 是否需要加會
+  loadMessgae        :null,
+  loadMessgaeType    :null,
+  bpmImage           :false 
 };
 
 export default function Form(state = initialState, action = {}) {
@@ -64,6 +65,7 @@ export default function Form(state = initialState, action = {}) {
       return {
         ...state,
         loadMessgae:action.message,
+        loadMessgaeType: action.message ? state.loadMessgaeType : null,
         isRefreshing:false,
         isLoadDone  :true
       };
@@ -142,6 +144,14 @@ export default function Form(state = initialState, action = {}) {
           loadMessgae :null,
           bpmImage    :false 
       };
+    
+    case types.SHOW_FORMLOADMESSAGE:
+      return {
+          ...state,
+          loadMessgae    : action.message,
+          loadMessgaeType: action.messageType
+      };
+
     default:
       return state;
   }

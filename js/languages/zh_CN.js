@@ -759,5 +759,9 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 	},
 	IsolationPolicyPage:{
 		IsolationPolicyTitle:"隔离政策查询"
+	},
+	FormContentGridForEvaluation:{
+		loadPreviousScore_Success:"载入前期分数 成功",
+		loadPreviousScore_Failure:"载入前期分数 失败",
 	}
 }

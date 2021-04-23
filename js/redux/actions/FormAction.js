@@ -615,10 +615,25 @@ export function	reloadFormContentIntoState_fromGetColumnactionValue(
 
 		// 回傳結果
 		dispatch(updateDefaultValue(formFormat));
-		// dispatch(updateDefaultValue(formFormat));
+
 		// 新增提示字
+		dispatch(
+			showLoadMessgae(
+				'success',
+				getState().Language.lang.FormContentGridForEvaluation.loadPreviousScore_Success 
+			)
+		);
 	}
 }
+
+function showLoadMessgae(type, messgae){
+	return{
+		type       : types.SHOW_FORMLOADMESSAGE,
+		messageType: type,
+		message    : messgae
+	}
+}
+
 
 /*
 	//	簽核狀況判斷

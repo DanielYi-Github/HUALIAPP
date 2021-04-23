@@ -756,5 +756,9 @@ export default {
 	},
 	IsolationPolicyPage:{
 		IsolationPolicyTitle:"Isolation policy query"
+	},
+	FormContentGridForEvaluation:{
+		loadPreviousScore_Success:"Success",
+		loadPreviousScore_Failure:"Failure",
 	}
 }
