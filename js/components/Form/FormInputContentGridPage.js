@@ -97,6 +97,7 @@ class FormInputContentGridPage extends Component {
 			AllItem.listComponent,
 			item.columntype
 		);
+
 		// 特殊規則比較 需要考慮 再次編輯的問題
 		if (ruleCheck == true) {
 			ruleCheck = await FormUnit.formRowRuleCheck(value, item, AllItem, this.state.editCheckItemIndex);
@@ -174,7 +175,7 @@ class FormInputContentGridPage extends Component {
 				}
 			)
 		} else {
-			this.state.confirmOnPress(tempData);
+			this.state.confirmOnPress(tempData, this.state.editCheckItemIndex);
 			this.pageClose();
 		}
 	}

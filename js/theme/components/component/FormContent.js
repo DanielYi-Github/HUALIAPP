@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 
 export default (variables /*: * */ = variable) => {
   const formContent = {
+  	MainPageBackground  :variables.MainPageBackground,
     InputFieldBackground:variables.cardDefaultBg,
     textColor:variables.textColor,
     inverseTextColor:variables.inverseTextColor,

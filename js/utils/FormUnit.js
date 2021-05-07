@@ -305,6 +305,9 @@ let FormUnit = {
       case "tableaveforlocal":
         formItem = value;       // 修改表格狀態
         break;
+      case "tabForEvaluation":
+        formItem = value;       // 修改表格狀態
+        break;
       case "rdo":
         formItem.defaultvalue = value;  
         for(let item of formItem.listComponent){
@@ -523,7 +526,7 @@ let FormUnit = {
     for(let actionValue of columnactionValue){
       for(let content of formFormat){        // 判斷該值是否填寫表單中顯示
         if (actionValue.id == content.component.id) {
-          content.defaultvalue = this.deepClone(actionValue.value);
+          content.defaultvalue = actionValue.value == "" ? content.defaultvalue : this.deepClone(actionValue.value);
           content.paramList    = actionValue.paramList;
           content.show         = actionValue.visible;
           content.required     = (actionValue.required) ? "Y" : "F";
@@ -617,6 +620,7 @@ let FormUnit = {
           break;
         case "tab":
         case "tabcar":  // 派車單的表格欄位輸入
+        case "tabForEvaluation": //每月考核單的欄位輸入
           if (item.defaultvalue == null || item.defaultvalue.length == 0) {
             formValue.push({
               columntype: item.columntype,

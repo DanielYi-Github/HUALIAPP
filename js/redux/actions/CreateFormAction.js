@@ -269,10 +269,10 @@ export function submitFormValue(){
 		let user       = getState().UserInfo.UserInfo;
 		let formFormat = getState().CreateForm.formFormat;
 		let formValue  = getState().CreateForm.formValue;
+		console.log(formFormat, formValue);
 		formValue.listComponent = FormUnit.formatSubmitFormValue(formFormat[formFormat.length-1].content);
-		// formValue.listComponent = formatSubmitFormValue(formFormat[formFormat.length-1].content);
-		// console.log(formValue);
-		// console.log("formValue",formValue);
+		console.log("formValue", formValue);
+
 		UpdateDataUtil.registerForm(user, formValue).then((data)=>{
 			let message = getState().Language.lang.CreateFormPage.FormApplySucess;
 			if (!data.success) {

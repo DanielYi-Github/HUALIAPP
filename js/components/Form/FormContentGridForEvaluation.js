@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Header, Left, Content, Right, Item, Label, Input, Body, Card, CardItem, Title, Button, Icon, Text, CheckBox, Toast, connectStyle, Spinner } from 'native-base';
 import { View, FlatList, TextField, Alert, Platform, AlertIOS }from 'react-native';
-import { KeyboardAwareScrollView }        from 'react-native-keyboard-aware-scroll-view'
 import FormInputContent                   from './FormInputContent';
 import FormInputContentGridLabel          from './FormInputContentGridLabel';
 import FormContentGridForEvaluationButton from './FormContentGridForEvaluationButton';
@@ -144,7 +143,6 @@ class FormContentGridForEvaluation extends Component {
 		                	:
 		                		null
 		                }
-
 		                {
 		                	(this.state.data.enableCreateData != false && !this.state.loadingMark) ? 
         		                <Icon 
@@ -293,6 +291,7 @@ class FormContentGridForEvaluation extends Component {
 									editCheckItemIndex: index,
 		                		});
 								this.showEditModal(data, index)
+								
 		                	}}
 		                />
 					</Right>
@@ -317,7 +316,10 @@ class FormContentGridForEvaluation extends Component {
 			data = await this.editablelize(data);
 		}
 
-		this.setState({ loadingMark:false });
+		this.setState({ 
+			loadingMark:false,
+		});
+		
 		NavigationService.navigate("FormInputContentGridPage", {
 			propsData         : this.props.data,
 			data              : data,
@@ -326,6 +328,7 @@ class FormContentGridForEvaluation extends Component {
 			confirmOnPress    : this.confirmFormData,
 			editCheckItemIndex: editCheckItemIndex
 		});
+		
 	}
 
 	confirmFormData = async (value) => {
@@ -350,7 +353,6 @@ class FormContentGridForEvaluation extends Component {
 		value.listComponent = this.deepClone(this.props.data.listComponent);
 		// 送值
 		await this.props.onPress(this.deepClone(value), this.props.data);
-
 		this.modalWrapperClose();
 	}
 	
@@ -358,15 +360,15 @@ class FormContentGridForEvaluation extends Component {
 		return (
 			<View>
 				<View style={[this.props.style.Separator, {width: '90%', alignSelf: 'center'}]}/>
-				<CardItem button						
+				<CardItem 
+					button						
 					style={{flexDirection: 'row', alignItems: 'flex-start'}}
-					// onPress = {()=>{ this.setModalListVisible(!this.state.modalListVisible); }}
 					onPress = {()=>{
 						NavigationService.navigate("FormContentGridDataTable", { 
 							data : this.props.data, 
 							lang : this.props.lang,
 							user : this.props.user,
-							onPress : this.props.onPress
+							propsOnPress: this.propsOnPress
 						});
 					}}
 				>
@@ -374,6 +376,13 @@ class FormContentGridForEvaluation extends Component {
 				</CardItem>
 			</View>
 		);
+	}
+
+	propsOnPress = (value) =>{
+		// 將listComponent變成最原本的樣子
+		value.listComponent = this.deepClone(this.props.data.listComponent);
+		// 送值
+		this.props.onPress(this.deepClone(value), this.props.data);
 	}
 
 	modalWrapperClose = () => {
@@ -427,15 +436,24 @@ class FormContentGridForEvaluation extends Component {
 			
 			for(let unShowColumn of unShowColumns){
 				if (unShowColumn.id == data.listComponent[i].component.id) {
-					data.listComponent[i].defaultvalue = unShowColumn.value;
+					data.listComponent[i].defaultvalue = unShowColumn.value == "" ? data.listComponent[i].defaultvalue : unShowColumn.value;
 					data.listComponent[i].paramList    = unShowColumn.paramList;
 					data.listComponent[i].show         = (unShowColumn.visible || unShowColumn.visible == "true") ? true : false;
 					data.listComponent[i].required     = (unShowColumn.required) ? "Y" : "F";
 				}
 			}
-			let columnactionValue = await FormUnit.getColumnactionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);   // 取得該欄位欲隱藏的欄位
+			let columnactionValue = await FormUnit.getColumnactionValue(
+				this.props.user, 
+				data.listComponent[i], 
+				this.props.data.listComponent
+			);   // 取得該欄位欲隱藏的欄位
 			unShowColumns = unShowColumns.concat(columnactionValue);
-			data.listComponent[i].actionValue = await FormUnit.getActionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);	// 取得該欄位的動作
+
+			data.listComponent[i].actionValue = await FormUnit.getActionValue(
+				this.props.user, 
+				data.listComponent[i], 
+				this.props.data.listComponent
+			);	// 取得該欄位的動作
 		}
 		return data;
 	}

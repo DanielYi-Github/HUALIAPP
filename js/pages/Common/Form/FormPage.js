@@ -174,6 +174,8 @@ class FormPage extends React.Component {
   }
 
   render() {
+    // console.log("content", this.state.content);
+
     let formPage = (
       <Container>
         <MainPageBackground />
@@ -286,13 +288,13 @@ class FormPage extends React.Component {
       }else{
         app.push(
             <FormContent 
-              key    ={index} 
-              data   ={this.state.content[index]} 
-              isOpen ={(this.state.content[index].columntype=="applyap") ? false : 0 } 
-              lang   ={this.props.lang }
-              user   ={this.props.state.UserInfo.UserInfo}
-              onPress={this.updateFormData.bind(this, index)} //預留修改後回傳值的接口
-              formActions = {this.props.actions} //有關於Formpage的redux actions
+              key         ={index} 
+              data        ={this.state.content[index]} 
+              isOpen      ={(this.state.content[index].columntype=="applyap") ? false : 0 } 
+              lang        ={this.props.lang }
+              user        ={this.props.state.UserInfo.UserInfo}
+              onPress     ={this.updateFormData.bind(this, index)} //預留修改後回傳值的接口
+              formActions ={this.props.actions} //有關於Formpage的redux actions
             />
         );  
       } 

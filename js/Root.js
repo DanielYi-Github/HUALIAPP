@@ -18,7 +18,8 @@ YellowBox.ignoreWarnings([
   'Module RNRSA ',
   'Animated: ',
   'Animated.event ',
-  'RCTBridge '
+  'RCTBridge ',
+  'Non-serializable values were found in the navigation state. Check:'
 ]);
   
 export default class Root extends React.Component {

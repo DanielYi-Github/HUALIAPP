@@ -38,6 +38,7 @@ let UpgradeDBTableUtil = {
 		  }
 		});
 		//檢查有無表單
+		/*
 		SQLite.checkTable("THF_FIND_INFO").then((data)=>{
 		  if (!data) {
 		    //檢查沒有進行新增表單
@@ -56,6 +57,7 @@ let UpgradeDBTableUtil = {
 		     SQLite.createTable(createTable).then((data)=>{});
 		  }
 		});
+		*/
 		//檢查有無表單
 		/*
 		SQLite.checkTable("THF_PERMISSION").then((data)=>{

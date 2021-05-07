@@ -28,7 +28,7 @@ class FormInputContentGrid extends Component {
 			editCheckItem      : false,
 			editCheckItemIndex : -1,
 			editCheckItemRecord: [], // 用來記錄被checkBox勾選的項目值是true/false 例如[true, false, false],
-			loadingMark        :false,
+			loadingMark        : false,
 		};
 	}
 
@@ -188,7 +188,7 @@ class FormInputContentGrid extends Component {
 		return renderItem;
 	}
 
-		/*
+	/*
 	getEditField = async() => {
 		this.setState({loadingMark:true});
 
@@ -214,7 +214,7 @@ class FormInputContentGrid extends Component {
 		this.setState({ loadingMark:false });
 		this.showEditModal(data); // 直接開啟編輯葉面
 	}
-		*/
+	*/
 
 	rendercheckItem = (item) => {
 		let index = item.index;

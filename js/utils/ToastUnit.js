@@ -13,11 +13,13 @@ let ToastUnit = {
 				topOffset = 50;
 			}
 		} else {
+			/*
 			if (isAuthPage) {
-				topOffset = 50;
+				topOffset = ;
 			} else {
-				topOffset = 0;
+				topOffset = 30;
 			}
+			*/
 		}
 
 		Toast.show({

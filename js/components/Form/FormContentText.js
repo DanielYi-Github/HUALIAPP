@@ -44,7 +44,7 @@ class FormContentText extends Component {
 		 			   <Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 		               <Label style={{flex: 1}}>{this.state.labelname}</Label>
 		               <Input 
-		               		// multiline
+		               		multiline
                           	ref="focusInput"
 		               		value = {value}
 		               		style={{ textAlign: 'right', flex: 1}}
@@ -52,12 +52,10 @@ class FormContentText extends Component {
 		               			await this.props.onPress(text.nativeEvent.text, this.props.data);
 		               			this.setState({ value:null });
 		               		}}
-							onFocus = {(e)=>{
-								// this.setState({ value:value });
-							}}
 							onChangeText ={(text)=>{
 								this.setState({ value:text });
 							}}
+							scrollEnabled={false}
 		               	/>
 		               	<Icon 
 		               		name='edit' 
@@ -86,11 +84,15 @@ class FormContentText extends Component {
 		 			<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 				  	<Label >{this.state.labelname}</Label>
 				    <Input 
-						// multiline 
+						multiline 
 						scrollEnabled = {false}
-						value         ={value} 
-						editable      ={editable} 
-						style         ={{textAlign: 'right', backgroundColor: 'rgba(0,0,0,0)', color:this.props.style.labelColor}}
+						value         = {value} 
+						editable      = {editable} 
+						style         = {{
+							textAlign      : 'right', 
+							backgroundColor: 'rgba(0,0,0,0)', 
+							color          : this.props.style.labelColor
+						}}
 				    />
 				  </Item>
 			);
