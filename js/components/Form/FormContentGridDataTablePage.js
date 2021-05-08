@@ -12,22 +12,20 @@ import FormUnit from '../../utils/FormUnit';
 class FormContentGridDataTablePage extends Component {
 	constructor(props) {
 		super(props);
-		const preData = this.deepClone(this.props.route.params.data); // 深層複製
-		const data = this.deepClone(this.props.route.params.data); // 深層複製
 		this.state = {
 			labelname         : props.route.params.data.component.name,
-			data              : data,
-			preData           : preData,
+			preData           : this.deepClone(this.props.route.params.data), // 深層複製
+			data              : this.deepClone(this.props.route.params.data), // 深層複製
 			lang              : this.props.route.params.lang,
 			user              : this.props.route.params.user,
-			propsOnPress      : this.props.route.params.propsOnPress,
+			confirmAllOnPress : this.props.route.params.confirmAllOnPress,
+
+			widthArr          : [60, 80, 60, 70, 65, 65, 65, 65, 90, 105, 65, 100, 40],
+
 			editCheckItem     : false,
 			editCheckItemIndex: -1,
-			widthArr          : [60, 80, 60, 70, 65, 65, 65, 65, 90, 105, 65, 100, 40],
 			isTextEditing 	  : false,
 			editingPosition   : {},
-			isRequiredEmpty   : false,
-			requiredEmptyPosition: {}
 		};
 	}
 
@@ -117,6 +115,7 @@ class FormContentGridDataTablePage extends Component {
 		)
 	}
 
+	// 點擊跳頁的按鈕
 	renderEditButton = (indexData, index) => {
 		return(
 			<TouchableOpacity onPress={ async () =>{ 
@@ -149,6 +148,7 @@ class FormContentGridDataTablePage extends Component {
 		);
 	}
 
+	// 點擊跳頁後的值更新，只更新本地state
 	confirmFormData = async ( value ) => {
 		if (this.state.editCheckItem) {
 			value.defaultvalue[this.state.editCheckItemIndex] = this.deepClone(value.listComponent);
@@ -171,14 +171,15 @@ class FormContentGridDataTablePage extends Component {
 		value.listComponent = this.deepClone(this.props.route.params.data.listComponent);
 
 		this.setState({
-			data              : value,
+			preData           : this.deepClone(value),
+			data              : this.deepClone(value),
 			editCheckItem     : false,
 			editCheckItemIndex: -1,
 		});
 		// 送值
-		this.state.propsOnPress(value);
 	}
 
+	// 直接在表格輸入
 	renderInput = (data, rowIndex, columnIndex) => {
 		let isValueExist = data.defaultvalue == "" || data.defaultvalue == " " || data.defaultvalue == null ? false : true;
 
@@ -258,6 +259,7 @@ class FormContentGridDataTablePage extends Component {
 		}
 	}
 
+	// 輸入完資料直接更新本地state
 	updateStateDefaultValue = (text, rowIndex, columnIndex) => {
 		let data = this.state.data;
 		data.defaultvalue[rowIndex][columnIndex].defaultvalue = text;
@@ -266,11 +268,8 @@ class FormContentGridDataTablePage extends Component {
 		});
 	}
 
+	// 輸入完成後進行資料驗證,必填欄位用紅匡表示,只更新本地state
 	confirmStateDefaultValue = async (value, rowIndex, columnIndex) => {
-		// 確認有沒有資料輸入錯誤
-		// 修改其他相關欄位數字
-		// 必填欄位用紅匡表示
-
 		let data = this.deepClone(this.state.data);
 		let item = data.defaultvalue[rowIndex][columnIndex];
 
@@ -316,39 +315,12 @@ class FormContentGridDataTablePage extends Component {
 				data:this.deepClone(data),
 				preData:this.deepClone(data)
 			});
-			this.state.propsOnPress(data);
 		}
-	}
-
-	editablelize = async (data) => {
-		let unShowColumns	 = []; 	//暫時紀錄不顯示的欄位
-		for(let i in data.listComponent){
-			data.listComponent[i].show = true; 	   		   		// 該欄位要不要顯示
-			data.listComponent[i].requiredAlbert = false; 	    // 該欄位空值警告
-			
-			for(let unShowColumn of unShowColumns){
-				if (unShowColumn.id == data.listComponent[i].component.id) {
-					data.listComponent[i].defaultvalue = unShowColumn.value;
-					data.listComponent[i].paramList    = unShowColumn.paramList;
-					data.listComponent[i].show         = (unShowColumn.visible || unShowColumn.visible == "true") ? true : false;
-					data.listComponent[i].required     = (unShowColumn.required) ? "Y" : "F";
-				}
-			}
-			let columnactionValue = await FormUnit.getColumnactionValue(this.state.user, data.listComponent[i], this.state.data.listComponent);   // 取得該欄位欲隱藏的欄位
-			unShowColumns = unShowColumns.concat(columnactionValue);
-			data.listComponent[i].actionValue = await FormUnit.getActionValue(this.state.user, data.listComponent[i], this.state.data.listComponent);	// 取得該欄位的動作
-		}
-		return data;
-	}
-
-	// deep clone
-	deepClone(src) {
-		return JSON.parse(JSON.stringify(src));
 	}
 
 	// 必填欄位的提示，離開表格時也需要提示
+	// 返回時直接更新APP state的資料
 	goBackWithRequiredCheck(){
-
 		let isGoBack = true;
 
 		for(let [i, defaultvalue] of this.state.data.defaultvalue.entries() ){
@@ -380,7 +352,10 @@ class FormContentGridDataTablePage extends Component {
 							{ 
 								text: "堅決返回", 
 								style: "destructive",
-								onPress: () => NavigationService.goBack()
+								onPress: () => {
+									this.state.confirmAllOnPress(this.state.data);
+									NavigationService.goBack();
+								}
 							}
 						]
 					);
@@ -389,7 +364,36 @@ class FormContentGridDataTablePage extends Component {
 			}
 		}
 
-		if (isGoBack) NavigationService.goBack()
+		if (isGoBack) {
+			this.state.confirmAllOnPress(this.state.data);
+			NavigationService.goBack();	
+		}
+	}
+
+	editablelize = async (data) => {
+		let unShowColumns	 = []; 	//暫時紀錄不顯示的欄位
+		for(let i in data.listComponent){
+			data.listComponent[i].show = true; 	   		   		// 該欄位要不要顯示
+			data.listComponent[i].requiredAlbert = false; 	    // 該欄位空值警告
+			
+			for(let unShowColumn of unShowColumns){
+				if (unShowColumn.id == data.listComponent[i].component.id) {
+					data.listComponent[i].defaultvalue = unShowColumn.value;
+					data.listComponent[i].paramList    = unShowColumn.paramList;
+					data.listComponent[i].show         = (unShowColumn.visible || unShowColumn.visible == "true") ? true : false;
+					data.listComponent[i].required     = (unShowColumn.required) ? "Y" : "F";
+				}
+			}
+			let columnactionValue = await FormUnit.getColumnactionValue(this.state.user, data.listComponent[i], this.state.data.listComponent);   // 取得該欄位欲隱藏的欄位
+			unShowColumns = unShowColumns.concat(columnactionValue);
+			data.listComponent[i].actionValue = await FormUnit.getActionValue(this.state.user, data.listComponent[i], this.state.data.listComponent);	// 取得該欄位的動作
+		}
+		return data;
+	}
+
+	// deep clone
+	deepClone(src) {
+		return JSON.parse(JSON.stringify(src));
 	}
 }
 

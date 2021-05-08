@@ -101,10 +101,10 @@ class FormContentGridForEvaluation extends Component {
 	            	<Item 
 	            		fixedLabel 
 	            		style={{
-	            			borderBottomWidth: 0, 
-	            			paddingTop: showLabelname ? 15: 0, 
-	            			paddingBottom: 15, 
-	            			borderWidth: 5 
+							borderBottomWidth: 0, 
+							paddingTop       : showLabelname ? 15: 0, 
+							paddingBottom    : 15, 
+							borderWidth      : 5 
 	            		}} 
 	            		error={this.props.data.requiredAlbert}
 	            	>
@@ -179,12 +179,12 @@ class FormContentGridForEvaluation extends Component {
 		            	:
 		            		<View style={{borderRadius: 10, borderWidth:0.6, borderColor:"#D9D5DC", width: '100%', }}>
 		            			<FlatList
-		            				keyExtractor={(item, index) => index.toString()}
-        							extraData     = {this.state}
-		            				data          = {this.props.data.defaultvalue.slice(0,3)}
-		            				renderItem    = {this.rendercheckItem}
-									ItemSeparatorComponent ={this.renderSeparator}
-						  	  		ListFooterComponent = {this.props.data.defaultvalue.length > 3 ? this.renderFooter : null}    //尾巴
+									keyExtractor           = {(item, index) => index.toString()}
+									extraData              = {this.state}
+									data                   = {this.props.data.defaultvalue.slice(0,3)}
+									renderItem             = {this.rendercheckItem}
+									ItemSeparatorComponent = {this.renderSeparator}
+									ListFooterComponent    = {this.props.data.defaultvalue.length > 3 ? this.renderFooter : null}    //尾巴
 		            			/>
 		            		</View>
 		            }
@@ -239,6 +239,7 @@ class FormContentGridForEvaluation extends Component {
 		return renderItem;
 	}
 
+	// 顯示前三筆的編輯畫面
 	rendercheckItem = (item) => {
 		let index = item.index;
 		item = item.item;
@@ -328,9 +329,9 @@ class FormContentGridForEvaluation extends Component {
 			confirmOnPress    : this.confirmFormData,
 			editCheckItemIndex: editCheckItemIndex
 		});
-		
 	}
 
+	// 確認編輯後的資料驗證與上傳至APP state做資料更新
 	confirmFormData = async (value) => {
 		if (this.state.editCheckItem) {
 			value.defaultvalue[this.state.editCheckItemIndex] = this.deepClone(value.listComponent);
@@ -356,6 +357,7 @@ class FormContentGridForEvaluation extends Component {
 		this.modalWrapperClose();
 	}
 	
+	// 顯示底部可編輯畫面
 	renderFooter = () => {
 		return (
 			<View>
@@ -365,10 +367,11 @@ class FormContentGridForEvaluation extends Component {
 					style={{flexDirection: 'row', alignItems: 'flex-start'}}
 					onPress = {()=>{
 						NavigationService.navigate("FormContentGridDataTable", { 
-							data : this.props.data, 
-							lang : this.props.lang,
-							user : this.props.user,
-							propsOnPress: this.propsOnPress
+							propsData         : this.props.data,
+							data              : this.state.data,
+							lang              : this.props.lang, 
+							user              : this.props.user,
+							confirmAllOnPress : this.confirmFormAllData,
 						});
 					}}
 				>
@@ -378,11 +381,15 @@ class FormContentGridForEvaluation extends Component {
 		);
 	}
 
-	propsOnPress = (value) =>{
+	confirmFormAllData = async (formValues) => {
 		// 將listComponent變成最原本的樣子
-		value.listComponent = this.deepClone(this.props.data.listComponent);
+		formValues.listComponent = this.deepClone(this.props.data.listComponent);
+		// 自己的state做改變
+		this.setState({
+			data:formValues
+		});
 		// 送值
-		this.props.onPress(this.deepClone(value), this.props.data);
+		this.props.onPress(this.deepClone(formValues), this.props.data);
 	}
 
 	modalWrapperClose = () => {
@@ -436,17 +443,19 @@ class FormContentGridForEvaluation extends Component {
 			
 			for(let unShowColumn of unShowColumns){
 				if (unShowColumn.id == data.listComponent[i].component.id) {
-					data.listComponent[i].defaultvalue = unShowColumn.value == "" ? data.listComponent[i].defaultvalue : unShowColumn.value;
+					data.listComponent[i].defaultvalue = (unShowColumn.value == "") ? data.listComponent[i].defaultvalue : unShowColumn.value;
 					data.listComponent[i].paramList    = unShowColumn.paramList;
 					data.listComponent[i].show         = (unShowColumn.visible || unShowColumn.visible == "true") ? true : false;
 					data.listComponent[i].required     = (unShowColumn.required) ? "Y" : "F";
 				}
 			}
+			
 			let columnactionValue = await FormUnit.getColumnactionValue(
 				this.props.user, 
 				data.listComponent[i], 
-				this.props.data.listComponent
+				data.listComponent
 			);   // 取得該欄位欲隱藏的欄位
+
 			unShowColumns = unShowColumns.concat(columnactionValue);
 
 			data.listComponent[i].actionValue = await FormUnit.getActionValue(
@@ -454,6 +463,7 @@ class FormContentGridForEvaluation extends Component {
 				data.listComponent[i], 
 				this.props.data.listComponent
 			);	// 取得該欄位的動作
+			
 		}
 		return data;
 	}

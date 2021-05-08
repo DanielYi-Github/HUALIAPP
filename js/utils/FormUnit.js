@@ -400,7 +400,7 @@ let FormUnit = {
                 for(let pItem of parentItem){
                   if (column == pItem.component.id) {
                     columnactionObject[column] = {
-                      value :pItem.defaultvalue,
+                      value   : pItem.defaultvalue,
                       required: pItem.required == "Y" ? true : false
                     }
                   }
