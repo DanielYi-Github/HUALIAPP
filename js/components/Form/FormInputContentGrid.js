@@ -384,7 +384,7 @@ class FormInputContentGrid extends Component {
 				}
 			}
 			let columnactionValue = await FormUnit.getColumnactionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);   // 取得該欄位欲隱藏的欄位
-			unShowColumns = unShowColumns.concat(columnactionValue);
+			unShowColumns = unShowColumns.concat(columnactionValue.columnList);
 			data.listComponent[i].actionValue = await FormUnit.getActionValue(this.props.user, data.listComponent[i], this.props.data.listComponent);	// 取得該欄位的動作
 		}
 		return data;

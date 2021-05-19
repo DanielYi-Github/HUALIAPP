@@ -295,6 +295,7 @@ class FormPage extends React.Component {
               user        ={this.props.state.UserInfo.UserInfo}
               onPress     ={this.updateFormData.bind(this, index)} //預留修改後回傳值的接口
               formActions ={this.props.actions} //有關於Formpage的redux actions
+              formContent ={this.state.content}
             />
         );  
       } 

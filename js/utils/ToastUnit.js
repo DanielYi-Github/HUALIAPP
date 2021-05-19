@@ -1,6 +1,9 @@
+import React, { Component } from 'react';
 import { Platform } from 'react-native';
+
 import variable from '../theme/variables/platform';
-import Toast from 'react-native-toast-message';
+import Toast, { BaseToast }  from '../components/CustomToast';
+// import Toast, { BaseToast }  from 'react-native-toast-message';
 
 const isIphoneX = variable.isIphoneX;
 const isIOS = Platform.OS == 'ios' ? true: false;

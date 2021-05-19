@@ -85,7 +85,6 @@ class FormInputContentGridPageForDeputy extends Component {
 	}
 
 	updateFormData = async (value, item) => {
-
 		item.columnaction = null;
 		item.columnactionColumn = [];
 
@@ -104,11 +103,12 @@ class FormInputContentGridPageForDeputy extends Component {
 			}
 		}
 		// 判斷是否有url的action動作
-		let columnactionValue = await FormUnit.getColumnactionValue(
+		let columnactionValue = await FormUnit.getCreateproActionValue(
 			this.state.user,
 			item,
 			AllItem.listComponent
 		);
+
 		if(editIndex == 1){
     		// 進行分類
     		switch(item.defaultvalue) {

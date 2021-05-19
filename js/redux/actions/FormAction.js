@@ -194,8 +194,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 		let p3 = UpdateDataUtil.getBPMSignState(userData, content_getBPMSignState);
 
 		Promise.all([p1, p2, p3]).then( async (value) => {
-			console.log(value);	
-
+			console.log(value);
 			let handsign         = value[0] ? value[0].handsign : false;			//是否需要手寫板簽名
 			let showsign         = value[0] ? value[0].showsign : false;			//是否需要顯示核決層級
 			let signresult       = value[0] ? value[0].signresult : false;			//是否需要顯示回簽
@@ -228,7 +227,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					}
 				}
 			}
-
+			
 			// 表單具體內容
 			tmpList = value[0] ? value[0].comList : []; 
 			for(var i in tmpList){
@@ -241,9 +240,10 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					apList.push(temp);
 					apListIndex++;
 				} else {
+					// 附值進defaultvalue
+					tmpList[i] = await FormUnit.formatEditalbeFormField(tmpList[i]);	// 取得該欄位的動作
 					// 整理成可編輯的表格格式
 					if ( tmpList[i].isedit == "Y" ) {
-						tmpList[i] = await FormUnit.formatEditalbeFormField(tmpList[i]);	// 取得該欄位的動作
 						for(let j in tmpList[i].listComponent){
 							tmpList[i].listComponent[j].defaultvalue = null;
 						}
@@ -255,15 +255,18 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					apList[apListIndex].content.push(tmpList[i]);	
 				}
 			}
-			
-			// 針對listButton要取直的資料進行整理
+
+			/**** 針對listButton要取值的資料進行整理 ***/
+			/*
 			let columns = [];
 			for(let index in apList){
 				columns.push(...apList[index].content);
 			}
-			// 先進行listButton的資料處理
 			await FormUnit.formatListButtonOfForm(columns);
-
+			*/
+			/**** listButton要取值的資料 ***/
+			
+			
 			// 判斷附件有沒有值
 			tmpList = value[0] ? value[0].tmpBotomList : []; 
 			if (
@@ -307,6 +310,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					allowAddAnnounce,
 				) 
 			); 
+			
 			
 		}).catch((err) => {
 			LoggerUtil.addErrorLog("FormAction loadFormContentIntoState", "APP Action", "ERROR", err);
@@ -450,7 +454,8 @@ export function submitSignForm(user, form, info, allowAddValue){
 			asType       : asType,
 			asMembers    : asMembers,
 		}
-
+		console.log(sign);
+		
 		//	簽核狀況判斷
 		let data = {};
 		if ( info.formSignState ){ 
@@ -540,15 +545,19 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 			formFormat[pageIndex].content[editIndex] = formItem;
 
 			// 判斷是否有url 的 action動作
+			// console.log(formFormat);
+			
 			let	columnactionValue = await FormUnit.getColumnactionValue(
 										getState().UserInfo.UserInfo, 
 										formItem, 
-										formFormat[pageIndex].content 
+										formFormat[pageIndex].content,
+										formFormat
 									);
+			
 			// 欄位隱藏或顯示控制
 			// 判斷該值是否填寫表單中顯示
 			formFormat[pageIndex].content = FormUnit.checkFormFieldShow(
-												columnactionValue, 
+												columnactionValue.columnList, 
 												formFormat[pageIndex].content
 											);	
 			
@@ -575,9 +584,8 @@ function updateDefaultValueError(ruleCheckMessage){
 
 export function	reloadFormContentIntoState_fromGetColumnactionValue(
 		user, 
-		stateDataListComponent, 
 		button, 
-		propsDataListComponent
+		formContent
 	){
 	return async (dispatch, getState) => {
 		//顯示載入動態
@@ -586,41 +594,61 @@ export function	reloadFormContentIntoState_fromGetColumnactionValue(
 		// 獲取載入前期分數
 		let columnactionValueList = await FormUnit.getColumnactionValueForButton(
 			user, 
-			stateDataListComponent, 
 			button, 
-			propsDataListComponent
+			formContent
 		);
 
-		// 進行資料整理
+		console.log(columnactionValueList);
+
 		let formFormat = getState().Form.FormContent;
-		for(let formContent of formFormat){
-			for(let content of formContent.content){
-				for(let columnactionValue of columnactionValueList){
+		let loadMessgaeObject = {
+			type   :'success',
+			message:getState().Language.lang.FormContentGridForEvaluation.loadPreviousScore_Success
+		};
 
-					if (content.component.id == columnactionValue.id) {
-						for (let [i, value] of content.defaultvalue.entries()) {
-							for(let voGrid of columnactionValue.voGrid[i]){
-								for(let item of value){
-									if(voGrid.id == item.component.id){
-										item.defaultvalue = voGrid.value;
-									}
-								}
-							}
-						}
+		// API請求是否成功
+		if (columnactionValueList.requstError) {
+			// API請求失敗
+			loadMessgaeObject = {
+				type   :'error',
+				message:getState().Language.lang.FormContentGridForEvaluation.loadPreviousScore_Error
+			}
+		} else {
+			// API請求成功,如果msgList有資料，取決serverComfirmUpdateData決定是否進行資料更新
+			if ( columnactionValueList.msgList.length == 0 ) {
+				// msgList沒資料，進行資料更新
+				formFormat = getFormFormat(columnactionValueList, formFormat);
+				loadMessgaeObject = {
+					type   :'success',
+					// message:getState().Language.lang.FormContentGridForEvaluation.loadPreviousScore_Success
+					message:"成功"
+				}
+			} else {
+				// msgList有資料，serverComfirmUpdateData決定是否資料更新
+				if (columnactionValueList.serverComfirmUpdateData) {
+					// serverComfirmUpdateData決定資料更新
+					formFormat = getFormFormat(columnactionValueList, formFormat);
+					loadMessgaeObject = {
+						type   :'info',
+						message:columnactionValueList.msgList[0]
 					}
-
+				} else {
+					// serverComfirmUpdateData決定不做資料更新
+					loadMessgaeObject = {
+						type   :'info',
+						message:columnactionValueList.msgList[0]
+					}
 				}
 			}
 		}
-
 		// 回傳結果
 		dispatch(updateDefaultValue(formFormat));
 
 		// 新增提示字
 		dispatch(
 			showLoadMessgae(
-				'success',
-				getState().Language.lang.FormContentGridForEvaluation.loadPreviousScore_Success 
+				loadMessgaeObject.type,
+				loadMessgaeObject.message
 			)
 		);
 	}
@@ -632,6 +660,40 @@ function showLoadMessgae(type, messgae){
 		messageType: type,
 		message    : messgae
 	}
+}
+
+function getFormFormat(columnactionValueList, formFormat){
+	// console.log(formFormat);
+	// console.log(columnactionValueList);
+
+	for(let formContent of formFormat){
+		for(let content of formContent.content){
+			for(let columnactionValue of columnactionValueList.columnList){
+				if (content.component.id == columnactionValue.id) {
+					for (let [i, value] of content.defaultvalue.entries()) {
+
+						// console.log(columnactionValue, value);
+						if (columnactionValue.voGrid != null){
+							for(let voGrid of columnactionValue.voGrid[i]){
+								for(let item of value){
+									if(voGrid.id == item.component.id){
+										item.defaultvalue = voGrid.value;
+									}
+								}
+							}
+						}
+
+						if (columnactionValue.voList != null){
+						}
+						
+					}
+				}
+			}
+		}
+	}
+
+
+	return formFormat;
 }
 
 

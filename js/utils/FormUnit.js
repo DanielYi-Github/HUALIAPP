@@ -348,7 +348,162 @@ let FormUnit = {
     return returnValue;
   },
   // 取得欄位columnaction資料
-  async getColumnactionValue(user, item, parentItem = []){
+  // allItem目前只有表單簽合的部分會使用到，且與立案的部分不相同
+  async getColumnactionValue(user, item, parentItem = [], allItem = []){
+    let returnValue = {
+      columnList:[],
+      msgList   :[]
+    };
+    if (item.columnaction) {
+      let columnactionObject = {};
+      let isGetColumnactionValueFromObject = false; // 用來確認最後的取直方式
+      for(let column of item.columnactionColumn){     
+          switch( item.columntype ) {
+            case "rdo":
+              let isMatch = false;
+              for(let it of item.listComponent){
+                if(column == it.component.id){
+                  isMatch = true;
+                  columnactionObject[column] = it.defaultvalue;
+                } 
+              }
+              if (!isMatch) {
+                if (column == item.component.id) {
+                  columnactionObject[column] = item.defaultvalue; 
+                } else {
+                  for(let pItem of parentItem){
+                    if (column == pItem.component.id) columnactionObject[column] = pItem.defaultvalue;
+                  }
+                }
+              }
+              break;              
+            case "tabForEvaluation":
+              // 是否有找到值
+              let isFind = false; 
+
+              // 先找自己
+              for(let component of item.listComponent){
+                if (column == component.component.id) {
+                  columnactionObject[column] = component.defaultvalue == null ? "": component.defaultvalue;
+                  isFind = true;
+                  break;
+                }
+              }
+
+              // 在找上層
+              if (!isFind) {
+                for (let item of parentItem) {
+                  if (column == item.component.id) {
+                    columnactionObject[column] = this.getDefaulevalueFormatForSubmit(item.defaultvalue);
+                    isFind = true;
+                    break;
+                  }
+                }
+              }
+
+              // 往最上層找
+              if (!isFind) {
+                for(let ap of allItem){
+                  for(let content of ap.content){
+                    if (column == content.component.id) {
+                      columnactionObject[column] = this.getDefaulevalueFormatForSubmit(content.defaultvalue);
+                      isFind = true;
+                      break;
+                    }
+                  }
+                }
+              }
+              break;
+            case "tableave":
+              if (item.defaultvalue.length != 0) {
+                columnactionObject[column] = this.getDefaulevalueFormatForSubmit(item.defaultvalue);
+                /*
+                let values = [];
+                for (let [i, temps] of item.defaultvalue.entries()) {
+                  let value = {
+                    ROWINDEX: i.toString()
+                  };
+                  for (let [j, temp] of temps.entries()) {
+                    value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+                  }
+                  values.push(value);
+                }
+                columnactionObject[column] = values; 
+                */
+              }
+              break;
+            default:
+              isGetColumnactionValueFromObject = true;
+              //是否取值欄位自己擁有，沒有的話去上層parentItem找
+              if (column == item.component.id) {
+                columnactionObject[column] = {
+                  value :item.defaultvalue,
+                  required: item.required == "Y" ? true : false
+                }; 
+              } else {
+                for(let pItem of parentItem){
+                  if (column == pItem.component.id) {
+                    columnactionObject[column] = {
+                      value   : pItem.defaultvalue,
+                      required: pItem.required == "Y" ? true : false
+                    }
+                  }
+                }
+              }
+          }
+      }
+
+      // 只要有一個key值為空就不發request，改成
+      if (isGetColumnactionValueFromObject) {
+        // 所有必填欄位有值才會觸發
+        for (let [key, value] of Object.entries(columnactionObject)) {
+          if (value.required && value.value == null) { return returnValue; }
+          else{ columnactionObject[key] = value.value; }
+        }
+      } else {
+        for(var index in columnactionObject) if(columnactionObject[index] == null) return returnValue;
+      }
+
+      await UpdateDataUtil.getCreateFormDetailFormat(user, item.columnaction, columnactionObject).then((data)=>{
+        returnValue = data;
+      }); 
+    }
+    return returnValue;
+  },
+  // 取得欄位columnaction資料
+  async getColumnactionValueForButton(user, buttonItem, formContent = []){
+    let returnValue = {
+      requstError:false
+    };
+
+    let columns = [];
+    for(let index in formContent){
+      columns.push(...formContent[index].content);
+    }
+    buttonItem = await this.formatListButtonOfForm(buttonItem, columns);
+
+    if (buttonItem.columnaction) {
+      await UpdateDataUtil.getCreateFormDetailFormat(
+        user, 
+        buttonItem.columnaction, 
+        buttonItem.columnactionColumnParam
+      ).then((data)=>{
+        returnValue = {
+          ...returnValue,
+          ...data
+        };
+      }).catch((e)=>{
+        console.log(e);
+        returnValue = {
+          requstError:true
+        };
+      }); 
+    }
+    
+    return returnValue;
+  },
+  // 取得代理人的Action資料
+  async getCreateproActionValue(user, item, parentItem = []){
     let returnValue = [];
     if (item.columnaction) {
       let columnactionObject = {};
@@ -427,100 +582,6 @@ let FormUnit = {
     }
     return returnValue;
   },
-  // 取得欄位columnaction資料
-  async getColumnactionValueForButton(user, item, buttonItem, parentItem = []){
-    let returnValue = [];
-    if (buttonItem.columnaction) {
-      await UpdateDataUtil.getCreateFormDetailFormat(
-        user, 
-        buttonItem.columnaction, 
-        buttonItem.columnactionColumnParam
-      ).then((data)=>{
-        returnValue = data;
-      }); 
-    }
-    return returnValue;
-
-    /*
-      for(let column of buttonItem.columnactionColumn){     
-          switch( item.columntype ) {
-            
-            case "rdo":
-              let isMatch = false;
-              for(let it of item.listComponent){
-                if(column == it.component.id){
-                  isMatch = true;
-                  columnactionObject[column] = it.defaultvalue;
-                } 
-              }
-              if (!isMatch) {
-                if (column == item.component.id) {
-                  columnactionObject[column] = item.defaultvalue; 
-                } else {
-                  for(let pItem of parentItem){
-                    if (column == pItem.component.id) columnactionObject[column] = pItem.defaultvalue;
-                  }
-                }
-              }
-              break;
-            
-            case "tableave":
-              if (item.defaultvalue.length != 0) {
-                let values = [];
-                for (let [i, temps] of item.defaultvalue.entries()) {
-                  let value = {
-                    ROWINDEX: i.toString()
-                  };
-                  for (let [j, temp] of temps.entries()) {
-                    value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
-                  }
-                  values.push(value);
-                }
-                columnactionObject[column] = values; 
-              }
-              break;
-            
-            case "tab":
-              if (item.defaultvalue.length != 0) {
-                let values = [];
-                for (let [i, temps] of item.defaultvalue.entries()) {
-                  let value = {
-                    ROWINDEX: i.toString()
-                  };
-                  for (let [j, temp] of temps.entries()) {
-                    value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
-                  }
-                  values.push(value);
-                }
-                columnactionObject[column] = values; 
-              }
-              break;
-            default:
-              isGetColumnactionValueFromObject = true;
-              //是否取值欄位自己擁有，沒有的話去上層parentItem找
-              if (column == item.component.id) {
-                columnactionObject[column] = {
-                  value :item.defaultvalue,
-                  required: item.required == "Y" ? true : false
-                }; 
-              } else {
-              }
-          }
-      }
-
-      // 只要有一個key值為空就不發request，改成
-      // for(var index in columnactionObject) if(columnactionObject[index] == null) return returnValue;
-      if (isGetColumnactionValueFromObject) {
-        // 所有必填欄位有值才會觸發
-        for (let [key, value] of Object.entries(columnactionObject)) {
-          if (value.required && value.value == null) { return returnValue; }
-          else{ columnactionObject[key] = value.value; }
-        }
-      } else {
-        for(var index in columnactionObject) if(columnactionObject[index] == null) return returnValue;
-      }
-    */
-  },
   // 欄位顯示隱藏檢查
   checkFormFieldShow(columnactionValue, formFormat){
     for(let actionValue of columnactionValue){
@@ -551,32 +612,26 @@ let FormUnit = {
     return formFormat;
   },
   // 針對listButtom的值進行整理
-  formatListButtonOfForm(items){
-    for(let item of items){
-      let usefulItem = false;
-      usefulItem = item.listButton != null ? true : false;
-      usefulItem = ( usefulItem && item.listButton.length != 0 ) ? true : false;
-      if (usefulItem) {
-        for(let button of item.listButton){
-          let columnactionColumnParam = {}
-          for(let columnactionColumn of button.columnactionColumn){
-            for(let itemm of items){
-              if (columnactionColumn == itemm.component.id) {
-                columnactionColumnParam[columnactionColumn] = itemm.defaultvalue
-              }else if( itemm.columntype == "txtwithtxt" ){
-                for(let itemmm of itemm.listComponent){
-                  if (columnactionColumn == itemmm.component.id) {
-                    columnactionColumnParam[columnactionColumn] = itemmm.defaultvalue
-                  }
-                }
-              }
+  formatListButtonOfForm(buttonItem, columns){
+    let columnactionColumnParam = {}
+    for(let columnactionColumn of buttonItem.columnactionColumn){
+      for(let column of columns){
+        // 找到id相同的
+        // 如果itemm的columntype是txtwithtxt，要去他的listComponent裡面找
+        if (columnactionColumn == column.component.id) {
+          columnactionColumnParam[columnactionColumn] = this.getDefaulevalueFormatForSubmit(column.defaultvalue);
+        }else if( column.columntype == "txtwithtxt" ){
+          for(let item of column.listComponent){
+            if (columnactionColumn == item.component.id) {
+              columnactionColumnParam[columnactionColumn] = this.getDefaulevalueFormatForSubmit(item.defaultvalue);
             }
           }
-          button.columnactionColumnParam = columnactionColumnParam;
         }
+
       }
     }
-    // return items;
+    buttonItem.columnactionColumnParam = columnactionColumnParam;
+    return buttonItem;
   },
   // 整理成可編輯的欄位格式
   formatEditalbeFormField(item){
@@ -599,6 +654,7 @@ let FormUnit = {
         // 是否可以添加一筆資料，目前預設為不能添加比數，也不能刪除比數
         item.enableCreateData = false;
         item.enableDeleteData = false;
+
         break;
       default:
     }
@@ -943,6 +999,25 @@ let FormUnit = {
       }
     }
     return formValue
+  },
+  // 當defaultvalue是array的形式時，取值資料進行整理
+  getDefaulevalueFormatForSubmit(defaultvalue){
+    let values;
+    if ( Array.isArray(defaultvalue) ) {
+      values = [];
+      for (let [i, temps] of defaultvalue.entries()) {
+        let value = {
+          ROWINDEX: i.toString()
+        };
+        for (let [j, temp] of temps.entries()) {
+          value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+        }
+        values.push(value);
+      }
+    } else {
+      values = defaultvalue
+    }
+    return values;
   },
   // deep clone
   deepClone(src) {

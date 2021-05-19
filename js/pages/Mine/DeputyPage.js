@@ -8,7 +8,6 @@ import FormContentTextWithAction from '../../components/Form/FormContentTextWith
 import FormContentCbo            from '../../components/Form/FormContentCbo';
 import FormContentDateTime       from '../../components/Form/FormContentDateTime';
 import HeaderForGeneral          from '../../components/HeaderForGeneral';
-import MainPageBackground        from '../../components/MainPageBackground';
 import * as NavigationService  from '../../utils/NavigationService';
 
 import * as DeputyAction        from '../../redux/actions/DeputyAction';
@@ -40,7 +39,6 @@ class DeputyPage extends React.Component {
 
     return (
       <Container>
-      <MainPageBackground height={null}/>
       {/*標題列*/}
       <HeaderForGeneral
         isLeftButtonIconShow  = {true}

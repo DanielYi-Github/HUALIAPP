@@ -73,7 +73,7 @@ export function getSurveyFormat( surveyOID ){
 					columnData.actionValue = await FormUnit.getActionValue(user, columnData);	// 取得該欄位的動作
 
 
-					unShowColumns = unShowColumns.concat(columnactionValue);
+					unShowColumns = unShowColumns.concat(columnactionValue.columnList);
 					apList[apListIndex].content.push(columnData);	
 					comfirmComponent.push(columnData);
 				}
@@ -173,7 +173,7 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 			*/
 			// 欄位隱藏或顯示控制
 			// 判斷該值是否全部表單中顯示
-			surveyFormat[pageIndex].content = FormUnit.checkFormFieldShow( columnactionValue, surveyFormat[pageIndex].content );	
+			surveyFormat[pageIndex].content = FormUnit.checkFormFieldShow( columnactionValue.columnList, surveyFormat[pageIndex].content );	
 			dispatch(updateDefaultValue(surveyFormat));
 		}
 	}

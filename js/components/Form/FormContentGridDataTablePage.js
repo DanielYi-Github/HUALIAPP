@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, TouchableOpacity, TextInput, Alert}from 'react-native';
+import { View, ScrollView, TouchableOpacity, TextInput, Alert, Keyboard}from 'react-native';
 import { Container, Content, Header, Left, Right, Item, Label, Body, Title, Button, Icon, Text, connectStyle } from 'native-base';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -12,16 +12,23 @@ import FormUnit from '../../utils/FormUnit';
 class FormContentGridDataTablePage extends Component {
 	constructor(props) {
 		super(props);
+		let widthArrList = props.route.params.editable ? [27.5, 60]: [27.5];
+		for (let component of props.route.params.data.listComponent) {
+			if (component.columntype != "hidetxt") {
+				widthArrList.push(65);
+			}
+		}
+		
 		this.state = {
 			labelname         : props.route.params.data.component.name,
 			preData           : this.deepClone(this.props.route.params.data), // 深層複製
 			data              : this.deepClone(this.props.route.params.data), // 深層複製
 			lang              : this.props.route.params.lang,
 			user              : this.props.route.params.user,
+			editable          : this.props.route.params.editable,
 			confirmAllOnPress : this.props.route.params.confirmAllOnPress,
 
-			widthArr          : [60, 80, 60, 70, 65, 65, 65, 65, 90, 105, 65, 100, 40],
-
+			widthArr          : widthArrList,
 			editCheckItem     : false,
 			editCheckItemIndex: -1,
 			isTextEditing 	  : false,
@@ -30,7 +37,8 @@ class FormContentGridDataTablePage extends Component {
 	}
 
 	render() {
-		let tableHead = ["動作"];
+		let tableHead = this.state.editable ? [ "", "動作" ] : [""] ;
+
 		for(let i in this.state.data.listComponent){
 			if(this.state.data.listComponent[i].columntype != "hidetxt"){
 				tableHead.push(this.state.data.listComponent[i].component.name);
@@ -39,11 +47,11 @@ class FormContentGridDataTablePage extends Component {
 
 		let tableData = [];
 		for(let i in this.state.data.defaultvalue){
-			const rowData = [ this.renderEditButton( this.state.data.defaultvalue[i], i ) ];
+			const rowData = this.state.editable ? [ parseInt(i)+1, this.renderEditButton( this.state.data.defaultvalue[i], i ) ] : [parseInt(i)+1];
 
 			for(let j in this.state.data.defaultvalue[i]){
 				if (this.state.data.defaultvalue[i][j].columntype != "hidetxt") {
-					if (this.state.data.defaultvalue[i][j].isedit == "Y") {
+					if (this.state.data.defaultvalue[i][j].isedit == "Y" && this.state.editable) {
 						rowData.push(this.renderInput(this.state.data.defaultvalue[i][j], i, j));
 					} else {
 						rowData.push(this.state.data.defaultvalue[i][j].defaultvalue);
@@ -56,19 +64,48 @@ class FormContentGridDataTablePage extends Component {
 		
 		return (
 			<Container>
-				<HeaderForGeneral
-				  isLeftButtonIconShow  = {true}
-				  leftButtonIcon        = {{name:"arrow-back"}}
-				  leftButtonOnPress     = {() =>{
-				  	// 返回時如果必填欄位未填，需要提示“有必填欄位未填”字樣，但是依舊可以返回
-				  	this.goBackWithRequiredCheck();
-				  }} 
-				  isRightButtonIconShow = {false}
-				  rightButtonIcon       = {null}
-				  rightButtonOnPress    = {null} 
-				  title                 = {this.state.labelname}
-				  isTransparent         = {false}
-				/>
+
+				<Header style={this.props.style.HeaderBackground}>
+				  <Left>
+				    <Button transparent onPress={() =>{
+				    	// 返回時需要顯示“確認是否執行返回，繼續返回將不儲存已編輯資料；如欲儲存已編輯資料，請點擊畫面右上角“完成”按鈕”
+				    	if (this.state.editable) {
+				    		this.goBackAlert();
+				    	} else {
+							NavigationService.goBack();
+				    	}
+				    }}>
+				      <Icon name='arrow-back' style = {{color: this.props.style.color}}/>
+				    </Button>
+				  </Left>
+				  <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>
+				      <Title>{this.state.data.component.name}</Title>
+				  </Body>
+				  <Right style={{alignItems: 'center'}}>
+				  	{
+				  		this.state.editable ?
+				  			<TouchableOpacity 
+				  			  style={{
+				  			    backgroundColor: '#47ACF2', 
+				  			    paddingLeft: 10, 
+				  			    paddingRight: 10,
+				  			    paddingTop: 5,
+				  			    paddingBottom: 5, 
+				  			    borderRadius: 10
+				  			  }}
+				  			  onPress={()=>{
+				  			    Keyboard.dismiss();				        
+				  				// 完成時如果必填欄位未填，需要提示“有必填欄位未填”字樣
+				  				this.goBackWithRequiredCheck();
+				  			  }}
+				  			>
+				  			  <Text style={{color: '#FFF'}}>{this.state.lang.CreateFormPage.Done}</Text>
+				  			</TouchableOpacity>
+				  		:
+				  			null
+				  	}
+				  </Right>
+				</Header>
 				
 				<KeyboardAwareScrollView horizontal={true}>
 					<View>
@@ -304,10 +341,11 @@ class FormContentGridDataTablePage extends Component {
 				item,
 				data.defaultvalue[rowIndex]
 			);
+			console.log("columnactionValue", columnactionValue);
 
 			// 判斷該值是否填寫表單中顯示
 			data.defaultvalue[rowIndex] = FormUnit.checkFormFieldShow(
-				columnactionValue,
+				columnactionValue.columnList,
 				data.defaultvalue[rowIndex]
 			);
 
@@ -348,15 +386,15 @@ class FormContentGridDataTablePage extends Component {
 							  			}
 							  		});
 							  	}
-							},
+							}
+							/*
+							,
 							{ 
 								text: "堅決返回", 
 								style: "destructive",
-								onPress: () => {
-									this.state.confirmAllOnPress(this.state.data);
-									NavigationService.goBack();
-								}
+								onPress: () => this.isGoback()
 							}
+							*/
 						]
 					);
 					break;
@@ -364,10 +402,73 @@ class FormContentGridDataTablePage extends Component {
 			}
 		}
 
-		if (isGoBack) {
+		if (isGoBack) this.isGoback();
+	}
+
+	isGoback = async () => {
+		// 判斷是否有url 的 action動作
+		let columnactionValue = await FormUnit.getColumnactionValue(
+			this.state.user,
+			this.state.data,
+			[this.state.data],
+			this.props.route.params.formContent
+		);
+
+		if (columnactionValue.msgList.length == 0) {
+			//沒有錯誤顯示，可以返回至上層
 			this.state.confirmAllOnPress(this.state.data);
-			NavigationService.goBack();	
+			NavigationService.goBack();
+		} else {
+			console.log("isGoback", columnactionValue);
+			let alertMsg = "";
+			let msgCount = columnactionValue.msgList.length;
+			for(let [i, msg] of columnactionValue.msgList.entries() ){
+
+				if ( msgCount == 1 ) {
+					alertMsg = msg;
+				} else {
+					alertMsg = ( i == 0 ) ? `${i+1}.${msg}` : `${alertMsg}\n${i+1}.${msg}`;
+				}
+			}
+
+			
+			Alert.alert(
+				"您有資料驗證異常",
+				alertMsg,
+				[
+					{
+					  	text: "了解",
+					  	onPress: () => {
+					  		
+					  	}
+					}
+				]
+			);
+			
 		}
+	}
+
+	goBackAlert = () => {
+		Alert.alert(
+			"請確認是否執行返回?",
+			`“確認返回將不儲存已編輯資料；如欲儲存已編輯資料，請點擊畫面右上角“完成”按鈕`,
+			[
+				{
+				  	text: "取消",
+				  	style: "cancel",
+				  	onPress: () => { 
+				  		
+				  	}
+				}
+				,
+				{ 
+					text: "確認返回", 
+					style: "destructive",
+					onPress: () => NavigationService.goBack()
+				}
+				
+			]
+		);
 	}
 
 	editablelize = async (data) => {
@@ -385,7 +486,7 @@ class FormContentGridDataTablePage extends Component {
 				}
 			}
 			let columnactionValue = await FormUnit.getColumnactionValue(this.state.user, data.listComponent[i], this.state.data.listComponent);   // 取得該欄位欲隱藏的欄位
-			unShowColumns = unShowColumns.concat(columnactionValue);
+			unShowColumns = unShowColumns.concat(columnactionValue.columnList);
 			data.listComponent[i].actionValue = await FormUnit.getActionValue(this.state.user, data.listComponent[i], this.state.data.listComponent);	// 取得該欄位的動作
 		}
 		return data;

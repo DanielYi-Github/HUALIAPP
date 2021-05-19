@@ -81,6 +81,7 @@ export default class FormContent extends Component {
 					lang     ={this.props.lang}
               		user   	 ={this.props.user}
               		formActions = {this.props.formActions ? this.props.formActions : null}
+              		formContent = {this.props.formContent}
 				/>
 			);
 		}

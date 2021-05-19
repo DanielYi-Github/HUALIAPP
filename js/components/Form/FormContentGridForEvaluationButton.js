@@ -7,6 +7,20 @@ class FormContentGridForEvaluationButton extends Component {
 	}
 
 	render() {
+		let icon, iconId = this.props.iconId;
+		switch(iconId) {
+		  case "LoadLastScore": 
+		  	// 載入前期分數
+		  	icon = "cloud-download-outline";
+		    break;
+		  case "Sort": 
+		  	//排序
+		  	icon = "swap-vertical-outline";
+		    break;
+		  default:
+		  	icon = "alert-outline";
+		}
+
 		return (
 	    	<Button 
 	    		iconLeft 
@@ -21,7 +35,7 @@ class FormContentGridForEvaluationButton extends Component {
 	    		}}
 	    	>
 				<Icon 
-					name='cloud-download-outline'
+					name={icon}
 					style={{
 						marginLeft: null,
 						paddingLeft: null,

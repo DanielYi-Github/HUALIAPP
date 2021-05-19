@@ -31,7 +31,11 @@ export default (variables /*: * */ = variable) => {
 	fixFormContentGridModalListWrapperCloseButton:{
 		paddingTop: variables.isIphoneX ? 20 : null
 	},
-	labelColor:variables.LabelColor
+	labelColor:variables.LabelColor,
+	HeaderBackground:{
+	  height:Platform.OS === "android" ? variables.toolbarHeight:null,
+	},
+    color : variables.HeaderForGeneral.color
   };
 
   return formContent;

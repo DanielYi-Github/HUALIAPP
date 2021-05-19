@@ -128,28 +128,17 @@ export default class FormInputContent extends Component {
 				}
 				break;
 			case "tabForEvaluation":
-				if ( this.props.data.isedit == "N") {
-					inputComponent = (
-						<FormInputContentGrid 
-							data     ={this.props.data} 
-							editable ={this.props.editable} 
-							onPress  ={this.props.onPress}
-							lang 	 ={this.props.lang}
-              				user 	 ={this.props.user}
-			  			/>
-			  		);
-				} else {
-					inputComponent = (
-						<FormContentGridForEvaluation
-							data     ={this.props.data} 
-							editable ={this.props.editable} 
-							onPress  ={this.props.onPress}
-							lang 	 ={this.props.lang}
-              				user 	 ={this.props.user}
-              				formActions = {this.props.formActions ? this.props.formActions : null}
-			  			/>
-			  		);
-				}
+				inputComponent = (
+					<FormContentGridForEvaluation
+						data        = {this.props.data} 
+						editable    = {this.props.editable} 
+						onPress     = {this.props.onPress}
+						lang        = {this.props.lang}
+						user        = {this.props.user}
+						formActions = {this.props.formActions ? this.props.formActions : null}
+						formContent = {this.props.formContent ? this.props.formContent : null}
+		  			/>
+		  		);
 				break;
 			case "tabForDeputy":	
 				inputComponent = (

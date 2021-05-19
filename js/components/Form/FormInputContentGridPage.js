@@ -104,7 +104,6 @@ class FormInputContentGridPage extends Component {
 		}
 
 		if (ruleCheck != true) {
-
 			Alert.alert(
 				this.state.lang.CreateFormPage.WrongData,
 				ruleCheck.message, [{
@@ -129,7 +128,7 @@ class FormInputContentGridPage extends Component {
 
 			// 判斷該值是否填寫表單中顯示
 			AllItem.listComponent = FormUnit.checkFormFieldShow(
-				columnactionValue,
+				columnactionValue.columnList,
 				AllItem.listComponent
 			);
 			this.setState({
@@ -143,7 +142,6 @@ class FormInputContentGridPage extends Component {
 		// 判斷是否有必填空值存在
 		let checkRequired = true;
 		let tempData = this.state.data;
-
 		for (let data of tempData.listComponent) {
 			if (data.required == "Y") {
 				if (
@@ -175,7 +173,7 @@ class FormInputContentGridPage extends Component {
 				}
 			)
 		} else {
-			this.state.confirmOnPress(tempData, this.state.editCheckItemIndex);
+			this.state.confirmOnPress( this.deepClone(tempData), this.state.editCheckItemIndex);
 			this.pageClose();
 		}
 	}

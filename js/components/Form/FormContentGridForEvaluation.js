@@ -7,6 +7,7 @@ import FormContentGridForEvaluationButton from './FormContentGridForEvaluationBu
 import * as NavigationService             from '../../utils/NavigationService';
 import FormUnit                           from '../../utils/FormUnit';
 
+// HMA2101001802
 class FormContentGridForEvaluation extends Component {
 	constructor(props) {
 		super(props);
@@ -43,6 +44,7 @@ class FormContentGridForEvaluation extends Component {
 			  case "btn":
 			    tabButtons.push(
 			    	<FormContentGridForEvaluationButton
+			    		iconId = {this.state.data.listButton[i].component.id}
 			    		label={this.state.data.listButton[i].component.name}
 			    		onPress = {()=>{
 			    			this.activeColumnaction(this.state.data.listButton[i], i);
@@ -62,12 +64,10 @@ class FormContentGridForEvaluation extends Component {
 	}
 
 	activeColumnaction = async (button, index) => {
-		// 獲取載入前期分數
 		this.props.formActions.reloadFormContentIntoState_fromGetColumnactionValue(
 			this.props.user, 
-			this.state.data.listComponent,
 			button,
-			this.props.data.listComponent
+			this.props.formContent
 		);
 	}
 
@@ -76,14 +76,13 @@ class FormContentGridForEvaluation extends Component {
 		nextState.data.defaultvalue = (nextState.data.defaultvalue == null) ? [] : nextState.data.defaultvalue;
 		
 		if (nextProps.data.defaultvalue.length !== nextState.data.defaultvalue.length) {
-
 			let editCheckItemRecord = [];
 			for(let i = 0; i<nextProps.data.defaultvalue.length; i++){
 				editCheckItemRecord.push(false);
 			}
 
 			this.setState({
-				data:this.deepClone(nextProps.data),
+				data               :this.deepClone(nextProps.data),
 				editCheckItemRecord:editCheckItemRecord
 			});
 		}
@@ -215,24 +214,21 @@ class FormContentGridForEvaluation extends Component {
 					    	style={{textAlign: 'right'}}
 					    />
 					  </Item>
-			} else {
-				renderItem =
+			} else {		       
+		       	renderItem = (
 					<View style={{width: '100%'}}>
-		            	<Item fixedLabel style={{borderBottomWidth: 0, paddingTop: 15, paddingBottom: 15}}>
-			 			  	<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
-			                <Label>{this.state.labelname}</Label>
-			            </Item>
-	            		<View style={{borderRadius: 10, borderWidth:0.6, borderColor:"#D9D5DC", width: '98%'}}>
+	            		<View style={{borderRadius: 10, borderWidth:0.6, borderColor:"#D9D5DC", width: '100%', }}>
 	            			<FlatList
-								scrollEnabled          = {false}
 								keyExtractor           = {(item, index) => index.toString()}
 								extraData              = {this.state}
-								data                   = {this.props.data.defaultvalue}
+								data                   = {this.props.data.defaultvalue.slice(0,3)}
 								renderItem             = {this.rendercheckItem}
 								ItemSeparatorComponent = {this.renderSeparator}
+								ListFooterComponent    = {this.props.data.defaultvalue.length > 3 ? this.renderFooter : null}    //尾巴
 	            			/>
 	            		</View>
-		            </View>
+					</View>
+		       	)	
 			}
 		}
 
@@ -350,11 +346,11 @@ class FormContentGridForEvaluation extends Component {
 				editCheckItemRecord: array
 			});
 		}
-		// 將listComponent變成最原本的樣子
-		value.listComponent = this.deepClone(this.props.data.listComponent);
 		// 送值
 		await this.props.onPress(this.deepClone(value), this.props.data);
-		this.modalWrapperClose();
+		// 將listComponent變成最原本的樣子
+		// value.listComponent = this.deepClone(this.props.data.listComponent);
+		this.modalWrapperClose(value);
 	}
 	
 	// 顯示底部可編輯畫面
@@ -367,11 +363,13 @@ class FormContentGridForEvaluation extends Component {
 					style={{flexDirection: 'row', alignItems: 'flex-start'}}
 					onPress = {()=>{
 						NavigationService.navigate("FormContentGridDataTable", { 
-							propsData         : this.props.data,
-							data              : this.state.data,
-							lang              : this.props.lang, 
-							user              : this.props.user,
-							confirmAllOnPress : this.confirmFormAllData,
+							propsData        : this.props.data,
+							data             : this.props.data,
+							lang             : this.props.lang, 
+							user             : this.props.user,
+							confirmAllOnPress: this.confirmAllOnPress,
+							formContent      : this.props.formContent,
+							editable 		 : this.state.editable
 						});
 					}}
 				>
@@ -381,7 +379,7 @@ class FormContentGridForEvaluation extends Component {
 		);
 	}
 
-	confirmFormAllData = async (formValues) => {
+	confirmAllOnPress = async (formValues) => {
 		// 將listComponent變成最原本的樣子
 		formValues.listComponent = this.deepClone(this.props.data.listComponent);
 		// 自己的state做改變
@@ -392,9 +390,9 @@ class FormContentGridForEvaluation extends Component {
 		this.props.onPress(this.deepClone(formValues), this.props.data);
 	}
 
-	modalWrapperClose = () => {
+	modalWrapperClose = (value) => {
 		// this.state.data 變回原本的state
-		let value = this.state.data;
+		// let value = this.state.data;
 		value.listComponent = this.deepClone(this.props.data.listComponent);
 		this.setState({
 			data: value,
@@ -456,7 +454,7 @@ class FormContentGridForEvaluation extends Component {
 				data.listComponent
 			);   // 取得該欄位欲隱藏的欄位
 
-			unShowColumns = unShowColumns.concat(columnactionValue);
+			unShowColumns = unShowColumns.concat(columnactionValue.columnList);
 
 			data.listComponent[i].actionValue = await FormUnit.getActionValue(
 				this.props.user, 

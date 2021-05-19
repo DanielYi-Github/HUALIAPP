@@ -81,7 +81,7 @@ export function getFormFormat(formID){
 					let columnactionValue = await FormUnit.getColumnactionValue(user, columnData);   // 取得該欄位欲隱藏的欄位
 					columnData.actionValue = await FormUnit.getActionValue(user, columnData);	// 取得該欄位的動作
 
-					unShowColumns = unShowColumns.concat(columnactionValue);
+					unShowColumns = unShowColumns.concat(columnactionValue.columnList);
 					apList[apListIndex].content.push(columnData);
 					comfirmComponent.push(columnData);
 				}
@@ -176,14 +176,14 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 			// 判斷該值是否填寫表單中顯示
 			// console.log(columnactionValue, formFormat[pageIndex].content);
 			formFormat[pageIndex].content = FormUnit.checkFormFieldShow(
-												columnactionValue, 
+												columnactionValue.columnList, 
 												formFormat[pageIndex].content
 											);
 			// console.log('formFormat[pageIndex].content', formFormat[pageIndex].content);
 
 			// 判斷該值是否全部表單中顯示
 			formFormat[formFormat.length-1].content = FormUnit.checkFormFieldShow(
-														columnactionValue, 
+														columnactionValue.columnList, 
 														formFormat[formFormat.length-1].content
 													  );	
 
