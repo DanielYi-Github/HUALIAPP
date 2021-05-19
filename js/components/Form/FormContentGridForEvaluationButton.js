@@ -9,11 +9,11 @@ class FormContentGridForEvaluationButton extends Component {
 	render() {
 		let icon, iconId = this.props.iconId;
 		switch(iconId) {
-		  case "LoadLastScore": 
+		  case "loadLastScore": 
 		  	// 載入前期分數
 		  	icon = "cloud-download-outline";
 		    break;
-		  case "Sort": 
+		  case "sort": 
 		  	//排序
 		  	icon = "swap-vertical-outline";
 		    break;
