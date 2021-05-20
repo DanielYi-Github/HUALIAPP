@@ -255,17 +255,6 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					apList[apListIndex].content.push(tmpList[i]);	
 				}
 			}
-
-			/**** 針對listButton要取值的資料進行整理 ***/
-			/*
-			let columns = [];
-			for(let index in apList){
-				columns.push(...apList[index].content);
-			}
-			await FormUnit.formatListButtonOfForm(columns);
-			*/
-			/**** listButton要取值的資料 ***/
-			
 			
 			// 判斷附件有沒有值
 			tmpList = value[0] ? value[0].tmpBotomList : []; 

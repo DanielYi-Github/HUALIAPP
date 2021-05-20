@@ -91,15 +91,22 @@ class AdvicesPage extends React.Component {
 
   confirm = () => {
     //值不能為空
-    if (!this.state.context) {
+    if (!this.state.context || this.isNull(this.state.context) ) {
       ToastUnit.show('error', this.props.Language.AlertAdvicesMessage);
     } 
-    else if(!this.state.contact) {
+    else if(!this.state.contact || this.isNull(this.state.contact) ) {
       ToastUnit.show('error', this.props.Language.AlertContactInfoMsg);
     }
     else{
       this.props.actions.submitAdvices(this.props.UserInfo.UserInfo, this.state.context, this.state.contact);
     }
+  }
+
+  isNull( str ){
+    if ( str == "" ) return true;
+    var regu = "^[ ]+$";
+    var re = new RegExp(regu);
+    return re.test(str);
   }
 }
 
