@@ -758,7 +758,20 @@ export default {
 		IsolationPolicyTitle:"Câu hỏi chính sách"
 	},
 	FormContentGridForEvaluation:{
-		loadPreviousScore_Success:"Success",
-		loadPreviousScore_Failure:"Failure",
+		loadPreviousScore_Success: "Sự thành công",
+		loadPreviousScore_Failure: "Sự thất bại",
+		tableAction              : "Hoạt động",
+		requiredFieldAlert       : "Có sân trống!",
+		alertMsg1                : "Chỉ số",
+		alertMsg2                : ",",
+		alertMsg3                : "trường không được để trống! Vui lòng vào chỉnh sửa và điền vào trường.",
+		goToEdit                 : "Biên tập",
+		dataCheckError           : "Xác minh không thành công",
+		gotIt                    : "Hiểu rồi",
+		continueToGoBack         : "Bạn có chắc chắn quay lại trang không?",
+		done                     : "Xong",
+		continueToGoBackMsg      : "Nó sẽ không lưu dữ liệu đã chỉnh sửa nếu quay lại trang. Nếu bạn muốn lưu dữ liệu, vui lòng nhấp vào nút \"Xong\" ở phía trên bên phải.",
+		cancel                   : "Huỷ bỏ",
+		goBack                   : "Quay lại"
 	}
 }

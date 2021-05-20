@@ -761,7 +761,20 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		IsolationPolicyTitle:"隔离政策查询"
 	},
 	FormContentGridForEvaluation:{
-		loadPreviousScore_Success:"载入前期分数 成功",
-		loadPreviousScore_Failure:"载入前期分数 失败",
+		loadPreviousScore_Success: "成功",
+		loadPreviousScore_Failure: "失败",
+		tableAction              : "动作",
+		requiredFieldAlert       : "有必填数据未填",
+		alertMsg1                : "第",
+		alertMsg2                : "笔的",
+		alertMsg3                : "字段为必填数据，请填写完成后再返回当前画面！",
+		goToEdit                 : "去填写",
+		dataCheckError           : "您有数据验证异常",
+		gotIt                    : "了解",
+		continueToGoBack         : "请确认是否执行返回?",
+		done                     : "完成",
+		continueToGoBackMsg      : "确认返回将不储存已编辑数据；如欲储存已编辑数据，请点击画面右上角\“完成\”按钮",
+		cancel                   : "取消",
+		goBack                   : "确认返回"
 	}
 }

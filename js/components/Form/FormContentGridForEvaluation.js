@@ -7,7 +7,6 @@ import FormContentGridForEvaluationButton from './FormContentGridForEvaluationBu
 import * as NavigationService             from '../../utils/NavigationService';
 import FormUnit                           from '../../utils/FormUnit';
 
-// HMA2101001802
 class FormContentGridForEvaluation extends Component {
 	constructor(props) {
 		super(props);
@@ -187,9 +186,6 @@ class FormContentGridForEvaluation extends Component {
 		            			/>
 		            		</View>
 		            }
-
-		            {/*顯示編輯畫面*/}
-		            {/*this.state.showEditModal ? this.showEditModal() : null*/}
 	            </View>
 			);
 		} else {
@@ -348,8 +344,6 @@ class FormContentGridForEvaluation extends Component {
 		}
 		// 送值
 		await this.props.onPress(this.deepClone(value), this.props.data);
-		// 將listComponent變成最原本的樣子
-		// value.listComponent = this.deepClone(this.props.data.listComponent);
 		this.modalWrapperClose(value);
 	}
 	
@@ -392,7 +386,6 @@ class FormContentGridForEvaluation extends Component {
 
 	modalWrapperClose = (value) => {
 		// this.state.data 變回原本的state
-		// let value = this.state.data;
 		value.listComponent = this.deepClone(this.props.data.listComponent);
 		this.setState({
 			data: value,
@@ -417,7 +410,6 @@ class FormContentGridForEvaluation extends Component {
 		}
 		this.props.onPress(value, this.props.data);
 
-		// this.state.editCheckItemRecord 恢復剔除後的紀錄
 		this.setState({
 			data: data,
 			editCheckItemRecord: checkArray

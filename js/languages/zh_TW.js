@@ -762,7 +762,20 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		IsolationPolicyTitle:"隔離政策查詢"
 	},
 	FormContentGridForEvaluation:{
-		loadPreviousScore_Success:"載入前期分數 成功",
-		loadPreviousScore_Failure:"載入前期分數 失敗",
+		loadPreviousScore_Success: "成功",
+		loadPreviousScore_Failure: "失敗",
+		tableAction              : "動作",
+		requiredFieldAlert       : "有必填資料未填",
+		alertMsg1                : "第",
+		alertMsg2                : "筆的",
+		alertMsg3                : "欄位為必填資料，請填寫完成後再返回當前畫面！",
+		goToEdit                 : "去填寫",
+		dataCheckError           : "您有資料驗證異常",
+		gotIt                    : "了解",
+		continueToGoBack         : "請確認是否執行返回?",
+		done                     : "完成",
+		continueToGoBackMsg      : "確認返回將不儲存已編輯資料；如欲儲存已編輯資料，請點擊畫面右上角\“完成\”按鈕",
+		cancel                   : "取消",
+		goBack                   : "確認返回"
 	}
 }

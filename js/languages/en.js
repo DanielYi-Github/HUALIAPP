@@ -758,7 +758,20 @@ export default {
 		IsolationPolicyTitle:"Isolation policy query"
 	},
 	FormContentGridForEvaluation:{
-		loadPreviousScore_Success:"Success",
-		loadPreviousScore_Failure:"Failure",
+		loadPreviousScore_Success: "Success",
+		loadPreviousScore_Failure: "Failure",
+		tableAction              : "Action",
+		requiredFieldAlert       : "There is the field empty!",
+		alertMsg1                : "The index",
+		alertMsg2                : ",",
+		alertMsg3                : "field must not be empty! Please, go to edit and fill in the field.",
+		goToEdit                 : "Go to edit",
+		dataCheckError           : "Verify failed",
+		gotIt                    : "Got it",
+		continueToGoBack         : "Are you sure go back the page?",
+		done                     : "Done",
+		continueToGoBackMsg      : "It will not save the edited data if go back the page. If you want to save the data, please click the \"Done\" button in the upper right.",
+		cancel                   : "Cancel",
+		goBack                   : "Go back"
 	}
 }

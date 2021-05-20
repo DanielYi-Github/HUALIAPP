@@ -37,7 +37,7 @@ class FormContentGridDataTablePage extends Component {
 	}
 
 	render() {
-		let tableHead = this.state.editable ? [ "", "動作" ] : [""] ;
+		let tableHead = this.state.editable ? [ "", this.state.lang.FormContentGridForEvaluation.tableAction ] : [""] ;
 
 		for(let i in this.state.data.listComponent){
 			if(this.state.data.listComponent[i].columntype != "hidetxt"){
@@ -99,7 +99,7 @@ class FormContentGridDataTablePage extends Component {
 				  				this.goBackWithRequiredCheck();
 				  			  }}
 				  			>
-				  			  <Text style={{color: '#FFF'}}>{this.state.lang.CreateFormPage.Done}</Text>
+				  			  <Text style={{color: '#FFF'}}>{this.state.lang.FormContentGridForEvaluation.done}</Text>
 				  			</TouchableOpacity>
 				  		:
 				  			null
@@ -341,7 +341,6 @@ class FormContentGridDataTablePage extends Component {
 				item,
 				data.defaultvalue[rowIndex]
 			);
-			console.log("columnactionValue", columnactionValue);
 
 			// 判斷該值是否填寫表單中顯示
 			data.defaultvalue[rowIndex] = FormUnit.checkFormFieldShow(
@@ -369,14 +368,15 @@ class FormContentGridDataTablePage extends Component {
 					column.defaultvalue == "" || 
 					column.defaultvalue == null 
 				) {
+					let lang = this.state.lang.FormContentGridForEvaluation;
 					isGoBack = false;
 					Alert.alert(
-						"有必填資料未填",
-						`"第${i+1}筆"的"${column.component.name}"欄位為必填資料，請填寫完成後再返回當前畫面！`,
+						lang.requiredFieldAlert, // 有必填欄位未填
+						`${lang.alertMsg1}${i+1}${lang.alertMsg2}"${column.component.name}"${lang.alertMsg3}`,
 						[
 							{
-							  	text: "去填寫",
-							  	style: "cancel",
+								text : lang.goToEdit,
+								style: "cancel",
 							  	onPress: () => {
 							  		this.setState({
 							  			isTextEditing: true,
@@ -387,14 +387,6 @@ class FormContentGridDataTablePage extends Component {
 							  		});
 							  	}
 							}
-							/*
-							,
-							{ 
-								text: "堅決返回", 
-								style: "destructive",
-								onPress: () => this.isGoback()
-							}
-							*/
 						]
 					);
 					break;
@@ -419,7 +411,6 @@ class FormContentGridDataTablePage extends Component {
 			this.state.confirmAllOnPress(this.state.data);
 			NavigationService.goBack();
 		} else {
-			console.log("isGoback", columnactionValue);
 			let alertMsg = "";
 			let msgCount = columnactionValue.msgList.length;
 			for(let [i, msg] of columnactionValue.msgList.entries() ){
@@ -433,11 +424,11 @@ class FormContentGridDataTablePage extends Component {
 
 			
 			Alert.alert(
-				"您有資料驗證異常",
+				this.state.lang.FormContentGridForEvaluation.dataCheckError, //您有資料驗證異常
 				alertMsg,
 				[
 					{
-					  	text: "了解",
+					  	text: this.state.lang.FormContentGridForEvaluation.gotIt, //了解
 					  	onPress: () => {
 					  		
 					  	}
@@ -450,11 +441,11 @@ class FormContentGridDataTablePage extends Component {
 
 	goBackAlert = () => {
 		Alert.alert(
-			"請確認是否執行返回?",
-			`“確認返回將不儲存已編輯資料；如欲儲存已編輯資料，請點擊畫面右上角“完成”按鈕`,
+			this.state.lang.FormContentGridForEvaluation.continueToGoBack, //請確認是否執行返回?
+			this.state.lang.FormContentGridForEvaluation.continueToGoBackMsg, //確認返回將不儲存已編輯資料；如欲儲存已編輯資料，請點擊畫面右上角“完成”按鈕
 			[
 				{
-				  	text: "取消",
+				  	text: this.state.lang.FormContentGridForEvaluation.cancel, //取消
 				  	style: "cancel",
 				  	onPress: () => { 
 				  		
@@ -462,7 +453,7 @@ class FormContentGridDataTablePage extends Component {
 				}
 				,
 				{ 
-					text: "確認返回", 
+					text: this.state.lang.goBack, //確認返回
 					style: "destructive",
 					onPress: () => NavigationService.goBack()
 				}
