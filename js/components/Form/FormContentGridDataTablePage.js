@@ -7,6 +7,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import * as NavigationService from '../../utils/NavigationService';
 import HeaderForGeneral from '../HeaderForGeneral';
 import FormUnit from '../../utils/FormUnit';
+import ToastUnit              from '../../utils/ToastUnit';
 
 // 資料欄位輸入錯誤，跳回上一個數值問題
 class FormContentGridDataTablePage extends Component {
@@ -118,7 +119,7 @@ class FormContentGridDataTablePage extends Component {
 									marginTop   : 10, 
 									marginBottom: 10, 
 									textAlign   : 'center',
-									color       : this.props.style.InputFieldBackground
+									color       : this.props.style.colorForTransparent,
 								}}
 						  />
 						</Table>
@@ -137,7 +138,9 @@ class FormContentGridDataTablePage extends Component {
 													fontWeight  : '100',
 													marginTop   : 10, 
 													marginBottom: 10, 
-													color       : '#000'
+													// color       : '#000'
+													// color       : '#575757'
+
 												}}
 											/>
 										)
@@ -169,6 +172,7 @@ class FormContentGridDataTablePage extends Component {
         		});
 				
 				NavigationService.navigate("FormInputContentGridPage", {
+					formContent 	  : this.props.route.params.formContent,
 					propsData         : this.props.route.params.data,
 					data              : data,
 					lang              : this.state.lang, 
@@ -339,19 +343,34 @@ class FormContentGridDataTablePage extends Component {
 			let columnactionValue = await FormUnit.getColumnactionValue(
 				this.state.user,
 				item,
-				data.defaultvalue[rowIndex]
+				data.defaultvalue[rowIndex],
+				this.props.route.params.formContent
 			);
 
-			// 判斷該值是否填寫表單中顯示
-			data.defaultvalue[rowIndex] = FormUnit.checkFormFieldShow(
-				columnactionValue.columnList,
-				data.defaultvalue[rowIndex]
-			);
+			// 加上columnactionValue.msgList信息邏輯判斷
+			let isShowMessageOrUpdateDate = FormUnit.isShowMessageOrUpdateDate(columnactionValue, this.state.lang);
+						
+			if (isShowMessageOrUpdateDate.showMessage) {
+				ToastUnit.show(isShowMessageOrUpdateDate.showMessage.type, isShowMessageOrUpdateDate.showMessage.message);
+			}
+			
+			if (isShowMessageOrUpdateDate.updateData) {
+				// 判斷該值是否填寫表單中顯示
+				data.defaultvalue[rowIndex] = FormUnit.checkFormFieldShow(
+					columnactionValue.columnList,
+					data.defaultvalue[rowIndex]
+				);
 
-			this.setState({
-				data:this.deepClone(data),
-				preData:this.deepClone(data)
-			});
+				this.setState({
+					data   :this.deepClone(data),
+					preData:this.deepClone(data)
+				});
+			}else{
+				// 修改回原來的值
+				this.setState({
+					data:this.deepClone(this.state.preData)
+				});
+			}
 		}
 	}
 
@@ -441,24 +460,20 @@ class FormContentGridDataTablePage extends Component {
 
 	goBackAlert = () => {
 		Alert.alert(
-			this.state.lang.FormContentGridForEvaluation.continueToGoBack, //請確認是否執行返回?
-			this.state.lang.FormContentGridForEvaluation.continueToGoBackMsg, //確認返回將不儲存已編輯資料；如欲儲存已編輯資料，請點擊畫面右上角“完成”按鈕
-			[
-				{
-				  	text: this.state.lang.FormContentGridForEvaluation.cancel, //取消
-				  	style: "cancel",
-				  	onPress: () => { 
-				  		
-				  	}
-				}
-				,
-				{ 
-					text: this.state.lang.goBack, //確認返回
-					style: "destructive",
-					onPress: () => NavigationService.goBack()
-				}
-				
-			]
+		  this.state.lang.FormContentGridForEvaluation.continueToGoBack, //請確認是否執行返回?
+		  this.state.lang.FormContentGridForEvaluation.continueToGoBackMsg, //確認返回將不儲存已編輯資料；如欲儲存已編輯資料，請點擊畫面右上角“完成”按鈕
+		  [
+		    {
+		      text: this.state.lang.FormContentGridForEvaluation.cancel, //取消
+		      onPress: () => console.log("Cancel Pressed"),
+		      style: "cancel"
+		    },
+		    { 
+		    	text: this.state.lang.FormContentGridForEvaluation.goBack, //確認返回, 
+		    	onPress: () => NavigationService.goBack(),
+				style: "destructive",
+		    }
+		  ]
 		);
 	}
 

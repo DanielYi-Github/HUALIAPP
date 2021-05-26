@@ -586,8 +586,7 @@ export function	reloadFormContentIntoState_fromGetColumnactionValue(
 			button, 
 			formContent
 		);
-
-		console.log(columnactionValueList);
+		console.log("columnactionValueList", columnactionValueList);
 
 		let formFormat = getState().Form.FormContent;
 		let loadMessgaeObject = {
@@ -595,6 +594,7 @@ export function	reloadFormContentIntoState_fromGetColumnactionValue(
 			message:getState().Language.lang.FormContentGridForEvaluation.loadPreviousScore_Success
 		};
 
+		/*
 		// API請求是否成功
 		if (columnactionValueList.requstError) {
 			// API請求失敗
@@ -630,6 +630,21 @@ export function	reloadFormContentIntoState_fromGetColumnactionValue(
 				}
 			}
 		}
+		*/
+
+		let isShowMessageOrUpdateDate = FormUnit.isShowMessageOrUpdateDate(columnactionValueList, getState().Language.lang);
+		// 是否顯示提示訊息
+		if (isShowMessageOrUpdateDate.showMessage) {
+			loadMessgaeObject = {
+				type   :isShowMessageOrUpdateDate.showMessage.type,
+				message:isShowMessageOrUpdateDate.showMessage.message
+			}
+		}
+		// 是否確認更換資料
+		if (isShowMessageOrUpdateDate.updateData) {
+			formFormat = getFormFormat(columnactionValueList, formFormat);
+		}
+
 		// 回傳結果
 		dispatch(updateDefaultValue(formFormat));
 

@@ -314,6 +314,7 @@ class FormContentGridForEvaluation extends Component {
 		});
 		
 		NavigationService.navigate("FormInputContentGridPage", {
+			formContent 	  : this.props.formContent,
 			propsData         : this.props.data,
 			data              : data,
 			lang              : this.props.lang, 
@@ -426,6 +427,7 @@ class FormContentGridForEvaluation extends Component {
 	}
 
 	editablelize = async (data) => {
+
 		let unShowColumns	 = []; 	//暫時紀錄不顯示的欄位
 		for(let i in data.listComponent){
 			data.listComponent[i].show = true; 	   		   		// 該欄位要不要顯示
@@ -443,7 +445,8 @@ class FormContentGridForEvaluation extends Component {
 			let columnactionValue = await FormUnit.getColumnactionValue(
 				this.props.user, 
 				data.listComponent[i], 
-				data.listComponent
+				data.listComponent,
+				this.props.formContent
 			);   // 取得該欄位欲隱藏的欄位
 
 			unShowColumns = unShowColumns.concat(columnactionValue.columnList);
@@ -455,6 +458,7 @@ class FormContentGridForEvaluation extends Component {
 			);	// 取得該欄位的動作
 			
 		}
+		
 		return data;
 	}
 }

@@ -8,12 +8,15 @@ import FormInputContentGridLabel from './FormInputContentGridLabel';
 import * as NavigationService    from '../../utils/NavigationService';
 import FormUnit                  from '../../utils/FormUnit';
 import HeaderForGeneral          from '../HeaderForGeneral';
+import ToastUnit              from '../../utils/ToastUnit';
+
 
 class FormInputContentGridPage extends Component {
 	constructor(props) {
 		super(props);
 		// 名稱、值、參數、能否編輯、強制編輯、欄位資料	
 		this.state = {
+			formContent       : this.props.route.params.formContent,
 			propsData         : this.props.route.params.propsData,
 			data              : this.props.route.params.data,
 			lang              : this.props.route.params.lang,
@@ -87,8 +90,9 @@ class FormInputContentGridPage extends Component {
 	}
 
 	updateFormData = async (value, item) => {
-		let AllItem = this.state.data;
-		let editIndex = AllItem.listComponent.indexOf(item);
+		let preAllItem = this.deepClone(this.state.data);
+		let AllItem    = this.state.data;
+		let editIndex  = AllItem.listComponent.indexOf(item);
 
 		// 欄位自己的規則比較
 		let ruleCheck = await FormUnit.formFieldRuleCheck(
@@ -123,17 +127,29 @@ class FormInputContentGridPage extends Component {
 			let columnactionValue = await FormUnit.getColumnactionValue(
 				this.state.user,
 				item,
-				AllItem.listComponent
+				AllItem.listComponent,
+				this.state.formContent
 			);
-
-			// 判斷該值是否填寫表單中顯示
-			AllItem.listComponent = FormUnit.checkFormFieldShow(
-				columnactionValue.columnList,
-				AllItem.listComponent
-			);
-			this.setState({
-				data: AllItem
-			});
+			
+			let isShowMessageOrUpdateDate = FormUnit.isShowMessageOrUpdateDate(columnactionValue, this.state.lang);
+			// 是否顯示提示訊息
+			if (isShowMessageOrUpdateDate.showMessage) {
+				ToastUnit.show(isShowMessageOrUpdateDate.showMessage.type, isShowMessageOrUpdateDate.showMessage.message);
+			}
+			// 是否確認更換資料
+			if (isShowMessageOrUpdateDate.updateData) {
+				AllItem.listComponent = FormUnit.checkFormFieldShow(
+					columnactionValue.columnList,
+					AllItem.listComponent
+				);
+				this.setState({
+					data: AllItem
+				});
+			}else{
+				this.setState({
+					data:preAllItem
+				});
+			}
 		}
 	}
 

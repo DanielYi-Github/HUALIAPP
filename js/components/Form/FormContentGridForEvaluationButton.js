@@ -23,6 +23,7 @@ class FormContentGridForEvaluationButton extends Component {
 
 		return (
 	    	<Button 
+	    		Danger
 	    		iconLeft 
 	    		bordered
 	    		onPress = {this.props.onPress} 

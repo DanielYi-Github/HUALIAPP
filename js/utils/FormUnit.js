@@ -350,11 +350,15 @@ let FormUnit = {
   // 取得欄位columnaction資料
   // allItem目前只有表單簽合的部分會使用到，且與立案的部分不相同
   async getColumnactionValue(user, item, parentItem = [], allItem = []){
+    // console.log("getColumnactionValue", item, "txtStaffJCID");
     let returnValue = {
       columnList:[],
-      msgList   :[]
+      msgList   :[],
+      requstError:false
     };
     if (item.columnaction) {
+      // console.log("allItem", allItem);
+
       let columnactionObject = {};
       let isGetColumnactionValueFromObject = false; // 用來確認最後的取直方式
       for(let column of item.columnactionColumn){     
@@ -433,6 +437,7 @@ let FormUnit = {
               }
               break;
             default:
+              let isGetValue = false;
               isGetColumnactionValueFromObject = true;
               //是否取值欄位自己擁有，沒有的話去上層parentItem找
               if (column == item.component.id) {
@@ -440,12 +445,32 @@ let FormUnit = {
                   value :item.defaultvalue,
                   required: item.required == "Y" ? true : false
                 }; 
-              } else {
+                isGetValue = true;
+              } 
+
+              if(!isGetValue){
                 for(let pItem of parentItem){
                   if (column == pItem.component.id) {
                     columnactionObject[column] = {
                       value   : pItem.defaultvalue,
                       required: pItem.required == "Y" ? true : false
+                    }
+                    isGetValue = true;
+                    break;
+                  }
+                }
+              }
+
+              if(!isGetValue){
+                for(let ap of allItem){
+                  for(let content of ap.content){
+                    if (column == content.component.id) {
+                      columnactionObject[column] = {
+                        value   : content.defaultvalue,
+                        required: content.required == "Y" ? true : false
+                      }
+                      isGetValue = true;
+                      break;
                     }
                   }
                 }
@@ -466,6 +491,11 @@ let FormUnit = {
 
       await UpdateDataUtil.getCreateFormDetailFormat(user, item.columnaction, columnactionObject).then((data)=>{
         returnValue = data;
+      }).catch((e)=>{
+        console.log(e);
+        returnValue = {
+          requstError:true
+        };
       }); 
     }
     return returnValue;
@@ -639,7 +669,7 @@ let FormUnit = {
       case "tab":
       case "tabForEvaluation":
         let defaultvalues = [];
-        let defaultvaluesCount = item.listComponent[0].defaultvalue.length;
+        let defaultvaluesCount = item.listComponent[0].defaultvalue == null ? 0 : item.listComponent[0].defaultvalue.length;
         let tempDefaultvalues = this.deepClone(item.listComponent);
 
         for (let i = 0; i < defaultvaluesCount; i++) {
@@ -1018,6 +1048,48 @@ let FormUnit = {
       values = defaultvalue
     }
     return values;
+  },
+  // 確認是否顯示資料與顯示提示訊息
+  isShowMessageOrUpdateDate(columnactionValue, lang){
+    let result = {
+      showMessage:false,
+      updateData :false
+    }
+
+    if (columnactionValue.requstError) {
+      // API請求失敗
+      result = {
+            showMessage:{
+              type   :'error',
+              message:lang.FormContentGridForEvaluation.loadPreviousScore_Error
+            },
+            updateData :false
+          }
+    } else {
+      // API請求成功,如果msgList有資料，取決serverComfirmUpdateData決定是否進行資料更新
+      if (columnactionValue.msgList.length == 0) {
+       result = {
+             showMessage:false,
+             updateData :true
+           }
+      } else {
+        // msgList有資料，serverComfirmUpdateData決定是否資料更新
+        if (columnactionValue.serverComfirmUpdateData) {
+          result.showMessage = {
+            type   :'info',
+            message:columnactionValue.msgList[0]
+          }
+          result.updateData = true;
+        } else {
+          result.showMessage = {
+            type   :'error',
+            message:columnactionValue.msgList[0]
+          }
+        }
+      }
+    }
+
+    return result;
   },
   // deep clone
   deepClone(src) {

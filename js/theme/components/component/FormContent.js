@@ -35,7 +35,9 @@ export default (variables /*: * */ = variable) => {
 	HeaderBackground:{
 	  height:Platform.OS === "android" ? variables.toolbarHeight:null,
 	},
-    color : variables.HeaderForGeneral.color
+    color : variables.HeaderForGeneral.color,
+    colorForTransparent:variables.HeaderForTransparent.color
+    
   };
 
   return formContent;
