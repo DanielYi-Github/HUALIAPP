@@ -8,3 +8,5 @@ import App from './js/Root';
 import {name as appName} from './app.json';
 
 AppRegistry.registerComponent(appName, () => App);
+
+console.log(2345678);
