@@ -31,20 +31,20 @@ export function bios_check() {
 				errorMsg = lang.BiosErrMsgCode6;
 				errorCode = -6;
 				dispatch(bios_error_msg(true, errorMsg, systemVersion));
-
 			} else if (error.indexOf("Code=-7") != -1) {	//No identities are enrolled;
 				errorMsg = lang.BiosErrMsgCode7;
 				errorCode = -7;
 				dispatch(bios_error_msg(available, errorMsg, systemVersion));
-
+			} else if (error.indexOf("BIOMETRIC_ERROR_NONE_ENROLLED") != -1) { 	//無啟用生物識別
+				errorMsg = lang.BiosErrMsgOther;	
+				errorCode = 0;
+				dispatch(bios_error_msg(available, errorMsg, systemVersion));
 			} else {										//生物識別功能獲取異常
 				errorMsg = lang.BiosErrMsgOther;	
 				errorCode = 0;
 				dispatch(bios_error_msg(available, errorMsg, systemVersion));
-
+				LoggerUtil.addErrorLog(`bios_check 生物識別異常 errorCode:${errorCode}`, "BiosUserInfoAction", "WARN", error);
 			}
-			// dispatch(bios_error_msg(available, errorMsg, systemVersion));
-			LoggerUtil.addErrorLog(`bios_check 生物識別異常 errorCode:${errorCode}`, "BiosUserInfoAction", "WARN", error);
 	    }
 
 	}

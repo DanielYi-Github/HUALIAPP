@@ -69,6 +69,7 @@ import birthdayPageTheme from "./page/BirthdayPage";
 import reportPageTheme from "./page/ReportPage";
 import homeRootPageTheme from "./page/HomeRootPage";
 import loginPageTheme from "./page/LoginPage";
+import meetingPageTheme from "./page/MeetingPage";
 import docComponentTheme from "./component/DocComponent";
 import birthdayComponentTheme from "./component/BirthdayComponent";
 import recruitItemTheme from "./component/RecruitItem";
@@ -301,6 +302,9 @@ export default (variables /*: * */ = variable) => {
     },
     "Page.LoginPage":{
       ...loginPageTheme(variables)
+    },
+    "Page.MeetingPage":{
+      ...meetingPageTheme(variables)
     }
   };
 

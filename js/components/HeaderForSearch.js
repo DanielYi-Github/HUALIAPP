@@ -37,7 +37,7 @@ class HeaderForSearch extends Component {
 
 		if (this.props.isShowSearch) {
 			header = (
-				<Header style={this.props.style.HeaderBackground} searchBar rounded>
+				<Header style={[this.props.style.HeaderBackground, {borderBottomWidth: 0}]} searchBar rounded hasSegment>
 				  <Left style={{flex:0, flexDirection: 'row'}}>
 				  </Left>
 				  <Item style={{borderWidth: 1}}>
@@ -70,7 +70,7 @@ class HeaderForSearch extends Component {
 			);
 		} else {
 			header = (
-				<Header style={this.props.style.HeaderBackground} searchBar rounded>
+				<Header style={[this.props.style.HeaderBackground, {borderBottomWidth: 0}]} searchBar rounded hasSegment>
 					<Left>
 						{leftButton}
 					</Left>

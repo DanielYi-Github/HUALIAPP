@@ -277,7 +277,6 @@ export function appHotInit(initActions){
 
 			let now = new Date().getTime();
 			if (( now - lastUpdateTime ) >= 300000)  { 
-			// if (true)  {
 				let isVersionUpdate = await UpgradeAppVersionUtil.checkBigUpdate(getState().Language.lang); // 版本更新檢查
 				let isHotUpdate = false;
 				if (!isVersionUpdate) {

@@ -94,6 +94,9 @@ import KPICategoryPage         from './pages/Common/Report/KPI/KPICategoryPage';
 
 import CreateWebViewPage       from './pages/Common/CreateWebViewPage';
 
+import MeetingListPage from './pages/Common/Meeting/MeetingListPage';
+import MeetingInsertPage from './pages/Common/Meeting/MeetingInsertPage';
+
 function ShowSplashPage(props){
   const isFocused = useIsFocused();
   return <SplashPage {...props} isFocused={isFocused}/>
@@ -242,7 +245,7 @@ function HomeTabNavigator(props) {
     }, [state]);
   
   return (
-      <MyBottomTabNavigator.Navigator initialRouteName="Home" state={state} contentStyle={theme}>
+      <MyBottomTabNavigator.Navigator  state={state} contentStyle={theme}>
         <MyBottomTabNavigator.Screen name="Home"      component={HomePage} />
         <MyBottomTabNavigator.Screen name="Find"      component={FindPage} />
         <MyBottomTabNavigator.Screen name="Messages"  component={MessagesPage} />
@@ -254,7 +257,8 @@ function HomeTabNavigator(props) {
 const AppStack  = createStackNavigator();
 function MainStack(props){
   return(
-    <AppStack.Navigator headerMode="none" >
+    <AppStack.Navigator headerMode="none">
+
       <AppStack.Screen name ="Splash"               component={ShowSplashPage}/>
       <AppStack.Screen name ="IntroductionDrawer"   component={IntroductionDrawer}
         options={{ ...TransitionPresets.ScaleFromCenterAndroid }} 
@@ -319,6 +323,9 @@ function MainStack(props){
       <AppStack.Screen name ="KPICategory"  component={KPICategoryPage} />
 
       <AppStack.Screen name ="CreateWebView"  component={CreateWebViewPage} />
+
+      <AppStack.Screen name ="MeetingList" component={MeetingListPage} />
+      <AppStack.Screen name ="MeetingInsert" component={MeetingInsertPage} />
       
     </AppStack.Navigator>
   )

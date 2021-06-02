@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Platform, View, Dimensions } from 'react-native';
-import { Left, Body, Right, Icon, Text, Button, Title, Header, connectStyle } from 'native-base';
+import { Left, Body, Right, Icon, Text, Button, Title, Header, Item, Input, connectStyle } from 'native-base';
 
 class HeaderForGeneral extends Component {
 	constructor(props) {
@@ -50,7 +50,6 @@ class HeaderForGeneral extends Component {
 
 		
 		if (this.state.iosPlatform) {
-
 			if (this.state.isTransparent) {
 				header = (
 					<Header transparent noShadow style={this.props.style.HeaderBackgroundWithTransparent}>
@@ -67,6 +66,7 @@ class HeaderForGeneral extends Component {
 				)
 			} else {
 				header = (
+					<View>
 					<Header style={this.props.style.HeaderBackground} rounded>
 					  <Left >
 					  	{leftButton}
@@ -78,6 +78,7 @@ class HeaderForGeneral extends Component {
 					  	{rightButton}
 					  </Right>
 					</Header>
+					</View>
 				);
 			}
 		} else {
