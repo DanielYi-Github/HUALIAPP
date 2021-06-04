@@ -174,7 +174,7 @@ class FormPage extends React.Component {
   }
 
   render() {
-    // console.log("content", this.state.content);
+    console.log("content", this.state.content);
 
     let formPage = (
       <Container>

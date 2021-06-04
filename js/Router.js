@@ -94,8 +94,9 @@ import KPICategoryPage         from './pages/Common/Report/KPI/KPICategoryPage';
 
 import CreateWebViewPage       from './pages/Common/CreateWebViewPage';
 
-import MeetingListPage from './pages/Common/Meeting/MeetingListPage';
-import MeetingInsertPage from './pages/Common/Meeting/MeetingInsertPage';
+import MeetingListPage           from './pages/Common/Meeting/MeetingListPage';
+import MeetingInsertPage         from './pages/Common/Meeting/MeetingInsertPage';
+import MeetingInsertWithTagsPage from './pages/Common/Meeting/MeetingInsertWithTagsPage';
 
 function ShowSplashPage(props){
   const isFocused = useIsFocused();
@@ -326,6 +327,9 @@ function MainStack(props){
 
       <AppStack.Screen name ="MeetingList" component={MeetingListPage} />
       <AppStack.Screen name ="MeetingInsert" component={MeetingInsertPage} />
+      <AppStack.Screen name ="MeetingInsertWithTags" component={MeetingInsertWithTagsPage} />
+
+
       
     </AppStack.Navigator>
   )

@@ -766,6 +766,8 @@ export async function updateMasterData(user) {
 	let lSQL = "SELECT MAX(TXDAT) as TXDAT FROM THF_MASTERDATA"; //取最大的更新時間
 	let lData = await SQLite.selectData(lSQL, []);
 	let ltxdat = lData.item(0).TXDAT; //更新時間
+	console.log("ltxdat", ltxdat);
+	
 	let promise = new Promise((resolve, reject) => {
 
 		let url = "data/getMasterData";

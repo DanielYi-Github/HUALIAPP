@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Keyboard, SafeAreaView, SectionList, StyleSheet } from 'react-native';
+import { View, Keyboard, SafeAreaView, SectionList } from 'react-native';
 import { Container, Header, Body, Left, Right, Button, Item, Icon, Input, Title, Text, Label, Segment, connectStyle} from 'native-base';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -8,6 +8,7 @@ const KEYS_TO_FILTERS = ['EMPID', 'DEPNAME', 'NAME', 'MAIL', 'SKYPE', 'CELLPHONE
 
 import * as NavigationService from '../../../utils/NavigationService';
 import HeaderForSearch        from '../../../components/HeaderForSearch';
+import MeetingItem            from '../../../components/MeetingItem';
 
 const DATA = [
   {
@@ -87,7 +88,7 @@ class MeetingListPage extends React.PureComponent  {
           title                 = {"會議查詢"}
           titleOnPress          = {()=>{ this.setState({ isShowSearch:true }) }}
         />
-        <Segment style={{backgroundColor: rgba(0,0,0,0)}}>
+        <Segment style={{backgroundColor: "rgba(0,0,0,0)"}}>
           <Button 
             first 
             style={{width:"32%", justifyContent: 'center' }} 
@@ -118,7 +119,6 @@ class MeetingListPage extends React.PureComponent  {
             <Text>被邀請</Text>
           </Button>
         </Segment>
-        <SafeAreaView>
           <SectionList
             sections            ={DATA}
             keyExtractor        ={(item, index) => item + index}
@@ -134,7 +134,6 @@ class MeetingListPage extends React.PureComponent  {
               </Label >
             )}
           />
-        </SafeAreaView>
       </Container>
     );
 	}
@@ -142,30 +141,17 @@ class MeetingListPage extends React.PureComponent  {
   renderItem = (item) => {
     item = item.item;
     return (
-      <View style={styles.item}>
-        <Text style={styles.title}>{item}</Text>
-      </View>
+      <MeetingItem 
+        item={item}
+        onPress = {() => this.navigateDetaile(item)}
+      />
     );
   }
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  item: {
-    backgroundColor: "#f9c2ff",
-    padding: 20,
-    marginVertical: 8
-  },
-  header: {
-    fontSize: 32,
-    backgroundColor: "#fff"
-  },
-  title: {
-    fontSize: 24
+  navigateDetaile = (item) => {
+    console.log(item);
   }
-});
+}
 
 let MeetingListPageStyle = connectStyle( 'Page.MeetingPage', {} )(MeetingListPage);
 export default connect(

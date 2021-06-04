@@ -155,6 +155,7 @@ class SurveyPage extends React.Component {
   }
   
   render() {
+    console.log(this.props.state.Survey);
     return (
       <Container>
         <MainPageBackground height={200} />
