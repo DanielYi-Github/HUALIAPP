@@ -484,7 +484,8 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		SmallerOrEqual: "小於或等於",
 		Smaller       : "小於",
 		NotEqual      : "不等於",
-		requireFirst  : "必須先行填寫"
+		requireFirst  : "必須先行填寫",
+		NoEmpty:"不能填寫空白"
 	},
 	SurveyPage:{
 		Creating          :"問卷生成中...",

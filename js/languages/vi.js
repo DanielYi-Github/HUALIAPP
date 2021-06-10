@@ -480,7 +480,8 @@ export default {
 		SmallerOrEqual: "be less or equal",
 		Smaller: "be less than",
 		NotEqual: "be unequal to",
-		requireFirst  : "have to write down first." 
+		requireFirst  : "have to write down first.",
+		NoEmpty:"Không thể điền vào chỗ trống"
 	},
 	SurveyPage:{
 		Creating          : "Bảng câu hỏi đang được tạo ...",

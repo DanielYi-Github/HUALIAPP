@@ -480,7 +480,8 @@ export default {
 		SmallerOrEqual: "be less than or equal to ",
 		Smaller       : "be less than ",
 		NotEqual      : "be unequal to ",
-		requireFirst  : "have to write down first." 
+		requireFirst  : "have to write down first." ,
+		NoEmpty:"could't be empty."
 	},
 	SurveyPage:{
 		Creating          :"Creating...",

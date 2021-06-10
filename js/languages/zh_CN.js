@@ -483,7 +483,9 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		SmallerOrEqual: "小于或等于",
 		Smaller       : "小于",
 		NotEqual      : "不等于",
-		requireFirst  : "必须先行填写"
+		requireFirst  : "必须先行填写",
+		NoEmpty:"不能填写空白"
+		
 	},
 	SurveyPage:{
 		Creating          :"问卷生成中...",

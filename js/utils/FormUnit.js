@@ -6,6 +6,13 @@ let FormUnit = {
   language:{},
   // 欄位規則檢查
   formFieldRuleCheck(value, formItem, formContent, columntype){
+    let string = this.deepClone(value);
+    string = string.replace(/\r\n/g,"");
+    string = string.replace(/\n/g,"");
+    string = string.replace(/\s/g,"");
+    if (string.length ==0){
+     return { message:`"${formItem.component.name}" ${this.language.NoEmpty}`}; 
+    }
     if (formItem.rulesList == null) return true;                       // 馬上結束
     let compareResult = true;                                          // 比對結果
     

@@ -172,23 +172,6 @@ class MeetingInsertPage extends React.PureComponent  {
             <Icon name='arrow-forward' />
           </Item>
 
-          <Item 
-            style={{
-              backgroundColor: '#fff',
-              borderWidth: 0,
-              height: this.props.style.inputHeightBase,
-              paddingLeft: 10,
-              paddingRight: 5
-            }}
-            onPress = {()=>{
-              console.log("567890");
-            }}
-          >
-            <Icon name='people-outline' />
-            <Label style={{flex:1}}>邀請參與人</Label>
-            <Icon name='arrow-forward' />
-          </Item>
-
           <Item style={{
             backgroundColor: '#fff',
             borderWidth: 10,
