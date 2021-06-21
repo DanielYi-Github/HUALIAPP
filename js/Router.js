@@ -95,8 +95,12 @@ import KPICategoryPage         from './pages/Common/Report/KPI/KPICategoryPage';
 import CreateWebViewPage       from './pages/Common/CreateWebViewPage';
 
 import MeetingListPage           from './pages/Common/Meeting/MeetingListPage';
+import MeetingSearchPage           from './pages/Common/Meeting/MeetingSearchPage';
 import MeetingInsertPage         from './pages/Common/Meeting/MeetingInsertPage';
 import MeetingInsertWithTagsPage from './pages/Common/Meeting/MeetingInsertWithTagsPage';
+import MeetingSearchWithTagsPage from './pages/Common/Meeting/MeetingSearchWithTagsPage';
+import MeetingInsertChairpersonPage from './pages/Common/Meeting/MeetingInsertChairpersonPage';
+import MeetingTimeForPersonPage from './pages/Common/Meeting/MeetingTimeForPersonPage';
 
 function ShowSplashPage(props){
   const isFocused = useIsFocused();
@@ -326,11 +330,12 @@ function MainStack(props){
       <AppStack.Screen name ="CreateWebView"  component={CreateWebViewPage} />
 
       <AppStack.Screen name ="MeetingList" component={MeetingListPage} />
+      <AppStack.Screen name ="MeetingSearch" component={MeetingSearchPage} />
+      <AppStack.Screen name ="MeetingSearchWithTags" component={MeetingSearchWithTagsPage} />
       <AppStack.Screen name ="MeetingInsert" component={MeetingInsertPage} />
       <AppStack.Screen name ="MeetingInsertWithTags" component={MeetingInsertWithTagsPage} />
-
-
-      
+      <AppStack.Screen name ="MeetingInsertChairperson" component={MeetingInsertChairpersonPage} />
+      <AppStack.Screen name ="MeetingTimeForPerson" component={MeetingTimeForPersonPage} />
     </AppStack.Navigator>
   )
 }

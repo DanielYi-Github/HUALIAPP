@@ -42,7 +42,16 @@ export default {
 		androidChangeAPPMessage11:"and use the new one to operation.（There is a \"NEW\" word in the app icon.）。",
 		androidChangeAPPMessage12:"For example：",
 		androidChangeAPPMessage13:" Don't show again.",
-		WebViewUrlError:"Abnormal website address acquisition"
+		WebViewUrlError:"Abnormal website address acquisition",
+		week:{
+			Sunday   :"Sun",
+			Monday   :"Mon",
+			Tuesday  :"Tue",
+			Wednesday:"Wed",
+			Thursday :"Thu",
+			Friday   :"Fri",
+			Saturday :"Sat",
+		}
 	},
 	InitialPage: {
 		Update: 'Update',		//更新

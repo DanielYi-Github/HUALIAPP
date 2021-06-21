@@ -1,33 +1,32 @@
 import React from 'react';
 import { View, Keyboard, SafeAreaView, SectionList } from 'react-native';
 import { Container, Header, Body, Left, Right, Button, Item, Icon, Input, Title, Text, Label, Segment, connectStyle} from 'native-base';
+import { tify, sify} from 'chinese-conv'; 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import SearchInput, { createFilter } from 'react-native-search-filter'; 
-const KEYS_TO_FILTERS = ['EMPID', 'DEPNAME', 'NAME', 'MAIL', 'SKYPE', 'CELLPHONE','TELPHONE','JOBTITLE'];
+const KEYS_TO_FILTERS = ['initiator.id'];
+const Invited_TO_FILTERS = [ "attendees.id", "attendees.name" ];
+const SearchingKey_TO_FILTERS = [
+  'subject', 
+  'description', 
+  'datetime.date',
+  'datetime.starttime', 
+  'datetime.endtime', 
+  'meetingPlace', 
+  'initiator.id', 
+  'initiator.name', 
+  "chairperson.id", 
+  "chairperson.name",
+  "attendees.id",
+  "attendees.name"
+];
 
 import * as NavigationService from '../../../utils/NavigationService';
 import HeaderForSearch        from '../../../components/HeaderForSearch';
 import MeetingItem            from '../../../components/MeetingItem';
-
-const DATA = [
-  {
-    title: "Main dishes",
-    data: ["Pizza", "Burger", "Risotto"]
-  },
-  {
-    title: "Sides",
-    data: ["French Fries", "Onion Rings", "Fried Shrimps"]
-  },
-  {
-    title: "Drinks",
-    data: ["Water", "Coke", "Beer"]
-  },
-  {
-    title: "Desserts",
-    data: ["Cheese Cake", "Ice Cream"]
-  }
-];
+import NoMoreItem       from '../../../components/NoMoreItem';
+import * as MeetingAction        from '../../../redux/actions/MeetingAction';
 
 class MeetingListPage extends React.PureComponent  {
 	constructor(props) {
@@ -37,20 +36,66 @@ class MeetingListPage extends React.PureComponent  {
         keyword        :"",          //一般搜尋
         sKeyword       :"",          //簡體中文
         tKeyword       :"",          //繁體中文
-        ContactData    :[],
         isShowSearch   :false,
         isLoading      :false,
         showFooter     :false,
-        SegmentButton  :"all"
+        SegmentButton  :"all",
+        isEnd          :false
       }
 	}
 
+  componentDidMount(){
+    this.props.actions.getMeetings();
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.state.Meeting.meetingList.length == this.props.state.Meeting.meetingList.length) {
+      this.setState({
+        isEnd:true
+      });
+    }else{
+      if (nextProps.state.Meeting.meetingList.length == 0) {
+        this.props.actions.getMeetings();
+        this.setState({
+          isEnd:false
+        });  
+      }
+    }
+  }
+
 	render() {
+    let userId = this.props.state.UserInfo.UserInfo.id;
+    let meetingList = this.props.state.Meeting.meetingList;
+    let keySearched = [];
+    // 關鍵字搜尋的整理
+    if (this.state.isShowSearch) {
+        if (this.state.isChinesKeyword) {
+          meetingList = meetingList.filter(createFilter(this.state.sKeyword, SearchingKey_TO_FILTERS));
+          let meetingListFortKeyword = meetingList.filter(createFilter(this.state.tKeyword, SearchingKey_TO_FILTERS));
+          meetingList = this.dedup([...meetingList, ...meetingListFortKeyword]);
+        } else {
+          meetingList = meetingList.filter(createFilter(this.state.keyword, SearchingKey_TO_FILTERS));
+        }
+    }
+
+    // 需要過濾的代碼處理
+    switch (this.state.SegmentButton) {
+      case 'create':
+        meetingList = meetingList.filter(createFilter(userId, KEYS_TO_FILTERS))
+        break;
+      case 'invited':
+        meetingList = meetingList.filter(createFilter(userId, Invited_TO_FILTERS))
+        break;
+    }
+
+    // 整理顯示會議內容的顯示格式
+    meetingList = this.formatMeetingDate(meetingList);
+
     return (
       <Container>
         <HeaderForSearch
           isShowSearch = {this.state.isShowSearch}
-          placeholder  = {this.props.Language.lang.ContactPage.SearchKeyword}
+          placeholder  = {this.props.state.Language.lang.ContactPage.SearchKeyword}
           onChangeText ={(text) => { 
               let sText = sify(text);   //簡體中文
               let tText = tify(text);   //繁體中文
@@ -77,15 +122,15 @@ class MeetingListPage extends React.PureComponent  {
             })
           }}
           searchButtomOnPress={Keyboard.dismiss}
-          searchButtomText={this.props.Language.lang.Common.Search}
+          searchButtomText={this.props.state.Language.lang.Common.Search}
           isLeftButtonIconShow  = {true}
           leftButtonIcon        = {{name:'arrow-back'}}
           leftButtonOnPress     = {() =>NavigationService.goBack()} 
           isRightButtonIconShow = {true}
           rightButtonIcon       = {{name:'search'}}
           rightButtonOnPress    = {()=>{ this.setState({ isShowSearch:true }); }} 
-          // title                 = {this.props.Language.lang.HomePage.Contacts}
-          title                 = {"會議查詢"}
+          // title                 = {this.props.state.Language.lang.HomePage.Contacts}
+          title                 = {"我的會議"}
           titleOnPress          = {()=>{ this.setState({ isShowSearch:true }) }}
         />
         <Segment style={{backgroundColor: "rgba(0,0,0,0)"}}>
@@ -119,42 +164,112 @@ class MeetingListPage extends React.PureComponent  {
             <Text>被邀請</Text>
           </Button>
         </Segment>
-          <SectionList
-            sections            ={DATA}
-            keyExtractor        ={(item, index) => item + index}
-            renderItem          ={this.renderItem}
-            renderSectionHeader ={({ section: { title } }) => (
-              <Label 
-                style={{
-                  backgroundColor: this.props.style.containerBgColor,
-                  paddingLeft: '3%'
-                }}
-              >
-                {title}
-              </Label >
-            )}
-          />
+        <SectionList
+          extraData           ={this.props.state.Meeting.meetingList} 
+          sections            ={meetingList}
+          keyExtractor        ={(item, index) => item + index}
+          renderItem          ={this.renderItem}
+          renderSectionHeader ={({ section: { title } }) => (
+            <Label 
+              style={{
+                backgroundColor: this.props.style.containerBgColor,
+                paddingLeft: '3%'
+              }}
+            >
+              {title}
+            </Label >
+          )}
+          ListFooterComponent   = {this.renderFooter}
+          onEndReachedThreshold = {0.3}
+          onEndReached          = {this.state.isEnd ? null :this.props.actions.getMeetings}
+        />
       </Container>
     );
 	}
 
   renderItem = (item) => {
-    item = item.item;
+    let items = item.item;
     return (
       <MeetingItem 
-        item={item}
-        onPress = {() => this.navigateDetaile(item)}
+        item={items}
+        data={item.section.meetings[item.index]}
+        onPress = {() => this.navigateDetaile(item.section.meetings[item.index])}
       />
     );
   }
 
   navigateDetaile = (item) => {
-    console.log(item);
+    NavigationService.navigate("MeetingInsert", {
+      meeting: item,
+      fromPage:"MeetingList"
+    });
+  }
+
+  formatMeetingDate(meetings){
+    let dateArray = [];
+    for(let dateMeeting of meetings){
+      
+      var res = dateMeeting.startdate.split(" ");
+      if (dateArray.length == 0) {
+        dateArray.push({
+          title:res[0],
+          data:[dateMeeting.oid],
+          meetings:[dateMeeting]
+        })
+      } else {
+        if (res[0] == dateArray[dateArray.length-1].title) {
+          dateArray[dateArray.length-1].data.push(dateMeeting.oid);
+          dateArray[dateArray.length-1].meetings.push(dateMeeting);
+        } else {
+          dateArray.push({
+            title:res[0],
+            data:[dateMeeting.oid],
+            meetings:[dateMeeting]
+          })
+        }
+      }
+    }
+    return dateArray;
+  }
+
+  renderFooter = () => {
+    if (this.state.showFooter) {
+      return (<NoMoreItem text={this.props.state.Language.lang.ListFooter.NoMore}/>);         
+    } else {
+      if (this.state.isLoading) {
+        return <NoMoreItem text={this.props.state.Language.lang.ListFooter.Loading}/>;
+      } else {
+        return <NoMoreItem text={this.props.state.Language.lang.ListFooter.NoMore}/>;
+      }
+    }
+  }
+
+  // 去除重複的數組
+  dedup(arr) {
+    var hashTable = {};
+
+    return arr.filter(function (el) {
+      var key = JSON.stringify(el);
+      var match = Boolean(hashTable[key]);
+
+      return (match ? false : hashTable[key] = true);
+    });
+  }
+
+  componentWillUnmount(){
+    this.props.actions.resetMeetingListRedux();
   }
 }
 
 let MeetingListPageStyle = connectStyle( 'Page.MeetingPage', {} )(MeetingListPage);
 export default connect(
-  (state) => ({...state})
+  (state) => ({
+    state: { ...state }
+  }),
+  (dispatch) => ({
+    actions: bindActionCreators({
+      ...MeetingAction
+    }, dispatch)
+  })
 )(MeetingListPageStyle);
 

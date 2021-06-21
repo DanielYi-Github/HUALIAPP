@@ -2815,7 +2815,7 @@ export async function getCreateFormDetailFormat(user, url, content = {}){
 			"userId" :Common.encrypt(user.loginID),
 			"content":Common.encrypt(content)
 		}
-
+		
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
@@ -4051,4 +4051,169 @@ export async function getWebViewUrlFromParamAbout(user,content){
 		})
 	});
 	return promise;
+}
+
+/**
+共用模板
+* 取得參會方式
+* @param user資料
+*/
+export async function getMeetingModeType(user){
+
+	let content ={
+		"paramtype":"MeetingModeType"
+	}
+
+	let promise = new Promise((resolve, reject) => {
+		let url = "data/getParams";
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+			// "lang"   : Common.encrypt(user.lang)
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+ 			resolve(data);
+		})
+	});
+	return promise;
+}
+
+/**
+共用模板
+* 新增會議
+* @param user資料
+*/
+export async function addMeeting(user, content){
+
+	let promise = new Promise((resolve, reject) => {
+		console.log("3333");
+		let url = "meeting/add";
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+ 			resolve(data);
+		})
+	});
+	return promise;
+}
+
+
+/**
+共用模板
+* 修改會議
+* @param user資料
+*/
+export async function modifyMeeting(user, content){
+
+	let promise = new Promise((resolve, reject) => {
+		let url = "meeting/modify";
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+ 			resolve(data);
+		})
+	});
+	return promise;
+}
+
+
+/**
+共用模板
+* 取得會議
+* @param user資料
+*/
+export async function getMeetings(user, content){
+		let promise = new Promise((resolve, reject) => {
+			let url = "meeting/get";
+			let params = {
+				"token"  : Common.encrypt(user.token),
+				"userId" : Common.encrypt(user.loginID),
+				"content": Common.encrypt(JSON.stringify(content)),
+				// "lang"   : Common.encrypt(user.lang)
+			};
+			NetUtil.getRequestContent(params, url).then((data)=>{
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
+				data = data.content;
+	 			resolve(data);
+			})
+		});
+		return promise;
+}
+
+
+/**
+共用模板
+* 取得取得多位特定人員的會議時程
+* @param user資料
+*/
+export async function searchMeeting(user, content){
+		let promise = new Promise((resolve, reject) => {
+			let url = "meeting/checkDoubleDateTime";
+			let params = {
+				"token"  : Common.encrypt(user.token),
+				"userId" : Common.encrypt(user.loginID),
+				"content": Common.encrypt(JSON.stringify(content)),
+				"lang"   : Common.encrypt(user.lang)
+			};
+			NetUtil.getRequestContent(params, url).then((data)=>{
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
+				data = data.content;
+	 			resolve(data);
+			})
+		});
+		return promise;
+}
+
+/**
+共用模板
+* 獲取特定人的會議時程
+* @param user資料
+*/
+export async function getPersonDateTime(user, content){
+		let promise = new Promise((resolve, reject) => {
+			let url = "meeting/getDateTime";
+			let params = {
+				"token"  : Common.encrypt(user.token),
+				"userId" : Common.encrypt(user.loginID),
+				"content": Common.encrypt(JSON.stringify(content)),
+				// "lang"   : Common.encrypt(user.lang)
+			};
+			NetUtil.getRequestContent(params, url).then((data)=>{
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
+				data = data.content;
+	 			resolve(data);
+			})
+		});
+		return promise;
 }

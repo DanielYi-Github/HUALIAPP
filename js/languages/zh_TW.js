@@ -42,7 +42,16 @@ export default {
         androidChangeAPPMessage11:"，使用新版APP進行操作（APP圖標有NEW字樣）。",
         androidChangeAPPMessage12:"圖標說明：",
 		androidChangeAPPMessage13:"不再顯示",
-		WebViewUrlError:"網站地址獲取異常"
+		WebViewUrlError:"網站地址獲取異常",
+		week:{
+			Sunday   :"週日",
+			Monday   :"週一",
+			Tuesday  :"週二",
+			Wednesday:"週三",
+			Thursday :"週四",
+			Friday   :"週五",
+			Saturday :"週六",
+		}
 	},
 	InitialPage: {
 		Update: '更新',

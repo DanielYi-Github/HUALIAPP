@@ -11,7 +11,8 @@ import * as NavigationService   from '../../../utils/NavigationService';
 import ToastUnit              from '../../../utils/ToastUnit';
 import * as MeetingAction        from '../../../redux/actions/MeetingAction';
 
-class MeetingInsertWithTagsPage extends React.Component {
+
+class MeetingSearchWithTagsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -146,7 +147,7 @@ class MeetingInsertWithTagsPage extends React.Component {
               <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>
                   <Title style={{color:this.props.style.color}} onPress={()=>{ this.setState({ isShowSearch:true });}}>
                     {/*{this.state.data.component.name}*/}
-                    {"邀請參與人"}
+                    {"新增參與人"}
                   </Title>
               </Body>
               <Right style={{alignItems: 'center'}}>
@@ -174,7 +175,7 @@ class MeetingInsertWithTagsPage extends React.Component {
             </Header>
         }
         <Label style={{marginLeft: 5, paddingTop: 20, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder }}>
-          {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd}${"邀請人"}`}
+          {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd}${"參與人"}`}
         </Label>
         <View style={{flex:0.3, backgroundColor: this.props.style.InputFieldBackground}}>
             <Content ref ={(c) => { this._content = c; }}>
@@ -282,58 +283,15 @@ class MeetingInsertWithTagsPage extends React.Component {
     return (
       <Item 
         fixedLabel 
-        style   ={{paddingLeft: 15, backgroundColor: this.props.style.InputFieldBackground}} 
+        style   ={{paddingLeft: 15, padding:15, backgroundColor: this.props.style.InputFieldBackground}} 
         onPress ={ async ()=>{ 
-          let enableMeeting = await this.checkHaveMeetingTime(item.item.id, this.state.startdate, this.state.enddate);
-          if (enableMeeting) {
-            this.addTag(item.item);
-          } else {
-            Alert.alert(
-              "有重複",
-              "該時段"+item.item.name+"已有安排會議",
-              [
-                { text: "OK", onPress: () => console.log("OK Pressed") }
-              ],
-              { cancelable: false }
-            );
-          }
+          this.addTag(item.item);
+
         }} 
       >
         <Label>{item.item.name}</Label>
-        <Icon 
-          name='calendar-outline'
-          onPress={()=>{
-            //顯示此人有哪些會議
-            NavigationService.navigate("MeetingTimeForPerson", {
-              person: item.item,
-            });
-          }}
-          style={{borderWidth: 0, padding: 10, paddingRight: 20}}
-        />
       </Item>
     );
-  }
-
-  checkHaveMeetingTime = async (id, startTime, endTime) => {
-    let user = this.props.state.UserInfo.UserInfo;
-    let meetingParams = {
-      startdate:startTime,
-      enddate  : endTime,
-      attendees:[ {id:id} ]
-    }
-    let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
-      console.log("checkHaveMeetingTime", result); // 顯示此群人有哪些會議
-      if (result.length == 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }).catch((errorResult)=>{
-      console.log("errorResult",errorResult.message);
-      return false;
-    });
-
-    return searchMeetingResult;
   }
 
   addTag = (item) => {      
@@ -437,9 +395,33 @@ class MeetingInsertWithTagsPage extends React.Component {
       return (match ? false : hashTable[key] = true);
     });
   }
+
+  checkHaveMeetingTime = async (id, startTime, endTime) => {
+    let user = this.props.state.UserInfo.UserInfo;
+    let action = "meeting/checkDoubleDateTime";
+    let actionObject = {
+      startdate:startTime,
+      enddate: endTime,
+      attendees:[ {id:id} ]
+    }
+    console.log("actionObject", actionObject);
+    let enableMeeting = await UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
+      console.log("result", result);
+      if (result.length == 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }).catch((errorResult)=>{
+      console.log("errorResult",errorResult.message);
+      return false;
+    });
+
+    return enableMeeting;
+  }
 }
 
-export let MeetingInsertWithTagsPageStyle = connectStyle( 'Page.FormPage', {} )(MeetingInsertWithTagsPage);
+export let MeetingSearchWithTagsPageStyle = connectStyle( 'Page.FormPage', {} )(MeetingSearchWithTagsPage);
 
 export default connect(
   (state) => ({
@@ -450,4 +432,4 @@ export default connect(
       ...MeetingAction
     }, dispatch)
   })
-)(MeetingInsertWithTagsPageStyle);
+)(MeetingSearchWithTagsPageStyle);
