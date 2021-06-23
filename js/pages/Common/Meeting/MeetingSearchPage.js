@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Keyboard, TouchableOpacity, Platform, Modal, Alert } from 'react-native';
-import { Container, Header, Content, Item, Icon, Input, Text, Label, Button, ListItem, connectStyle, Card, CardItem} from 'native-base';
+import { Container, Header, Content, Item, Icon, Input, Title, Text, Label, Button, ListItem, connectStyle, Card, CardItem, Body} from 'native-base';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DateFormat             from  'dateformat';
@@ -16,23 +16,24 @@ import FunctionPageBanner from '../../../components/FunctionPageBanner';
 const explain = "為了快速得知特定時間內，您想邀請的人員是否已安排其他會議，可使用下列“起迄時間”與”新增參與人員“的設定，快速查詢所有”參與人員“的會議時間，方便您安排會議與發送邀請。";
 class MeetingSearchPage extends React.PureComponent  {
 	constructor(props) {
-	    super(props);
-      let startTime  = new Date().getTime();
-      let endTime    = new Date().getTime();
-      startTime      = startTime + (900000-(startTime%900000));
-      endTime        = endTime + (900000-(endTime%900000));
+    super(props);
+    let startTime  = new Date().getTime();
+    let endTime    = new Date().getTime();
+    startTime      = startTime + (900000-(startTime%900000));
+    endTime        = endTime + (900000-(endTime%900000));
 
-	    this.state = {
-        now                   : startTime,
-        startdate             : DateFormat( new Date(startTime), "yyyy-mm-dd HH:MM:ss"),
-        enddate               : DateFormat( new Date(endTime), "yyyy-mm-dd HH:MM:ss"),
-        attendees             : [],  //參與者
-        showDatePicker        : false,
-        showTimePicker        : false,
-        showDateTimePicker    : false, // for ios
-        editDatetimeValue     : new Date(),
-        editStartorEndDatetime: true, // true for start, false for end
-      }
+    this.state = {
+      now                   : startTime,
+      startdate             : DateFormat( new Date(startTime), "yyyy-mm-dd HH:MM:ss"),
+      enddate               : DateFormat( new Date(endTime), "yyyy-mm-dd HH:MM:ss"),
+      attendees             : [],  //參與者
+      showDatePicker        : false,
+      showTimePicker        : false,
+      showDateTimePicker    : false, // for ios
+      editDatetimeValue     : new Date(),
+      editStartorEndDatetime: true, // true for start, false for end
+      showNavigationMessage: false // 顯示要前往新增會議的功能
+    }
 	}
 
 	render() {
@@ -53,7 +54,7 @@ class MeetingSearchPage extends React.PureComponent  {
           isRightButtonIconShow = {false}
           rightButtonIcon       = {null}
           rightButtonOnPress    = {null} 
-          title                 = {"會議查詢"}
+          title                 = {"參與人時間查詢"}
           isTransparent         = {false}
         />
         <Content>
@@ -147,12 +148,12 @@ class MeetingSearchPage extends React.PureComponent  {
            
 
 
-          <Button 
+          <Button info
             style={{
               alignSelf: 'center',
-              marginTop: 40,
-              marginBottom: 40,
-              width: '50%',
+              marginTop: 30,
+              marginBottom: 30,
+              width: '95%',
               justifyContent: 'center'  
             }}
             onPress={()=>{
@@ -161,6 +162,47 @@ class MeetingSearchPage extends React.PureComponent  {
           >
             <Text>查詢</Text>
           </Button>
+
+          {
+            /*this.state.showNavigationMessage ? */
+            true ? 
+              <Card>
+                <CardItem style={{borderWidth: 3, borderColor: '#4CAF50'}}>
+                  <Body style={{width:"95%", alignItems: 'flex-start', justifyContent: 'flex-start'}}>
+                    <Text style={{color:"#757575", fontWeight: 'bold', fontSize: 22, paddingBottom: 5}}>{"太棒了!"}</Text>
+                    <Text style={{color:"#757575", fontWeight: 'bold', paddingBottom: 2.5}} >
+                      {`期間：${DateFormat( new Date(this.state.startdate), "m/dd HH:MM")} - ${DateFormat( new Date(this.state.enddate), "m/dd HH:MM")}`}
+                    </Text>
+                    <Text style={{color:"#757575", fontWeight: 'bold', paddingRight: 10}}>
+                      {"您所選的參與人沒有安排會議，是否直接用此設定幫您新增會議？"}
+                    </Text>
+                  </Body>
+                  <Body style={{flex:null, justifyContent: 'center', borderLeftWidth: 1, borderLeftColor: '#757575' }}>
+                    <Text style={{paddingLeft: 10}}>
+                      前往新增
+                    </Text>
+                  </Body>
+
+                </CardItem>
+              </Card>
+              
+            :
+             null
+          }
+          
+          {/*
+              <Text style={{marginTop: 10,color:"#757575"}}>
+                {"直接前往 → "} 
+                <Title style={{color:"#47ACF2", fontWeight: 'bold'}} onPress={()=>{
+                  NavigationService.navigate("MeetingInsert", {
+                    meeting: this.state.meetingParams,
+                    fromPage:"MeetingSearch"
+                  });
+                }}>
+                   新增會議
+                </Title>
+              </Text>
+          */}
 
         </Content>
 
@@ -270,16 +312,18 @@ class MeetingSearchPage extends React.PureComponent  {
   }
 
   showDateTimePicker = (editStartorEndDatetime) => {
+    let enddate = new Date(this.state.startdate) > new Date(this.state.enddate) ? new Date(this.state.startdate) : new Date(this.state.enddate);
+
     if (Platform.OS == "ios") {
       this.setState({
         editStartorEndDatetime: editStartorEndDatetime,
-        editDatetimeValue: editStartorEndDatetime ? new Date(this.state.startdate): new Date(this.state.enddate),
+        editDatetimeValue: editStartorEndDatetime ? new Date(this.state.startdate): enddate,
         showDateTimePicker: true
       });
     } else {
       this.setState({
         editStartorEndDatetime: editStartorEndDatetime,
-        editDatetimeValue: editStartorEndDatetime ? new Date(this.state.startdate): new Date(this.state.enddate),
+        editDatetimeValue: editStartorEndDatetime ? new Date(this.state.startdate): enddate,
         showDatePicker: true
       });
     }
@@ -387,30 +431,14 @@ class MeetingSearchPage extends React.PureComponent  {
 
     if (isRequestSussce) {
       if (searchMeetingResult.length == 0) {
-        Alert.alert(
-          "太棒了！",
-          `期間：${DateFormat( new Date(this.state.startdate), "m/dd HH:MM")} - ${DateFormat( new Date(this.state.enddate), "m/dd HH:MM")}\n您所選的參與人目前沒有安排會議，是否直接幫您新增會議呢？`,
-          [
-            {
-              text: "取消",
-              onPress: () => console.log("Cancel Pressed"),
-              style: "cancel"
-            },
-            { 
-              text: "新增會議", 
-              onPress: () => {
-                NavigationService.navigate("MeetingInsert", {
-                  meeting: meetingParams,
-                  fromPage:"MeetingSearch"
-                });
-              }
-            }
-          ],
-          { cancelable: false }
-        );
+        this.setState({
+          showNavigationMessage:true,
+          meetingParams        :meetingParams
+        });
       } else {
-        NavigationService.navigate("MeetingTimeForPerson", {
+        NavigationService.navigate("MeetingTimeForSearch", {
           searchMeetingResult: searchMeetingResult,
+          meetingParams : meetingParams
         });
       }
     } else {

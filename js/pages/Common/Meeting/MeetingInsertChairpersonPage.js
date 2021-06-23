@@ -117,7 +117,6 @@ class MeetingInsertChairpersonPage extends React.Component {
     );
   }
 
-
   loadMoreData = (isSearching, searchedData = null) => {
     isSearching = (typeof isSearching == "object") ? false : isSearching;
     let isSearch = isSearching ? isSearching : this.state.isSearch;

@@ -17,12 +17,12 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
 	    super(props);
 	    this.state = {
         person         : props.route.params.person,
-        meetingDateTime: props.route.params.searchMeetingResult? props.route.params.searchMeetingResult:[]
+        meetingDateTime: props.route.params.meetingDateTime ? props.route.params.meetingDateTime: []
       }
 	}
 
   componentDidMount(){
-    if (this.state.person) this.props.actions.getPersonDateTime(this.state.person.id);
+    if( typeof this.props.route.params.person != "undefined" ) this.props.actions.getPersonDateTime(this.state.person.id);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {

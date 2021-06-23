@@ -23,6 +23,7 @@ export function iniDeputyData(){
 export function loadBPMDeputySetting() {
 	return async (dispatch, getState) => {
 	    await UpdateDataUtil.getBPMDeputySetting(getState().UserInfo.UserInfo).then(async (data) => {
+	    	console.log("loadBPMDeputySetting", data);
 			dispatch(setDeputyBasic(data));
 	    	await this.basicInit(data);
 	    	this.getDeputyTip();

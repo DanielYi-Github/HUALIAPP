@@ -19,9 +19,16 @@ export default function index(state = initialState, action = {}) {
     case types.MEETING_ACTIONRESULT:
       return {
         ...state,
-        actionResult:action.result,
+        actionResult   :action.result,
         actionResultMsg:action.result? "":action.resultMsg,
-        meetingList:action.result? []:state.meetingList,
+        meetingList    :action.result? []:state.meetingList,
+      }
+    case types.MEETING_MODIFYRESULT:
+      return {
+        ...state,
+        actionResult   :action.result,
+        actionResultMsg:action.result? "":action.resultMsg,
+        meetingList    :action.result? []:state.meetingList,
       }
     case types.MEETING_RESET:
       return {

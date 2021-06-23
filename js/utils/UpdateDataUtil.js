@@ -4092,7 +4092,6 @@ export async function getMeetingModeType(user){
 export async function addMeeting(user, content){
 
 	let promise = new Promise((resolve, reject) => {
-		console.log("3333");
 		let url = "meeting/add";
 		let params = {
 			"token"  : Common.encrypt(user.token),

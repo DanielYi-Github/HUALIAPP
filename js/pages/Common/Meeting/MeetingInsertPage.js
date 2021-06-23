@@ -73,8 +73,7 @@ class MeetingInsertPage extends React.PureComponent  {
       }
 
 	    this.state = {
-        now : startTime,
-
+        now             :startTime,
         isEditable      :isEditable, //預設只有發起人可以修改
         isModify        :isModify,   //是不是修改表單
         headerName      :headerName,
@@ -199,18 +198,14 @@ class MeetingInsertPage extends React.PureComponent  {
           }}>
               <Label>會議主題</Label>
               <Input 
-                  scrollEnabled={false}
-                  textAlign="right"
-                  value = {this.state.subject}
-                  onEndEditing ={ async (text)=>{
-                    // 不能為空
-                    // text.nativeEvent.text
-                  }}
-                  onChangeText ={(text)=>{
+                  scrollEnabled ={false}
+                  textAlign     ="right"
+                  editable      ={this.state.isEditable}
+                  placeholder   ={this.state.isEditable ? null : this.state.subject}
+                  value         ={this.state.isEditable ? this.state.subject : null}
+                  onChangeText  ={(text)=>{
                     this.setState({ subject:text });
                   }}
-                  scrollEnabled={false}
-                  editable={this.state.isEditable}
               />
           </Item>
 
@@ -222,17 +217,14 @@ class MeetingInsertPage extends React.PureComponent  {
               <Label>說明</Label>
               <Input 
                 multiline 
-                scrollEnabled={false}
-                textAlign="right"
-                value = {this.state.description}
-                onEndEditing ={ async (text)=>{
-                  // 不能為空
-                  // text.nativeEvent.text
-                }}
-                onChangeText ={(text)=>{
+                scrollEnabled ={false}
+                textAlign     ="right"
+                editable      ={this.state.isEditable}
+                value         ={this.state.isEditable ? this.state.description : null}
+                placeholder   ={this.state.isEditable ? null : this.state.description }
+                onChangeText  ={(text)=>{
                   this.setState({ description:text });
                 }}
-                editable={this.state.isEditable}
               />
           </Item>
 
@@ -273,6 +265,7 @@ class MeetingInsertPage extends React.PureComponent  {
               paddingLeft    : 10,
               paddingRight   : 5
             }}
+            disabled= {!this.state.isEditable}
             onPress = {()=>{
               NavigationService.navigate("MeetingInsertChairperson", {
                 startdate: this.state.startdate,
@@ -280,11 +273,15 @@ class MeetingInsertPage extends React.PureComponent  {
                 onPress  : this.selectChairperson
               });
             }}
-            disabled={!this.state.isEditable}
           >
             <Icon name='person-outline' />
             <Label style={{flex:1}}>會議主席</Label>
-            <Text>{this.state.chairpersonLabel}</Text>
+            {
+              this.state.isEditable ?
+                <Text>{this.state.chairpersonLabel}</Text>
+              :
+                <Label>{this.state.chairpersonLabel}</Label>
+            }
             {
               this.state.isEditable ? 
                 <Icon name='arrow-forward' />
@@ -362,16 +359,19 @@ class MeetingInsertPage extends React.PureComponent  {
               marginTop: 30,
             }}
             onPress = {()=>{
-              this.setState({
-                actionSheetType:"O"
-              });
+              this.setState({ actionSheetType:"O" });
               setTimeout( this.showActionSheet, 50);
             }}
             disabled={!this.state.isEditable}
           >
             <Icon name='meeting-room' type="MaterialIcons"/>
             <Label style={{flex:1}}>參會方式</Label>
-            <Text style={{}}>{meetingPlaceName}</Text>
+            {
+              this.state.isEditable ? 
+                <Text>{meetingPlaceName}</Text>
+              :
+                <Label>{meetingPlaceName}</Label>
+            }
             {
               this.state.isEditable ? 
                 <Icon name='arrow-forward' />
@@ -389,21 +389,15 @@ class MeetingInsertPage extends React.PureComponent  {
                   paddingLeft: 10,
                   paddingRight: 5
                 }}
-                onPress = {()=>{
-                  console.log("567890");
-                }}
               >
                 <Label>會議室-號碼</Label>
                 <Input 
-                  editable={this.state.isEditable}
                   scrollEnabled = {false}
                   textAlign     = "right"
-                  value = {this.state.meetingNumber}
-                  onEndEditing ={ async (text)=>{
-                    // 不能為空
-                    // text.nativeEvent.text
-                  }}
-                  onChangeText ={(text)=>{
+                  editable      = {this.state.isEditable}
+                  value         = {this.state.isEditable ? this.state.meetingNumber : null}
+                  placeholder   = {this.state.isEditable ? null : this.state.meetingNumber }
+                  onChangeText  = {(text)=>{
                     this.setState({ meetingNumber:text });
                   }}
                 />
@@ -417,22 +411,15 @@ class MeetingInsertPage extends React.PureComponent  {
                   paddingLeft: 10,
                   paddingRight: 5
                 }}
-                onPress = {()=>{
-                  console.log("567890");
-
-                }}
               >
                 <Label>會議室地點</Label>
                 <Input 
-                    editable={this.state.isEditable}
-                    scrollEnabled={false}
-                    textAlign="right"
-                    value = {this.state.meetingPlace}
-                    onEndEditing ={ async (text)=>{
-                      // 不能為空
-                      // text.nativeEvent.text
-                    }}
-                    onChangeText ={(text)=>{
+                    scrollEnabled ={false}
+                    textAlign     ="right"
+                    editable      ={this.state.isEditable}
+                    value         ={this.state.isEditable ? this.state.meetingPlace: null}
+                    placeholder   ={this.state.isEditable ? null : this.state.meetingPlace }
+                    onChangeText  ={(text)=>{
                       this.setState({ meetingPlace:text });
                     }}
                 />
@@ -448,21 +435,15 @@ class MeetingInsertPage extends React.PureComponent  {
                   paddingLeft: 10,
                   paddingRight: 5
                 }}
-                onPress = {()=>{
-                  console.log("567890");
-                }}
               >
                 <Label>會議室-密碼</Label>
                 <Input 
-                    editable={this.state.isEditable}
-                    scrollEnabled={false}
-                    textAlign="right"
-                    value = {this.state.meetingPassword}
-                    onEndEditing ={ async (text)=>{
-                      // 不能為空
-                      // text.nativeEvent.text
-                    }}
-                    onChangeText ={(text)=>{
+                    scrollEnabled ={false}
+                    textAlign     ="right"
+                    editable      ={this.state.isEditable}
+                    value         ={this.state.isEditable ? this.state.meetingPassword: null}
+                    placeholder   ={this.state.isEditable ? null : this.state.meetingPassword }
+                    onChangeText  ={(text)=>{
                       this.setState({ meetingPassword:text });
                     }}
                 />
@@ -481,18 +462,20 @@ class MeetingInsertPage extends React.PureComponent  {
               paddingRight   : 5,
               marginTop      : 30,
             }}
-            onPress = {()=>{
-              this.setState({
-                actionSheetType:"M"
-              });
+            disabled = {!this.state.isEditable}
+            onPress  = {()=>{
+              this.setState({ actionSheetType:"M" });
               setTimeout( this.showActionSheet, 50);
             }}
-            disabled={!this.state.isEditable}
-
           >
             <Icon name='clock-alert-outline' type="MaterialCommunityIcons" />
             <Label style={{flex:1}}>會議前提醒</Label>
-            <Text>{remindtimeLabel}</Text>
+            {
+             this.state.isEditable ?
+              <Text>{remindtimeLabel}</Text>
+             :
+              <Label>{remindtimeLabel}</Label>  
+            }
             {
               this.state.isEditable ? 
                 <Icon name='arrow-forward' />
@@ -508,7 +491,7 @@ class MeetingInsertPage extends React.PureComponent  {
                   alignSelf: 'center',
                   marginTop: 40,
                   marginBottom: 40,
-                  width: '50%',
+                  width: '60%',
                   justifyContent: 'center'  
                 }}
                 onPress={()=>{
@@ -818,11 +801,24 @@ class MeetingInsertPage extends React.PureComponent  {
           }
         ],
       )
+    } else if( new Date(this.state.enddate).getTime() == new Date(this.state.startdate).getTime() ) {
+      Alert.alert(
+        "錯誤",   // 表單動作失敗
+        `會議結束時間不能\"等於\"開始時間`,
+        [
+          {
+            text: this.props.state.Language.lang.Common.Close,   // 關閉 
+            onPress: () => {
+              
+            }, 
+          }
+        ],
+      )
     } else {
       let meetingParams = {
           subject        :this.state.subject,
           description    :this.state.description,
-          startdate      :this.state.startdate,
+          startdate      :DateFormat( new Date(this.state.startdate).getTime()+1000, "yyyy-mm-dd HH:MM:ss"),
           enddate        :this.state.enddate,
           meetingMode    :this.state.meetingMode,
           meetingPlace   :this.state.meetingPlace,
@@ -834,6 +830,7 @@ class MeetingInsertPage extends React.PureComponent  {
           attendees      :this.state.attendees,
       }
 
+      
       if (this.state.isModify) {
         // 修改會議
         meetingParams.oid = this.props.route.params.meeting.oid;
@@ -842,7 +839,6 @@ class MeetingInsertPage extends React.PureComponent  {
         // 新增會議
         this.props.actions.addMeeting(meetingParams);
       }
-      
     }    
   }
 

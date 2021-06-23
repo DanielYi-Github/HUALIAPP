@@ -59,15 +59,17 @@ export function modifyMeeting(meetingParams){
 		let user = getState().UserInfo.UserInfo;
 		let resultMsg = "";
 		let modifyMeetingResult = await UpdateDataUtil.modifyMeeting(user, meetingParams).then((result)=>{
+			console.log("modifyMeetingResult", result);
 			return result;
 		}).catch((e)=>{
+			console.log("modifyErrorResult", e.message);
 			resultMsg = e.message;
 			return false;
 		});
 		// dispatch(refreshing(false)); 
 
 		dispatch({
-			type: MeetingTypes.MEETING_ACTIONRESULT,
+			type: MeetingTypes.MEETING_MODIFYRESULT,
 			result:modifyMeetingResult,
 			resultMsg:resultMsg
 		}); 
