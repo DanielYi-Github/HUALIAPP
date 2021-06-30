@@ -9,7 +9,7 @@ class MeetingItemForPerson extends Component {
 	}
 
 	render() {
-		let image = require("../image/meeting/meeting.png");
+		let image = require("../../image/meeting/meeting.png");
 		let cardItem = (
 				<CardItem >				
 				    <Left style={{flex:0.25, flexDirection: 'column', borderWidth: 0}}> 

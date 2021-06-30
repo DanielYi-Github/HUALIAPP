@@ -5,10 +5,10 @@ import { tify, sify} from 'chinese-conv';
 import { connect }   from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import * as UpdateDataUtil from '../../../utils/UpdateDataUtil';
-import * as NavigationService   from '../../../utils/NavigationService';
-import HeaderForSearch     from '../../../components/HeaderForSearch';
-import * as MeetingAction        from '../../../redux/actions/MeetingAction';
+import * as UpdateDataUtil    from '../../../utils/UpdateDataUtil';
+import * as NavigationService from '../../../utils/NavigationService';
+import HeaderForSearch        from '../../../components/HeaderForSearch';
+import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 
 
 class MeetingInsertChairpersonPage extends React.Component {
@@ -261,7 +261,7 @@ class MeetingInsertChairpersonPage extends React.Component {
       enddate: endTime,
       attendees:[ {id:id} ]
     }
-    console.log("meeting/checkDoubleDateTime", actionObject);
+    // console.log("meeting/checkDoubleDateTime", actionObject);
     let enableMeeting = await UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
       if (result.length == 0) {
         return true;

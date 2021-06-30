@@ -24,9 +24,9 @@ const SearchingKey_TO_FILTERS = [
 
 import * as NavigationService from '../../../utils/NavigationService';
 import HeaderForSearch        from '../../../components/HeaderForSearch';
-import MeetingItem            from '../../../components/MeetingItem';
-import NoMoreItem       from '../../../components/NoMoreItem';
-import * as MeetingAction        from '../../../redux/actions/MeetingAction';
+import MeetingItem            from '../../../components/Meeting/MeetingItem';
+import NoMoreItem             from '../../../components/NoMoreItem';
+import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 
 class MeetingListPage extends React.PureComponent  {
 	constructor(props) {
@@ -45,7 +45,12 @@ class MeetingListPage extends React.PureComponent  {
 	}
 
   componentDidMount(){
-    this.props.actions.getMeetings();
+    if (this.props.state.Meeting.meetingList.length == 0) {
+      this.props.actions.getMeetings();
+      this.setState({
+        isEnd:false
+      });  
+    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -64,6 +69,7 @@ class MeetingListPage extends React.PureComponent  {
   }
 
 	render() {
+    // console.log(this.props.state.Meeting.meetingList);
     let userId = this.props.state.UserInfo.UserInfo.id;
     let meetingList = this.props.state.Meeting.meetingList;
     let keySearched = [];
@@ -181,11 +187,15 @@ class MeetingListPage extends React.PureComponent  {
           )}
           ListFooterComponent   = {this.renderFooter}
           onEndReachedThreshold = {0.3}
-          onEndReached          = {this.state.isEnd ? null :this.props.actions.getMeetings}
+          onEndReached          = {this.state.isEnd ? null :this.endReachedGetMeetings}
         />
       </Container>
     );
 	}
+
+  endReachedGetMeetings = () => {
+    this.props.actions.getMeetings();
+  }
 
   renderItem = (item) => {
     let items = item.item;

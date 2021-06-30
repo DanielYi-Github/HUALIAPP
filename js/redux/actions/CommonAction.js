@@ -200,8 +200,18 @@ export function checkDirectorPage(data){
 		data = await SQLite.selectData(sql, []).then((result) => {
 			return result.item(0)
 		});
-
-		if (data.ISREAD == "F") updateMessageReadState(OID, user, dispatch, getState)
+		console.log("checkDirectorPage", data);
+		/*
+		if (data.TYPE == "meeting") {
+			data.APPID = "MeetingInsert";
+			data.CONTENT1 = {
+				meetingId : "c9bb34a32031c9fcbd11b59c90224211"
+			}
+		} 
+		*/
+		
+		if (data.ISREAD == "F") updateMessageReadState(OID, user, dispatch, getState);
+		// console.log("checkDirectorPage", data);
 
 		switch (data.APPID) {
 			case "CreateForm": 			// 派車單、台籍休假單... 
@@ -213,6 +223,12 @@ export function checkDirectorPage(data){
 			case "Operation": 			// APP操作說明
 			case "ViewFile":  			// 集團文件、任一文件
 				NavigationService.navigate(data.APPID, JSON.parse(data.CONTENT1));
+				break;
+			case "Meeting":  	    // 會議訊息
+				NavigationService.navigate("MeetingInsert", {
+			      meetingParam: { oid:data.CONTENT1	},
+			      fromPage:"MessageFuc"
+			    });
 				break;
 			case "Notice": 				// 集團公告
 				let sql  = `select * from THF_NOTICE N where N.OID ='${data.CONTENT1}'`;

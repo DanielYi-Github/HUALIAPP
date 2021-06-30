@@ -8,8 +8,8 @@ class LoginSingleItem extends React.PureComponent  {
 	constructor(props) {
 	    super(props);
 	    this.state = {
-        account      : "daniel.yi",
-        password     : "daniel.yi",
+        account      : "",
+        password     : "",
         isLockEyeOpen: false
 	    }
 	}

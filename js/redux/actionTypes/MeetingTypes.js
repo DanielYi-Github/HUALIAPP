@@ -6,5 +6,7 @@ export const MEETING_RESET               = 'MEETING_RESET';   				//重置Meetin
 export const MEETINGLIST_RESET           = 'MEETINGLIST_RESET';   			//重置MeetingList 的Redux state
 export const GET_MEETINGS                = 'GET_MEETINGS';   				//取得會議
 export const GET_MEETINGSPERSON_DATETIME = 'GET_MEETINGSPERSON_DATETIME';   //獲取特定人的會議時程
+export const GET_MEETINGS_FREE_DATETIME  = 'GET_MEETINGS_FREE_DATETIME';    //獲取特定人員有空的會議時程
+
 
 

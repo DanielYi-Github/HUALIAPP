@@ -6,7 +6,8 @@ const initialState = {
   actionResult          : null,
   actionResultMsg       : "",
   meetingList           : [],
-  person_meetingDateTime: []
+  person_meetingDateTime: [],
+  suggestMeetingDateTime: []
 };
 
 export default function index(state = initialState, action = {}) {
@@ -20,15 +21,15 @@ export default function index(state = initialState, action = {}) {
       return {
         ...state,
         actionResult   :action.result,
-        actionResultMsg:action.result? "":action.resultMsg,
+        actionResultMsg:action.resultMsg,
         meetingList    :action.result? []:state.meetingList,
       }
     case types.MEETING_MODIFYRESULT:
       return {
         ...state,
         actionResult   :action.result,
-        actionResultMsg:action.result? "":action.resultMsg,
-        meetingList    :action.result? []:state.meetingList,
+        actionResultMsg:action.resultMsg,
+        meetingList    :action.result.success? []:state.meetingList,
       }
     case types.MEETING_RESET:
       return {
@@ -51,6 +52,16 @@ export default function index(state = initialState, action = {}) {
       return{
         ...state,
         person_meetingDateTime:action.meetingsResult
+      }
+    case types.MEETING_REFRESHING:
+      return{
+        ...state,
+        isRefreshing:action.isRefreshing
+      }
+    case types.GET_MEETINGS_FREE_DATETIME:
+      return{
+        ...state,
+        suggestMeetingDateTime:action.getFreeDateTimeResult
       }
     default:
       return state;

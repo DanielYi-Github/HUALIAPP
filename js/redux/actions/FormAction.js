@@ -522,7 +522,7 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 		let formFormat = getState().Form.FormContent;
 		let editIndex  = formFormat[pageIndex].content.indexOf(formItem);
 		
-
+		console.log(1);
 		// 欄位自己的規則比較
 		let ruleCheck = await FormUnit.formFieldRuleCheck(
 								value, 
@@ -531,8 +531,11 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 								formItem.columntype
 							  );
 		if( ruleCheck != true){
+		console.log(2);
+
 			dispatch(updateDefaultValueError(ruleCheck.message));
 		} else {
+		console.log(3);
 			
 			// 進行該欄位的新值舊值更換
 			formItem = await FormUnit.updateFormValue( value, formItem, formFormat[pageIndex].content );
@@ -540,6 +543,7 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 
 			// 判斷是否有url 的 action動作
 			// console.log(formFormat);
+		console.log(4);
 			
 			let	columnactionValue = await FormUnit.getColumnactionValue(
 										getState().UserInfo.UserInfo, 
@@ -550,6 +554,8 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 			
 			// 欄位隱藏或顯示控制
 			// 判斷該值是否填寫表單中顯示
+		console.log(5);
+			// 
 			formFormat[pageIndex].content = FormUnit.checkFormFieldShow(
 												columnactionValue.columnList, 
 												formFormat[pageIndex].content

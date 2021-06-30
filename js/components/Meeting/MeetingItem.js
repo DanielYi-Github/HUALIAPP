@@ -12,27 +12,27 @@ class MeetingItem extends Component {
 		let image, imageText = this.props.data.meetingMode;
 		switch(imageText) {
 		  case "M":
-		    image = require("../image/meeting/MicrosoftLync.png");
+		    image = require("../../image/meeting/MicrosoftLync.png");
 		    imageText = "MicrosoftLync";
 		    break;
 		  case "S":
-		    image = require("../image/meeting/Skype.png");
+		    image = require("../../image/meeting/Skype.png");
 		    imageText = "Skype";
 		    break;
 		  case "T":
-		    image = require("../image/meeting/Tencent.png");
+		    image = require("../../image/meeting/Tencent.png");
 		    imageText = "Tencent";
 		    break;
 		  case "W":
-		    image = require("../image/meeting/WeChart.png");
+		    image = require("../../image/meeting/WeChart.png");
 		    imageText = "WeChart";
 		    break;
 		  case "Z":
-		    image = require("../image/meeting/Zoom.png");
+		    image = require("../../image/meeting/Zoom.png");
 		    imageText = "Zoom";
 		    break;
 		  default:
-		    image = require("../image/meeting/meeting.png");
+		    image = require("../../image/meeting/meeting.png");
 		    imageText = this.props.data.meetingPlace;
 		}
 
@@ -70,7 +70,7 @@ class MeetingItem extends Component {
 							marginLeft: 7
 						}}>
 							<Label>會議主席：{this.props.data.chairperson.name}</Label>
-							<Label>參與人：{attendeesString}</Label>
+							<Label>與會人員：{attendeesString}</Label>
 						</View>
 					</Body>
 					<Right style={{flex:0}}>

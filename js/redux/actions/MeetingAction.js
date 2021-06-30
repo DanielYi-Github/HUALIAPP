@@ -3,7 +3,7 @@ import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
 
 export function getMeetingModeType() {
 	return async (dispatch, getState) => {
-		// dispatch(refreshing(true)); 	
+		dispatch(refreshing(true)); 	
 		let user = getState().UserInfo.UserInfo;
 		let meetingModeTypes = await UpdateDataUtil.getMeetingModeType(user).then((result)=>{
 			return result;
@@ -12,15 +12,15 @@ export function getMeetingModeType() {
 			return [];
 		});
 		dispatch(loadModeType(meetingModeTypes)); 	
+		dispatch(refreshing(false)); 	
 
-		// dispatch(refreshing(false)); 	
 	}
 }
 
-function refresh(isRefresh){
+function refreshing(isRefreshing){
 	return {
 		type: MeetingTypes.MEETING_REFRESHING,
-		isRefresh
+		isRefreshing
 	}
 }
 
@@ -34,44 +34,47 @@ function loadModeType(meetingModeTypes){
 
 export function addMeeting(meetingParams){
 	return async (dispatch, getState) => {
-		// dispatch(refreshing(true)); 	
+		dispatch(refreshing(true)); 	
 		let user = getState().UserInfo.UserInfo;
-		let resultMsg = "";
 		let addMeetingResult = await UpdateDataUtil.addMeeting(user, meetingParams).then((result)=>{
+			// console.log("addMeeting", result);
 			return result;
 		}).catch((e)=>{
-			resultMsg = e.message;
-			return false;
+			console.log("modifyErrorResult", e.message);
+			let resultMsg = {
+				success:false,
+				msg:e.message
+			};
+			return resultMsg;
 		});
-		// dispatch(refreshing(false)); 
-		
+		dispatch(refreshing(false)); 
 		dispatch({
 			type: MeetingTypes.MEETING_ACTIONRESULT,
 			result:addMeetingResult,
-			resultMsg:resultMsg
+			resultMsg:addMeetingResult.success ? null: addMeetingResult.msg
 		}); 
 	}
 }
 
 export function modifyMeeting(meetingParams){
 	return async (dispatch, getState) => {
-		// dispatch(refreshing(true)); 	
+		dispatch(refreshing(true)); 	
 		let user = getState().UserInfo.UserInfo;
-		let resultMsg = "";
 		let modifyMeetingResult = await UpdateDataUtil.modifyMeeting(user, meetingParams).then((result)=>{
 			console.log("modifyMeetingResult", result);
 			return result;
 		}).catch((e)=>{
-			console.log("modifyErrorResult", e.message);
-			resultMsg = e.message;
-			return false;
+			let resultMsg = {
+				success:false,
+				msg:e.message
+			};
+			return resultMsg;
 		});
-		// dispatch(refreshing(false)); 
-
+		dispatch(refreshing(false)); 
 		dispatch({
 			type: MeetingTypes.MEETING_MODIFYRESULT,
 			result:modifyMeetingResult,
-			resultMsg:resultMsg
+			resultMsg:modifyMeetingResult.success ? null: modifyMeetingResult.msg
 		}); 
 	}
 }
@@ -100,7 +103,6 @@ export function getMeetings(condition = ""){
 			condition:condition, //查詢使用
 		}
 		let meetingsResult = await UpdateDataUtil.getMeetings(user, content).then((result)=>{
-			console.log("getMeetings", result);
 			return result;
 		}).catch((e)=>{
 			console.log("e", e);
@@ -155,13 +157,11 @@ export function getPersonDateTime(personId){
 			console.log("e", e);
 			return [];
 		});
-		// meetingsResult = await formatPersonDateTime(meetingsResult);
-		
+
 		dispatch({
 			type: MeetingTypes.GET_MEETINGSPERSON_DATETIME,
 			meetingsResult
 		});
-		
 	}
 }
 
@@ -191,28 +191,33 @@ function formatPersonDateTime(meetings){
 	return dateArray;
 }
 
-/*
-export function searchMeeting(meetingParams){
+export function getFreeDateTime(meetingParams, freeTimeUnit){
 	return async (dispatch, getState) => {
-		// dispatch(refreshing(true)); 	
+		dispatch(refreshing(true)); 	
+
 		let user = getState().UserInfo.UserInfo;
-		let resultMsg = "";
-		let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
-			console.log("searchMeeting", result); // 顯示此群人有哪些會議
+		let content = {
+			startdate:meetingParams.startdate,
+			enddate  :meetingParams.enddate,
+			attendees:meetingParams.attendees,
+			min      :freeTimeUnit
+		}
+		// console.log("content", content);
+		
+		let getFreeDateTimeResult = await UpdateDataUtil.getFreeDateTime(user, content).then((result)=>{
+			// console.log("result", result);
 			return result;
 		}).catch((e)=>{
-			resultMsg = e.message;
-			console.log("searchMeetingError", resultMsg);
-			return false;
+			console.log("e", e);
+			return [];
 		});
-		// dispatch(refreshing(false)); 
-		console.log("searchMeetingResult", searchMeetingResult);
-		/*
+		
+		// getFreeDateTimeResult = [];
+
 		dispatch({
-			type: MeetingTypes.MEETING_ACTIONRESULT,
-			result:searchMeetingResult,
-			resultMsg:resultMsg
-		}); 
+			type: MeetingTypes.GET_MEETINGS_FREE_DATETIME,
+			getFreeDateTimeResult
+		});
+		dispatch(refreshing(false)); 
 	}
 }
-*/

@@ -7,10 +7,10 @@ import SearchInput, { createFilter } from 'react-native-search-filter';
 const KEYS_TO_FILTERS = ['EMPID', 'DEPNAME', 'NAME', 'MAIL', 'SKYPE', 'CELLPHONE','TELPHONE','JOBTITLE'];
 
 import * as NavigationService from '../../../utils/NavigationService';
-import HeaderForGeneral   from '../../../components/HeaderForGeneral';
-import MeetingItemForPerson            from '../../../components/MeetingItemForPerson';
-import NoMoreItem            from '../../../components/NoMoreItem';
-import * as MeetingAction        from '../../../redux/actions/MeetingAction';
+import HeaderForGeneral       from '../../../components/HeaderForGeneral';
+import MeetingItemForPerson   from '../../../components/Meeting/MeetingItemForPerson';
+import NoMoreItem             from '../../../components/NoMoreItem';
+import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 
 class MeetingTimeForPersonPage extends React.PureComponent  {
 	constructor(props) {

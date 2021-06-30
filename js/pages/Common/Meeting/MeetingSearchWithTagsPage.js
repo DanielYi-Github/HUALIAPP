@@ -6,10 +6,10 @@ import { connect }   from 'react-redux';
 import TagInput      from 'react-native-tags-input';
 import { bindActionCreators } from 'redux';
 
-import * as UpdateDataUtil from '../../../utils/UpdateDataUtil';
-import * as NavigationService   from '../../../utils/NavigationService';
+import * as UpdateDataUtil    from '../../../utils/UpdateDataUtil';
+import * as NavigationService from '../../../utils/NavigationService';
 import ToastUnit              from '../../../utils/ToastUnit';
-import * as MeetingAction        from '../../../redux/actions/MeetingAction';
+import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 
 
 class MeetingSearchWithTagsPage extends React.Component {
@@ -34,7 +34,7 @@ class MeetingSearchWithTagsPage extends React.Component {
       searchedData      :[],          //關鍵字搜尋出來的資料
       searchedCount     :0,           //關鍵字搜尋出來的筆數
       data              :[],          //搜尋出來的資料
-      attendees         :this.props.route.params.attendees,  //參與人
+      attendees         :this.deepClone(this.props.route.params.attendees),  //參與人
       isFooterRefreshing:false,
       isEnd             :false        //紀錄搜尋結果是否已經沒有更多資料
     };
@@ -146,8 +146,7 @@ class MeetingSearchWithTagsPage extends React.Component {
               </Left>
               <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>
                   <Title style={{color:this.props.style.color}} onPress={()=>{ this.setState({ isShowSearch:true });}}>
-                    {/*{this.state.data.component.name}*/}
-                    {"新增參與人"}
+                    {"新增與會人員"}
                   </Title>
               </Body>
               <Right style={{alignItems: 'center'}}>
@@ -155,14 +154,7 @@ class MeetingSearchWithTagsPage extends React.Component {
                   <Icon name='search' style={{color:this.props.style.color}}/>
                 </Button>
                 <TouchableOpacity 
-                  style={{
-                    backgroundColor: '#47ACF2', 
-                    paddingLeft: 10, 
-                    paddingRight: 10,
-                    paddingTop: 5,
-                    paddingBottom: 5, 
-                    borderRadius: 10
-                  }}
+                  style={{backgroundColor: '#47ACF2', paddingLeft: 10, paddingRight: 10,paddingTop: 5,paddingBottom: 5, borderRadius: 10}}
                   onPress={()=>{
                     Keyboard.dismiss();
                     this.state.sendValueBack(this.state.attendees);
@@ -196,7 +188,7 @@ class MeetingSearchWithTagsPage extends React.Component {
 
         <View style={{flex: 1, paddingTop: 20}}>
           <Label style={{marginLeft: 5, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
-            {`${this.props.state.Language.lang.CreateFormPage.QuickSelect}${"邀請人"}`}
+            {`${this.props.state.Language.lang.CreateFormPage.QuickSelect}${"與會人員"}`}
           </Label>
           <FlatList
             keyExtractor          ={(item, index) => index.toString()}
@@ -213,6 +205,7 @@ class MeetingSearchWithTagsPage extends React.Component {
   }
 
   loadMoreData = (isSearching, searchedData = null) => {
+    console.log(isSearching, searchedData);
     isSearching = (typeof isSearching == "object") ? false : isSearching;
     let isSearch = isSearching ? isSearching : this.state.isSearch;
     searchedData = (searchedData == null) ? this.state.searchedData : searchedData;
@@ -234,6 +227,7 @@ class MeetingSearchWithTagsPage extends React.Component {
             UpdateDataUtil.getCreateFormDetailFormat(user, action, {count:count, condition:this.state.tKeyword})
           ];
         } else {
+          console.log(this.state.keyword);
           searchList.push(
             UpdateDataUtil.getCreateFormDetailFormat(user, action, {count:count, condition:this.state.keyword})
           );
@@ -346,40 +340,47 @@ class MeetingSearchWithTagsPage extends React.Component {
         </Item>
       );
     }else{
-      let keyword = this.state.isChinesKeyword ? this.state.tKeyword : this.state.keyword;
-      if (this.state.isSearch && this.state.searchedData.length == 0) {
-        footer = (
-          <Item style={{padding: 15, justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
-              <Label style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{`${this.props.state.Language.lang.CreateFormPage.SearchNothing} "${this.state.data.component.name}"`}</Label>
-              <Label style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{`${this.props.state.Language.lang.CreateFormPage.AddSearchItemOrNot} "${keyword}" ${this.state.data.component.name} ?`}</Label>
-              <Button light
-                style={{
-                  marginTop: 15,
-                  padding: 15,
-                  alignSelf: 'center', 
-                  borderColor: '#575757'
-                }}
-                onPress={()=>{
-                  this.addTag({
-                    COLUMN1: null, 
-                    name: keyword, 
-                    COLUMN3: null, 
-                    COLUMN4: null
-                  });
-                }}
-              >
-                <Text>{this.props.state.Language.lang.CreateFormPage.AddSearchItem}</Text>
-                <Icon name="add" />
-              </Button>
-          </Item>
-        )
-      } else {
-        footer = (
-          <Item style={{padding: 15, justifyContent: 'center', backgroundColor: this.props.style.InputFieldBackground}}>
-              <Label>{this.props.state.Language.lang.ListFooter.NoMore}</Label>
-          </Item>
-        )  
-      }
+      footer = (
+        <Item style={{padding: 15, justifyContent: 'center', backgroundColor: this.props.style.InputFieldBackground}}>
+            <Label>{this.props.state.Language.lang.ListFooter.NoMore}</Label>
+        </Item>
+      ) 
+      /*
+        let keyword = this.state.isChinesKeyword ? this.state.tKeyword : this.state.keyword;
+        if (this.state.isSearch && this.state.searchedData.length == 0) {
+          footer = (
+            <Item style={{padding: 15, justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+                <Label style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{`${this.props.state.Language.lang.CreateFormPage.SearchNothing} "${this.state.data.component.name}"`}</Label>
+                <Label style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{`${this.props.state.Language.lang.CreateFormPage.AddSearchItemOrNot} "${keyword}" ${this.state.data.component.name} ?`}</Label>
+                <Button light
+                  style={{
+                    marginTop: 15,
+                    padding: 15,
+                    alignSelf: 'center', 
+                    borderColor: '#575757'
+                  }}
+                  onPress={()=>{
+                    this.addTag({
+                      COLUMN1: null, 
+                      name: keyword, 
+                      COLUMN3: null, 
+                      COLUMN4: null
+                    });
+                  }}
+                >
+                  <Text>{this.props.state.Language.lang.CreateFormPage.AddSearchItem}</Text>
+                  <Icon name="add" />
+                </Button>
+            </Item>
+          )
+        } else {
+          footer = (
+            <Item style={{padding: 15, justifyContent: 'center', backgroundColor: this.props.style.InputFieldBackground}}>
+                <Label>{this.props.state.Language.lang.ListFooter.NoMore}</Label>
+            </Item>
+          )  
+        }
+      */
     }
 
     return footer;
@@ -418,6 +419,10 @@ class MeetingSearchWithTagsPage extends React.Component {
     });
 
     return enableMeeting;
+  }
+
+  deepClone(src) {
+    return JSON.parse(JSON.stringify(src));
   }
 }
 

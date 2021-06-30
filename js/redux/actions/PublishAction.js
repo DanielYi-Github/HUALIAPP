@@ -75,6 +75,7 @@ export function submitPublish(user, data, com, fac){
 		/*
 		*	server 同步資料	
 		*/
+
 		
 		Promise.all([
 			UpdateDataUtil.setPushMsg(user,content),
@@ -86,7 +87,7 @@ export function submitPublish(user, data, com, fac){
 			}
 			dispatch( submit_fail() );  		//結束載入資料畫面
 		})
-
+		
 		
 		/*
 		{
