@@ -98,6 +98,9 @@ import MeetingListPage           from './pages/Common/Meeting/MeetingListPage';
 import MeetingInsertPage         from './pages/Common/Meeting/MeetingInsertPage';
 import MeetingInsertWithTagsPage from './pages/Common/Meeting/MeetingInsertWithTagsPage';
 
+import DailyOralEnglishPage from "./pages/Common/DailyOralEnglish/DailyOralEnglishPage";
+import DailyOralEnglishDetailPage from "./pages/Common/DailyOralEnglish/DailyOralEnglishDetailPage";
+
 function ShowSplashPage(props){
   const isFocused = useIsFocused();
   return <SplashPage {...props} isFocused={isFocused}/>
@@ -329,7 +332,8 @@ function MainStack(props){
       <AppStack.Screen name ="MeetingInsert" component={MeetingInsertPage} />
       <AppStack.Screen name ="MeetingInsertWithTags" component={MeetingInsertWithTagsPage} />
 
-
+      <AppStack.Screen name ="DailyOralEnglish" component={DailyOralEnglishPage}/>
+      <AppStack.Screen name ="DailyOralEnglishDetail" component={DailyOralEnglishDetailPage}/>
       
     </AppStack.Navigator>
   )

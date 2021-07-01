@@ -130,6 +130,23 @@ let UpgradeDBTableUtil = {
 		    });
 		  }
 		});
+		//檢查有無表單
+		SQLite.checkTable("THF_DAILY_ORAL_ENGLISH").then((data)=>{
+			if (!data) {
+				let createTable = `CREATE TABLE THF_DAILY_ORAL_ENGLISH ( 
+					OID integer PRIMARY KEY AUTOINCREMENT, 
+					CONTENT varchar ( 255 ) NOT NULL, 
+					TRANSLATE varchar ( 255 ) NOT NULL, 
+					PUSHDATE numeric DEFAULT (datetime('now','+8 hour')), 
+					STATUS char ( 1 ) NOT NULL DEFAULT 'Y', 
+					CRTDAT numeric NOT NULL DEFAULT (datetime('now','+8 hour')), 
+					TXDAT numeric DEFAULT (datetime('now','+8 hour')) 
+				  )`;
+				SQLite.createTable(createTable).then((e)=>{
+					console.log('THF_DAILY_ORAL_ENGLISH:',e);
+				});
+			}
+		  });
 	},
 }
 

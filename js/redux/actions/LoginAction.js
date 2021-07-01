@@ -386,7 +386,8 @@ export function initialApi(user,way=false){
 			UpdateDataUtil.updateModule(user),		//module
 			UpdateDataUtil.setLoginInfo(user),
   			UpdateDataUtil.updateRead(user)			//訊息讀取表       
-  		];
+			UpdateDataUtil.updateDailyOralEnglish(user) //每日英语
+		];
 
 	  	Promise.all(arr).then( async (data) => {
 	  		loadBannerImagesIntoState(dispatch, getState);//撈取HomePage Banners資料
