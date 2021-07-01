@@ -205,7 +205,6 @@ class MeetingSearchWithTagsPage extends React.Component {
   }
 
   loadMoreData = (isSearching, searchedData = null) => {
-    console.log(isSearching, searchedData);
     isSearching = (typeof isSearching == "object") ? false : isSearching;
     let isSearch = isSearching ? isSearching : this.state.isSearch;
     searchedData = (searchedData == null) ? this.state.searchedData : searchedData;
@@ -234,43 +233,43 @@ class MeetingSearchWithTagsPage extends React.Component {
         }
 
         Promise.all(searchList).then((result) => {
-          if (this.state.isChinesKeyword) {
-            let searchedData = this.state.searchedData.concat(result[0]);
-            searchedData = searchedData.concat(result[1]);
-
-            this.setState({
-              searchedData:this.dedup(searchedData),
-              isFooterRefreshing:false,
-              isEnd:(result[0].length == 0 && result[1].length == 0) ? true: false
-            })
-          } else {
-            this.setState({
-              searchedData:this.state.searchedData.concat(result[0]),
-              isFooterRefreshing:false,
-              isEnd:result[0].length == 0 ? true: false
-            })
-          }
+          let temparray = this.state.isChinesKeyword ? [...result[0], ...result[1]]: result[0];
+          let isEnd = this.dealIsDataEnd(searchedData, temparray);
+          this.setState({
+           searchedData: isEnd? searchedData: this.dedup([...searchedData, ...temparray]),
+           isFooterRefreshing:false,
+           isEnd:isEnd
+          })
         }).catch((err) => {
           console.log(err);
         })
       } else {
-
-        let actionObject = {
-            condition:"", //查詢使用
-        };
+        let actionObject = { condition:"" };//查詢使用
         actionObject.count = this.state.data.length;
-
         UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
-          let data = this.state.data;
-          data = data.concat(result);
+          let isEnd = this.dealIsDataEnd(this.state.data, result);
           this.setState({
-            data:data,
+            data              :isEnd ? this.state.data: this.state.data.concat(result) ,
             isFooterRefreshing:false,
-            isEnd:result.length == 0 ? true: false
-          })
+            isEnd             :isEnd
+          });
         });
       }
     }
+  }
+
+  dealIsDataEnd = (stateData, resultData) => {
+    let isEnd = false;
+    if (
+      resultData.length == 0 ||
+      ( stateData.length != 0 && stateData[stateData.length-1].id == resultData[resultData.length-1].id )
+    ) {
+      isEnd = true;
+    } else {
+      isEnd = false;
+    }
+
+    return isEnd;
   }
 
   renderTapItem = (item) => {

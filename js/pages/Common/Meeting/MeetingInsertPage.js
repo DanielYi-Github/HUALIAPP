@@ -890,6 +890,7 @@ class MeetingInsertPage extends React.PureComponent  {
           initiator      :this.state.initiator,
           chairperson    :this.state.chairperson,
           attendees      :this.state.attendees,
+          timezone       :new Date(this.state.startdate).getTimezoneOffset().toString()
       }
 
       

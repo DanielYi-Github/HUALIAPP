@@ -34,8 +34,6 @@ function loadModeType(meetingModeTypes){
 
 export function addMeeting(meetingParams){
 	return async (dispatch, getState) => {
-			console.log(this);
-			
 		dispatch(refreshing(true)); 	
 		let user = getState().UserInfo.UserInfo;
 		let addMeetingResult = await UpdateDataUtil.addMeeting(user, meetingParams).then((result)=>{
@@ -54,7 +52,6 @@ export function addMeeting(meetingParams){
 		if (addMeetingResult.success) {
 			this.getMeetings();
 		}
-
 	}
 }
 

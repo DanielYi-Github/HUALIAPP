@@ -253,7 +253,6 @@ export async function updateAPP(user) {
 				} else {
 					insertSQL += "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?),";
 				}
-
 				apps = apps.concat([
 					data[i].oid,
 					data[i].id,
@@ -2815,7 +2814,6 @@ export async function getCreateFormDetailFormat(user, url, content = {}){
 			"userId" :Common.encrypt(user.loginID),
 			"content":Common.encrypt(content)
 		}
-		
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
@@ -3228,15 +3226,17 @@ export async function updateModule(user){
 * @return void
 */
 export async function setLoginInfo(user) {
+	let date = new Date().getTimezoneOffset().toString();
 	let url = 'data/setLoginInfo';
 	let content = {
-		"userid": user.loginID,
-		"ip": await Device.getIP(),
-		"platform": Platform.OS,
+		"userid"         : user.loginID,
+		"ip"             : await Device.getIP(),
+		"platform"       : Platform.OS,
 		"platformversion": Device.getSystemVersion(),
-		"model": Device.getModel(),
-		"appversion": Device.getVersion(),
-		"empid": user.id
+		"model"          : Device.getModel(),
+		"appversion"     : Device.getVersion(),
+		"empid"          : user.id,
+		"timezone"       : date
 	}
 	
 	let params = {
