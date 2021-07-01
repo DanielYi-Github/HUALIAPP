@@ -71,7 +71,9 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
             <Label 
               style={{
                 backgroundColor: this.props.style.containerBgColor,
-                paddingLeft: '3%'
+                paddingLeft: '3%',
+                paddingTop: 5,
+                paddingBottom: 5
               }}
             >
               {title}
@@ -88,16 +90,9 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
     switch (item.item) {
       case 'SuggestMeetingDateTime':
         if (item.section.isRefreshing) {
-          itemComponent = (
-            null
-            // <Spinner />
-            // 載入撈取的ＵＩ需要玩善
-            // <NoMoreItem text={this.props.state.Language.lang.ListFooter.Loading}/>
-          );
+          itemComponent = (null);
         } else {
-          
           itemComponent = (
-            
             <MeetingTimeSuggestItem
               text={"建議安排會議時間"}
               data={item.section.suggestDateTime[item.index]}
@@ -115,7 +110,6 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
         
         break;
       case 'MoreButton':
-      
        itemComponent = (
          <Card style={{alignSelf: 'center'}}>
           <CardItem button 
@@ -133,7 +127,6 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
       
         break;
       default:
-      
         itemComponent = (
           <MeetingItemForPerson 
             name={item.section.meetings[item.index].name}
@@ -141,7 +134,6 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
             data={item.section.meetings[item.index]}
           />
         );
-        
     }
 
     return itemComponent;

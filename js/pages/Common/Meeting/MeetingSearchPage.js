@@ -72,7 +72,6 @@ class MeetingSearchPage extends React.PureComponent  {
             <CardItem style={{flexDirection: 'column', alignContent: 'flex-start', justifyContent: 'flex-start'   }}>        
               {/*時間*/}
                <Item style={{
-                backgroundColor: '#fff',
                 flexDirection: 'row',
                 borderBottomWidth: 0,
               }}>
@@ -98,7 +97,6 @@ class MeetingSearchPage extends React.PureComponent  {
             <CardItem style={{flexDirection: 'column', alignContent: 'flex-start', justifyContent: 'flex-start'   }}>    
               {/*會議參與人*/}
               <Item style={{
-                backgroundColor: '#fff',
                 borderWidth: 10,
                 height: tags.tagsArray.length == 0 ? this.props.style.inputHeightBase: null,
                 paddingLeft: 10,
@@ -176,10 +174,10 @@ class MeetingSearchPage extends React.PureComponent  {
                 >
                   <Body style={{width:"95%", alignItems: 'flex-start', justifyContent: 'flex-start'}}>
                     <Text style={{color:"#5cb85c", fontWeight: 'bold', fontSize: 22, paddingBottom: 5}}>{"太棒了!"}</Text>
-                    <Text style={{color:"#757575", fontWeight: 'bold', paddingBottom: 2.5}} >
+                    <Text style={{ fontWeight: 'bold', paddingBottom: 2.5}} >
                       {`期間：${DateFormat( startdate, "m/dd HH:MM")} - ${DateFormat( enddate, "m/dd HH:MM")}`}
                     </Text>
-                    <Text style={{color:"#757575", fontWeight: 'bold', paddingRight: 10}}>
+                    <Text style={{fontWeight: 'bold', paddingRight: 10}}>
                       {"您所選的與會人員沒有安排會議，是否直接用此設定幫您新增會議？"}
                     </Text>
                   </Body>

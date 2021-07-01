@@ -58,7 +58,9 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
             <Label 
               style={{
                 backgroundColor: this.props.style.containerBgColor,
-                paddingLeft: '3%'
+                paddingLeft: '3%',
+                paddingTop: 5,
+                paddingBottom: 5
               }}
             >
               {title}

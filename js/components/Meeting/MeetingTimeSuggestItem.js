@@ -28,27 +28,27 @@ export default class MeetingTimeSuggestItem extends Component {
 			    <Body style={{width:"95%", alignContent: 'flex-start'}}>
 			    	{
 			    		isCrossDate ?
-			    			<Text style={{color:"#757575", fontWeight: 'bold'}}>
+			    			<Text style={{fontWeight: 'bold'}}>
 			    				{`${DateFormat( startdate, "mm/dd")}`}
 			    			</Text>
 			    		:
-			    			<Text style={{color:"#757575", fontWeight: 'bold'}}>
+			    			<Text style={{fontWeight: 'bold'}}>
 			    				{`跨日會議${DateFormat( startdate, "mm/dd")} - ${DateFormat( enddate, "mm/dd")}`}
 			    			</Text>
 			    	}
 			    	<Body style={{width: '100%', flexDirection: 'row', alignContent: 'space-between', marginTop: 3, marginBottom: 3}} >
-			    		<Text style={{color:"#757575", fontWeight: 'bold', fontSize: 22}}>
+			    		<Text style={{fontWeight: 'bold', fontSize: 22}}>
 			    			{`${DateFormat( startdate, "HH:MM")}`}
 			    		</Text>
 
 			    		<View style ={{borderWidth: 3, borderColor: '#757575', width: 20, marginLeft: 20, marginRight: 20, borderRadius: 5}}/>
 
-			    		<Text style={{color:"#757575", fontWeight: 'bold', fontSize: 22}}>
+			    		<Text style={{fontWeight: 'bold', fontSize: 22}}>
 			    			{`${DateFormat( enddate, "HH:MM")}`}
 			    		</Text>
 			    	</Body>
 			    	<Body style={{width: '100%'}}>
-			    		<Text style={{alignSelf: 'flex-start', color:"#757575", fontWeight: 'bold', paddingRight: 10}}>
+			    		<Text style={{alignSelf: 'flex-start', fontWeight: 'bold', paddingRight: 10}}>
 			    		  {"此段時間各位都有空"}
 			    		</Text>
 			    	</Body>

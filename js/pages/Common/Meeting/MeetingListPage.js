@@ -96,7 +96,6 @@ class MeetingListPage extends React.PureComponent  {
 
     // 整理顯示會議內容的顯示格式
     meetingList = this.formatMeetingDate(meetingList);
-
     return (
       <Container>
         <HeaderForSearch
@@ -179,7 +178,9 @@ class MeetingListPage extends React.PureComponent  {
             <Label 
               style={{
                 backgroundColor: this.props.style.containerBgColor,
-                paddingLeft: '3%'
+                paddingLeft: '3%',
+                paddingTop: 5,
+                paddingBottom: 5
               }}
             >
               {title}
@@ -267,7 +268,7 @@ class MeetingListPage extends React.PureComponent  {
   }
 
   componentWillUnmount(){
-    this.props.actions.resetMeetingListRedux();
+    // this.props.actions.resetMeetingListRedux();
   }
 }
 

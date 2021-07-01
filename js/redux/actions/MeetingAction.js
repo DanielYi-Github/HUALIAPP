@@ -34,17 +34,14 @@ function loadModeType(meetingModeTypes){
 
 export function addMeeting(meetingParams){
 	return async (dispatch, getState) => {
+			console.log(this);
+			
 		dispatch(refreshing(true)); 	
 		let user = getState().UserInfo.UserInfo;
 		let addMeetingResult = await UpdateDataUtil.addMeeting(user, meetingParams).then((result)=>{
-			// console.log("addMeeting", result);
 			return result;
 		}).catch((e)=>{
-			console.log("modifyErrorResult", e.message);
-			let resultMsg = {
-				success:false,
-				msg:e.message
-			};
+			let resultMsg = { success:false, msg:e.message};
 			return resultMsg;
 		});
 		dispatch(refreshing(false)); 
@@ -53,6 +50,11 @@ export function addMeeting(meetingParams){
 			result:addMeetingResult,
 			resultMsg:addMeetingResult.success ? null: addMeetingResult.msg
 		}); 
+
+		if (addMeetingResult.success) {
+			this.getMeetings();
+		}
+
 	}
 }
 
@@ -60,14 +62,11 @@ export function modifyMeeting(meetingParams){
 	return async (dispatch, getState) => {
 		dispatch(refreshing(true)); 	
 		let user = getState().UserInfo.UserInfo;
+		
 		let modifyMeetingResult = await UpdateDataUtil.modifyMeeting(user, meetingParams).then((result)=>{
-			console.log("modifyMeetingResult", result);
 			return result;
 		}).catch((e)=>{
-			let resultMsg = {
-				success:false,
-				msg:e.message
-			};
+			let resultMsg = { success:false, msg:e.message };
 			return resultMsg;
 		});
 		dispatch(refreshing(false)); 
@@ -76,6 +75,10 @@ export function modifyMeeting(meetingParams){
 			result:modifyMeetingResult,
 			resultMsg:modifyMeetingResult.success ? null: modifyMeetingResult.msg
 		}); 
+
+		if (modifyMeetingResult.success) {
+			this.getMeetings();
+		}
 	}
 }
 
@@ -96,19 +99,20 @@ export function resetMeetingListRedux(){
 }
 
 export function getMeetings(condition = ""){
-	return async (dispatch, getState) => {
+	return async (dispatch, getState) => {		
 		let user = getState().UserInfo.UserInfo;
 		let content = {
-			count    :getState().Meeting.meetingList.length,
-			condition:condition, //查詢使用
+			// count    :getState().Meeting.meetingList.length,
+			// condition:condition, //查詢使用
 		}
 		let meetingsResult = await UpdateDataUtil.getMeetings(user, content).then((result)=>{
+			console.log("getMeetings", result);
 			return result;
 		}).catch((e)=>{
 			console.log("e", e);
 			return [];
 		});
-		meetingsResult = [ ...getState().Meeting.meetingList, ...meetingsResult];
+		// meetingsResult = [ ...getState().Meeting.meetingList, ...meetingsResult];
 
 		dispatch({
 			type: MeetingTypes.GET_MEETINGS,

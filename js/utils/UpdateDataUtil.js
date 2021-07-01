@@ -1295,12 +1295,9 @@ export async function updateVersion() {
 	
 	let lSQL   = "SELECT MAX(TXDAT) as TXDAT FROM THF_VERSION"; //取最大的更新時間
 	let lData  = await SQLite.selectData(lSQL, []);
-	console.log(lData.item(0));
 	let ltxdat = lData.item(0).TXDAT; 							//更新時間
 	let url    = "version/getVersion";
 	let params = { "content":ltxdat ? ltxdat : "" };
-
-	console.log(params);
 
 	let promise = new Promise((resolve, reject) => {
 		if (ltxdat === null) {

@@ -17,6 +17,7 @@ import ToastUnit              from '../../../utils/ToastUnit';
 class MeetingInsertPage extends React.PureComponent  {
 	constructor(props) {
 	    super(props);
+
       let oid              = "";
       let isParams         = this.props.route.params ? true : false;
       let isEditable       = true;
@@ -65,7 +66,7 @@ class MeetingInsertPage extends React.PureComponent  {
             meetingPlaceName = meetingParam.meetingPlaceName ? meetingParam.meetingPlaceName : meetingPlaceName;
             meetingNumber    = meetingParam.meetingNumber ? meetingParam.meetingNumber : meetingNumber;
             meetingPassword  = meetingParam.meetingPassword ? meetingParam.meetingPassword : meetingPassword;
-            remindtime       = meetingParam.remindtime;
+            remindtime       = meetingParam.min;
             break;
           case 'MeetingSearch': // 參與人員搜尋那邊過來的
             now              = meetingParam.startdate.replace(' ', 'T');;
@@ -103,7 +104,7 @@ class MeetingInsertPage extends React.PureComponent  {
               meetingPlaceName = meetingParam.meetingPlaceName ? meetingParam.meetingPlaceName : meetingPlaceName;
               meetingNumber    = meetingParam.meetingNumber ? meetingParam.meetingNumber : meetingNumber;
               meetingPassword  = meetingParam.meetingPassword ? meetingParam.meetingPassword : meetingPassword;
-              remindtime       = meetingParam.remindtime;
+              remindtime       = meetingParam.min;
             } else {
               isSearchedMeeting = false;
             }
@@ -168,7 +169,6 @@ class MeetingInsertPage extends React.PureComponent  {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.state.Meeting.actionResult !== null) {
-        console.log(nextProps.state.Meeting.actionResult);
         if (nextProps.state.Meeting.actionResult.success) {
           ToastUnit.show('success', this.state.isModify ?"修改會議成功" :"新增會議成功");
           this.props.actions.resetMeetingRedux();
@@ -241,7 +241,7 @@ class MeetingInsertPage extends React.PureComponent  {
         />
         <Content>
           {/*會議主題*/}
-          <Item style={{ backgroundColor: '#fff', marginTop: 30, borderWidth: 0, paddingLeft: 10 }}>
+          <Item style={{ backgroundColor: this.props.style.InputFieldBackground, marginTop: 30, borderWidth: 0, paddingLeft: 10 }}>
               <Label>會議主題</Label>
               <Input 
                   scrollEnabled ={false}
@@ -253,7 +253,7 @@ class MeetingInsertPage extends React.PureComponent  {
               />
           </Item>
 
-          <Item style={{ backgroundColor: '#fff', borderWidth: 0, paddingLeft: 10 }}>
+          <Item style={{ backgroundColor: this.props.style.InputFieldBackground, borderWidth: 0, paddingLeft: 10 }}>
               <Label>說明</Label>
               <Input 
                 multiline 
@@ -268,7 +268,7 @@ class MeetingInsertPage extends React.PureComponent  {
           
 
           {/*時間*/}
-           <Item style={{ backgroundColor: '#fff', marginTop: 30, borderWidth: 0, flexDirection: 'row' }}>
+           <Item style={{ backgroundColor: this.props.style.InputFieldBackground, marginTop: 30, borderWidth: 0, flexDirection: 'row' }}>
             <TouchableOpacity 
               style    ={{flex:1, flexDirection: 'column', padding: 10}}
               disabled ={!this.state.isEditable}
@@ -290,7 +290,7 @@ class MeetingInsertPage extends React.PureComponent  {
           {/*會議主席*/}
           <Item 
             style={{
-              backgroundColor: '#fff',
+              backgroundColor: this.props.style.InputFieldBackground,
               height         : this.props.style.inputHeightBase,
               marginTop      : 30,
               paddingLeft    : 10,
@@ -318,7 +318,7 @@ class MeetingInsertPage extends React.PureComponent  {
 
           {/*會議參與人*/}
           <Item style={{
-            backgroundColor: '#fff',
+            backgroundColor: this.props.style.InputFieldBackground,
             height         : tags.tagsArray.length == 0 ? this.props.style.inputHeightBase: null,
             paddingTop     : 10,
             paddingLeft    : 10,
@@ -364,7 +364,7 @@ class MeetingInsertPage extends React.PureComponent  {
           {/*參與方式*/}
           <Item 
             style={{
-              backgroundColor: '#fff',
+              backgroundColor: this.props.style.InputFieldBackground,
               height: this.props.style.inputHeightBase,
               paddingLeft: 10,
               paddingRight: 5,
@@ -392,7 +392,7 @@ class MeetingInsertPage extends React.PureComponent  {
           {/*會議前提醒*/}
           <Item 
             style={{
-              backgroundColor: '#fff',
+              backgroundColor: this.props.style.InputFieldBackground,
               height         : this.props.style.inputHeightBase,
               paddingLeft    : 10,
               paddingRight   : 5,
@@ -704,6 +704,7 @@ class MeetingInsertPage extends React.PureComponent  {
 
     if (this.state.isOnlineMeeting) {
       let setStateFunction1, setStateFunction2;
+
       switch (this.state.meetingMode) {
         case 'Z': // ZOOM
           setStateFunction1 = (text)=>{ this.setState({ meetingNumber:text }); }
@@ -730,13 +731,23 @@ class MeetingInsertPage extends React.PureComponent  {
         case 'T': // Tencent
           setStateFunction1 = (text)=>{ this.setState({ meetingNumber:text }); }
           compontent.push(
-            this.renderMeetingPlaceInfoItem( "會議號", this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
+            this.renderMeetingPlaceInfoItem( "會議室-號碼", this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
+          );
+          setStateFunction2 = (text)=>{ this.setState({ meetingPassword:text }); }
+          compontent.push(
+            this.renderMeetingPlaceInfoItem( "會議室-密碼", this.state.isEditable, this.state.meetingPassword, setStateFunction2 )
           );
           break;
         case 'M': // Mircasoft Lync
           setStateFunction1 = (text)=>{ this.setState({ meetingNumber:text }); }
           compontent.push(
-            this.renderMeetingPlaceInfoItem( "會議室資訊", this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
+            this.renderMeetingPlaceInfoItem( "會議連結", this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
+          );
+          break;
+        case 'D': // Mircasoft Lync
+          setStateFunction1 = (text)=>{ this.setState({ meetingNumber:text }); }
+          compontent.push(
+            this.renderMeetingPlaceInfoItem( "入會號", this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
           );
           break;
       }
@@ -760,7 +771,7 @@ class MeetingInsertPage extends React.PureComponent  {
     return (
       <Item 
         style={{
-          backgroundColor: '#fff',
+          backgroundColor: this.props.style.InputFieldBackground,
           height: this.props.style.inputHeightBase,
           paddingLeft: 10,
           paddingRight: 5,
@@ -884,7 +895,6 @@ class MeetingInsertPage extends React.PureComponent  {
       
       if (this.state.isModify) {
         // 修改會議
-        // meetingParams.oid = this.props.route.params.meeting.oid;
         meetingParams.oid = this.state.oid;
         this.props.actions.modifyMeeting(meetingParams);
       } else {
