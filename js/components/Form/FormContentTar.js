@@ -33,6 +33,7 @@ class FormContentTar extends Component {
 				value = (this.state.value == null) ? value : this.state.value; 
 			}
 
+
 			return(
 				 	<Item fixedLabel 
 				 		style={[
@@ -46,6 +47,7 @@ class FormContentTar extends Component {
 		               		multiline
                           	ref="focusInput"
 		               		value = {value}
+							scrollEnabled = {false}
 		               		style={{ textAlign: 'right', flex: 1}}
 		               		onEndEditing ={ async (text)=>{
 		               			await this.props.onPress(text.nativeEvent.text, this.props.data);

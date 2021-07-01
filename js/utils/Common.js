@@ -58,7 +58,6 @@ let Common = {
 	},
 	getNetworkStatus(){
 		return new Promise((resolve) => NetInfo.getConnectionInfo().then((connectionInfo) => {
-
 				switch(connectionInfo.type){
 			  		case 'none':
 			  		case 'unknown':
@@ -73,7 +72,12 @@ let Common = {
 		);
 	},
 	dateFormat(date){
-		var time = new Date(date);
+		if (date == null) {
+		} else {
+			date = date.replace(' ', 'T');
+		}
+
+		var time = new Date( date );
 		var y = time.getFullYear();
 		var m = time.getMonth()+1;
 		var d = time.getDate();
@@ -83,6 +87,10 @@ let Common = {
 		return y+'-'+this.add0(m)+'-'+this.add0(d)+' '+this.add0(h)+':'+this.add0(mm)+':'+this.add0(s);
 	},
 	dateFormatNoSecond(date,separator){
+		if (date == null) {
+		} else {
+			date = date.replace(' ', 'T');
+		}
 		var time = new Date(date);
 		var y = time.getFullYear();
 		var m = time.getMonth()+1;
@@ -92,6 +100,10 @@ let Common = {
 		return y+separator+this.add0(m)+separator+this.add0(d)+' '+this.add0(h)+':'+this.add0(mm);
 	},
 	dateFormatNoTime(date){
+		if (date == null) {
+		} else {
+			date = date.replace(' ', 'T');
+		}
 		var time = new Date(date);
 		var y = time.getFullYear();
 		var m = time.getMonth()+1;
@@ -100,6 +112,10 @@ let Common = {
 		return y+'-'+this.add0(m)+'-'+this.add0(d);
 	},	
 	dateFormatNoYear(date){
+		if (date == null) {
+		} else {
+			date = date.replace(' ', 'T');
+		}
 		var time = new Date(date);
 		var m = time.getMonth()+1;
 		var d = time.getDate();
@@ -108,6 +124,10 @@ let Common = {
 		return this.add0(m)+'-'+this.add0(d)+' '+this.add0(h)+':'+this.add0(mm);
 	},
 	dateFormatInbusdat(date){
+		if (date == null) {
+		} else {
+			date = date.replace(' ', 'T');
+		}
 		// date = date.replace(/\-/g, "/").replace(".0","");
 		var time = new Date(date).getTime(); 
     	var nowTime = new Date().getTime(); 
@@ -117,6 +137,10 @@ let Common = {
     	return y.toString();
 	},	
 	dateFormatNoYearTime(date){
+		if (date == null) {
+		} else {
+			date = date.replace(' ', 'T');
+		}
 		var time = new Date(date);
 		var m = time.getMonth()+1;
 		var d = time.getDate();

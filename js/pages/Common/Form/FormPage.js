@@ -174,7 +174,7 @@ class FormPage extends React.Component {
   }
 
   render() {
-    console.log("content", this.state.content);
+    // console.log("content", this.state.content);
 
     let formPage = (
       <Container>
@@ -232,18 +232,8 @@ class FormPage extends React.Component {
         {/*是否顯示loading 畫面*/}
         {
           (this.props.state.Form.isRefreshing) ? 
-            // <CustomModal text={null}/>
-            <Modal
-              animationType="fade"
-              // animationType="none"
-              transparent={true}
-              visible={true}
-              onRequestClose={() => {}}>
-              <Container style={{
-                justifyContent: 'center', 
-                alignItems: 'center', 
-                backgroundColor:this.props.style.SpinnerbackgroundColor
-              }}>
+            <Modal animationType="fade" transparent={true} visible={true} >
+              <Container style={{justifyContent: 'center', alignItems: 'center', backgroundColor:this.props.style.SpinnerbackgroundColor}}>
                 <Spinner color={this.props.style.SpinnerColor}/>
               </Container>
             </Modal>

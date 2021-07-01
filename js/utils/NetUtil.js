@@ -57,6 +57,10 @@ let NetUtil = {
 							responseJson.code = 200
 							return responseJson;
 							break;
+						case "24": 	// 資料請求成功，內容正確
+							responseJson.code = 200
+							return responseJson;
+							break;
 						case "13": 		// 憑證不存在
 							return responseJson; 
 							break;

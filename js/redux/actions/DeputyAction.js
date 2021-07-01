@@ -12,6 +12,7 @@ import * as NavigationService  from '../../utils/NavigationService';
 export function iniDeputyData(){
 	return async (dispatch) => {
 		dispatch(isLoading(true));
+		console.log("this",this);
 		await this.paramInit();
 		await this.cboParamInit();
 		await this.loadBPMDeputySetting();
@@ -22,6 +23,7 @@ export function iniDeputyData(){
 export function loadBPMDeputySetting() {
 	return async (dispatch, getState) => {
 	    await UpdateDataUtil.getBPMDeputySetting(getState().UserInfo.UserInfo).then(async (data) => {
+	    	console.log("loadBPMDeputySetting", data);
 			dispatch(setDeputyBasic(data));
 	    	await this.basicInit(data);
 	    	this.getDeputyTip();
@@ -947,10 +949,12 @@ async function getInitCondicton2 (rule,user,lang){
 	      for (let column of item.actionColumn) {
 	        actionObject[column] = (column == item.defaultvalue) ? true : false;
 	      }
-	      await UpdateDataUtil.getCreateFormDetailFormat(user, item.action, actionObject).then(async (data) => {
+	      await UpdateDataUtil.getCreateFormDetailFormat(user, item.action).then(async (data) => {
+	      	console.log(data);
+
 	          if(data){
                 returnValue = data;
-                returnValue["actionObject"] = actionObject;
+                // returnValue["actionObject"] = actionObject;
                 result = returnValue;
 	          }
 	      }).catch((e)=>{

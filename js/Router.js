@@ -94,9 +94,14 @@ import KPICategoryPage         from './pages/Common/Report/KPI/KPICategoryPage';
 
 import CreateWebViewPage       from './pages/Common/CreateWebViewPage';
 
-import MeetingListPage           from './pages/Common/Meeting/MeetingListPage';
-import MeetingInsertPage         from './pages/Common/Meeting/MeetingInsertPage';
-import MeetingInsertWithTagsPage from './pages/Common/Meeting/MeetingInsertWithTagsPage';
+import MeetingSearchPage            from './pages/Common/Meeting/MeetingSearchPage';
+import MeetingSearchWithTagsPage    from './pages/Common/Meeting/MeetingSearchWithTagsPage';
+import MeetingTimeForSearchPage     from './pages/Common/Meeting/MeetingTimeForSearchPage';
+import MeetingListPage              from './pages/Common/Meeting/MeetingListPage';
+import MeetingInsertPage            from './pages/Common/Meeting/MeetingInsertPage';
+import MeetingInsertChairpersonPage from './pages/Common/Meeting/MeetingInsertChairpersonPage';
+import MeetingInsertWithTagsPage    from './pages/Common/Meeting/MeetingInsertWithTagsPage';
+import MeetingTimeForPersonPage     from './pages/Common/Meeting/MeetingTimeForPersonPage';
 
 import DailyOralEnglishPage from "./pages/Common/DailyOralEnglish/DailyOralEnglishPage";
 import DailyOralEnglishDetailPage from "./pages/Common/DailyOralEnglish/DailyOralEnglishDetailPage";
@@ -329,12 +334,17 @@ function MainStack(props){
       <AppStack.Screen name ="CreateWebView"  component={CreateWebViewPage} />
 
       <AppStack.Screen name ="MeetingList" component={MeetingListPage} />
+      <AppStack.Screen name ="MeetingSearch" component={MeetingSearchPage} />
+      <AppStack.Screen name ="MeetingSearchWithTags" component={MeetingSearchWithTagsPage} />
       <AppStack.Screen name ="MeetingInsert" component={MeetingInsertPage} />
       <AppStack.Screen name ="MeetingInsertWithTags" component={MeetingInsertWithTagsPage} />
 
       <AppStack.Screen name ="DailyOralEnglish" component={DailyOralEnglishPage}/>
       <AppStack.Screen name ="DailyOralEnglishDetail" component={DailyOralEnglishDetailPage}/>
       
+      <AppStack.Screen name ="MeetingInsertChairperson" component={MeetingInsertChairpersonPage} />
+      <AppStack.Screen name ="MeetingTimeForPerson" component={MeetingTimeForPersonPage} />
+      <AppStack.Screen name ="MeetingTimeForSearch" component={MeetingTimeForSearchPage} />
     </AppStack.Navigator>
   )
 }

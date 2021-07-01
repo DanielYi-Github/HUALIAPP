@@ -7,6 +7,7 @@ import { connect }               from 'react-redux';
 import FormContentTextWithAction from '../../components/Form/FormContentTextWithAction';
 import FormContentCbo            from '../../components/Form/FormContentCbo';
 import FormContentDateTime       from '../../components/Form/FormContentDateTime';
+
 import HeaderForGeneral          from '../../components/HeaderForGeneral';
 import * as NavigationService  from '../../utils/NavigationService';
 
@@ -36,7 +37,7 @@ class DeputyPage extends React.Component {
     //過濾關鍵字所查詢的資料
     let lang = this.props.state.Language.lang.DeputyPage;
     let Deputy=this.props.state.Deputy;
-
+    console.log(Deputy);
     return (
       <Container>
       {/*標題列*/}

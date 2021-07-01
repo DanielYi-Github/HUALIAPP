@@ -766,7 +766,6 @@ export async function updateMasterData(user) {
 	let lSQL = "SELECT MAX(TXDAT) as TXDAT FROM THF_MASTERDATA"; //取最大的更新時間
 	let lData = await SQLite.selectData(lSQL, []);
 	let ltxdat = lData.item(0).TXDAT; //更新時間
-	console.log("ltxdat", ltxdat);
 	
 	let promise = new Promise((resolve, reject) => {
 
@@ -1108,7 +1107,6 @@ export async function updateEvent(user) {
 					index++;
 
 					dArray = dArray.concat([data[i].oid]);
-					
 					let nCrtDat = Common.dateFormat(data[i].crtdat);
 					let nTxDat = Common.dateFormat(data[i].txdat);
 					iArray = iArray.concat([
@@ -1410,7 +1408,6 @@ export async function updateVersion() {
 		}
 	});
 	return promise;
-
 }
 
 /**
@@ -1877,6 +1874,8 @@ export async function setPushMsg(user,content) {
 			"userId" : Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
+		// console.log(params);
+		
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
@@ -1885,6 +1884,7 @@ export async function setPushMsg(user,content) {
 			data = data.content;
 			resolve(data);
 		})
+		
 	});
 	return promise;
 }
@@ -2815,7 +2815,7 @@ export async function getCreateFormDetailFormat(user, url, content = {}){
 			"userId" :Common.encrypt(user.loginID),
 			"content":Common.encrypt(content)
 		}
-
+		
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
@@ -4130,4 +4130,195 @@ export async function updateDailyOralEnglish(user){
 			// })
 		}
 	})
+}
+/**
+共用模板
+* 取得參會方式
+* @param user資料
+*/
+export async function getMeetingModeType(user){
+
+	let content ={
+		"paramtype":"MeetingModeType"
+	}
+
+	let promise = new Promise((resolve, reject) => {
+		let url = "data/getParams";
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+			// "lang"   : Common.encrypt(user.lang)
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+ 			resolve(data);
+		})
+	});
+	return promise;
+}
+
+/**
+共用模板
+* 新增會議
+* @param user資料
+*/
+export async function addMeeting(user, content){
+
+	let promise = new Promise((resolve, reject) => {
+		let url = "meeting/add";
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+ 			resolve(data);
+		})
+	});
+	return promise;
+}
+
+
+/**
+共用模板
+* 修改會議
+* @param user資料
+*/
+export async function modifyMeeting(user, content){
+
+	let promise = new Promise((resolve, reject) => {
+		let url = "meeting/modify";
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+		};
+		// console.log("params", params);
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+ 			resolve(data);
+		})
+	});
+	return promise;
+}
+
+
+/**
+共用模板
+* 取得會議
+* @param user資料
+*/
+export async function getMeetings(user, content){
+		let promise = new Promise((resolve, reject) => {
+			let url = "meeting/get";
+			let params = {
+				"token"  : Common.encrypt(user.token),
+				"userId" : Common.encrypt(user.loginID),
+				"content": Common.encrypt(JSON.stringify(content)),
+				// "lang"   : Common.encrypt(user.lang)
+			};
+			NetUtil.getRequestContent(params, url).then((data)=>{
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
+				data = data.content;
+	 			resolve(data);
+			})
+		});
+		return promise;
+}
+
+
+/**
+共用模板
+* 取得取得多位特定人員的會議時程
+* @param user資料
+*/
+export async function searchMeeting(user, content){
+		let promise = new Promise((resolve, reject) => {
+			let url = "meeting/checkDoubleDateTime";
+			let params = {
+				"token"  : Common.encrypt(user.token),
+				"userId" : Common.encrypt(user.loginID),
+				"content": Common.encrypt(JSON.stringify(content)),
+				"lang"   : Common.encrypt(user.lang)
+			};
+			NetUtil.getRequestContent(params, url).then((data)=>{
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
+				data = data.content;
+	 			resolve(data);
+			})
+		});
+		return promise;
+}
+
+/**
+共用模板
+* 獲取特定人的會議時程
+* @param user資料
+*/
+export async function getPersonDateTime(user, content){
+		let promise = new Promise((resolve, reject) => {
+			let url = "meeting/getDateTime";
+			let params = {
+				"token"  : Common.encrypt(user.token),
+				"userId" : Common.encrypt(user.loginID),
+				"content": Common.encrypt(JSON.stringify(content)),
+				// "lang"   : Common.encrypt(user.lang)
+			};
+			NetUtil.getRequestContent(params, url).then((data)=>{
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
+				data = data.content;
+	 			resolve(data);
+			})
+		});
+		return promise;
+}
+
+/**
+共用模板
+* 獲取特定人的有空的會議時程
+* @param user資料
+*/
+export async function getFreeDateTime(user, content){
+		let promise = new Promise((resolve, reject) => {
+			let url = "meeting/getFreeDateTime";
+			let params = {
+				"token"  : Common.encrypt(user.token),
+				"userId" : Common.encrypt(user.loginID),
+				"content": Common.encrypt(JSON.stringify(content)),
+				// "lang"   : Common.encrypt(user.lang)
+			};
+
+			NetUtil.getRequestContent(params, url).then((data)=>{
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
+				data = data.content;
+	 			resolve(data);
+			})
+		});
+		return promise;
 }
