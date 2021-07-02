@@ -454,7 +454,7 @@ let Common = {
 		for (let i = 0; i < columnNum - 1; i++) {
 			selectInitSQL += ',?'
 		}
-		const deleteInitSQL = 'DELETE FROM THF_NOTICE WHERE OID in ('
+		const deleteInitSQL = 'DELETE FROM '+tableName+' WHERE OID in ('
 		const insertInitSQL = 'INSERT INTO ' + tableName + ' '
 		//拼写执行语句及整理对应的资料格式
 		let dExcuteList = [] //拼好的delete语句及对应资料数组

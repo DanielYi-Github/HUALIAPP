@@ -4060,74 +4060,56 @@ export async function updateDailyOralEnglish(user){
 	let sql = "SELECT MAX(TXDAT) AS TXDAT FROM THF_DAILY_ORAL_ENGLISH"
 	let data = await SQLite.selectData(sql,[])
 	let maxTxdat = data.item(0).TXDAT
-
+	console.log('maxTxdat:',maxTxdat);
 	let promise = new Promise((resolve,reject)=>{
 		//获取数据的API参数和URL
-		let enContent = Common.encrypt(JSON.stringify({txdat:maxTxdat}))
+		let enContent = Common.encrypt(maxTxdat ? maxTxdat : '')
 		let params = {
 			token:Common.encrypt(user.token),
 			userId:Common.encrypt(user.loginID),
 			content:enContent
 		}
-		let url = ''
+		let url = 'data/getEnglish'
 		//资料格式转换方法
 		let dataFun = row => {
 			let array = []
 			array.push(row.oid)
 			array.push(row.content)
 			array.push(row.translate)
-			array.push(Common.dateFormatNoTime(row.pushdate))
-			array.push(row.imageurl)
+			array.push(Common.dateFormat(row.pushdate))
+			array.push(row.imageurl ? row.imageurl : '')
+			array.push(row.status)
 			array.push(Common.dateFormat(row.crtdat))
 			array.push(Common.dateFormat(row.txdat))
 			return array
 		}
 
-		let content = [
-			{oid:'1',content:'Correction does much, but encouragement does more.',translate:'纠正很有用，但鼓励的作用更大。',pushdate:'2021-06-01 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'},
-			{oid:'2',content:'bcd',translate:'234',pushdate:'2021-06-02 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'},
-			{oid:'3',content:'cde',translate:'345',pushdate:'2021-06-03 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'},
-			{oid:'4',content:'cde',translate:'345',pushdate:'2021-06-04 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'},
-			{oid:'5',content:'cde',translate:'345',pushdate:'2021-06-05 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'},
-			{oid:'6',content:'cde',translate:'345',pushdate:'2021-06-06 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'},
-			{oid:'7',content:'cde',translate:'345',pushdate:'2021-06-07 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'},
-			{oid:'8',content:'cde',translate:'345',pushdate:'2021-06-08 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'},
-			{oid:'9',content:'cde',translate:'345',pushdate:'2021-06-09 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'},
-			{oid:'10',content:'cde',translate:'345',pushdate:'2021-06-10 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'},
-			{oid:'11',content:'cde',translate:'345',pushdate:'2021-06-11 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'},
-			{oid:'12',content:'cde',translate:'345',pushdate:'2021-06-12 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'},
-			{oid:'13',content:'cde',translate:'345',pushdate:'2021-06-13 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'},
-			{oid:'14',content:'cde',translate:'345',pushdate:'2021-06-14 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'},
-			{oid:'15',content:'cde',translate:'345',pushdate:'2021-06-15 13:00:00',imageurl:'',crtdat:'2021-06-29 13:00:00',txdat:'2021-06-29 13:00:00'}
-		]
-		if (maxTxdat !== null) {//没有资料则批量插入
-			// NetUtil.getRequestContent(params,url).then(data => {
-				// if (data.code != '200') reject(data)//code错误则直接回报错误
-				// let content = data.content
-				let excuteList = Common.tranBatchInsertSQL('THF_DAILY_ORAL_ENGLISH',content,dataFun,7,30)
-				console.log('updateDailyOralEnglish excuteList',excuteList);
+		if (maxTxdat === null) {//没有资料则批量插入
+			NetUtil.getRequestContent(params,url).then(data => {
+				if (data.code != '200') reject(data)//code错误则直接回报错误
+				let content = data.content
+				let excuteList = Common.tranBatchInsertSQL('THF_DAILY_ORAL_ENGLISH',content,dataFun,8,30)
 				SQLite.insertData_new(excuteList).then(()=>{
 					let end = new Date().getTime();
 					console.log("updateDailyOralEnglish_end:" + (end - start) / 1000);
 					resolve();
 				})
-			// })
+			})
 		}else {//有资料则差异更新
-			// NetUtil.getRequestContent(params,url).then(data => {
-				// if (data.code != '200') reject(data)//code错误则直接回报错误
-				// let content = data.content
-				let excuteList = Common.tranDiffUpdateSQL('THF_DAILY_ORAL_ENGLISH',content,dataFun,7,30)
-				console.log('updateDailyOralEnglish excuteList',excuteList);
+			NetUtil.getRequestContent(params,url).then(data => {
+				if (data.code != '200') reject(data)//code错误则直接回报错误
+				let content = data.content
+				let excuteList = Common.tranDiffUpdateSQL('THF_DAILY_ORAL_ENGLISH',content,dataFun,8,30)
 				const dExcuteList = excuteList['dExcuteList']
 				const iExcuteList = excuteList['iExcuteList']
 				Promise.all(dExcuteList.map(excute => SQLite.deleteData(excute[0], excute[1]))).then(()=>{
-					Promise.all(dExcuteList.map(excute => SQLite.insertData(excute[0], excute[1]))).then(()=>{
+					Promise.all(iExcuteList.map(excute => SQLite.insertData(excute[0], excute[1]))).then(()=>{
 						let end = new Date().getTime();
 						console.log("updateDailyOralEnglish:" + (end - start) / 1000);
 						resolve();
 					})
 				})
-			// })
+			})
 		}
 	})
 }

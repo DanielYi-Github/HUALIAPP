@@ -385,7 +385,7 @@ export function initialApi(user,way=false){
 			UpdateDataUtil.updateBanner(user),		//Banner
 			UpdateDataUtil.updateModule(user),		//module
 			UpdateDataUtil.setLoginInfo(user),
-  			UpdateDataUtil.updateRead(user)			//訊息讀取表       
+  			UpdateDataUtil.updateRead(user),		//訊息讀取表       
 			UpdateDataUtil.updateDailyOralEnglish(user) //每日英语
 		];
 

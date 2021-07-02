@@ -1,23 +1,29 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { StyleSheet } from 'react-native'
 import { Body, CardItem, Container, Content, Left, Right, Text, View, Thumbnail, Title, Label, Card } from "native-base";
 import HeaderForGeneral from "../../../components/HeaderForGeneral";
 import { FlatList, TouchableOpacity } from 'react-native';
 import * as NavigationService from '../../../utils/NavigationService';
-import * as SQLite       from '../../../utils/SQLiteUtil';
+import * as SQLite from '../../../utils/SQLiteUtil';
+import Common from '../../../utils/Common';
 
 class DailyOralEnglishPage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            title: '每日一句英語',
-            data: []
+            data: [], //显示的资料
+            totalCount: 0, //资料总笔数
+            pageSize: 10, //每页资料笔数
+            pageNum: 1, //页数
+            isEnd: false, //资料是否达到底部
+            loading: true
         }
     }
 
-    componentDidMount(){
-        
+    componentDidMount() {
+        this.loadDailyOralEnglishData()
     }
 
     render() {
@@ -27,27 +33,51 @@ class DailyOralEnglishPage extends Component {
                     isLeftButtonIconShow={true}
                     leftButtonIcon={{ name: "arrow-back" }}
                     leftButtonOnPress={() => this.props.navigation.goBack()}
-                    title={this.state.title}
+                    title={this.props.state.Language.lang.HomePage.DailyOralEnglish}
                 />
-                <Content>
-                    <FlatList
-                        keyExtractor={item => item.oid}
-                        data={this.state.data.reverse()}
-                        renderItem={this.renderListItem}
-                        // onEndReached={this.state.isEnd ? null : this.loadMoreData}
-                        // onEndReachedThreshold={0.3}
-                    />
-                </Content>
+                <FlatList
+                    keyExtractor={item => item.oid}
+                    data={this.state.data}
+                    renderItem={this.renderListItem}
+                    onEndReachedThreshold={0.3}
+                    onEndReached={this.loadMoreData}
+                    ListFooterComponent={this.renderFooter}
+                />
             </Container>
         )
     }
 
-    goDailyOralEnglishDetail = data => {
-        NavigationService.navigate("DailyOralEnglishDetail", { title: this.state.title, data: data });
+    loadDailyOralEnglishData() {
+        this.setState({ loading: true })
+        let count = 0
+        let nowDate = new Date().getUTCDate();
+        SQLite.selectData("select count(1) as COUNT from THF_DAILY_ORAL_ENGLISH where date(PUSHDATE) <= date('now') ", []).then(result => {
+            count = result.raw()[0].COUNT
+            return SQLite.selectData("select * from THF_DAILY_ORAL_ENGLISH where date(PUSHDATE) <= date('now')  order by date(PUSHDATE) desc limit 0,10", [])
+        }).then(result => {
+            let data = [];
+            let raw = result.raw()
+            for (let item of raw) {
+                let sourceUrl = this.getImageByDate(item.PUSHDATE)
+                item.IMAGEURL = item.IMAGEURL != '' ? { uri: item.IMAGEURL } : sourceUrl
+                item.PUSHDATE = Common.dateFormatNoTime(item.PUSHDATE)
+                data.push(item);
+            }
+            this.setState({
+                data: data,
+                totalCount: count,
+                pageSize: 10,
+                pageNum: 1,
+                loading: false
+            })
+        })
+    }
+
+    goDailyOralEnglishDetail = item => {
+        NavigationService.navigate("DailyOralEnglishDetail", { data: item });
     }
 
     renderListItem = ({ item }) => {
-        let sourceUrl = this.getImageByDate(item.date)
         return (
             <Card>
                 <CardItem>
@@ -59,22 +89,68 @@ class DailyOralEnglishPage extends Component {
                                 <Thumbnail
                                     style={{ width: '100%', height: "100%" }}
                                     resizeMode={"contain"}
-                                    source={sourceUrl}
+                                    source={item.IMAGEURL}
                                 />
                             </Left>
-                            <Body style={{ flex: 0, width: '70%', padding: 5, paddingLeft: 20 }}>
+                            <Body style={{ flex: 0, width: '70%', paddingLeft: 20 }}>
                                 <Body style={{ alignSelf: 'flex-start', paddingVertical: 5 }}>
-                                    <Title style={{ color: 'black', fontSize: 15 }}>{item.content}</Title>
+                                    <Title style={[styles.fontSize, { color: 'black' }]}>{item.CONTENT}</Title>
                                 </Body>
                                 <Body style={{ alignSelf: 'flex-start', paddingVertical: 5 }}>
-                                    <Title style={{ color: 'black', fontSize: 15 }}>{item.note}</Title>
+                                    <Title style={[styles.fontSize, { color: 'black' }]}>{item.TRANSLATE}</Title>
                                 </Body>
                                 <Body style={{ alignSelf: 'flex-start', paddingVertical: 5 }}>
-                                    <Label style={{ color: 'gray', fontSize: 15 }}>{item.date}</Label>
+                                    <Label style={[styles.fontSize, { color: 'gray' }]}>{item.PUSHDATE}</Label>
                                 </Body>
                             </Body>
                         </Body>
                     </TouchableOpacity>
+                </CardItem>
+            </Card>
+        )
+    }
+
+    loadMoreData = () => {
+        this.setState({ loading: true })
+        let size = this.state.pageSize
+        let num = this.state.pageNum
+        let totalCount = this.state.totalCount
+        if (size * num >= totalCount) {//如果页数*每页笔数达到或超过总笔数则return
+            this.setState({ loading: false })
+            return
+        }
+        let count = num * size
+        SQLite.selectData("select * from THF_DAILY_ORAL_ENGLISH where date(PUSHDATE) <= date('now') order by date(PUSHDATE) desc limit " + count + "," + size , []).then(result => {
+            let data = this.state.data;
+            let raw = result.raw()
+            for (let item of raw) {
+                let sourceUrl = this.getImageByDate(item.PUSHDATE)
+                item.IMAGEURL = item.IMAGEURL != '' ? item.IMAGEURL : sourceUrl
+                item.PUSHDATE = Common.dateFormatNoTime(item.PUSHDATE)
+                data.push(item);
+            }
+            this.setState({
+                data: data,
+                pageNum: num + 1,
+                loading: false
+            })
+        })
+    }
+
+    renderFooter = () => {
+        let loading = this.state.loading
+        return (
+            <Card>
+                <CardItem>
+                    <Body style={{ flex: 1, alignItems: 'center' }}>
+                        <Text>
+                            {
+                                loading
+                                    ? this.props.state.Language.lang.ListFooter.Loading
+                                    : this.props.state.Language.lang.ListFooter.NoMore
+                            }
+                        </Text>
+                    </Body>
                 </CardItem>
             </Card>
         )
@@ -113,8 +189,14 @@ class DailyOralEnglishPage extends Component {
     }
 }
 
+const styles = StyleSheet.create({
+    fontSize: {
+        fontSize: 15
+    }
+})
+
 export default connect(
     (state) => ({
-        state: { ...state }
+        state: { Language: state.Language }
     })
 )(DailyOralEnglishPage)

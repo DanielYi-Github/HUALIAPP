@@ -1,35 +1,31 @@
 import React, { Component } from 'react'
-import { Container, Content, Text, View, Body, Left, Right, Label, Button, CardItem } from "native-base";
-import { Image, StyleSheet } from 'react-native'
 import { connect } from 'react-redux';
+import { Container, Content, Text, View, Body, Left, Right, Label, Button, Card, CardItem } from "native-base";
+import { Image, StyleSheet } from 'react-native'
 import HeaderForGeneral from "../../../components/HeaderForGeneral";
 import * as NavigationService from '../../../utils/NavigationService';
 
-export default class DailyOralEnglishDetailPage extends Component {
+class DailyOralEnglishDetailPage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            data: this.props.route.params.data,
-            title: this.props.route.params.title
+            data: []
         }
-
-        console.log('DailyOralEnglishDetailPage constructor');
     }
 
-    goDailyOralEnglishList = data => {
-        NavigationService.navigate("DailyOralEnglish");
+    componentDidMount() {
+        this.loadDailyOralEnglishDetailData()
     }
 
     render() {
-        let imageUrl = this.getImageByDate(this.state.data.date)
         return (
             <Container>
                 <HeaderForGeneral
                     isLeftButtonIconShow={true}
                     leftButtonIcon={{ name: "arrow-back" }}
                     leftButtonOnPress={() => this.props.navigation.goBack()}
-                    title={this.state.title}
+                    title={this.props.state.Language.lang.HomePage.DailyOralEnglish}
                 />
                 <Content>
                     <View style={{ padding: 10 }}>
@@ -37,115 +33,53 @@ export default class DailyOralEnglishDetailPage extends Component {
                             <Image
                                 style={{ width: '100%', height: 200, borderRadius: 10 }}
                                 resizeMode={"cover"}
-                                source={imageUrl}
+                                source={this.state.data.IMAGEURL}
                             />
                         </View>
-                        <View style={{ padding: 5 }}>
+                        <CardItem style={{ flexDirection: 'column', marginVertical: 10, borderRadius: 10 }}>
                             <Body style={{ alignSelf: 'flex-start', paddingVertical: 5 }}>
-                                <Text style={{ fontSize: 18 }}>{this.state.data.content}</Text>
+                                <Text style={styles.fontSize}>{this.state.data.CONTENT}</Text>
                             </Body>
                             <Body style={{ alignSelf: 'flex-start', paddingVertical: 5 }}>
-                                <Text style={{ fontSize: 18 }}>{this.state.data.note}</Text>
+                                <Text style={styles.fontSize}>{this.state.data.TRANSLATE}</Text>
                             </Body>
                             <Body style={{ alignSelf: 'flex-start', paddingVertical: 5 }}>
-                                <Label style={{ color: 'gray', fontSize: 18 }}>{this.state.data.date}</Label>
+                                <Label style={[styles.fontSize, { color: 'gray' }]}>{this.state.data.PUSHDATE}</Label>
                             </Body>
-                        </View>
-                        <Body>
-                            <CardItem button style={{ flexDirection: 'row', width: '100%' }} onPress={this.goDailyOralEnglishList}>
-                                <Left />
-                                <Body>
-                                    <Text style={{ color: 'black', fontSize: 18 }}>查看更多</Text>
-                                </Body>
-                                <Right />
-                            </CardItem>
-                        </Body>
+                        </CardItem>
+                        <CardItem button style={{ flexDirection: 'row', width: '100%', paddingTop: 10 }} onPress={this.goDailyOralEnglishList}>
+                            <Body style={{ flex: 1, alignItems: 'center' }}>
+                                <Text style={[styles.fontSize]}>{this.props.state.Language.lang.Common.ViewMore}</Text>
+                            </Body>
+                        </CardItem>
                     </View>
                 </Content>
             </Container>
         )
     }
 
-    static getDerivedStateFromProps(props, state) {
-        let type = props.route.params.data.type
-        if (type != null) {
-            const content = props.route.params.data.title
-            const note = props.route.params.data.explain
-            let newData = {
-                content,
-                note,
-                date: '2021-06-07',
-            }
-            return {
-                title: type,
-                data: newData
-            }
-        } else {
-            let data = Object.assign({}, props.route.params.data)
-            return {
-                title: type,
-                data
-            }
-        }
+    loadDailyOralEnglishDetailData() {
+        let data = this.props.route.params.data
+        this.setState({
+            data: data
+        })
+
     }
 
-    getImageByDate(date) {
-        let day = new Date(date).getDay()
-        let sourceUrl
-        switch (day) {
-            case 0:
-                sourceUrl = require("../../../image/dailyOralEnglish/Sunday.jpg")
-                break
-            case 1:
-                sourceUrl = require("../../../image/dailyOralEnglish/Monday.jpg")
-                break
-            case 2:
-                sourceUrl = require("../../../image/dailyOralEnglish/Tuesday.jpg")
-                break
-            case 3:
-                sourceUrl = require("../../../image/dailyOralEnglish/Wednesday.jpg")
-                break
-            case 4:
-                sourceUrl = require("../../../image/dailyOralEnglish/Thursday.jpg")
-                break
-            case 5:
-                sourceUrl = require("../../../image/dailyOralEnglish/Friday.jpg")
-                break
-            case 6:
-                sourceUrl = require("../../../image/dailyOralEnglish/Saturday.jpg")
-                break
-            default:
-                sourceUrl = ''
-                break
-        }
-        return sourceUrl
-    }
-
-    DateButton = () => {
-
-        return (
-            <Content>
-                <Button
-                    transparent
-                    small
-                    rounded
-                    style={styles.dateButton}
-                >
-                    <Text>一</Text>
-                </Button>
-            </Content>
-        )
+    goDailyOralEnglishList = data => {
+        NavigationService.navigate("DailyOralEnglish");
     }
 
 }
 
 const styles = StyleSheet.create({
-    dateButtonText: {
-        fontSize: 10,
-        textAlign: 'center'
-    },
-    dateButton: {
-        width: 40,
-        height: 40
+    fontSize: {
+        fontSize: 18
     }
 })
+
+export default connect(
+    (state) => ({
+        state: { Language: state.Language }
+    })
+)(DailyOralEnglishDetailPage)

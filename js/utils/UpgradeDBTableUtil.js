@@ -134,16 +134,18 @@ let UpgradeDBTableUtil = {
 		SQLite.checkTable("THF_DAILY_ORAL_ENGLISH").then((data)=>{
 			if (!data) {
 				let createTable = `CREATE TABLE THF_DAILY_ORAL_ENGLISH ( 
-					OID integer PRIMARY KEY AUTOINCREMENT, 
+					OID char ( 32 ) NOT NULL, 
 					CONTENT varchar ( 255 ) NOT NULL, 
 					TRANSLATE varchar ( 255 ) NOT NULL, 
 					PUSHDATE numeric DEFAULT (datetime('now','+8 hour')), 
+					IMAGEURL varchar ( 255 ) ,
 					STATUS char ( 1 ) NOT NULL DEFAULT 'Y', 
 					CRTDAT numeric NOT NULL DEFAULT (datetime('now','+8 hour')), 
-					TXDAT numeric DEFAULT (datetime('now','+8 hour')) 
+					TXDAT numeric DEFAULT (datetime('now','+8 hour')),
+					PRIMARY KEY(OID)  
 				  )`;
 				SQLite.createTable(createTable).then((e)=>{
-					console.log('THF_DAILY_ORAL_ENGLISH:',e);
+					console.log(e);
 				});
 			}
 		  });

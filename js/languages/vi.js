@@ -171,6 +171,7 @@ export default {
 		noticeMT: "Mgmt",
 		noticeFI: "FI",
 		noticeAG: "GR",
+		DailyOralEnglish :"Mỗi ngày một câu nói tiếng Anh",
 	},
 	FindPage: {
 		SearchKeyword: 'Từ khóa',

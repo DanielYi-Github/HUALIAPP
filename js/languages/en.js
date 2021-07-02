@@ -171,6 +171,7 @@ export default {
 		noticeMT     : "Mgmt",
 		noticeFI     : "FI",
 		noticeAG     : "GR",
+		DailyOralEnglish :"Daily Oral English",
 	},
 	FindPage: {
 		SearchKeyword     : 'Keyword',

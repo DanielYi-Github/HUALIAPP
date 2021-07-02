@@ -171,6 +171,7 @@ export default {
 		noticeMT     :"管理",
 		noticeFI     :"财务",
 		noticeAG     :"总务",
+		DailyOralEnglish :"每日一句英语",
 	},
 	FindPage: {
 		SearchKeyword     : '关键字',
