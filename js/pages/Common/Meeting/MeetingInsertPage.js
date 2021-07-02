@@ -17,7 +17,6 @@ import ToastUnit              from '../../../utils/ToastUnit';
 class MeetingInsertPage extends React.PureComponent  {
 	constructor(props) {
 	    super(props);
-
       let oid              = "";
       let isParams         = this.props.route.params ? true : false;
       let isEditable       = true;
@@ -27,8 +26,8 @@ class MeetingInsertPage extends React.PureComponent  {
       let description      = "";
       let startTime        = new Date().getTime();
       let endTime          = new Date().getTime();
-      startTime            = startTime + (900000-(startTime%900000));
-      endTime              = endTime + (900000-(endTime%900000));
+      startTime            = startTime + (600000-(startTime%600000));
+      endTime              = endTime + (600000-(endTime%600000));
       let initiator        = { id : props.state.UserInfo.UserInfo.id };  //發起人
       let chairperson      = { id : props.state.UserInfo.UserInfo.id };  //主席
       let chairpersonLabel = props.state.UserInfo.UserInfo.name;
@@ -202,6 +201,8 @@ class MeetingInsertPage extends React.PureComponent  {
   }
 
 	render() {
+    console.log(this.state.startdate, Platform.OS);
+
     //整理tags的資料格式
     let tagsArray = [];
     for(let value of this.state.attendees) {
@@ -227,6 +228,7 @@ class MeetingInsertPage extends React.PureComponent  {
 
     let startdate = new Date( this.state.startdate.replace(' ', 'T') );
     let enddate = new Date( this.state.enddate.replace(' ', 'T') );
+    console.log(startdate, enddate);
     return (
       <Container>
         <HeaderForGeneral
@@ -443,7 +445,7 @@ class MeetingInsertPage extends React.PureComponent  {
               is24Hour ={true}
               display  ="spinner"
               onChange ={this.setTime}
-              minuteInterval = {15}
+              minuteInterval = {10}
             />
           :
             null
@@ -466,7 +468,7 @@ class MeetingInsertPage extends React.PureComponent  {
                       mode     ={"datetime"}
                       value    ={this.state.editDatetimeValue}
                       minimumDate = {new Date(this.state.now)}
-                      minuteInterval = {15}
+                      minuteInterval = {10}
                       is24Hour ={true}
                       display  ={"spinner"}
                       locale   ={this.props.state.Language.lang.LangStatus}
@@ -578,6 +580,7 @@ class MeetingInsertPage extends React.PureComponent  {
 
   dateFormat = (datetime) => {
     let datetimeString = "";
+    console.log("datetime", this.state.startdate, new Date() );
     switch (this.props.state.Language.langStatus) {
       case 'zh-TW':
       case 'zh-CN':
@@ -589,6 +592,8 @@ class MeetingInsertPage extends React.PureComponent  {
       default:
         datetimeString = DateFormat( new Date(datetime), "mmm dd dddd");
     }
+
+    // console.log( DateFormat( new Date(), "yyyy-mm-dd HH:MM:ss") );
     return datetimeString;
   }
 
@@ -880,7 +885,7 @@ class MeetingInsertPage extends React.PureComponent  {
       let meetingParams = {
           subject        :this.state.subject,
           description    :this.state.description,
-          startdate      :DateFormat( new Date(this.state.startdate).getTime()+1000, "yyyy-mm-dd HH:MM:ss"),
+          startdate      :DateFormat( new Date(this.state.startdate.replace(' ', 'T')).getTime()+1000, "yyyy-mm-dd HH:MM:ss"),
           enddate        :this.state.enddate,
           meetingMode    :this.state.meetingMode,
           meetingPlace   :this.state.meetingPlace,
@@ -890,10 +895,10 @@ class MeetingInsertPage extends React.PureComponent  {
           initiator      :this.state.initiator,
           chairperson    :this.state.chairperson,
           attendees      :this.state.attendees,
-          timezone       :new Date(this.state.startdate).getTimezoneOffset().toString()
+          timezone       :new Date( this.state.startdate.replace(' ', 'T') ).getTimezoneOffset().toString()
       }
+      console.log("meetingParams", meetingParams);
 
-      
       if (this.state.isModify) {
         // 修改會議
         meetingParams.oid = this.state.oid;

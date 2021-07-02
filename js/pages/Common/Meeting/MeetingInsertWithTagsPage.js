@@ -228,18 +228,24 @@ class MeetingInsertWithTagsPage extends React.Component {
         let searchList = [];
 
         if (this.state.isChinesKeyword) {
+          let sKeyword = this.removeSpace(this.state.sKeyword); 
+          let tKeyword = this.removeSpace(this.state.tKeyword);
           searchList = [
-            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:this.state.sKeyword}),
-            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:this.state.tKeyword})
+            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:sKeyword}),
+            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:tKeyword})
           ];
         } else {
-          searchList.push(
-            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:this.state.keyword})
-          );
+          let keyword = this.removeSpace(this.state.keyword); 
+          let lowKeyword = keyword.toLowerCase(); 
+          console.log(keyword, lowKeyword);
+          searchList = [
+            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:keyword}),
+            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:lowKeyword}),
+          ];
         }
 
         Promise.all(searchList).then((result) => {
-          let temparray = this.state.isChinesKeyword ? [...result[0], ...result[1]]: result[0];
+          let temparray = this.state.isChinesKeyword ? [...result[0], ...result[1]]: [...result[0], ...result[1]];
           let isEnd = this.dealIsDataEnd(searchedData, temparray);
           this.setState({
            searchedData: isEnd? searchedData: this.dedup([...searchedData, ...temparray]),
@@ -449,6 +455,13 @@ class MeetingInsertWithTagsPage extends React.Component {
 
       return (match ? false : hashTable[key] = true);
     });
+  }
+
+  removeSpace(string){
+    string = string.replace(/\r\n/g,"");
+    string = string.replace(/\n/g,"");
+    string = string.replace(/\s/g,"");
+    return string;
   }
 }
 

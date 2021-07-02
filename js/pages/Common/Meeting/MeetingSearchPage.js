@@ -19,8 +19,8 @@ class MeetingSearchPage extends React.PureComponent  {
     super(props);
     let startTime  = new Date().getTime();
     let endTime    = new Date().getTime();
-    startTime      = startTime + (900000-(startTime%900000));
-    endTime        = endTime + (900000-(endTime%900000));
+    startTime      = startTime + (600000-(startTime%600000));
+    endTime        = endTime + (600000-(endTime%600000));
 
     this.state = {
       now                   : startTime,
@@ -219,7 +219,7 @@ class MeetingSearchPage extends React.PureComponent  {
               is24Hour ={true}
               display  ="spinner"
               onChange ={this.setTime}
-              minuteInterval = {15}
+              minuteInterval = {10}
             />
           :
             null
@@ -265,7 +265,7 @@ class MeetingSearchPage extends React.PureComponent  {
                             onChange ={this.setDatetime_ios}
                             locale   ={this.props.state.Language.lang.LangStatus}
                             display  ={"spinner"}
-                            minuteInterval = {15}
+                            minuteInterval = {10}
                           />
                         </View>
                   </View>

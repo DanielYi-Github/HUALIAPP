@@ -13,6 +13,7 @@ let MessageRouter = {
 
 		// 接收推送通知
 		JPush.addNotificationListener((result) => {
+			console.log("addNotificationListener", result);
 			if (result.notificationEventType == "notificationArrived"){
 				this.dealMessagesOriginalsource(result, props, true);
 			}else{

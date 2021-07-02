@@ -103,7 +103,7 @@ export function getMeetings(condition = ""){
 			// condition:condition, //查詢使用
 		}
 		let meetingsResult = await UpdateDataUtil.getMeetings(user, content).then((result)=>{
-			console.log("getMeetings", result);
+			// console.log("getMeetings", result);
 			return result;
 		}).catch((e)=>{
 			console.log("e", e);
