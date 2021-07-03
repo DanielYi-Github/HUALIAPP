@@ -24,6 +24,7 @@ import Deputy     from './DeputyReducer';
 import Salary     from './SalaryReducer';
 import Survey     from './SurveyReducer';
 import Meeting    from './MeetingReducer';
+import DailyOralEnglish from "./DailyOralEnglishReducer";
 
 const rootReducer = combineReducers({
 	AppInit,
@@ -47,7 +48,8 @@ const rootReducer = combineReducers({
 	Deputy,
 	Salary,
 	Survey,
-	Meeting
+	Meeting,
+	DailyOralEnglish
 });
 
 export default rootReducer;

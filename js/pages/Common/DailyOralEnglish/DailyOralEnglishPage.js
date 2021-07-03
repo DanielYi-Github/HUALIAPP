@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux';
 import { StyleSheet } from 'react-native'
 import { Body, CardItem, Container, Content, Left, Right, Text, View, Thumbnail, Title, Label, Card } from "native-base";
 import HeaderForGeneral from "../../../components/HeaderForGeneral";
@@ -7,24 +8,24 @@ import { FlatList, TouchableOpacity } from 'react-native';
 import * as NavigationService from '../../../utils/NavigationService';
 import * as SQLite from '../../../utils/SQLiteUtil';
 import Common from '../../../utils/Common';
+import * as DailyOralEnglishAction from "../../../redux/actions/DailyOralEnglishAction";
 
 class DailyOralEnglishPage extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            data: [], //显示的资料
-            totalCount: 0, //资料总笔数
-            pageSize: 10, //每页资料笔数
-            pageNum: 1, //页数
             isEnd: false, //资料是否达到底部
-            loading: true
         }
     }
 
     componentDidMount() {
-        this.loadDailyOralEnglishData()
+        this.props.actions.initDailyOralEnglish()
     }
+
+    componentWillUnmount(){
+        this.props.actions.resetDailyOralEnglish();
+      }
 
     render() {
         return (
@@ -37,40 +38,14 @@ class DailyOralEnglishPage extends Component {
                 />
                 <FlatList
                     keyExtractor={item => item.oid}
-                    data={this.state.data}
+                    data={this.props.state.DailyOralEnglish.data}
                     renderItem={this.renderListItem}
                     onEndReachedThreshold={0.3}
-                    onEndReached={this.loadMoreData}
+                    onEndReached={this.props.actions.loadMoreDailyOralEnglishData}
                     ListFooterComponent={this.renderFooter}
                 />
             </Container>
         )
-    }
-
-    loadDailyOralEnglishData() {
-        this.setState({ loading: true })
-        let count = 0
-        let nowDate = new Date().getUTCDate();
-        SQLite.selectData("select count(1) as COUNT from THF_DAILY_ORAL_ENGLISH where date(PUSHDATE) <= date('now') ", []).then(result => {
-            count = result.raw()[0].COUNT
-            return SQLite.selectData("select * from THF_DAILY_ORAL_ENGLISH where date(PUSHDATE) <= date('now')  order by date(PUSHDATE) desc limit 0,10", [])
-        }).then(result => {
-            let data = [];
-            let raw = result.raw()
-            for (let item of raw) {
-                let sourceUrl = this.getImageByDate(item.PUSHDATE)
-                item.IMAGEURL = item.IMAGEURL != '' ? { uri: item.IMAGEURL } : sourceUrl
-                item.PUSHDATE = Common.dateFormatNoTime(item.PUSHDATE)
-                data.push(item);
-            }
-            this.setState({
-                data: data,
-                totalCount: count,
-                pageSize: 10,
-                pageNum: 1,
-                loading: false
-            })
-        })
     }
 
     goDailyOralEnglishDetail = item => {
@@ -78,6 +53,8 @@ class DailyOralEnglishPage extends Component {
     }
 
     renderListItem = ({ item }) => {
+        let sourceUrl = this.getImageByDate(item.PUSHDATE)//默认图片
+        sourceUrl = item.IMAGEURL != '' ? { uri: item.IMAGEURL } : sourceUrl
         return (
             <Card>
                 <CardItem>
@@ -89,7 +66,7 @@ class DailyOralEnglishPage extends Component {
                                 <Thumbnail
                                     style={{ width: '100%', height: "100%" }}
                                     resizeMode={"contain"}
-                                    source={item.IMAGEURL}
+                                    source={sourceUrl}
                                 />
                             </Left>
                             <Body style={{ flex: 0, width: '70%', paddingLeft: 20 }}>
@@ -110,35 +87,8 @@ class DailyOralEnglishPage extends Component {
         )
     }
 
-    loadMoreData = () => {
-        this.setState({ loading: true })
-        let size = this.state.pageSize
-        let num = this.state.pageNum
-        let totalCount = this.state.totalCount
-        if (size * num >= totalCount) {//如果页数*每页笔数达到或超过总笔数则return
-            this.setState({ loading: false })
-            return
-        }
-        let count = num * size
-        SQLite.selectData("select * from THF_DAILY_ORAL_ENGLISH where date(PUSHDATE) <= date('now') order by date(PUSHDATE) desc limit " + count + "," + size , []).then(result => {
-            let data = this.state.data;
-            let raw = result.raw()
-            for (let item of raw) {
-                let sourceUrl = this.getImageByDate(item.PUSHDATE)
-                item.IMAGEURL = item.IMAGEURL != '' ? item.IMAGEURL : sourceUrl
-                item.PUSHDATE = Common.dateFormatNoTime(item.PUSHDATE)
-                data.push(item);
-            }
-            this.setState({
-                data: data,
-                pageNum: num + 1,
-                loading: false
-            })
-        })
-    }
-
     renderFooter = () => {
-        let loading = this.state.loading
+        let loading = this.props.state.DailyOralEnglish.loading
         return (
             <Card>
                 <CardItem>
@@ -197,6 +147,15 @@ const styles = StyleSheet.create({
 
 export default connect(
     (state) => ({
-        state: { Language: state.Language }
-    })
+        state: 
+        { 
+            Language: state.Language,
+            DailyOralEnglish: state.DailyOralEnglish
+        }
+    }),
+    (dispatch) => ({
+        actions: bindActionCreators({
+          ...DailyOralEnglishAction
+        }, dispatch)
+      })
 )(DailyOralEnglishPage)

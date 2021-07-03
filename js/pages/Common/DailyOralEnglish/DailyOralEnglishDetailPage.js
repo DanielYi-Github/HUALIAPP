@@ -19,6 +19,8 @@ class DailyOralEnglishDetailPage extends Component {
     }
 
     render() {
+        let sourceUrl = this.getImageByDate(this.state.data.PUSHDATE)
+        sourceUrl = this.state.data.IMAGEURL != '' ? { uri: this.state.data.IMAGEURL } : sourceUrl
         return (
             <Container>
                 <HeaderForGeneral
@@ -33,7 +35,7 @@ class DailyOralEnglishDetailPage extends Component {
                             <Image
                                 style={{ width: '100%', height: 200, borderRadius: 10 }}
                                 resizeMode={"cover"}
-                                source={this.state.data.IMAGEURL}
+                                source={sourceUrl}
                             />
                         </View>
                         <CardItem style={{ flexDirection: 'column', marginVertical: 10, borderRadius: 10 }}>
@@ -68,6 +70,38 @@ class DailyOralEnglishDetailPage extends Component {
 
     goDailyOralEnglishList = data => {
         NavigationService.navigate("DailyOralEnglish");
+    }
+
+    getImageByDate(date) {
+        let day = new Date(date).getDay()
+        let sourceUrl
+        switch (day) {
+            case 0:
+                sourceUrl = require("../../../image/dailyOralEnglish/Sunday.jpg")
+                break
+            case 1:
+                sourceUrl = require("../../../image/dailyOralEnglish/Monday.jpg")
+                break
+            case 2:
+                sourceUrl = require("../../../image/dailyOralEnglish/Tuesday.jpg")
+                break
+            case 3:
+                sourceUrl = require("../../../image/dailyOralEnglish/Wednesday.jpg")
+                break
+            case 4:
+                sourceUrl = require("../../../image/dailyOralEnglish/Thursday.jpg")
+                break
+            case 5:
+                sourceUrl = require("../../../image/dailyOralEnglish/Friday.jpg")
+                break
+            case 6:
+                sourceUrl = require("../../../image/dailyOralEnglish/Saturday.jpg")
+                break
+            default:
+                sourceUrl = ''
+                break
+        }
+        return sourceUrl
     }
 
 }
