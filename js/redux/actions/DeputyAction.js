@@ -1,20 +1,18 @@
 import * as types from '../actionTypes/DeputyTypes';
-import { Alert } from 'react-native';
+import { Alert }  from 'react-native';
 import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
 import * as SQLite         from '../../utils/SQLiteUtil';
 import * as LoggerUtil     from '../../utils/LoggerUtil';
 import Common              from '../../utils/Common';
-import * as LoginTypes    from '../actionTypes/LoginTypes';
+import * as LoginTypes     from '../actionTypes/LoginTypes';
 import * as NavigationService  from '../../utils/NavigationService';
-
-
 
 export function iniDeputyData(){
 	return async (dispatch) => {
 		dispatch(isLoading(true));
-		await this.paramInit();
-		await this.cboParamInit();
-		await this.loadBPMDeputySetting();
+		await this.paramInit();		// 捞取代理下拉参数档资料
+		await this.cboParamInit();	// 捞取流程分类和流程名称
+		await this.loadBPMDeputySetting();	// 呼叫代理人api保存返回资料
 		dispatch(isLoading(false));
 	}
 }
@@ -22,6 +20,7 @@ export function iniDeputyData(){
 export function loadBPMDeputySetting() {
 	return async (dispatch, getState) => {
 	    await UpdateDataUtil.getBPMDeputySetting(getState().UserInfo.UserInfo).then(async (data) => {
+			console.log('getBPMDeputySetting', data);
 			dispatch(setDeputyBasic(data));
 	    	await this.basicInit(data);
 	    	this.getDeputyTip();
@@ -39,11 +38,11 @@ export function loadBPMDeputySetting() {
 
 export function basicInit(data){
 	return async (dispatch, getState) => {
-		let basicClone=deepClone(data);
-		let lang=getState().Language.lang.DeputyPage;
-		let deputyState=getState().Deputy;
+		let basicClone = deepClone(data);
+		let lang = getState().Language.lang.DeputyPage;
+		let deputyState = getState().Deputy;
       	if(basicClone){
-    		let rulesMemActionValue=null;
+    		let rulesMemActionValue = null;
             //拼接card呈現方式
             let listComponent = basicClone.deputyRules.listComponent;
             //確認組件數
@@ -532,6 +531,8 @@ export function basicInit(data){
 		    	rulesMemActionValue:rulesMemActionValue
 		    }
 
+			console.log('basicClone', basicClone);
+			console.log('iniOtherObj', iniOtherObj);
   			dispatch(setTransferBasic(basicClone));
   			dispatch(setOrtherInit(iniOtherObj));
 		}
@@ -765,7 +766,6 @@ export function updateDeputyRules(value){
 
 }
 
-
 //代理方式
 function updateDeputyWayData(lang , deputyRule, deputyState, deputyWayParam){
     let isedit = deputyState ? "N" : "Y";
@@ -787,8 +787,6 @@ function updateDeputyWayData(lang , deputyRule, deputyState, deputyWayParam){
 
     return deputyWay;
 }
-
-
 
 export function getInitCondicton2Param(rule) {
 	return async (dispatch, getState) => {
@@ -822,12 +820,11 @@ export function getInitCondicton2Param(rule) {
 
 export function paramInit(){
 	return async (dispatch, getState) => {
-	    let relationParam = [];
-	    let condition1Param = [];
-	    let deputyWayParam = [];
+	    let relationParam = [];		// 关联性
+	    let condition1Param = [];	// 多规则条件
+	    let deputyWayParam = [];	// 代理方式
       	let data = [];
-	    let deputyRuleComParam=true;
-
+	    let deputyRuleComParam = true;	// 是否成功捞取代理下拉资料
 	    /*
 	    let sql=`
 	    	select * 
@@ -840,8 +837,6 @@ export function paramInit(){
 		    ) 
 		    order by CLASS1,SORT;`
 		*/
-
-
 		let sql=`
 			select * 
 			from THF_MASTERDATA 
@@ -849,50 +844,51 @@ export function paramInit(){
 		    order by CLASS1,SORT;`
 		//初始化執行
 		await SQLite.selectData(sql, []).then((result) => {
+			console.log('getSQLData', result.raw());
 			//如果沒有找到資料，不顯示任何資料
 		    for (let i in result.raw()) {
 		      data.push(result.raw()[i]);
 		    }
 		}).catch((e)=>{
-			deputyRuleComParam=false;
+			deputyRuleComParam = false;
 			LoggerUtil.addErrorLog("DeputyAction paramInit", "APP Action", "ERROR", e);
 		});
 		if (data.length != 0) {
-			data.forEach(param => {
-			let  tempObj = {
-			    desccode: null,
-			    descname: null,
-			    oid: param.OID,
-			    paramcode: param.CLASS3,
-			    paramname: param.CONTENT,
-			    paramtype: param.CLASS1,
-			    paramtypename: param.CLASS2,
-			    parentparam: null,
-			    columnaction: param.CLASS4,
-			    columFieldType: param.CLASS5
-			  }
-			  switch (param.CLASS1) {
-			    case "DeputyRelation":
-			      relationParam.push(tempObj);
-			      break;
-			    case "DeputyRules":
-			      condition1Param.push(tempObj);
-			      break;
-			    case "DeputyWay":
-			      tempObj.paramcode = eval(param.CLASS3);
-			      deputyWayParam.push(tempObj);
-			      break;
-			  }
+			data.forEach( param => {
+				let tempObj = {
+					desccode: null,
+					descname: null,
+					oid: param.OID,
+					paramcode: param.CLASS3,
+					paramname: param.CONTENT,
+					paramtype: param.CLASS1,
+					paramtypename: param.CLASS2,
+					parentparam: null,
+					columnaction: param.CLASS4,
+					columFieldType: param.CLASS5
+				}
+			  	switch (param.CLASS1) {
+					case "DeputyRelation":
+						relationParam.push(tempObj);
+						break;
+					case "DeputyRules":
+						condition1Param.push(tempObj);
+						break;
+					case "DeputyWay":
+						tempObj.paramcode = eval(param.CLASS3);
+						deputyWayParam.push(tempObj);
+						break;
+			  	}
 			})
 		}
 
-	    let mixParam =mixParamInit(condition1Param,relationParam);
-	    let paramObj={
-	    	relationParam:relationParam,
-	    	condition1Param:condition1Param,
-	    	deputyWayParam:deputyWayParam,
-	    	deputyRuleComParam:deputyRuleComParam,
-	    	mixParam:mixParam
+	    let mixParam = mixParamInit(condition1Param, relationParam);
+	    let paramObj = {
+	    	relationParam: relationParam,
+	    	condition1Param: condition1Param,
+	    	deputyWayParam: deputyWayParam,
+	    	deputyRuleComParam: deputyRuleComParam,
+	    	mixParam: mixParam
 	    }
 		dispatch(setDeputyParam(paramObj));
 	}
@@ -902,14 +898,13 @@ export function cboParamInit(){
 	return async (dispatch, getState) => {
 		let user = getState().UserInfo.UserInfo;
 	    let lang = getState().Language.lang.DeputyPage;
-	    let MapCategoryParam =await getInitCondicton2("$AF$PRJ",user,lang);
-	    let MapParam =await getInitCondicton2("$AF$PRO",user,lang);
-		dispatch(setMapInit(MapCategoryParam,MapParam));
+	    let MapCategoryParam = await getInitCondicton2("$AF$PRJ",user,lang);
+	    let MapParam = await getInitCondicton2("$AF$PRO",user,lang);
+		dispatch(setMapInit(MapCategoryParam, MapParam));
 	}
 }
 
 async function getInitCondicton2 (rule,user,lang){
-
 	    let action = null;
 	    let result = [];
 	    switch (rule) {
@@ -935,8 +930,8 @@ async function getInitCondicton2 (rule,user,lang){
 	      paramList: [],
 	      required: "N",
 	    }
-	    let returnValue = null;
 
+	    let returnValue = null;
 	    if (item.action) {
 	      if (!item.actionColumn) {
 	        item.actionColumn = [];
@@ -944,23 +939,24 @@ async function getInitCondicton2 (rule,user,lang){
 	      let actionObject = {
 	        count: 0
 	      };
-	      for (let column of item.actionColumn) {
-	        actionObject[column] = (column == item.defaultvalue) ? true : false;
-	      }
+	    //   for (let column of item.actionColumn) {
+	    //     actionObject[column] = (column == item.defaultvalue) ? true : false;
+	    //   }
 	      await UpdateDataUtil.getCreateFormDetailFormat(user, item.action, actionObject).then(async (data) => {
 	          if(data){
                 returnValue = data;
                 returnValue["actionObject"] = actionObject;
+				console.log('returnValue', returnValue);
                 result = returnValue;
 	          }
 	      }).catch((e)=>{
-			  result=[];
+			  result = [];
 		  });
 	    }
 	    return result;
 }
 
-function mixParamInit(condition1Param,relationParam){
+function mixParamInit(condition1Param, relationParam){
 	let mixParam=[];
     //條件一參數
     for (let i in condition1Param) {
