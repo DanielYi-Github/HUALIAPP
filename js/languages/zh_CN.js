@@ -42,7 +42,16 @@ export default {
         androidChangeAPPMessage11:"，使用新版APP进行操作（APP图标有NEW字样）。",
         androidChangeAPPMessage12:"图标说明：",
         androidChangeAPPMessage13:"不再显示",
-		WebViewUrlError:"网站地址获取异常"
+		WebViewUrlError:"网站地址获取异常",
+		week:{
+			Sunday   :"週日",
+			Monday   :"週一",
+			Tuesday  :"週二",
+			Wednesday:"週三",
+			Thursday :"週四",
+			Friday   :"週五",
+			Saturday :"週六",
+		}
 	},
 	InitialPage: {
 		Update                   :'更新',
@@ -162,6 +171,7 @@ export default {
 		noticeMT     :"管理",
 		noticeFI     :"财务",
 		noticeAG     :"总务",
+		DailyOralEnglish :"每日一句英语",
 	},
 	FindPage: {
 		SearchKeyword     : '关键字',
@@ -483,7 +493,9 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		SmallerOrEqual: "小于或等于",
 		Smaller       : "小于",
 		NotEqual      : "不等于",
-		requireFirst  : "必须先行填写"
+		requireFirst  : "必须先行填写",
+		NoEmpty:"不能填写空白"
+		
 	},
 	SurveyPage:{
 		Creating          :"问卷生成中...",

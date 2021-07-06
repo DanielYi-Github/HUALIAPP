@@ -33,12 +33,11 @@ class FormContentText extends Component {
 			} else {
 				value = (this.state.value == null) ? value : this.state.value; 
 			}
-
 			return(
 				 	<Item fixedLabel 
 				 		style={[
 				 			this.props.style.CreateFormPageFiledItemWidth,
-				 			this.props.style.fixCreateFormPageFiledItemWidth
+				 			this.props.style.fixCreateFormPageFiledItemWidth,
 				 		]} 
 				 		error={this.props.data.requiredAlbert}>
 		 			   <Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>

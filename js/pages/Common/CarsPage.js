@@ -269,7 +269,7 @@ class CarsPage extends React.Component {
 	}
 
 	searchCars = () => {
-		this.setState({ isShowDatePicker:false});
+		this.setState({ isShowDatePicker:false });
 		this.loadCarsData(this.state.selectedCompany);
 	}	
 

@@ -10,9 +10,10 @@ import * as NavigationService  from '../../utils/NavigationService';
 export function iniDeputyData(){
 	return async (dispatch) => {
 		dispatch(isLoading(true));
-		await this.paramInit();		// 捞取代理下拉参数档资料
-		await this.cboParamInit();	// 捞取流程分类和流程名称
-		await this.loadBPMDeputySetting();	// 呼叫代理人api保存返回资料
+		console.log("this",this);
+		await this.paramInit();
+		await this.cboParamInit();
+		await this.loadBPMDeputySetting();
 		dispatch(isLoading(false));
 	}
 }
@@ -20,7 +21,7 @@ export function iniDeputyData(){
 export function loadBPMDeputySetting() {
 	return async (dispatch, getState) => {
 	    await UpdateDataUtil.getBPMDeputySetting(getState().UserInfo.UserInfo).then(async (data) => {
-			console.log('getBPMDeputySetting', data);
+	    	console.log("loadBPMDeputySetting", data);
 			dispatch(setDeputyBasic(data));
 	    	await this.basicInit(data);
 	    	this.getDeputyTip();
@@ -939,14 +940,15 @@ async function getInitCondicton2 (rule,user,lang){
 	      let actionObject = {
 	        count: 0
 	      };
-	    //   for (let column of item.actionColumn) {
-	    //     actionObject[column] = (column == item.defaultvalue) ? true : false;
-	    //   }
-	      await UpdateDataUtil.getCreateFormDetailFormat(user, item.action, actionObject).then(async (data) => {
+	      for (let column of item.actionColumn) {
+	        actionObject[column] = (column == item.defaultvalue) ? true : false;
+	      }
+	      await UpdateDataUtil.getCreateFormDetailFormat(user, item.action).then(async (data) => {
+	      	console.log(data);
+
 	          if(data){
                 returnValue = data;
-                returnValue["actionObject"] = actionObject;
-				console.log('returnValue', returnValue);
+                // returnValue["actionObject"] = actionObject;
                 result = returnValue;
 	          }
 	      }).catch((e)=>{

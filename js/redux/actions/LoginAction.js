@@ -385,13 +385,13 @@ export function initialApi(user,way=false){
 			UpdateDataUtil.updateBanner(user),		//Banner
 			UpdateDataUtil.updateModule(user),		//module
 			UpdateDataUtil.setLoginInfo(user),
-  			UpdateDataUtil.updateRead(user)			//訊息讀取表       
-  		];
+  			UpdateDataUtil.updateRead(user),		//訊息讀取表       
+			UpdateDataUtil.updateDailyOralEnglish(user) //每日英语
+		];
 
 	  	Promise.all(arr).then( async (data) => {
 	  		loadBannerImagesIntoState(dispatch, getState);//撈取HomePage Banners資料
 	        user = certTips(dispatch, getState(), user); //判斷是否進行提示生物識別設定
-	  		user = await getUserInfoWithImage(user); 	//處理使用者圖片的後續處理
 			dispatch(setUserInfo(user));				//將資料存放在UserInfoReducer的state裡
 			dispatch(login_done(true));				    //同步完成，跳至首頁	
 			dispatch(setAccountType()); 				//恢復輸入欄位初始值	
@@ -400,8 +400,12 @@ export function initialApi(user,way=false){
 				type: types.ENABLE_APP_INITIAL,
 				enable:true
 			});
+			
 			NavigationService.navigate('HomeTabNavigator', {screen: 'Home'});
 			DeviceStorageUtil.set("lastUpdateTime", new Date().getTime()); // localstorage記錄此次版本更新的時間
+
+			user = await getUserInfoWithImage(user); 	//處理使用者圖片的後續處理
+			dispatch(setUserInfo(user));				//將資料存放在UserInfoReducer的state裡
 	  	}).catch((e)=>{
 	  		console.log("e", e);
 
@@ -580,6 +584,7 @@ async function getUserInfoWithImage(data){
 		}
 	} else {
 		if (data.pictureUrl.includes("http")) {
+			console.log(data.pictureUrl);
 			data = await RNFetchBlob.fetch('GET', data.pictureUrl).then((res) => {
 				data.picture = { uri: `data:image/png;base64,${res.base64()}`};
 				return data;

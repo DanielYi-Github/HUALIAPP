@@ -42,7 +42,16 @@ export default {
 		androidChangeAPPMessage11:"，使用新版APP进行操作（APP图标有NEW字样）。",
 		androidChangeAPPMessage12:"图标说明：",
 		androidChangeAPPMessage13:"不再显示",
-		WebViewUrlError:"khác mua địa chỉ trang web"
+		WebViewUrlError:"khác mua địa chỉ trang web",
+		week:{
+			Sunday   :"chủ nhật",
+			Monday   :"Thứ hai",
+			Tuesday  :"Thứ ba",
+			Wednesday:"Thứ tư",
+			Thursday :"Thứ năm",
+			Friday   :"Thứ sáu",
+			Saturday :"ngày thứ bảy",
+		}
 	},
 	InitialPage: {
 		Update: 'Cập nhật', //更新
@@ -162,6 +171,7 @@ export default {
 		noticeMT: "Mgmt",
 		noticeFI: "FI",
 		noticeAG: "GR",
+		DailyOralEnglish :"Mỗi ngày một câu nói tiếng Anh",
 	},
 	FindPage: {
 		SearchKeyword: 'Từ khóa',
@@ -480,7 +490,8 @@ export default {
 		SmallerOrEqual: "be less or equal",
 		Smaller: "be less than",
 		NotEqual: "be unequal to",
-		requireFirst  : "have to write down first." 
+		requireFirst  : "have to write down first.",
+		NoEmpty:"Không thể điền vào chỗ trống"
 	},
 	SurveyPage:{
 		Creating          : "Bảng câu hỏi đang được tạo ...",

@@ -18,6 +18,7 @@ import * as MyFormAction   from '../../redux/actions/MyFormAction';
 import * as DocumentAction from '../../redux/actions/DocumentAction';
 import * as BirthdayAction from '../../redux/actions/BirthdayAction';
 import * as ReportAction   from '../../redux/actions/ReportAction';
+import * as MeetingAction  from '../../redux/actions/MeetingAction';
 
 import ReactNativeParallaxHeader from '../../extendThirdModule/CustomRNParallax';
 import HomePageBanner            from '../../components/HomePageBanner';
@@ -86,6 +87,7 @@ class HomePage extends React.Component {
     props.actions.loadFunctionType(langStatus);            //取得Module分類    
     props.actions.loadInitialNoticeData();                 //撈取公告列表資料 
     props.actions.messageInitial(user);                    //撈取全部的消息資料，並放置在redux的state中
+    props.actions.getMeetings();                           //撈取全部的會議訊息，並放置在redux的state中
     props.actions.loadWaterMarkViewConfig();               //撈取APP共用資料_浮水印顯示畫面控制
     props.actions.getIsAppNotificationEnable(user);        //檢查手機ＡＰＰ的通知是否開啟
     Platform.OS == 'android' ? props.actions.enableScreenShot(false) : null; //啟動禁止截圖的功能(android專屬)  
@@ -618,6 +620,7 @@ export default connect(
       ...DocumentAction,
       ...BirthdayAction,
       ...ReportAction,
+      ...MeetingAction
     }, dispatch)
   })
 )(HomePageStyle);

@@ -42,7 +42,16 @@ export default {
         androidChangeAPPMessage11:"，使用新版APP進行操作（APP圖標有NEW字樣）。",
         androidChangeAPPMessage12:"圖標說明：",
 		androidChangeAPPMessage13:"不再顯示",
-		WebViewUrlError:"網站地址獲取異常"
+		WebViewUrlError:"網站地址獲取異常",
+		week:{
+			Sunday   :"週日",
+			Monday   :"週一",
+			Tuesday  :"週二",
+			Wednesday:"週三",
+			Thursday :"週四",
+			Friday   :"週五",
+			Saturday :"週六",
+		}
 	},
 	InitialPage: {
 		Update: '更新',
@@ -162,6 +171,7 @@ export default {
 		noticeMT     :"管理",
 		noticeFI     :"財務",
 		noticeAG     :"總務",
+		DailyOralEnglish :"每日一句英語",
 	},
 	FindPage: {
 		SearchKeyword: '關鍵字',
@@ -484,7 +494,8 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		SmallerOrEqual: "小於或等於",
 		Smaller       : "小於",
 		NotEqual      : "不等於",
-		requireFirst  : "必須先行填寫"
+		requireFirst  : "必須先行填寫",
+		NoEmpty:"不能填寫空白"
 	},
 	SurveyPage:{
 		Creating          :"問卷生成中...",

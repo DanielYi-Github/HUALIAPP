@@ -37,41 +37,6 @@ let UpgradeDBTableUtil = {
 		    });
 		  }
 		});
-		//檢查有無表單
-		/*
-		SQLite.checkTable("THF_FIND_INFO").then((data)=>{
-		  if (!data) {
-		    //檢查沒有進行新增表單
-		    let createTable = `CREATE TABLE THF_FIND_INFO ( 
-		        OID char ( 32 ) NOT NULL,
-		        ID varchar ( 50 ) NOT NULL,
-		        NAME nvarchar ( 50 ),
-		        FUNC nvarchar ( 50 ),
-		        LANGID nvarchar ( 50 ),
-		        STATUS char ( 1 ) NOT NULL DEFAULT 'Y',
-		        CRTDAT numeric NOT NULL DEFAULT (datetime('now','+8 hour')),
-		        TXDAT numeric DEFAULT (datetime('now','+8 hour')), 
-		        PRIMARY KEY( OID ) 
-		      )`;
-
-		     SQLite.createTable(createTable).then((data)=>{});
-		  }
-		});
-		*/
-		//檢查有無表單
-		/*
-		SQLite.checkTable("THF_PERMISSION").then((data)=>{
-		  if (!data) {
-		    //檢查沒有進行新增表單
-		    let createTable = `CREATE TABLE THF_PERMISSION (
-		                        DATA_OID  TEXT NOT NULL,
-		                        DATA_TYPE TEXT NOT NULL,
-		                        PRIMARY KEY( DATA_OID)
-		                      )`;
-		     SQLite.createTable(createTable).then((data)=>{});
-		  }
-		});
-		*/
 		//檢查該表單有無此欄位
 		SQLite.checkTableField("THF_PERMISSION", "FUNC_OID").then((data)=>{
 		  if (!data) {
@@ -165,6 +130,25 @@ let UpgradeDBTableUtil = {
 		    });
 		  }
 		});
+		//檢查有無表單
+		SQLite.checkTable("THF_DAILY_ORAL_ENGLISH").then((data)=>{
+			if (!data) {
+				let createTable = `CREATE TABLE THF_DAILY_ORAL_ENGLISH ( 
+					OID char ( 32 ) NOT NULL, 
+					CONTENT varchar ( 255 ) NOT NULL, 
+					TRANSLATE varchar ( 255 ) NOT NULL, 
+					PUSHDATE numeric DEFAULT (datetime('now','+8 hour')), 
+					IMAGEURL varchar ( 255 ) ,
+					STATUS char ( 1 ) NOT NULL DEFAULT 'Y', 
+					CRTDAT numeric NOT NULL DEFAULT (datetime('now','+8 hour')), 
+					TXDAT numeric DEFAULT (datetime('now','+8 hour')),
+					PRIMARY KEY(OID)  
+				  )`;
+				SQLite.createTable(createTable).then((e)=>{
+					console.log(e);
+				});
+			}
+		  });
 	},
 }
 

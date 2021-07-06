@@ -58,7 +58,6 @@ let Common = {
 	},
 	getNetworkStatus(){
 		return new Promise((resolve) => NetInfo.getConnectionInfo().then((connectionInfo) => {
-
 				switch(connectionInfo.type){
 			  		case 'none':
 			  		case 'unknown':
@@ -73,7 +72,12 @@ let Common = {
 		);
 	},
 	dateFormat(date){
-		var time = new Date(date);
+		if (date == null) {
+		} else {
+			date = date.replace(' ', 'T');
+		}
+
+		var time = new Date( date );
 		var y = time.getFullYear();
 		var m = time.getMonth()+1;
 		var d = time.getDate();
@@ -83,6 +87,10 @@ let Common = {
 		return y+'-'+this.add0(m)+'-'+this.add0(d)+' '+this.add0(h)+':'+this.add0(mm)+':'+this.add0(s);
 	},
 	dateFormatNoSecond(date,separator){
+		if (date == null) {
+		} else {
+			date = date.replace(' ', 'T');
+		}
 		var time = new Date(date);
 		var y = time.getFullYear();
 		var m = time.getMonth()+1;
@@ -92,6 +100,10 @@ let Common = {
 		return y+separator+this.add0(m)+separator+this.add0(d)+' '+this.add0(h)+':'+this.add0(mm);
 	},
 	dateFormatNoTime(date){
+		if (date == null) {
+		} else {
+			date = date.replace(' ', 'T');
+		}
 		var time = new Date(date);
 		var y = time.getFullYear();
 		var m = time.getMonth()+1;
@@ -100,6 +112,10 @@ let Common = {
 		return y+'-'+this.add0(m)+'-'+this.add0(d);
 	},	
 	dateFormatNoYear(date){
+		if (date == null) {
+		} else {
+			date = date.replace(' ', 'T');
+		}
 		var time = new Date(date);
 		var m = time.getMonth()+1;
 		var d = time.getDate();
@@ -108,6 +124,10 @@ let Common = {
 		return this.add0(m)+'-'+this.add0(d)+' '+this.add0(h)+':'+this.add0(mm);
 	},
 	dateFormatInbusdat(date){
+		if (date == null) {
+		} else {
+			date = date.replace(' ', 'T');
+		}
 		// date = date.replace(/\-/g, "/").replace(".0","");
 		var time = new Date(date).getTime(); 
     	var nowTime = new Date().getTime(); 
@@ -117,6 +137,10 @@ let Common = {
     	return y.toString();
 	},	
 	dateFormatNoYearTime(date){
+		if (date == null) {
+		} else {
+			date = date.replace(' ', 'T');
+		}
 		var time = new Date(date);
 		var m = time.getMonth()+1;
 		var d = time.getDate();
@@ -382,6 +406,98 @@ let Common = {
 		  }
 		}
 		return picture;
+	},
+	/**
+	 * 将资料转换成SQLiteUtil insertData_new方法的参数格式
+	 * @param String tableName 表名称
+	 * @param Array datas 数组资料
+	 * @param Function dataFun datas资料转换格式方法，需返回一个数组
+	 * @param Number columnNum 列数
+	 * @param Number batchNum 批量数量
+	 * @returns 
+	 */
+	tranBatchInsertSQL(tableName, datas, dataFun, columnNum, batchNum){
+		//拼写初始语句
+		let selectInitSQL = 'SELECT ?'
+		for (let i = 0; i < columnNum - 1; i++) {
+			selectInitSQL += ',?'
+		}
+		const insertInitSQL = 'INSERT INTO ' + tableName + ' '
+		//拼写执行语句及整理对应的资料格式
+		let excuteList = [] //拼好的语句及对应资料数组
+		let insertSQL = insertInitSQL //拼写的语句
+		let dataArray = [] //语句对应资料
+		let rowNum = 1 //第几行
+		let rowLength = datas.length //行数
+		for (const data of datas) {
+			dataArray = dataArray.concat(dataFun(data))
+			if (rowNum % batchNum == 0) {
+				insertSQL += selectInitSQL
+				excuteList.push([insertSQL, dataArray])
+				//达到批量数量，重新拼写语句及清空资料
+				insertSQL = insertInitSQL
+				dataArray = [];
+			} else if (rowNum == rowLength) {
+				insertSQL += selectInitSQL
+				excuteList.push([insertSQL, dataArray])
+			} else {
+				insertSQL += selectInitSQL + ' union all '
+			}
+			
+			rowNum++
+		}
+		return excuteList
+	},
+	tranDiffUpdateSQL(tableName, datas, dataFun, columnNum, batchNum){
+		//拼写初始语句
+		let selectInitSQL = 'SELECT ?'
+		for (let i = 0; i < columnNum - 1; i++) {
+			selectInitSQL += ',?'
+		}
+		const deleteInitSQL = 'DELETE FROM '+tableName+' WHERE OID in ('
+		const insertInitSQL = 'INSERT INTO ' + tableName + ' '
+		//拼写执行语句及整理对应的资料格式
+		let dExcuteList = [] //拼好的delete语句及对应资料数组
+		let deleteSQL = deleteInitSQL //拼写的delete语句
+		let dDataArray = [] //delete语句对应资料
+
+		let iExcuteList = [] //拼好的insert语句及对应资料数组
+		let insertSQL = insertInitSQL //拼写的insert语句
+		let iDataArray = [] //insert语句对应资料
+
+		let rowNum = 1 //第几行
+		let rowLength = datas.length //行数
+		for (const data of datas) {
+			dDataArray.push(data.oid)
+			iDataArray = iDataArray.concat(dataFun(data))
+			if (rowNum % batchNum == 0) {
+				deleteSQL += '?)'
+				insertSQL += selectInitSQL
+				dExcuteList.push([deleteSQL,dDataArray])
+				iExcuteList.push([insertSQL,iDataArray])
+				//达到批量数量，重新拼写语句及清空资料
+				dDataArray = []
+				iDataArray = []
+				deleteSQL = deleteInitSQL
+				insertSQL = insertInitSQL
+			} else if (rowNum == rowLength) {
+				deleteSQL += '?)'
+				insertSQL += selectInitSQL
+				dExcuteList.push([deleteSQL,dDataArray])
+				iExcuteList.push([insertSQL,iDataArray])
+			} else {
+				deleteSQL += '?,'
+				insertSQL += selectInitSQL + ' union all '
+			}
+			
+			rowNum++
+		}
+
+		const excuteList = {
+			dExcuteList,
+			iExcuteList
+		}
+		return excuteList
 	}
 }
 

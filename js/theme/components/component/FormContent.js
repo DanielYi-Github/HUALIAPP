@@ -4,12 +4,12 @@ import { Platform } from 'react-native';
 
 export default (variables /*: * */ = variable) => {
   const formContent = {
-  	MainPageBackground  :variables.MainPageBackground,
-    InputFieldBackground:variables.cardDefaultBg,
-    textColor:variables.textColor,
-    inverseTextColor:variables.inverseTextColor,
-    PageSize:variables.PageSize,
-    Separator:variables.Separator,
+	MainPageBackground  :variables.MainPageBackground,
+	InputFieldBackground:variables.cardDefaultBg,
+	textColor           :variables.textColor,
+	inverseTextColor    :variables.inverseTextColor,
+	PageSize            :variables.PageSize,
+	Separator           :variables.Separator,
     CreateFormPageFiledItemWidth:{
 		width:variables.deviceWidth*0.86, 
 		borderWidth:0,

@@ -23,8 +23,6 @@ import FormContentGridForEvaluation  from './FormContentGridForEvaluation';
 import FormInputContentGridForDeputy from './FormInputContentGridForDeputy';
 import FormContentTabRdo            from './FormContentTabRdo';
 
-
-
 export default class FormInputContent extends Component {
 	constructor(props) {
 		super(props);
