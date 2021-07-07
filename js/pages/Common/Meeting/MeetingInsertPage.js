@@ -17,6 +17,7 @@ import ToastUnit              from '../../../utils/ToastUnit';
 class MeetingInsertPage extends React.PureComponent  {
 	constructor(props) {
 	    super(props);
+
       let time1 = new Date();
       let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss").replace(' ', 'T') );
       let isChangeTime = time1.getHours() == time2.getHours() ? false: true;

@@ -74,7 +74,9 @@ let Common = {
 	dateFormat(date){
 		if (date == null) {
 		} else {
-			date = date.replace(' ', 'T');
+			if (typeof date == "String") {
+				date = date.replace(' ', 'T');
+			}
 		}
 
 		var time = new Date( date );
@@ -89,7 +91,9 @@ let Common = {
 	dateFormatNoSecond(date,separator){
 		if (date == null) {
 		} else {
-			date = date.replace(' ', 'T');
+			if (typeof date == "String") {
+				date = date.replace(' ', 'T');
+			}
 		}
 		var time = new Date(date);
 		var y = time.getFullYear();
@@ -102,7 +106,9 @@ let Common = {
 	dateFormatNoTime(date){
 		if (date == null) {
 		} else {
-			date = date.replace(' ', 'T');
+			if (typeof date == "String") {
+				date = date.replace(' ', 'T');
+			}
 		}
 		var time = new Date(date);
 		var y = time.getFullYear();
@@ -114,7 +120,9 @@ let Common = {
 	dateFormatNoYear(date){
 		if (date == null) {
 		} else {
-			date = date.replace(' ', 'T');
+			if (typeof date == "String") {
+				date = date.replace(' ', 'T');
+			}
 		}
 		var time = new Date(date);
 		var m = time.getMonth()+1;
@@ -126,7 +134,9 @@ let Common = {
 	dateFormatInbusdat(date){
 		if (date == null) {
 		} else {
-			date = date.replace(' ', 'T');
+			if (typeof date == "String") {
+				date = date.replace(' ', 'T');
+			}
 		}
 		// date = date.replace(/\-/g, "/").replace(".0","");
 		var time = new Date(date).getTime(); 
@@ -139,7 +149,9 @@ let Common = {
 	dateFormatNoYearTime(date){
 		if (date == null) {
 		} else {
-			date = date.replace(' ', 'T');
+			if (typeof date == "String") {
+				date = date.replace(' ', 'T');
+			}
 		}
 		var time = new Date(date);
 		var m = time.getMonth()+1;
