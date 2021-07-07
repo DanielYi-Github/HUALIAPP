@@ -74,8 +74,8 @@ let Common = {
 	dateFormat(date){
 		if (date == null) {
 		} else {
-			if (typeof date == "String") {
-				date = date.replace(' ', 'T');
+			if (typeof date == "string") {
+				date = Date.parse(date.replace(/-/g, "/"));
 			}
 		}
 
@@ -91,8 +91,8 @@ let Common = {
 	dateFormatNoSecond(date,separator){
 		if (date == null) {
 		} else {
-			if (typeof date == "String") {
-				date = date.replace(' ', 'T');
+			if (typeof date == "string") {
+				date = Date.parse(date.replace(/-/g, "/"));
 			}
 		}
 		var time = new Date(date);
@@ -106,8 +106,8 @@ let Common = {
 	dateFormatNoTime(date){
 		if (date == null) {
 		} else {
-			if (typeof date == "String") {
-				date = date.replace(' ', 'T');
+			if (typeof date == "string") {
+				date = Date.parse(date.replace(/-/g, "/"));
 			}
 		}
 		var time = new Date(date);
@@ -120,8 +120,8 @@ let Common = {
 	dateFormatNoYear(date){
 		if (date == null) {
 		} else {
-			if (typeof date == "String") {
-				date = date.replace(' ', 'T');
+			if (typeof date == "string") {
+				date = Date.parse(date.replace(/-/g, "/"));
 			}
 		}
 		var time = new Date(date);
@@ -134,8 +134,8 @@ let Common = {
 	dateFormatInbusdat(date){
 		if (date == null) {
 		} else {
-			if (typeof date == "String") {
-				date = date.replace(' ', 'T');
+			if (typeof date == "string") {
+				date = Date.parse(date.replace(/-/g, "/"));
 			}
 		}
 		// date = date.replace(/\-/g, "/").replace(".0","");
@@ -149,8 +149,8 @@ let Common = {
 	dateFormatNoYearTime(date){
 		if (date == null) {
 		} else {
-			if (typeof date == "String") {
-				date = date.replace(' ', 'T');
+			if (typeof date == "string") {
+				date = Date.parse(date.replace(/-/g, "/"));
 			}
 		}
 		var time = new Date(date);
