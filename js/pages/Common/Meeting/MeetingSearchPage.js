@@ -462,7 +462,8 @@ class MeetingSearchPage extends React.PureComponent  {
       let isRequestSussce = false;
       let errorMessage = "";
       let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
-        console.log("searchMeetingResult", result);
+        // console.log("meeting/checkDoubleDateTime", result);
+        
         isRequestSussce = true;
         return result;
       }).catch((errorResult)=>{
@@ -478,7 +479,7 @@ class MeetingSearchPage extends React.PureComponent  {
             meetingParams        :meetingParams
           });
         } else {
-          console.log(meetingParams);
+          // console.log(meetingParams);
           NavigationService.navigate("MeetingTimeForSearch", {
             searchMeetingResult: searchMeetingResult,
             meetingParams : meetingParams

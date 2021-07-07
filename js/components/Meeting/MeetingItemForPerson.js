@@ -8,6 +8,32 @@ class MeetingItemForPerson extends Component {
 	}
 
 	render() {
+
+		let startDate, startTime, endDate, endTime;
+		let startDateTime = this.props.data.startdate.split(" ");
+		let endDateTime   = this.props.data.enddate.split(" ");
+
+		let isCrossDate = startDateTime[0] == endDateTime[0]? false: true;
+
+		startDate = startDateTime[0].split("-");
+		startTime = startDateTime[1].split(":");
+		endDate = endDateTime[0].split("-");
+		endTime = endDateTime[1].split(":");
+
+		startDate[1] = startDate[1].indexOf('0') == 0 ? startDate[1].replace('0', ''): startDate[1];
+		startDate[2] = startDate[2].indexOf('0') == 0 ? startDate[2].replace('0', ''): startDate[2];
+		endDate[1] = endDate[1].indexOf('0') == 0 ? endDate[1].replace('0', ''): endDate[1];
+		endDate[2] = endDate[2].indexOf('0') == 0 ? endDate[2].replace('0', ''): endDate[2];
+
+		let meetingTime = "";
+
+		if (isCrossDate) {
+			meetingTime= `${startDate[1]}/${startDate[2]} ${startTime[0]}:${startTime[1]} - ${endDate[1]}/${endDate[2]} ${endTime[0]}:${endTime[1]}`;
+		} else {
+			meetingTime = `${startTime[0]}:${startTime[1]} - ${endTime[0]}:${endTime[1]}`;
+		}
+
+
 		let image = require("../../image/meeting/meeting.png");
 		let cardItem = (
 				<CardItem >				
@@ -30,7 +56,7 @@ class MeetingItemForPerson extends Component {
 							width         : '100%', 
 							marginLeft: 7
 						}}>
-						<Text style={{flex:0, marginRight: 0}}>{this.props.data.starttime} - {this.props.data.endtime}</Text>
+						<Text style={{flex:0, marginRight: 0}}>{meetingTime}</Text>
 						</View>
 					</Body>
 				</CardItem>

@@ -155,7 +155,7 @@ export function getPersonDateTime(personId){
 			empid    :personId
 		}
 		let meetingsResult = await UpdateDataUtil.getPersonDateTime(user, content).then((result)=>{
-			console.log("getPersonDateTime", result); //顯示此人有哪些會議
+			// console.log("meeting/getDateTime", result); //顯示此人有哪些會議
 			return result;
 		}).catch((e)=>{
 			console.log("e", e);
