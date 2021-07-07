@@ -167,7 +167,7 @@ class MeetingSearchWithTagsPage extends React.Component {
             </Header>
         }
         <Label style={{marginLeft: 5, paddingTop: 20, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder }}>
-          {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd}${"參與人"}`}
+          {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd}${"與會人員"}`}
         </Label>
         <View style={{flex:0.3, backgroundColor: this.props.style.InputFieldBackground}}>
             <Content ref ={(c) => { this._content = c; }}>
@@ -283,7 +283,6 @@ class MeetingSearchWithTagsPage extends React.Component {
         style   ={{paddingLeft: 15, padding:15, backgroundColor: this.props.style.InputFieldBackground}} 
         onPress ={ async ()=>{ 
           this.addTag(item.item);
-
         }} 
       >
         <Label>{item.item.name}</Label>
@@ -348,42 +347,6 @@ class MeetingSearchWithTagsPage extends React.Component {
             <Label>{this.props.state.Language.lang.ListFooter.NoMore}</Label>
         </Item>
       ) 
-      /*
-        let keyword = this.state.isChinesKeyword ? this.state.tKeyword : this.state.keyword;
-        if (this.state.isSearch && this.state.searchedData.length == 0) {
-          footer = (
-            <Item style={{padding: 15, justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
-                <Label style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{`${this.props.state.Language.lang.CreateFormPage.SearchNothing} "${this.state.data.component.name}"`}</Label>
-                <Label style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{`${this.props.state.Language.lang.CreateFormPage.AddSearchItemOrNot} "${keyword}" ${this.state.data.component.name} ?`}</Label>
-                <Button light
-                  style={{
-                    marginTop: 15,
-                    padding: 15,
-                    alignSelf: 'center', 
-                    borderColor: '#575757'
-                  }}
-                  onPress={()=>{
-                    this.addTag({
-                      COLUMN1: null, 
-                      name: keyword, 
-                      COLUMN3: null, 
-                      COLUMN4: null
-                    });
-                  }}
-                >
-                  <Text>{this.props.state.Language.lang.CreateFormPage.AddSearchItem}</Text>
-                  <Icon name="add" />
-                </Button>
-            </Item>
-          )
-        } else {
-          footer = (
-            <Item style={{padding: 15, justifyContent: 'center', backgroundColor: this.props.style.InputFieldBackground}}>
-                <Label>{this.props.state.Language.lang.ListFooter.NoMore}</Label>
-            </Item>
-          )  
-        }
-      */
     }
 
     return footer;
@@ -408,9 +371,7 @@ class MeetingSearchWithTagsPage extends React.Component {
       enddate: endTime,
       attendees:[ {id:id} ]
     }
-    console.log("actionObject", actionObject);
     let enableMeeting = await UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
-      console.log("result", result);
       if (result.length == 0) {
         return true;
       } else {

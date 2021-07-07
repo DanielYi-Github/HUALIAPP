@@ -184,11 +184,13 @@ export function loadWaterMarkViewConfig(){
 }
 
 // for Messages
-export function checkDirectorPage(data){
+export function checkDirectorPage(data, type = null){
 	return async (dispatch, getState) => {
 		
 		// 找出該訊息的EVENT 再進行調轉動作
 		let user = getState().UserInfo.UserInfo;
+
+
 		let OID  = data.oid ? data.oid: data.OID;
 		let sql  = `SELECT case when r.ISREAD is null then 'F' else r.ISREAD end ISREAD,
 					a.OID as MSGOID, a.TYPE, a.TITLE, a.CONTENT, a.ISPUSH, a.CRTDAT,
@@ -200,18 +202,9 @@ export function checkDirectorPage(data){
 		data = await SQLite.selectData(sql, []).then((result) => {
 			return result.item(0)
 		});
-		console.log("checkDirectorPage", data);
-		/*
-		if (data.TYPE == "meeting") {
-			data.APPID = "MeetingInsert";
-			data.CONTENT1 = {
-				meetingId : "c9bb34a32031c9fcbd11b59c90224211"
-			}
-		} 
-		*/
-		
 		if (data.ISREAD == "F") updateMessageReadState(OID, user, dispatch, getState);
-		// console.log("checkDirectorPage", data);
+
+
 
 		switch (data.APPID) {
 			case "CreateForm": 			// 派車單、台籍休假單... 

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import SearchInput, { createFilter } from 'react-native-search-filter'; 
 const KEYS_TO_FILTERS = ['initiator.id'];
-const Invited_TO_FILTERS = [ "attendees.id", "attendees.name" ];
+const Invited_TO_FILTERS = [ "chairperson.id", "chairperson.name", "attendees.id", "attendees.name" ];
 const SearchingKey_TO_FILTERS = [
   'subject', 
   'description', 
@@ -69,7 +69,7 @@ class MeetingListPage extends React.PureComponent  {
   }
 
 	render() {
-    // console.log(this.props.state.Meeting.meetingList);
+    
     let userId = this.props.state.UserInfo.UserInfo.id;
     let meetingList = this.props.state.Meeting.meetingList;
     let keySearched = [];
@@ -134,8 +134,7 @@ class MeetingListPage extends React.PureComponent  {
           isRightButtonIconShow = {true}
           rightButtonIcon       = {{name:'search'}}
           rightButtonOnPress    = {()=>{ this.setState({ isShowSearch:true }); }} 
-          // title                 = {this.props.state.Language.lang.HomePage.Contacts}
-          title                 = {"我的會議"}
+          title                 = {this.props.lang.MeetingPage.myMeetings} //"我的會議"
           titleOnPress          = {()=>{ this.setState({ isShowSearch:true }) }}
         />
         <Segment style={{backgroundColor: "rgba(0,0,0,0)"}}>
@@ -147,7 +146,7 @@ class MeetingListPage extends React.PureComponent  {
               this.setState({SegmentButton:"all"});
             }}
           >
-            <Text>全部</Text>
+            <Text>{this.props.lang.MeetingPage.all}</Text>
           </Button>
           <Button 
             style={{width:"30%", justifyContent: 'center'}} 
@@ -156,7 +155,7 @@ class MeetingListPage extends React.PureComponent  {
               this.setState({SegmentButton:"create"});
             }}
           >
-            <Text>我發起</Text>
+            <Text>{this.props.lang.MeetingPage.initiator}</Text>
           </Button>
           <Button 
             last 
@@ -166,7 +165,7 @@ class MeetingListPage extends React.PureComponent  {
               this.setState({SegmentButton:"invited"});
             }}
           >
-            <Text>被邀請</Text>
+            <Text>{this.props.lang.MeetingPage.invited}</Text>
           </Button>
         </Segment>
         <SectionList
@@ -205,6 +204,7 @@ class MeetingListPage extends React.PureComponent  {
         item={items}
         data={item.section.meetings[item.index]}
         onPress = {() => this.navigateDetaile(item.section.meetings[item.index])}
+        lang = {this.props.lang.MeetingPage}
       />
     );
   }
@@ -244,14 +244,10 @@ class MeetingListPage extends React.PureComponent  {
   }
 
   renderFooter = () => {
-    if (this.state.showFooter) {
-      return (<NoMoreItem text={this.props.state.Language.lang.ListFooter.NoMore}/>);         
+    if (this.props.state.Meeting.isRefreshing) {
+      return <NoMoreItem text={this.props.state.Language.lang.ListFooter.Loading}/>;
     } else {
-      if (this.state.isLoading) {
-        return <NoMoreItem text={this.props.state.Language.lang.ListFooter.Loading}/>;
-      } else {
-        return <NoMoreItem text={this.props.state.Language.lang.ListFooter.NoMore}/>;
-      }
+      return (<NoMoreItem text={this.props.state.Language.lang.ListFooter.NoMore}/>);         
     }
   }
 
@@ -275,7 +271,8 @@ class MeetingListPage extends React.PureComponent  {
 let MeetingListPageStyle = connectStyle( 'Page.MeetingPage', {} )(MeetingListPage);
 export default connect(
   (state) => ({
-    state: { ...state }
+    state: { ...state },
+    lang: { ...state.Language.lang }
   }),
   (dispatch) => ({
     actions: bindActionCreators({

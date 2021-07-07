@@ -45,8 +45,7 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
         isRightButtonIconShow = {false}
         rightButtonIcon       = {null}
         rightButtonOnPress    = {null} 
-        // title                 = {`${this.state.person.name}的會議時程`}
-        title                 = {`會議時程`}
+        title                 = {this.props.lang.MeetingPage.meetingSchedule} //`會議時程`
         isTransparent         = {false}
       />
         <SectionList
@@ -78,6 +77,7 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
         name={item.section.meetings[item.index].name}
         item={items}
         data={item.section.meetings[item.index]}
+        lang={this.props.lang.MeetingPage}
       />
     );
   }
@@ -85,7 +85,7 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
   renderEmptyComponent = () => {
     return (
       <NoMoreItem
-        text={"暫時無會議"}
+        text={this.props.lang.MeetingPage.noMeetings} //"暫時無會議"
       />
     )
   }
@@ -120,7 +120,8 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
 let MeetingTimeForPersonPageStyle = connectStyle( 'Page.MeetingPage', {} )(MeetingTimeForPersonPage);
 export default connect(
   (state) => ({
-    state: { ...state }
+    state: { ...state },
+    lang: { ...state.Language.lang }
   }),
   (dispatch) => ({
     actions: bindActionCreators({

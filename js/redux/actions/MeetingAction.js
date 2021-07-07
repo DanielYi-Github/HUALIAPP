@@ -1,11 +1,14 @@
 import * as MeetingTypes   from '../actionTypes/MeetingTypes';
 import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
+import { Alert } from 'react-native';
+import DateFormat from  'dateformat';
 
 export function getMeetingModeType() {
 	return async (dispatch, getState) => {
 		dispatch(refreshing(true)); 	
 		let user = getState().UserInfo.UserInfo;
 		let meetingModeTypes = await UpdateDataUtil.getMeetingModeType(user).then((result)=>{
+			// console.log("getMeetingModeType",result);
 			return result;
 		}).catch((e)=>{
 			console.log("e", e);
@@ -103,7 +106,7 @@ export function getMeetings(condition = ""){
 			// condition:condition, //查詢使用
 		}
 		let meetingsResult = await UpdateDataUtil.getMeetings(user, content).then((result)=>{
-			// console.log("getMeetings", result);
+			console.log("getMeetings", result);
 			return result;
 		}).catch((e)=>{
 			console.log("e", e);
@@ -203,7 +206,6 @@ export function getFreeDateTime(meetingParams, freeTimeUnit){
 			attendees:meetingParams.attendees,
 			min      :freeTimeUnit
 		}
-		// console.log("content", content);
 		
 		let getFreeDateTimeResult = await UpdateDataUtil.getFreeDateTime(user, content).then((result)=>{
 			// console.log("result", result);
@@ -213,12 +215,46 @@ export function getFreeDateTime(meetingParams, freeTimeUnit){
 			return [];
 		});
 		
-		// getFreeDateTimeResult = [];
-
 		dispatch({
 			type: MeetingTypes.GET_MEETINGS_FREE_DATETIME,
 			getFreeDateTimeResult
 		});
 		dispatch(refreshing(false)); 
+	}
+}
+
+export function cancelMeeting(oid){
+	return async (dispatch, getState) => {
+		dispatch(refreshing(true)); 	
+		let user = getState().UserInfo.UserInfo;
+		let meetingParams = { "oid":oid };
+		
+		let cancelMeetingResult = await UpdateDataUtil.cancelMeeting(user, meetingParams).then((result)=>{
+			return result;
+		}).catch((e)=>{
+			let resultMsg = { success:false, msg:e.message };
+			return resultMsg;
+		});
+
+		dispatch(refreshing(false)); 
+		
+		dispatch({
+			type: MeetingTypes.MEETING_CANCELRESULT,
+			result:cancelMeetingResult,
+			resultMsg:cancelMeetingResult.success ? null: cancelMeetingResult.msg
+		}); 
+
+		if (cancelMeetingResult.success) {
+			this.getMeetings();
+		}
+		
+	}
+}
+
+export function resetMeetingMessage(){
+	return async (dispatch, getState) => {
+		dispatch({
+			type: MeetingTypes.MEETING_RESETMEETINGMESSAGE,
+		}); 	
 	}
 }

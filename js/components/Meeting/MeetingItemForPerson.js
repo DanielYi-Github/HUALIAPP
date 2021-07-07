@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import {Card, CardItem, Left, Body, Right, Icon, Text, Button, connectStyle, Thumbnail, Title, Label } from 'native-base';
-import DateFormat from  'dateformat';
 
 class MeetingItemForPerson extends Component {
 	constructor(props) {
@@ -24,7 +23,7 @@ class MeetingItemForPerson extends Component {
 							marginBottom: 5
 						}}>
 							<View style={{flex:1}}>
-								<Title style={{alignSelf: 'flex-start'}}> {`${this.props.name}有一場會議`}</Title>
+								<Title style={{alignSelf: 'flex-start'}}> {`${this.props.name} ${this.props.lang.haveaMeeting}`}</Title>
 							</View>
 						</View>
 						<View style={{

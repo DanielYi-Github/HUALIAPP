@@ -37,9 +37,7 @@ class MeetingInsertChairpersonPage extends React.Component {
 
   render() {
     // 紀錄是否是關鍵字搜尋結果的資料
-    // let contentList = this.state.isSearch ? this.state.searchedData : this.state.data.actionValue.contentList;
     let contentList = this.state.isSearch ? this.state.searchedData : this.state.data;
-
     return (
       <Container>
         {/*標題列*/}
@@ -101,7 +99,7 @@ class MeetingInsertChairpersonPage extends React.Component {
           isRightButtonIconShow = {true}
           rightButtonIcon       = {{name:'search'}}
           rightButtonOnPress    = {()=>{ this.setState({ isShowSearch:true }); }} 
-          title                 = {"選擇會議主席"}
+          title                 = {this.props.lang.MeetingPage.chairpersonChoose}
           titleOnPress          = {()=>{ this.setState({ isShowSearch:true }) }}
         />
         <FlatList
@@ -203,8 +201,8 @@ class MeetingInsertChairpersonPage extends React.Component {
             NavigationService.goBack();
           } else {
             Alert.alert(
-              "有重複",
-              "該時段"+item.item.name+"正在進行會議",
+              this.props.lang.MeetingPage.alertMessage_duplicate, //"有重複"
+              `${this.props.lang.MeetingPage.alertMessage_period} ${item.item.name} ${this.props.lang.MeetingPage.alertMessage_meetingAlready}`,
               [
                 { text: "OK", onPress: () => console.log("OK Pressed") }
               ],
@@ -266,7 +264,6 @@ class MeetingInsertChairpersonPage extends React.Component {
       enddate: endTime,
       attendees:[ {id:id} ]
     }
-    // console.log("meeting/checkDoubleDateTime", actionObject);
     let enableMeeting = await UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
       if (result.length == 0) {
         return true;
@@ -293,7 +290,8 @@ export let MeetingInsertChairpersonPageStyle = connectStyle( 'Page.FormPage', {}
 
 export default connect(
   (state) => ({
-    state: { ...state }
+    state: { ...state },
+    lang: { ...state.Language.lang }
   }),
   (dispatch) => ({
     actions: bindActionCreators({

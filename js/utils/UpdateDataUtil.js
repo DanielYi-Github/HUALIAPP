@@ -351,6 +351,7 @@ export async function updateMSG(user) {
 			let executeInsertMSGArraySQL = [];
 			
 			for (let [ index, insertData] of data.entries() ) {
+				// console.log(insertData, index);
 				prepareToInsertMSGArray = prepareToInsertMSGArray.concat([
 					insertData.oid,
 					insertData.type,
@@ -1827,6 +1828,7 @@ export async function updateMSGByOID(user,oid,lang) {
 
 			let lSelect = "SELECT * FROM THF_MSG WHERE OID=?";
 			SQLite.selectData(lSelect,[data.oid]).then((data1)=>{
+				console.log("updateMSGByOID", data1);
 				if(data1.length==0){
 					let lInsert = "INSERT INTO THF_MSG select ?,?,?,?,?,?,?,?,?,?,?,? ";
 					let nCrtDat = Common.dateFormat(data.crtdat);
@@ -4141,6 +4143,32 @@ export async function modifyMeeting(user, content){
 
 /**
 共用模板
+* 刪除會議
+* @param user資料
+*/
+export async function cancelMeeting(user, content){
+
+	let promise = new Promise((resolve, reject) => {
+		let url = "meeting/cancel";
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+ 			resolve(data);
+		})
+	});
+	return promise;
+}
+
+/**
+共用模板
 * 取得會議
 * @param user資料
 */
@@ -4206,6 +4234,7 @@ export async function getPersonDateTime(user, content){
 				"content": Common.encrypt(JSON.stringify(content)),
 				// "lang"   : Common.encrypt(user.lang)
 			};
+			console.log(params);
 			NetUtil.getRequestContent(params, url).then((data)=>{
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
