@@ -13,6 +13,7 @@ let MessageRouter = {
 
 		// 接收推送通知
 		JPush.addNotificationListener((result) => {
+			console.log("addNotificationListener", result);
 			if (result.notificationEventType == "notificationArrived"){
 				this.dealMessagesOriginalsource(result, props, true);
 			}else{
@@ -84,6 +85,8 @@ let MessageRouter = {
 			default:
 				// 需要判斷是哪一種訊息再寫入資料庫中，後續再進行推送，需要討論
 				await UpdateDataUtil.updateMSGByOID(user, oid, lang);  
+				await UpdateDataUtil.updateEvent(user); //事件表
+				console.log("isOriginal", isOriginal);
 				if (isOriginal){
 					DeviceEventEmitter.emit('loadMsgState');
 				}else{

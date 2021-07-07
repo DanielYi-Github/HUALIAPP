@@ -17,18 +17,21 @@ import ToastUnit              from '../../../utils/ToastUnit';
 class MeetingInsertPage extends React.PureComponent  {
 	constructor(props) {
 	    super(props);
+      let time1 = new Date();
+      let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss").replace(' ', 'T') );
+      let isChangeTime = time1.getHours() == time2.getHours() ? false: true;
 
       let oid              = "";
       let isParams         = this.props.route.params ? true : false;
       let isEditable       = true;
-      let headerName       = "新增會議";
+      let headerName       = props.lang.MeetingPage.insertMeeting;
       let isModify         = false;
       let subject          = "";
       let description      = "";
       let startTime        = new Date().getTime();
       let endTime          = new Date().getTime();
-      startTime            = startTime + (900000-(startTime%900000));
-      endTime              = endTime + (900000-(endTime%900000));
+      startTime            = startTime + (600000-(startTime%600000));
+      endTime              = endTime + (600000-(endTime%600000));
       let initiator        = { id : props.state.UserInfo.UserInfo.id };  //發起人
       let chairperson      = { id : props.state.UserInfo.UserInfo.id };  //主席
       let chairpersonLabel = props.state.UserInfo.UserInfo.name;
@@ -40,6 +43,8 @@ class MeetingInsertPage extends React.PureComponent  {
       let meetingPassword  = "";
       let remindtime       = 15;
       let now              = startTime;
+      let isEndDateChange  = false;
+
       let isSearchedMeeting = true;    // 有沒有找到此會議的訊息
 
 
@@ -51,12 +56,12 @@ class MeetingInsertPage extends React.PureComponent  {
             // 會議發起人要是自己才可進行編輯
             oid              = meetingParam.oid;
             isEditable       = false;
-            headerName       = isEditable ? "修改會議": "查看會議";
+            headerName       = isEditable ? props.lang.MeetingPage.modifyMeeting: props.lang.MeetingPage.seeMeetiog;
             isModify         = meetingParam.initiator.id == props.state.UserInfo.UserInfo.id ? true: false;;
             subject          = meetingParam.subject;
             description      = meetingParam.description;
-            startTime        = `${meetingParam.datetime.date} ${meetingParam.datetime.starttime}`.replace(' ', 'T');
-            endTime          = `${meetingParam.datetime.date} ${meetingParam.datetime.endtime}`.replace(' ', 'T');
+            startTime        = meetingParam.startdate.replace(' ', 'T');
+            endTime          = meetingParam.enddate.replace(' ', 'T');
             initiator        = meetingParam.initiator;
             chairperson      = meetingParam.chairperson;
             chairpersonLabel = meetingParam.chairperson.name;
@@ -66,13 +71,17 @@ class MeetingInsertPage extends React.PureComponent  {
             meetingPlaceName = meetingParam.meetingPlaceName ? meetingParam.meetingPlaceName : meetingPlaceName;
             meetingNumber    = meetingParam.meetingNumber ? meetingParam.meetingNumber : meetingNumber;
             meetingPassword  = meetingParam.meetingPassword ? meetingParam.meetingPassword : meetingPassword;
-            remindtime       = meetingParam.min;
+            remindtime       = meetingParam.remindtime;
             break;
           case 'MeetingSearch': // 參與人員搜尋那邊過來的
-            now              = meetingParam.startdate.replace(' ', 'T');;
-            startTime        = meetingParam.startdate.replace(' ', 'T');;
-            endTime          = meetingParam.enddate.replace(' ', 'T');;
-            attendees        = meetingParam.attendees;
+            startTime = new Date( meetingParam.startdate.replace(' ', 'T') ).getTime();
+            endTime   = new Date( meetingParam.enddate.replace(' ', 'T') ).getTime();
+
+            now       = isChangeTime ? startTime-28800000 : startTime;
+            startTime = isChangeTime ? startTime-28800000 : startTime;
+            endTime   = isChangeTime ? endTime-28800000 : endTime;
+            attendees = meetingParam.attendees;
+            isEndDateChange = true;
             break;
           case "MessageFuc": // 消息那邊過來的
             isSearchedMeeting = false;
@@ -84,17 +93,17 @@ class MeetingInsertPage extends React.PureComponent  {
               }
             }
             
-            
             if (isSearchedMeeting) {
               // 會議發起人要是自己才可進行編輯
               oid              = meetingParam.oid;
               isEditable       = false;
-              headerName       = isEditable ? "修改會議": "查看會議";
+              isModify         = true;
+              headerName       = isEditable ? props.lang.MeetingPage.modifyMeeting: props.lang.MeetingPage.seeMeetiog;
               isModify         = meetingParam.initiator.id == props.state.UserInfo.UserInfo.id ? true: false;;
               subject          = meetingParam.subject;
               description      = meetingParam.description;
-              startTime        = `${meetingParam.datetime.date} ${meetingParam.datetime.starttime}`.replace(' ', 'T');
-              endTime          = `${meetingParam.datetime.date} ${meetingParam.datetime.endtime}`.replace(' ', 'T');
+              startTime        = meetingParam.startdate.replace(' ', 'T');
+              endTime          = meetingParam.enddate.replace(' ', 'T');
               initiator        = meetingParam.initiator;
               chairperson      = meetingParam.chairperson;
               chairpersonLabel = meetingParam.chairperson.name;
@@ -104,7 +113,7 @@ class MeetingInsertPage extends React.PureComponent  {
               meetingPlaceName = meetingParam.meetingPlaceName ? meetingParam.meetingPlaceName : meetingPlaceName;
               meetingNumber    = meetingParam.meetingNumber ? meetingParam.meetingNumber : meetingNumber;
               meetingPassword  = meetingParam.meetingPassword ? meetingParam.meetingPassword : meetingPassword;
-              remindtime       = meetingParam.min;
+              remindtime       = meetingParam.remindtime;
             } else {
               isSearchedMeeting = false;
             }
@@ -114,7 +123,12 @@ class MeetingInsertPage extends React.PureComponent  {
         }
       }
 
+      startTime = isModify && isChangeTime ? new Date(startTime).getTime()-28800000: startTime;
+      endTime = isModify && isChangeTime  ? new Date(endTime).getTime()-28800000: endTime;
+      console.log(Platform.OS, time1.getHours() , time2.getHours(), isChangeTime);
+
 	    this.state = {
+        isChangeTime    :isChangeTime, //記錄部分機型會將時間直接+8小時
         oid             :oid,
         now             :now,
         isEditable      :isEditable, //預設只有發起人可以修改
@@ -139,22 +153,22 @@ class MeetingInsertPage extends React.PureComponent  {
         actionSheetType :"O",  //控制下拉式選單要出現哪種選項，O->選擇哪一種會議、M->會議前幾分鐘提醒
         remindtimeOptions:[
           {
-            label:"無提醒",
+            label:props.lang.MeetingPage.noAlert,
             value:0
           },{
-            label:"5分鐘前",
+            label:props.lang.MeetingPage.min5,
             value:5
           },{
-            label:"15分鐘前",
+            label:props.lang.MeetingPage.min15,
             value:15
           },{
-            label:"30分鐘前",
+            label:props.lang.MeetingPage.min30,
             value:30
           },{
-            label:"一小時前",
+            label:props.lang.MeetingPage.min60,
             value:60
           },{
-            label:"一天前",
+            label:props.lang.MeetingPage.min1day,
             value:3600
           }
         ],
@@ -163,18 +177,26 @@ class MeetingInsertPage extends React.PureComponent  {
         showDateTimePicker    : false, // for ios
         editDatetimeValue     : new Date(),
         editStartorEndDatetime: true, // true for start, false for end
-        isSearchedMeeting: isSearchedMeeting 
+        isSearchedMeeting     : isSearchedMeeting,
+        isEndDateChange       : isEndDateChange,
+        isDelete              : false,  // 是否刪除表單
       }
 	}
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.state.Meeting.actionResult !== null) {
         if (nextProps.state.Meeting.actionResult.success) {
-          ToastUnit.show('success', this.state.isModify ?"修改會議成功" :"新增會議成功");
-          this.props.actions.resetMeetingRedux();
-          NavigationService.goBack();
+          if (this.state.isDelete) {
+            ToastUnit.show('success', this.props.lang.MeetingPage.deleteMeetingSuccess);
+          } else {
+            ToastUnit.show('success', this.state.isModify ? this.props.lang.MeetingPage.modifyMeetingSuccess :this.props.lang.MeetingPage.insertMeetingSuccess);
+          }
+          setTimeout(
+            function(){ NavigationService.goBack(); }, 
+            50
+          );
         } else {
-          ToastUnit.show('error', nextProps.state.Meeting.actionResultMsg);          
+          ToastUnit.show('error', nextProps.state.Meeting.actionResultMsg, false, this.props.actions.resetMeetingMessage);          
         }
     }
   }
@@ -185,11 +207,11 @@ class MeetingInsertPage extends React.PureComponent  {
     } else {
 
       Alert.alert(
-        "此會議已結束",
+        this.props.lang.MeetingPage.meetingAlreadyDone,
         "",
         [
           {
-            text: this.props.state.Language.lang.Common.Close,   // 關閉 
+            text: this.props.lang.Common.Close,   // 關閉 
             style: 'cancel',
             onPress: () => {
               NavigationService.goBack();
@@ -224,9 +246,11 @@ class MeetingInsertPage extends React.PureComponent  {
         meetingPlaceName = meetingModeTypes.paramname;
       }
     }
-
     let startdate = new Date( this.state.startdate.replace(' ', 'T') );
     let enddate = new Date( this.state.enddate.replace(' ', 'T') );
+    startdate = this.state.isChangeTime ? startdate-28800000 : startdate;
+    enddate = this.state.isChangeTime ? enddate-28800000 : enddate;
+
     return (
       <Container>
         <HeaderForGeneral
@@ -241,8 +265,8 @@ class MeetingInsertPage extends React.PureComponent  {
         />
         <Content>
           {/*會議主題*/}
-          <Item style={{ backgroundColor: this.props.style.InputFieldBackground, marginTop: 30, borderWidth: 0, paddingLeft: 10 }}>
-              <Label>會議主題</Label>
+          <Item style={{ backgroundColor: this.props.style.InputFieldBackground, marginTop: 20, borderWidth: 0, paddingLeft: 10 }}>
+              <Label>{this.props.lang.MeetingPage.meetingSubject}</Label>
               <Input 
                   scrollEnabled ={false}
                   textAlign     ="right"
@@ -254,7 +278,7 @@ class MeetingInsertPage extends React.PureComponent  {
           </Item>
 
           <Item style={{ backgroundColor: this.props.style.InputFieldBackground, borderWidth: 0, paddingLeft: 10 }}>
-              <Label>說明</Label>
+              <Label>{this.props.lang.MeetingPage.meetingdescription}</Label>
               <Input 
                 multiline 
                 scrollEnabled ={false}
@@ -268,14 +292,14 @@ class MeetingInsertPage extends React.PureComponent  {
           
 
           {/*時間*/}
-           <Item style={{ backgroundColor: this.props.style.InputFieldBackground, marginTop: 30, borderWidth: 0, flexDirection: 'row' }}>
+           <Item style={{ backgroundColor: this.props.style.InputFieldBackground, marginTop: 20, borderWidth: 0, flexDirection: 'row' }}>
             <TouchableOpacity 
               style    ={{flex:1, flexDirection: 'column', padding: 10}}
               disabled ={!this.state.isEditable}
               onPress  ={()=>{ this.showDateTimePicker(true); }}
             >
               <Text>{this.dateFormat(startdate)}</Text>
-              <Text>{DateFormat( startdate, "HH:MM")}</Text>
+              <Text>{DateFormat( startdate, "HH:MM")  }</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style    ={{flex:1, flexDirection: 'column', padding: 10}}
@@ -283,7 +307,7 @@ class MeetingInsertPage extends React.PureComponent  {
               onPress  ={()=>{ this.showDateTimePicker(false); }}
             >
               <Text>{this.dateFormat(enddate)}</Text>
-              <Text>{DateFormat( enddate, "HH:MM")}</Text>
+              <Text>{DateFormat( enddate, "HH:MM")  }</Text>
             </TouchableOpacity>
           </Item>
           
@@ -292,7 +316,7 @@ class MeetingInsertPage extends React.PureComponent  {
             style={{
               backgroundColor: this.props.style.InputFieldBackground,
               height         : this.props.style.inputHeightBase,
-              marginTop      : 30,
+              marginTop      : 20,
               paddingLeft    : 10,
               paddingRight   : 5,
               borderWidth    : 0
@@ -307,7 +331,7 @@ class MeetingInsertPage extends React.PureComponent  {
             }}
           >
             <Icon name='person-outline' />
-            <Label style={{flex:1}}>會議主席</Label>
+            <Label style={{flex:1}}>{this.props.lang.MeetingPage.chairperson}</Label>
             {
               this.state.isEditable ? <Text>{this.state.chairpersonLabel}</Text> : <Label>{this.state.chairpersonLabel}</Label>
             }
@@ -327,7 +351,7 @@ class MeetingInsertPage extends React.PureComponent  {
           }}>
             <View style={{ flexDirection: 'row',  width: '100%' }}>
               <Icon name='people-outline' />
-              <Label style={{alignSelf: 'center', flex:1}}>{"邀請與會人員"}</Label>
+              <Label style={{alignSelf: 'center', flex:1}}>{this.props.lang.MeetingPage.attendeesInvite}</Label>
               {
                 this.state.isEditable ? 
                   <Icon 
@@ -348,7 +372,7 @@ class MeetingInsertPage extends React.PureComponent  {
               }
             </View>
             <TagInput
-              disabled            ={false}
+              disabled            ={true}
               autoFocus           ={false}
               tags                ={tags}
               deleteIconStyles    ={this.state.isEditable ? null: {width: 0, height: 0}}
@@ -368,7 +392,7 @@ class MeetingInsertPage extends React.PureComponent  {
               height: this.props.style.inputHeightBase,
               paddingLeft: 10,
               paddingRight: 5,
-              marginTop: 30,
+              marginTop: 20,
             }}
             disabled={!this.state.isEditable}
             onPress = {()=>{
@@ -377,7 +401,7 @@ class MeetingInsertPage extends React.PureComponent  {
             }}
           >
             <Icon name='meeting-room' type="MaterialIcons"/>
-            <Label style={{flex:1}}>與會方式</Label>
+            <Label style={{flex:1}}>{this.props.lang.MeetingPage.meetingMode}</Label>
             {
               this.state.isEditable ? <Text>{meetingPlaceName}</Text> : <Label>{meetingPlaceName}</Label>
             }
@@ -396,7 +420,7 @@ class MeetingInsertPage extends React.PureComponent  {
               height         : this.props.style.inputHeightBase,
               paddingLeft    : 10,
               paddingRight   : 5,
-              marginTop      : 30,
+              marginTop      : 20,
             }}
             disabled = {!this.state.isEditable}
             onPress  = {()=>{
@@ -405,7 +429,7 @@ class MeetingInsertPage extends React.PureComponent  {
             }}
           >
             <Icon name='clock-alert-outline' type="MaterialCommunityIcons" />
-            <Label style={{flex:1}}>會議前提醒</Label>
+            <Label style={{flex:1}}>{this.props.lang.MeetingPage.reminder}</Label>
             {
              this.state.isEditable ? <Text>{remindtimeLabel}</Text> : <Label>{remindtimeLabel}</Label>  
             }
@@ -424,12 +448,12 @@ class MeetingInsertPage extends React.PureComponent  {
         {
           (this.state.showDatePicker) ? 
             <DateTimePicker 
-              value    ={this.state.editDatetimeValue}
-              minimumDate = {new Date(this.state.now)}
-              mode     ={"date"}
-              is24Hour ={true}
-              display  ="default"
-              onChange ={this.setDate}
+              value       ={this.state.editDatetimeValue}
+              minimumDate ={new Date(this.state.now)}
+              mode        ={"date"}
+              is24Hour    ={true}
+              display     ="default"
+              onChange    ={this.setDate}
             />
           :
             null
@@ -443,7 +467,7 @@ class MeetingInsertPage extends React.PureComponent  {
               is24Hour ={true}
               display  ="spinner"
               onChange ={this.setTime}
-              minuteInterval = {15}
+              minuteInterval = {10}
             />
           :
             null
@@ -455,7 +479,13 @@ class MeetingInsertPage extends React.PureComponent  {
                 <View style={{flex:1, backgroundColor:"rgba(0,0,0,.4)", flexDirection:"column", justifyContent:"flex-end"}}>
                   <View style={{backgroundColor:"white"}}>
                     <View style={{flexDirection:"row", justifyContent:"space-between"}}>
-                      <Button transparent onPress ={()=>{ this.setState({ showDateTimePicker:false, editDatetimeValue :null });}} >
+                      <Button transparent onPress ={()=>{ 
+                        this.setState({ 
+                          showDateTimePicker:false, 
+                          editDatetimeValue :null, 
+                          isEndDateChange   :true
+                        });
+                      }}>
                         <Text style={{color: "black"}}>{this.props.state.Language.lang.Common.Cancel}</Text>
                       </Button>
                       <Button transparent onPress={this.setDatetime}>
@@ -466,7 +496,7 @@ class MeetingInsertPage extends React.PureComponent  {
                       mode     ={"datetime"}
                       value    ={this.state.editDatetimeValue}
                       minimumDate = {new Date(this.state.now)}
-                      minuteInterval = {15}
+                      minuteInterval = {10}
                       is24Hour ={true}
                       display  ={"spinner"}
                       locale   ={this.props.state.Language.lang.LangStatus}
@@ -495,22 +525,29 @@ class MeetingInsertPage extends React.PureComponent  {
 	}
 
   showDateTimePicker = (editStartorEndDatetime) => {
+    let startdate = new Date( this.state.startdate.replace(' ', 'T') ).getTime();
+    let enddate = new Date( this.state.enddate.replace(' ', 'T') ).getTime();
+    startdate = this.state.isChangeTime ? startdate-28800000: startdate;
+    enddate = this.state.isChangeTime ? enddate-28800000: enddate;
 
-    let startdate = new Date( this.state.startdate.replace(' ', 'T') );
-    let enddate = new Date( this.state.enddate.replace(' ', 'T') );
-
-    enddate = this.state.isModify ? enddate : startdate;
+      if (this.state.isEndDateChange) {
+      } else {
+        enddate = startdate;
+      }
+    
     if (Platform.OS == "ios") {
       this.setState({
         editStartorEndDatetime: editStartorEndDatetime,
         editDatetimeValue: editStartorEndDatetime ? startdate: enddate,
-        showDateTimePicker: true
+        showDateTimePicker: true,
+        isEndDateChange: editStartorEndDatetime ? false: true,
       });
     } else {
       this.setState({
         editStartorEndDatetime: editStartorEndDatetime,
         editDatetimeValue: editStartorEndDatetime ? startdate: enddate,
-        showDatePicker: true
+        showDatePicker: true,
+        isEndDateChange: editStartorEndDatetime ? false: true,
       });
     }
   }
@@ -524,7 +561,8 @@ class MeetingInsertPage extends React.PureComponent  {
   setDate = (date) => {
     if (date.type == "set") {
       this.setState({
-        editDatetimeValue:new Date(DateFormat( date.nativeEvent.timestamp, "yyyy/mm/dd HH:MM")),
+        // editDatetimeValue:this.state.isChangeTime ? date.nativeEvent.timestamp-28800000: date.nativeEvent.timestamp ,
+        editDatetimeValue:date.nativeEvent.timestamp,
         showDatePicker   :false,
         showTimePicker   :true,
       });
@@ -561,14 +599,14 @@ class MeetingInsertPage extends React.PureComponent  {
   setDatetime = () => {
     if (this.state.editStartorEndDatetime) {
       //start
-      let editDatetimeValue = this.state.editDatetimeValue.getTime();
+      let editDatetimeValue = this.state.editDatetimeValue-1000 >= this.state.now ? this.state.editDatetimeValue : this.state.now;
       this.setState({
         startdate      :DateFormat( new Date(editDatetimeValue), "yyyy-mm-dd HH:MM:ss"),
         showDateTimePicker    : false, // for ios
       });
     } else {
       //end
-      let editDatetimeValue = this.state.editDatetimeValue.getTime();
+      let editDatetimeValue = this.state.editDatetimeValue;
       this.setState({
         enddate        :DateFormat( new Date(editDatetimeValue), "yyyy-mm-dd HH:MM:ss"),
         showDateTimePicker    : false, // for ios
@@ -642,7 +680,7 @@ class MeetingInsertPage extends React.PureComponent  {
         for (let type of this.props.state.Meeting.meetingModeTypes) {
           BUTTONS.push(type.paramname);
         }
-        isShowDestructiveButton = true;
+        // isShowDestructiveButton = true;
         DestructiveButtonIndex = BUTTONS.length-1;
         break;
       case 'M':
@@ -657,9 +695,9 @@ class MeetingInsertPage extends React.PureComponent  {
     return (
       <ActionSheet
       ref               ={o => this.ActionSheet = o}
-      title             ={"請選擇"}
+      title             ={this.props.lang.MeetingPage.choose}
       options           ={BUTTONS}
-      destructiveButtonIndex = { isShowDestructiveButton ? DestructiveButtonIndex: null}
+      // destructiveButtonIndex = { isShowDestructiveButton ? DestructiveButtonIndex: null}
       cancelButtonIndex ={CANCEL_INDEX}
       onPress           ={(buttonIndex) => { 
           if (buttonIndex != CANCEL_INDEX) {
@@ -709,45 +747,45 @@ class MeetingInsertPage extends React.PureComponent  {
         case 'Z': // ZOOM
           setStateFunction1 = (text)=>{ this.setState({ meetingNumber:text }); }
           compontent.push(
-            this.renderMeetingPlaceInfoItem( "會議室-號碼", this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
+            this.renderMeetingPlaceInfoItem( this.props.lang.MeetingPage.meetingNumber, this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
           );
           setStateFunction2 = (text)=>{ this.setState({ meetingPassword:text }); }
           compontent.push(
-            this.renderMeetingPlaceInfoItem( "會議室-密碼", this.state.isEditable, this.state.meetingPassword, setStateFunction2 )
+            this.renderMeetingPlaceInfoItem( this.props.lang.MeetingPage.meetingPassword, this.state.isEditable, this.state.meetingPassword, setStateFunction2 )
           );
           break;
         case 'S': // SKYPE
           setStateFunction1 = (text)=>{ this.setState({ meetingNumber:text }); }
           compontent.push(
-            this.renderMeetingPlaceInfoItem( "會議室資訊", this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
+            this.renderMeetingPlaceInfoItem( this.props.lang.MeetingPage.meetingPlaceInfo, this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
           );
           break;
         case 'W': // WeChat
           setStateFunction1 = (text)=>{ this.setState({ meetingNumber:text }); }
           compontent.push(
-            this.renderMeetingPlaceInfoItem( "會議室資訊", this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
+            this.renderMeetingPlaceInfoItem( this.props.lang.MeetingPage.meetingPlaceInfo, this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
           );
           break;
         case 'T': // Tencent
           setStateFunction1 = (text)=>{ this.setState({ meetingNumber:text }); }
           compontent.push(
-            this.renderMeetingPlaceInfoItem( "會議室-號碼", this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
+            this.renderMeetingPlaceInfoItem( this.props.lang.MeetingPage.meetingNumber, this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
           );
           setStateFunction2 = (text)=>{ this.setState({ meetingPassword:text }); }
           compontent.push(
-            this.renderMeetingPlaceInfoItem( "會議室-密碼", this.state.isEditable, this.state.meetingPassword, setStateFunction2 )
+            this.renderMeetingPlaceInfoItem( this.props.lang.MeetingPage.meetingPassword, this.state.isEditable, this.state.meetingPassword, setStateFunction2 )
           );
           break;
-        case 'M': // Mircasoft Lync
+        case 'M': // Team
           setStateFunction1 = (text)=>{ this.setState({ meetingNumber:text }); }
           compontent.push(
-            this.renderMeetingPlaceInfoItem( "會議連結", this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
+            this.renderMeetingPlaceInfoItem( this.props.lang.MeetingPage.meetingPlaceLink, this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
           );
           break;
-        case 'D': // Mircasoft Lync
+        case 'D': // 釘釘
           setStateFunction1 = (text)=>{ this.setState({ meetingNumber:text }); }
           compontent.push(
-            this.renderMeetingPlaceInfoItem( "入會號", this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
+            this.renderMeetingPlaceInfoItem( this.props.lang.MeetingPage.meetingPlaceNO, this.state.isEditable, this.state.meetingNumber, setStateFunction1 )
           );
           break;
       }
@@ -756,7 +794,7 @@ class MeetingInsertPage extends React.PureComponent  {
       let setStateFunction = (text)=>{ this.setState({ meetingPlace:text }); }
       compontent.push(
         this.renderMeetingPlaceInfoItem(
-          "會議室地點",
+          this.props.lang.MeetingPage.meetingPlace,
           this.state.isEditable,
           this.state.meetingPlace,
           setStateFunction
@@ -796,13 +834,21 @@ class MeetingInsertPage extends React.PureComponent  {
     if (this.state.isModify) {
       if (this.state.isEditable) {
         this.setState({
-          headerName:"編輯會議"
+          headerName:this.props.lang.MeetingPage.modifyMeeting
         });
-        button = (
+        button = [];
+        button.push(
           <Button info style={{ alignSelf: 'center', marginTop: 40, marginBottom: 40, width: '60%', justifyContent: 'center' }}
             onPress={()=>{ this.addMeeting(); }}
           >
-            <Text>確定</Text>
+            <Text>{this.props.state.Language.lang.FormSign.Comfirm}</Text>
+          </Button>
+        );
+        button.push(
+          <Button danger style={{ alignSelf: 'center', marginTop: -20, marginBottom: 40, width: '60%', justifyContent: 'center' }}
+            onPress={()=>{ this.cancelMeeting(); }}
+          >
+            <Text>{this.props.lang.MeetingPage.deleteMeeting}</Text>
           </Button>
         );
       } else {
@@ -814,7 +860,7 @@ class MeetingInsertPage extends React.PureComponent  {
               });
             }}
           >
-            <Text>編輯會議</Text>
+            <Text>{this.props.lang.MeetingPage.modifyMeeting}</Text>
           </Button>
         );
       }
@@ -825,7 +871,7 @@ class MeetingInsertPage extends React.PureComponent  {
           <Button info style={{ alignSelf: 'center', marginTop: 40, marginBottom: 40, width: '60%', justifyContent: 'center' }}
             onPress={()=>{ this.addMeeting(); }}
           >
-            <Text>確定</Text>
+            <Text>{this.props.state.Language.lang.FormSign.Comfirm}</Text>
           </Button>
         );
       }
@@ -842,26 +888,26 @@ class MeetingInsertPage extends React.PureComponent  {
     // meetingPlace
     if (this.isEmptyString(this.state.subject)) {
       Alert.alert(
-        "錯誤",   // 表單動作失敗
-        `會議主題必須填寫`,
+        this.props.lang.Common.Error,   
+        this.props.lang.MeetingPage.meetingSubjectRequire, //`會議主題必須填寫`
         [{
             text: this.props.state.Language.lang.Common.Close,   // 關閉 
             onPress: () => { }, 
         }],
       )
-    } else if( new Date(this.state.enddate).getTime() == new Date(this.state.startdate).getTime() ) {
+    } else if( new Date(this.state.enddate.replace(' ', 'T')).getTime() == new Date(this.state.startdate.replace(' ', 'T')).getTime() ) {
       Alert.alert(
-        "錯誤",   // 表單動作失敗
-        `會議結束時間不能\"等於\"開始時間`,
+        this.props.lang.Common.Error,   // 表單動作失敗
+        this.props.lang.MeetingPage.alertMessage_equal, //`會議結束時間不能\"等於\"開始時間`
         [{
             text: this.props.state.Language.lang.Common.Close,   // 關閉 
             onPress: () => {}, 
         }],
       )
-    } else if (new Date(this.state.enddate) < new Date(this.state.startdate)) {
+    } else if (new Date(this.state.enddate.replace(' ', 'T')) < new Date(this.state.startdate.replace(' ', 'T'))) {
       Alert.alert(
-        "錯誤",   // 表單動作失敗
-        `會議結束時間不能\"早於\"開始時間`,
+        this.props.lang.Common.Error,   // 表單動作失敗
+        this.props.lang.MeetingPage.alertMessage_earlier, //`會議結束時間不能\"早於\"開始時間`
         [{
             text: this.props.state.Language.lang.Common.Close,   // 關閉 
             onPress: () => { }, 
@@ -869,18 +915,25 @@ class MeetingInsertPage extends React.PureComponent  {
       )
     }  else if (this.state.meetingMode == "A" && this.isEmptyString(this.state.meetingPlace)) {
       Alert.alert(
-        "錯誤",   // 表單動作失敗
-        `會議室地點必須填寫`,
+       this.props.lang.Common.Error,   // 表單動作失敗
+       this.props.lang.MeetingPage.meetingPlaceRequire, //`會議室地點必須填寫`
         [{
             text: this.props.state.Language.lang.Common.Close,   // 關閉 
             onPress: () => { }, 
         }],
       )
     } else {
+      let startdate;
+      if (this.state.isChangeTime) {
+        startdate = new Date(this.state.startdate.replace(' ', 'T')).getTime()+1000-28800000;
+      } else {
+        startdate = new Date(this.state.startdate.replace(' ', 'T')).getTime()+1000;
+      }
+
       let meetingParams = {
           subject        :this.state.subject,
           description    :this.state.description,
-          startdate      :DateFormat( new Date(this.state.startdate).getTime()+1000, "yyyy-mm-dd HH:MM:ss"),
+          startdate      :DateFormat( startdate, "yyyy-mm-dd HH:MM:ss"),
           enddate        :this.state.enddate,
           meetingMode    :this.state.meetingMode,
           meetingPlace   :this.state.meetingPlace,
@@ -890,9 +943,11 @@ class MeetingInsertPage extends React.PureComponent  {
           initiator      :this.state.initiator,
           chairperson    :this.state.chairperson,
           attendees      :this.state.attendees,
+          timezone       :new Date( this.state.startdate.replace(' ', 'T') ).getTimezoneOffset().toString()
       }
 
-      
+      console.log("meetingParams", meetingParams);
+
       if (this.state.isModify) {
         // 修改會議
         meetingParams.oid = this.state.oid;
@@ -902,6 +957,24 @@ class MeetingInsertPage extends React.PureComponent  {
         this.props.actions.addMeeting(meetingParams);
       }
     }    
+  }
+
+  cancelMeeting = () => {
+    Alert.alert(
+          this.props.lang.MeetingPage.alert, // "提醒！"
+          this.props.lang.MeetingPage.deleteConfirm, //"確定刪除此會議" 
+          [
+            {
+              text: this.props.lang.Common.Cancel, //"取消"
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel"
+            },
+            { text: this.props.lang.Common.Comfirm, onPress: () => {
+              this.setState({isDelete:true});
+              this.props.actions.cancelMeeting(this.state.oid);
+            }}
+          ]
+    );
   }
 
   isEmptyString = (string) => {
@@ -919,7 +992,8 @@ class MeetingInsertPage extends React.PureComponent  {
 let MeetingInsertPageStyle = connectStyle( 'Page.MeetingPage', {} )(MeetingInsertPage);
 export default connect(
   (state) => ({
-    state: { ...state }
+    state: { ...state },
+    lang: { ...state.Language.lang }
   }),
   (dispatch) => ({
     actions: bindActionCreators({

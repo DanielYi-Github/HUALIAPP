@@ -13,16 +13,22 @@ import * as UpdateDataUtil    from '../../../utils/UpdateDataUtil';
 import MainPageBackground     from '../../../components/MainPageBackground';
 import FunctionPageBanner     from '../../../components/FunctionPageBanner';
 
-const explain = "為了快速得知特定時間內，您想邀請的人員是否已安排其他會議，可使用下列“起迄時間”與”新增與會人員“的設定，快速查詢所有”與會人員“的會議時間，方便您安排會議與發送邀請。";
 class MeetingSearchPage extends React.PureComponent  {
 	constructor(props) {
     super(props);
-    let startTime  = new Date().getTime();
-    let endTime    = new Date().getTime();
-    startTime      = startTime + (900000-(startTime%900000));
-    endTime        = endTime + (900000-(endTime%900000));
+
+    let time1 = new Date();
+    let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss").replace(' ', 'T') );
+    let isChangeTime = time1.getHours() == time2.getHours() ? false: true;
+    // console.log(Platform.OS, time1.getHours() , time2.getHours(), isChangeTime);
+
+    let startTime = new Date().getTime();
+    let endTime   = new Date().getTime();
+    startTime     = startTime + (600000-(startTime%600000));
+    endTime       = endTime + (600000-(endTime%600000));
 
     this.state = {
+      isChangeTime          : isChangeTime, //記錄部分機型會將時間直接+8小時
       now                   : startTime,
       startdate             : DateFormat( new Date(startTime), "yyyy-mm-dd HH:MM:ss"),
       enddate               : DateFormat( new Date(endTime), "yyyy-mm-dd HH:MM:ss"),
@@ -32,20 +38,21 @@ class MeetingSearchPage extends React.PureComponent  {
       showDateTimePicker    : false, // for ios
       editDatetimeValue     : new Date(),
       editStartorEndDatetime: true, // true for start, false for end
-      showNavigationMessage: false // 顯示要前往新增會議的功能
+      showNavigationMessage : false, // 顯示要前往新增會議的功能
+      isEndDateChange       : false
     }
 	}
 
 	render() {
     //整理tags的資料格式
     let tagsArray = [];
-    for(let value of this.state.attendees) {
-     tagsArray.push(value.name); 
-    }
+    for(let value of this.state.attendees) { tagsArray.push(value.name); }
     let tags = { tag: '', tagsArray: tagsArray }
 
     let startdate = new Date( this.state.startdate.replace(' ', 'T') );
     let enddate = new Date( this.state.enddate.replace(' ', 'T') );
+    startdate = this.state.isChangeTime ? startdate-28800000 : startdate;
+    enddate = this.state.isChangeTime ? enddate-28800000 : enddate;
 
     return (
       <Container>
@@ -57,12 +64,12 @@ class MeetingSearchPage extends React.PureComponent  {
           isRightButtonIconShow = {false}
           rightButtonIcon       = {null}
           rightButtonOnPress    = {null} 
-          title                 = {"與會人員時間查詢"}
+          title                 = {this.props.lang.MeetingPage.attendeesTimeSearch} //"與會人員時間查詢"
           isTransparent         = {false}
         />
         <Content>
           <FunctionPageBanner
-             explain         ={explain} //隨時了解表單狀態，流程追蹤、表單簽核目了然，簡單管理流程進度。
+             explain         ={this.props.lang.MeetingPage.functionMsg} 
              isShowButton    ={this.state.selectedCompany ? true : false}
              buttonText      ={this.state.selectedCompany }
              imageBackground ={require("../../../image/functionImage/meetingCalendarsSearch.jpeg")}
@@ -71,10 +78,7 @@ class MeetingSearchPage extends React.PureComponent  {
           <Card>
             <CardItem style={{flexDirection: 'column', alignContent: 'flex-start', justifyContent: 'flex-start'   }}>        
               {/*時間*/}
-               <Item style={{
-                flexDirection: 'row',
-                borderBottomWidth: 0,
-              }}>
+               <Item style={{ flexDirection: 'row', borderBottomWidth: 0 }}>
                 <TouchableOpacity 
                   style={{flex:1, flexDirection: 'column', padding: 10}}
                   onPress={()=>{this.showDateTimePicker(true)}}
@@ -115,7 +119,7 @@ class MeetingSearchPage extends React.PureComponent  {
                   borderWidth: 0
                 }}>
                   <Icon name='people-outline' />
-                  <Label style={{alignSelf: 'center', flex:1}}>{"新增與會人員"}</Label>
+                  <Label style={{alignSelf: 'center', flex:1}}>{this.props.lang.MeetingPage.insertAttendees}</Label>
                   <Icon 
                     name    ="add-circle" 
                     type    ="MaterialIcons" 
@@ -158,7 +162,7 @@ class MeetingSearchPage extends React.PureComponent  {
               this.searchMeeting();
             }}
           >
-            <Text>查詢</Text>
+            <Text>{this.props.lang.MeetingPage.search}</Text>
           </Button>
 
           {
@@ -173,17 +177,19 @@ class MeetingSearchPage extends React.PureComponent  {
                   }}
                 >
                   <Body style={{width:"95%", alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-                    <Text style={{color:"#5cb85c", fontWeight: 'bold', fontSize: 22, paddingBottom: 5}}>{"太棒了!"}</Text>
+                    <Text style={{color:"#5cb85c", fontWeight: 'bold', fontSize: 22, paddingBottom: 5}}>{this.props.lang.MeetingPage.good}</Text>
                     <Text style={{ fontWeight: 'bold', paddingBottom: 2.5}} >
-                      {`期間：${DateFormat( startdate, "m/dd HH:MM")} - ${DateFormat( enddate, "m/dd HH:MM")}`}
+                      {`${this.props.lang.MeetingPage.period}：${DateFormat( startdate, "m/dd HH:MM")} - ${DateFormat( enddate, "m/dd HH:MM")}`}
                     </Text>
+                    {/*"您所選的與會人員沒有安排會議，是否直接用此設定幫您新增會議？"*/}
                     <Text style={{fontWeight: 'bold', paddingRight: 10}}>
-                      {"您所選的與會人員沒有安排會議，是否直接用此設定幫您新增會議？"}
+                      {this.props.lang.MeetingPage.sugguestMsg} 
                     </Text>
                   </Body>
                   <Body style={{flex:null, justifyContent: 'center', borderLeftWidth: 1, borderLeftColor: '#757575' }}>
+                    {/*前往新增*/}
                     <Title style={{paddingLeft: 10, color:"#5cb85c", fontWeight: 'bold'}}>
-                      前往新增
+                      {this.props.lang.MeetingPage.gotoInsert}
                     </Title>
                   </Body>
 
@@ -219,7 +225,7 @@ class MeetingSearchPage extends React.PureComponent  {
               is24Hour ={true}
               display  ="spinner"
               onChange ={this.setTime}
-              minuteInterval = {15}
+              minuteInterval = {10}
             />
           :
             null
@@ -241,7 +247,8 @@ class MeetingSearchPage extends React.PureComponent  {
                             onPress ={()=>{ 
                               this.setState({
                                 showDateTimePicker:false,
-                                editDatetimeValue :null
+                                editDatetimeValue :null,
+                                isEndDateChange   :true
                               }); 
                             }}
                           >
@@ -257,15 +264,15 @@ class MeetingSearchPage extends React.PureComponent  {
                         </View>
                         <View>
                           <DateTimePicker 
-                            value    ={this.state.editDatetimeValue}
-                            mode     ={"datetime"}
-                            minimumDate = {new Date(this.state.now)}
-                            is24Hour ={true}
-                            display  ="default"
-                            onChange ={this.setDatetime_ios}
-                            locale   ={this.props.state.Language.lang.LangStatus}
-                            display  ={"spinner"}
-                            minuteInterval = {15}
+                            value          ={this.state.editDatetimeValue}
+                            mode           ={"datetime"}
+                            minimumDate    = {new Date(this.state.now)}
+                            is24Hour       ={true}
+                            display        ="default"
+                            onChange       ={this.setDatetime_ios}
+                            locale         ={this.props.state.Language.lang.LangStatus}
+                            display        ={"spinner"}
+                            minuteInterval = {10}
                           />
                         </View>
                   </View>
@@ -303,22 +310,30 @@ class MeetingSearchPage extends React.PureComponent  {
   }
 
   showDateTimePicker = (editStartorEndDatetime) => {
-    let startdate = new Date( this.state.startdate.replace(' ', 'T') );
-    let enddate = new Date( this.state.enddate.replace(' ', 'T') );
+    let startdate = new Date( this.state.startdate.replace(' ', 'T') ).getTime();
+    let enddate = new Date( this.state.enddate.replace(' ', 'T') ).getTime();
+    startdate = this.state.isChangeTime ? startdate-28800000: startdate;
+    enddate = this.state.isChangeTime ? enddate-28800000: enddate;
 
-    enddate = startdate > enddate ? startdate : enddate;
+
+    if (this.state.isEndDateChange) {
+    } else {
+      enddate = startdate;
+    }
 
     if (Platform.OS == "ios") {
       this.setState({
         editStartorEndDatetime: editStartorEndDatetime,
         editDatetimeValue: editStartorEndDatetime ? startdate: enddate,
-        showDateTimePicker: true
+        showDateTimePicker: true,
+        isEndDateChange: editStartorEndDatetime ? false: true,
       });
     } else {
       this.setState({
         editStartorEndDatetime: editStartorEndDatetime,
         editDatetimeValue: editStartorEndDatetime ? startdate: enddate,
-        showDatePicker: true
+        showDatePicker: true,
+        isEndDateChange: editStartorEndDatetime ? false: true,
       });
     }
   }
@@ -332,7 +347,7 @@ class MeetingSearchPage extends React.PureComponent  {
   setDate = (date) => {
     if (date.type == "set") {
       this.setState({
-        editDatetimeValue:new Date(DateFormat( date.nativeEvent.timestamp, "yyyy/mm/dd HH:MM")),
+        editDatetimeValue:date.nativeEvent.timestamp ,
         showDatePicker   :false,
         showTimePicker   :true,
       });
@@ -366,7 +381,7 @@ class MeetingSearchPage extends React.PureComponent  {
     }
   }
   
-  setDatetime = () => {
+  setDatetime = () => {   
     if (this.state.editStartorEndDatetime) {
       //start
       this.setState({
@@ -408,35 +423,29 @@ class MeetingSearchPage extends React.PureComponent  {
   }
 
   searchMeeting = async () =>{
-    let startdate = this.state.startdate;
-    let enddate   = this.state.enddate;
     let attendees = this.state.attendees;
-
-    if ( new Date(startdate).getTime() >  new Date(enddate).getTime() ) {
-      console.log("結束時間不能早於開始時間");
+    if ( new Date(this.state.startdate.replace(' ', 'T')).getTime() >  new Date(this.state.enddate.replace(' ', 'T')).getTime() ) {
       Alert.alert(
-        "錯誤",   // 表單動作失敗
-        `會議結束時間不能\"早於\"開始時間`,
+        this.props.lang.Common.Error,   // 表單動作失敗
+        this.props.lang.MeetingPage.alertMessage_earlier, //`會議結束時間不能\"早於\"開始時間`
         [{
             text: this.props.state.Language.lang.Common.Close,   // 關閉 
             onPress: () => { }, 
         }],
       )
-    } else if ( new Date(startdate).getTime() == new Date(enddate).getTime() ) {
-      console.log("結束時間不能等於開始時間");
+    } else if ( new Date(this.state.startdate.replace(' ', 'T')).getTime() == new Date(this.state.enddate.replace(' ', 'T')).getTime() ) {
       Alert.alert(
-        "錯誤",   // 表單動作失敗
-        `會議結束時間不能\"等於\"開始時間`,
+        this.props.lang.Common.Error,   // 表單動作失敗
+        this.props.lang.MeetingPage.alertMessage_equal, //`會議結束時間不能\"等於\"開始時間`
         [{
             text: this.props.state.Language.lang.Common.Close,   // 關閉 
             onPress: () => {}, 
         }],
       )
     } else if ( attendees.length == 0 ) {
-      console.log("請新增與會人員");
       Alert.alert(
-        "錯誤",   // 表單動作失敗
-        "請新增與會人員",
+        this.props.lang.Common.Error,   // 表單動作失敗
+        this.props.lang.MeetingPage.pleaseInsertAttendees, //"請新增與會人員",
         [{
             text: this.props.state.Language.lang.Common.Close,   // 關閉 
             onPress: () => { }, 
@@ -445,14 +454,15 @@ class MeetingSearchPage extends React.PureComponent  {
     } else {
       let user = this.props.state.UserInfo.UserInfo;
       let meetingParams = {
-          startdate      :startdate,
-          enddate        :enddate,
+          startdate      :this.state.startdate,
+          enddate        :this.state.enddate,
           attendees      :attendees,
       }
 
       let isRequestSussce = false;
       let errorMessage = "";
       let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
+        console.log("searchMeetingResult", result);
         isRequestSussce = true;
         return result;
       }).catch((errorResult)=>{
@@ -468,7 +478,7 @@ class MeetingSearchPage extends React.PureComponent  {
             meetingParams        :meetingParams
           });
         } else {
-          console.log(234567890);
+          console.log(meetingParams);
           NavigationService.navigate("MeetingTimeForSearch", {
             searchMeetingResult: searchMeetingResult,
             meetingParams : meetingParams
@@ -476,7 +486,7 @@ class MeetingSearchPage extends React.PureComponent  {
         }
       } else {
         Alert.alert(
-          "出錯了！",
+          this.props.lang.Common.Sorry, //"出錯了！",
           errorMessage,
           [
             { 
@@ -487,6 +497,7 @@ class MeetingSearchPage extends React.PureComponent  {
           { cancelable: false }
         );
       }
+
     }
   }
 
@@ -498,7 +509,8 @@ class MeetingSearchPage extends React.PureComponent  {
 let MeetingSearchPageStyle = connectStyle( 'Page.MeetingPage', {} )(MeetingSearchPage);
 export default connect(
   (state) => ({
-    state: { ...state }
+    state: { ...state },
+    lang: { ...state.Language.lang }
   }),
   (dispatch) => ({
     actions: bindActionCreators({
