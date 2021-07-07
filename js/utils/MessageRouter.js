@@ -30,6 +30,7 @@ let MessageRouter = {
 
 		// 接收本地通知
 		JPush.addLocalNotificationListener((result) => {
+			console.log("notificationArrived", result);
 			if (result.notificationEventType == "notificationArrived"){
 				DeviceEventEmitter.emit('loadMsgState');
 			}else{
