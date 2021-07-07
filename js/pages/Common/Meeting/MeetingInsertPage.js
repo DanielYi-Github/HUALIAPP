@@ -265,7 +265,7 @@ class MeetingInsertPage extends React.PureComponent  {
         />
         <Content>
           {/*會議主題*/}
-          <Item style={{ backgroundColor: this.props.style.InputFieldBackground, marginTop: 30, borderWidth: 0, paddingLeft: 10 }}>
+          <Item style={{ backgroundColor: this.props.style.InputFieldBackground, marginTop: 20, borderWidth: 0, paddingLeft: 10 }}>
               <Label>{this.props.lang.MeetingPage.meetingSubject}</Label>
               <Input 
                   scrollEnabled ={false}
@@ -292,7 +292,7 @@ class MeetingInsertPage extends React.PureComponent  {
           
 
           {/*時間*/}
-           <Item style={{ backgroundColor: this.props.style.InputFieldBackground, marginTop: 30, borderWidth: 0, flexDirection: 'row' }}>
+           <Item style={{ backgroundColor: this.props.style.InputFieldBackground, marginTop: 20, borderWidth: 0, flexDirection: 'row' }}>
             <TouchableOpacity 
               style    ={{flex:1, flexDirection: 'column', padding: 10}}
               disabled ={!this.state.isEditable}
@@ -316,7 +316,7 @@ class MeetingInsertPage extends React.PureComponent  {
             style={{
               backgroundColor: this.props.style.InputFieldBackground,
               height         : this.props.style.inputHeightBase,
-              marginTop      : 30,
+              marginTop      : 20,
               paddingLeft    : 10,
               paddingRight   : 5,
               borderWidth    : 0
@@ -392,7 +392,7 @@ class MeetingInsertPage extends React.PureComponent  {
               height: this.props.style.inputHeightBase,
               paddingLeft: 10,
               paddingRight: 5,
-              marginTop: 30,
+              marginTop: 20,
             }}
             disabled={!this.state.isEditable}
             onPress = {()=>{
@@ -420,7 +420,7 @@ class MeetingInsertPage extends React.PureComponent  {
               height         : this.props.style.inputHeightBase,
               paddingLeft    : 10,
               paddingRight   : 5,
-              marginTop      : 30,
+              marginTop      : 20,
             }}
             disabled = {!this.state.isEditable}
             onPress  = {()=>{
@@ -448,12 +448,12 @@ class MeetingInsertPage extends React.PureComponent  {
         {
           (this.state.showDatePicker) ? 
             <DateTimePicker 
-              value    ={this.state.editDatetimeValue}
-              minimumDate = {new Date(this.state.now)}
-              mode     ={"date"}
-              is24Hour ={true}
-              display  ="default"
-              onChange ={this.setDate}
+              value       ={this.state.editDatetimeValue}
+              minimumDate ={new Date(this.state.now)}
+              mode        ={"date"}
+              is24Hour    ={true}
+              display     ="default"
+              onChange    ={this.setDate}
             />
           :
             null
@@ -597,10 +597,9 @@ class MeetingInsertPage extends React.PureComponent  {
   }
   
   setDatetime = () => {
-
     if (this.state.editStartorEndDatetime) {
       //start
-      let editDatetimeValue = this.state.editDatetimeValue;
+      let editDatetimeValue = this.state.editDatetimeValue-1000 >= this.state.now ? this.state.editDatetimeValue : this.state.now;
       this.setState({
         startdate      :DateFormat( new Date(editDatetimeValue), "yyyy-mm-dd HH:MM:ss"),
         showDateTimePicker    : false, // for ios

@@ -4234,7 +4234,7 @@ export async function getPersonDateTime(user, content){
 				"content": Common.encrypt(JSON.stringify(content)),
 				// "lang"   : Common.encrypt(user.lang)
 			};
-			console.log(params);
+			// console.log(params);
 			NetUtil.getRequestContent(params, url).then((data)=>{
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
