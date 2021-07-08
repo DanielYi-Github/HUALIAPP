@@ -850,6 +850,8 @@ export default {
 		haveaMeeting               :"have an appointment",
 		crossDayMeeting            :"Cross day meetin",
 		avalableTime               :"Avalable schedule",
-		good                       :"Good!"
+		good                       :"Good!",
+		yourTimezone   :"Your local time",
+		meetingTimezone:"time"
 	}
 }

@@ -854,6 +854,8 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		haveaMeeting               :"有一場會議",
 		crossDayMeeting            :"跨日會議",
 		avalableTime               :"此段時間各位都有空",
-		good                       :"太棒了!"
+		good                       :"太棒了!",
+		yourTimezone   :"您本地的會議時間",
+		meetingTimezone:"時間"
 	}
 }

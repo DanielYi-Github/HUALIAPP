@@ -854,6 +854,8 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		haveaMeeting               :"有一场会议",
 		crossDayMeeting            :"跨日会议",
 		avalableTime               :"此段时间各位都有空",
-		good                       :"太好了!"
+		good                       :"太好了!",
+		yourTimezone   :"您当地的会议时间",
+		meetingTimezone:"时间"
 	}
 }

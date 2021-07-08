@@ -4,6 +4,7 @@ import CryptoJS from 'crypto-js'
 import Md5Encrypt from "react-native-md5";
 import {AES_KEY,AES_VI} from './Contant';
 import * as DeviceInfo     from './DeviceInfoUtil';
+import * as RNLocalize from "react-native-localize";
 
 import ReactNativeBiometrics from 'react-native-biometrics'
 

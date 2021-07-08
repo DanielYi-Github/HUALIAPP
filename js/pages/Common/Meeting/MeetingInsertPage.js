@@ -7,12 +7,15 @@ import DateFormat from  'dateformat';
 import TagInput   from 'react-native-tags-input';
 import ActionSheet from 'react-native-actionsheet';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as RNLocalize from "react-native-localize";
+import Moment from 'moment-timezone';
 
 import HeaderForGeneral       from '../../../components/HeaderForGeneral';
 import FormInputContent       from '../../../components/Form/FormInputContent';
 import * as NavigationService from '../../../utils/NavigationService';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 import ToastUnit              from '../../../utils/ToastUnit';
+import Common                 from '../../../utils/Common';
 
 class MeetingInsertPage extends React.PureComponent  {
 	constructor(props) {
@@ -45,8 +48,8 @@ class MeetingInsertPage extends React.PureComponent  {
       let remindtime       = 15;
       let now              = startTime;
       let isEndDateChange  = false;
-
       let isSearchedMeeting = true;    // 有沒有找到此會議的訊息
+      let timezone = RNLocalize.getTimeZone();
 
 
       // 判斷當前頁面,從哪個畫面來
@@ -73,6 +76,7 @@ class MeetingInsertPage extends React.PureComponent  {
             meetingNumber    = meetingParam.meetingNumber ? meetingParam.meetingNumber : meetingNumber;
             meetingPassword  = meetingParam.meetingPassword ? meetingParam.meetingPassword : meetingPassword;
             remindtime       = meetingParam.remindtime;
+            timezone         = meetingParam.timezone;
             break;
           case 'MeetingSearch': // 參與人員搜尋那邊過來的
             startTime = new Date( meetingParam.startdate.replace(' ', 'T') ).getTime();
@@ -115,6 +119,7 @@ class MeetingInsertPage extends React.PureComponent  {
               meetingNumber    = meetingParam.meetingNumber ? meetingParam.meetingNumber : meetingNumber;
               meetingPassword  = meetingParam.meetingPassword ? meetingParam.meetingPassword : meetingPassword;
               remindtime       = meetingParam.remindtime;
+              timezone         = meetingParam.timezone;
             } else {
               isSearchedMeeting = false;
             }
@@ -181,6 +186,7 @@ class MeetingInsertPage extends React.PureComponent  {
         isSearchedMeeting     : isSearchedMeeting,
         isEndDateChange       : isEndDateChange,
         isDelete              : false,  // 是否刪除表單
+        timezone              : timezone
       }
 	}
 
@@ -252,6 +258,11 @@ class MeetingInsertPage extends React.PureComponent  {
     startdate = this.state.isChangeTime ? startdate-28800000 : startdate;
     enddate = this.state.isChangeTime ? enddate-28800000 : enddate;
 
+
+    let nowTimeZone = RNLocalize.getTimeZone();
+    let differentZone = this.state.timezone == nowTimeZone ? false : true;
+    let timezone = this.state.timezone.split("/")[1];
+
     return (
       <Container>
         <HeaderForGeneral
@@ -291,9 +302,11 @@ class MeetingInsertPage extends React.PureComponent  {
               />
           </Item>
           
-
           {/*時間*/}
-           <Item style={{ backgroundColor: this.props.style.InputFieldBackground, marginTop: 20, borderWidth: 0, flexDirection: 'row' }}>
+          {
+            differentZone ? <Label style={{marginTop: 20, paddingLeft: 10}}>{this.props.lang.MeetingPage.yourTimezone}</Label> : null
+          }
+           <Item style={{ backgroundColor: this.props.style.InputFieldBackground,  borderWidth: 0, flexDirection: 'row', marginTop: differentZone ? null: 20 }}>
             <TouchableOpacity 
               style    ={{flex:1, flexDirection: 'column', padding: 10}}
               disabled ={!this.state.isEditable}
@@ -311,6 +324,11 @@ class MeetingInsertPage extends React.PureComponent  {
               <Text>{DateFormat( enddate, "HH:MM")  }</Text>
             </TouchableOpacity>
           </Item>
+          { differentZone?
+            <Label style={{paddingLeft: 10}}>{timezone} {this.props.lang.MeetingPage.meetingTimezone}: {Moment( this.state.startdate ).tz(this.state.timezone).format('HH:mm')} - {Moment( this.state.enddate ).tz(this.state.timezone).format('HH:mm')}</Label>
+            :
+              null
+          }
           
           {/*會議主席*/}
           <Item 
@@ -944,7 +962,8 @@ class MeetingInsertPage extends React.PureComponent  {
           initiator      :this.state.initiator,
           chairperson    :this.state.chairperson,
           attendees      :this.state.attendees,
-          timezone       :new Date( this.state.startdate.replace(' ', 'T') ).getTimezoneOffset().toString()
+          // timezone       :new Date( this.state.startdate.replace(' ', 'T') ).getTimezoneOffset().toString(),
+          timezone       :RNLocalize.getTimeZone(),
       }
 
       console.log("meetingParams", meetingParams);

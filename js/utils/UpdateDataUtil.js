@@ -1,5 +1,6 @@
 import { Platform }      from 'react-native';
 import NetInfo           from "@react-native-community/netinfo";
+import * as RNLocalize from "react-native-localize";
 import DeviceStorageUtil from './DeviceStorageUtil';
 import * as SQLite       from './SQLiteUtil';
 import * as Device       from './DeviceInfoUtil';
@@ -3228,7 +3229,6 @@ export async function updateModule(user){
 * @return void
 */
 export async function setLoginInfo(user) {
-	let date = new Date().getTimezoneOffset().toString();
 	let url = 'data/setLoginInfo';
 	let content = {
 		"userid"         : user.loginID,
@@ -3238,7 +3238,7 @@ export async function setLoginInfo(user) {
 		"model"          : Device.getModel(),
 		"appversion"     : Device.getVersion(),
 		"empid"          : user.id,
-		"timezone"       : date
+		"timezone"       : RNLocalize.getTimeZone()
 	}
 	
 	let params = {

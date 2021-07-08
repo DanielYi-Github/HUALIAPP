@@ -850,6 +850,8 @@ export default {
 		haveaMeeting               :"Có một cuộc họp",
 		crossDayMeeting            :"Cuộc họp giữa các ngày",
 		avalableTime               :"Mọi người đều rảnh vào thời điểm này",
-		good                       :"Good!"
+		good                       :"Good!",
+		yourTimezone   :"Giờ họp địa phương của bạn",
+		meetingTimezone:"thời gian"
 	}
 }
