@@ -1,7 +1,7 @@
 import * as MeetingTypes   from '../actionTypes/MeetingTypes';
 import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
 import { Alert } from 'react-native';
-import DateFormat from  'dateformat';
+import * as RNLocalize from "react-native-localize";
 
 export function getMeetingModeType() {
 	return async (dispatch, getState) => {
@@ -206,9 +206,10 @@ export function getFreeDateTime(meetingParams, freeTimeUnit){
 			attendees:meetingParams.attendees,
 			min      :freeTimeUnit
 		}
+		console.log(RNLocalize.getTimeZone());
 		
 		let getFreeDateTimeResult = await UpdateDataUtil.getFreeDateTime(user, content).then((result)=>{
-			// console.log("result", result);
+			console.log("result", result);
 			return result;
 		}).catch((e)=>{
 			console.log("e", e);

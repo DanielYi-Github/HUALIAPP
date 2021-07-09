@@ -11,7 +11,7 @@ export default class MeetingTimeSuggestItem extends Component {
 
 	render() {
 		let time1 = new Date();
-		let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss").replace(' ', 'T') );
+		let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss").replace(/-/g, "/") );
     	let isChangeTime = time1.getHours() == time2.getHours() ? false: true;
 
 		let startdateSplit = this.props.data.startdate.split(" ");
@@ -23,8 +23,8 @@ export default class MeetingTimeSuggestItem extends Component {
 			isCrossDate = true;
 		}
 
-		let startdate = new Date( this.props.data.startdate.replace(' ', 'T') );
-		let enddate = new Date( this.props.data.enddate.replace(' ', 'T') );
+		let startdate = new Date( this.props.data.startdate.replace(/-/g, "/") );
+		let enddate = new Date( this.props.data.enddate.replace(/-/g, "/") );
 
 		startdate = isChangeTime ? startdate.getTime()-28800000: startdate.getTime();
 		enddate   = isChangeTime ? enddate.getTime()-28800000: enddate.getTime();

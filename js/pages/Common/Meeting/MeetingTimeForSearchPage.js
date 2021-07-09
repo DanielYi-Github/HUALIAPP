@@ -8,14 +8,12 @@ import SearchInput, { createFilter } from 'react-native-search-filter';
 const KEYS_TO_FILTERS = ['EMPID', 'DEPNAME', 'NAME', 'MAIL', 'SKYPE', 'CELLPHONE','TELPHONE','JOBTITLE'];
 import DateFormat             from  'dateformat';
 
-
 import * as NavigationService from '../../../utils/NavigationService';
 import HeaderForGeneral       from '../../../components/HeaderForGeneral';
 import MeetingItemForPerson   from '../../../components/Meeting/MeetingItemForPerson';
 import MeetingTimeSuggestItem from '../../../components/Meeting/MeetingTimeSuggestItem'; 
 import NoMoreItem             from '../../../components/NoMoreItem';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
-
 
 class MeetingTimeForPersonPage extends React.PureComponent  {
 	constructor(props) {
@@ -142,8 +140,8 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
 
   renderFooterComponent = () => {
     let component = null;
-    let startdate = new Date( this.state.meetingParams.startdate.replace(' ', 'T'));
-    let enddate   = new Date( this.state.meetingParams.enddate.replace(' ', 'T'));
+    let startdate = new Date( this.state.meetingParams.startdate.replace(/-/g, "/"));
+    let enddate   = new Date( this.state.meetingParams.enddate.replace(/-/g, "/"));
 
     let time1 = new Date();
     let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss") );

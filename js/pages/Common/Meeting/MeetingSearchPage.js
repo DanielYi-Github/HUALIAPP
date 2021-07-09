@@ -18,7 +18,7 @@ class MeetingSearchPage extends React.PureComponent  {
     super(props);
 
     let time1 = new Date();
-    let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss").replace(' ', 'T') );
+    let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss").replace(/-/g, "/") );
     let isChangeTime = time1.getHours() == time2.getHours() ? false: true;
     // console.log(Platform.OS, time1.getHours() , time2.getHours(), isChangeTime);
 
@@ -49,8 +49,8 @@ class MeetingSearchPage extends React.PureComponent  {
     for(let value of this.state.attendees) { tagsArray.push(value.name); }
     let tags = { tag: '', tagsArray: tagsArray }
 
-    let startdate = new Date( this.state.startdate.replace(' ', 'T') );
-    let enddate = new Date( this.state.enddate.replace(' ', 'T') );
+    let startdate = new Date( this.state.startdate.replace(/-/g, "/") );
+    let enddate = new Date( this.state.enddate.replace(/-/g, "/") );
     startdate = this.state.isChangeTime ? startdate-28800000 : startdate;
     enddate = this.state.isChangeTime ? enddate-28800000 : enddate;
 
@@ -310,8 +310,8 @@ class MeetingSearchPage extends React.PureComponent  {
   }
 
   showDateTimePicker = (editStartorEndDatetime) => {
-    let startdate = new Date( this.state.startdate.replace(' ', 'T') ).getTime();
-    let enddate = new Date( this.state.enddate.replace(' ', 'T') ).getTime();
+    let startdate = new Date( this.state.startdate.replace(/-/g, "/") ).getTime();
+    let enddate = new Date( this.state.enddate.replace(/-/g, "/") ).getTime();
     startdate = this.state.isChangeTime ? startdate-28800000: startdate;
     enddate = this.state.isChangeTime ? enddate-28800000: enddate;
 
@@ -424,7 +424,7 @@ class MeetingSearchPage extends React.PureComponent  {
 
   searchMeeting = async () =>{
     let attendees = this.state.attendees;
-    if ( new Date(this.state.startdate.replace(' ', 'T')).getTime() >  new Date(this.state.enddate.replace(' ', 'T')).getTime() ) {
+    if ( new Date(this.state.startdate.replace(/-/g, "/")).getTime() >  new Date(this.state.enddate.replace(/-/g, "/")).getTime() ) {
       Alert.alert(
         this.props.lang.Common.Error,   // 表單動作失敗
         this.props.lang.MeetingPage.alertMessage_earlier, //`會議結束時間不能\"早於\"開始時間`
@@ -433,7 +433,7 @@ class MeetingSearchPage extends React.PureComponent  {
             onPress: () => { }, 
         }],
       )
-    } else if ( new Date(this.state.startdate.replace(' ', 'T')).getTime() == new Date(this.state.enddate.replace(' ', 'T')).getTime() ) {
+    } else if ( new Date(this.state.startdate.replace(/-/g, "/")).getTime() == new Date(this.state.enddate.replace(/-/g, "/")).getTime() ) {
       Alert.alert(
         this.props.lang.Common.Error,   // 表單動作失敗
         this.props.lang.MeetingPage.alertMessage_equal, //`會議結束時間不能\"等於\"開始時間`
@@ -458,6 +458,8 @@ class MeetingSearchPage extends React.PureComponent  {
           enddate        :this.state.enddate,
           attendees      :attendees,
       }
+      console.log(this.state.startdate);
+      console.log(this.state.enddate);
 
       let isRequestSussce = false;
       let errorMessage = "";

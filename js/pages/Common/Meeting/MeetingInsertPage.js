@@ -22,7 +22,7 @@ class MeetingInsertPage extends React.PureComponent  {
 	    super(props);
 
       let time1 = new Date();
-      let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss").replace(' ', 'T') );
+      let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss").replace(/-/g, "/") );
       let isChangeTime = time1.getHours() == time2.getHours() ? false: true;
 
       let oid              = "";
@@ -64,8 +64,8 @@ class MeetingInsertPage extends React.PureComponent  {
             isModify         = meetingParam.initiator.id == props.state.UserInfo.UserInfo.id ? true: false;;
             subject          = meetingParam.subject;
             description      = meetingParam.description;
-            startTime        = meetingParam.startdate.replace(' ', 'T');
-            endTime          = meetingParam.enddate.replace(' ', 'T');
+            startTime        = meetingParam.startdate.replace(/-/g, "/");
+            endTime          = meetingParam.enddate.replace(/-/g, "/");
             initiator        = meetingParam.initiator;
             chairperson      = meetingParam.chairperson;
             chairpersonLabel = meetingParam.chairperson.name;
@@ -79,8 +79,8 @@ class MeetingInsertPage extends React.PureComponent  {
             timezone         = meetingParam.timezone;
             break;
           case 'MeetingSearch': // 參與人員搜尋那邊過來的
-            startTime = new Date( meetingParam.startdate.replace(' ', 'T') ).getTime();
-            endTime   = new Date( meetingParam.enddate.replace(' ', 'T') ).getTime();
+            startTime = new Date( meetingParam.startdate.replace(/-/g, "/") ).getTime();
+            endTime   = new Date( meetingParam.enddate.replace(/-/g, "/") ).getTime();
 
             now       = isChangeTime ? startTime-28800000 : startTime;
             startTime = isChangeTime ? startTime-28800000 : startTime;
@@ -107,8 +107,8 @@ class MeetingInsertPage extends React.PureComponent  {
               isModify         = meetingParam.initiator.id == props.state.UserInfo.UserInfo.id ? true: false;;
               subject          = meetingParam.subject;
               description      = meetingParam.description;
-              startTime        = meetingParam.startdate.replace(' ', 'T');
-              endTime          = meetingParam.enddate.replace(' ', 'T');
+              startTime        = meetingParam.startdate.replace(/-/g, "/");
+              endTime          = meetingParam.enddate.replace(/-/g, "/");
               initiator        = meetingParam.initiator;
               chairperson      = meetingParam.chairperson;
               chairpersonLabel = meetingParam.chairperson.name;
@@ -253,8 +253,8 @@ class MeetingInsertPage extends React.PureComponent  {
         meetingPlaceName = meetingModeTypes.paramname;
       }
     }
-    let startdate = new Date( this.state.startdate.replace(' ', 'T') );
-    let enddate = new Date( this.state.enddate.replace(' ', 'T') );
+    let startdate = new Date( this.state.startdate.replace(/-/g, "/") );
+    let enddate = new Date( this.state.enddate.replace(/-/g, "/") );
     startdate = this.state.isChangeTime ? startdate-28800000 : startdate;
     enddate = this.state.isChangeTime ? enddate-28800000 : enddate;
 
@@ -544,8 +544,8 @@ class MeetingInsertPage extends React.PureComponent  {
 	}
 
   showDateTimePicker = (editStartorEndDatetime) => {
-    let startdate = new Date( this.state.startdate.replace(' ', 'T') ).getTime();
-    let enddate = new Date( this.state.enddate.replace(' ', 'T') ).getTime();
+    let startdate = new Date( this.state.startdate.replace(/-/g, "/") ).getTime();
+    let enddate = new Date( this.state.enddate.replace(/-/g, "/") ).getTime();
     startdate = this.state.isChangeTime ? startdate-28800000: startdate;
     enddate = this.state.isChangeTime ? enddate-28800000: enddate;
 
@@ -914,7 +914,7 @@ class MeetingInsertPage extends React.PureComponent  {
             onPress: () => { }, 
         }],
       )
-    } else if( new Date(this.state.enddate.replace(' ', 'T')).getTime() == new Date(this.state.startdate.replace(' ', 'T')).getTime() ) {
+    } else if( new Date(this.state.enddate.replace(/-/g, "/")).getTime() == new Date(this.state.startdate.replace(/-/g, "/")).getTime() ) {
       Alert.alert(
         this.props.lang.Common.Error,   // 表單動作失敗
         this.props.lang.MeetingPage.alertMessage_equal, //`會議結束時間不能\"等於\"開始時間`
@@ -923,7 +923,7 @@ class MeetingInsertPage extends React.PureComponent  {
             onPress: () => {}, 
         }],
       )
-    } else if (new Date(this.state.enddate.replace(' ', 'T')) < new Date(this.state.startdate.replace(' ', 'T'))) {
+    } else if (new Date(this.state.enddate.replace(/-/g, "/")) < new Date(this.state.startdate.replace(/-/g, "/"))) {
       Alert.alert(
         this.props.lang.Common.Error,   // 表單動作失敗
         this.props.lang.MeetingPage.alertMessage_earlier, //`會議結束時間不能\"早於\"開始時間`
@@ -944,9 +944,9 @@ class MeetingInsertPage extends React.PureComponent  {
     } else {
       let startdate;
       if (this.state.isChangeTime) {
-        startdate = new Date(this.state.startdate.replace(' ', 'T')).getTime()+1000-28800000;
+        startdate = new Date(this.state.startdate.replace(/-/g, "/")).getTime()+1000-28800000;
       } else {
-        startdate = new Date(this.state.startdate.replace(' ', 'T')).getTime()+1000;
+        startdate = new Date(this.state.startdate.replace(/-/g, "/")).getTime()+1000;
       }
 
       let meetingParams = {
@@ -962,7 +962,7 @@ class MeetingInsertPage extends React.PureComponent  {
           initiator      :this.state.initiator,
           chairperson    :this.state.chairperson,
           attendees      :this.state.attendees,
-          // timezone       :new Date( this.state.startdate.replace(' ', 'T') ).getTimezoneOffset().toString(),
+          // timezone       :new Date( this.state.startdate.replace(/-/g, "/") ).getTimezoneOffset().toString(),
           timezone       :RNLocalize.getTimeZone(),
       }
 
