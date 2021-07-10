@@ -12,6 +12,8 @@ import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 import * as UpdateDataUtil    from '../../../utils/UpdateDataUtil';
 import MainPageBackground     from '../../../components/MainPageBackground';
 import FunctionPageBanner     from '../../../components/FunctionPageBanner';
+import * as RNLocalize from "react-native-localize";
+import Moment from 'moment-timezone';
 
 class MeetingSearchPage extends React.PureComponent  {
 	constructor(props) {
@@ -22,8 +24,8 @@ class MeetingSearchPage extends React.PureComponent  {
     let isChangeTime = time1.getHours() == time2.getHours() ? false: true;
     // console.log(Platform.OS, time1.getHours() , time2.getHours(), isChangeTime);
 
-    let startTime = new Date().getTime();
-    let endTime   = new Date().getTime();
+    let startTime = new Date( Moment( new Date() ).tz(RNLocalize.getTimeZone()).format() ).getTime();
+    let endTime   = new Date( Moment( new Date() ).tz(RNLocalize.getTimeZone()).format() ).getTime();
     startTime     = startTime + (600000-(startTime%600000));
     endTime       = endTime + (600000-(endTime%600000));
 
@@ -84,14 +86,16 @@ class MeetingSearchPage extends React.PureComponent  {
                   onPress={()=>{this.showDateTimePicker(true)}}
                 >
                   <Text>{this.dateFormat(startdate)}</Text>
-                  <Text>{DateFormat( startdate, "HH:MM")  }</Text>
+                  {/*<Text>{DateFormat( startdate, "HH:MM")  }</Text>*/}
+                  <Text>{Moment( new Date(startdate) ).tz(RNLocalize.getTimeZone()).format("HH:mm")}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
                   style={{flex:1, flexDirection: 'column', padding: 10}}
                   onPress={()=>{ this.showDateTimePicker(false) }}
                 >
                   <Text>{this.dateFormat(enddate)}</Text>
-                  <Text>{DateFormat( enddate, "HH:MM")  }</Text>
+                  {/*<Text>{DateFormat( enddate, "HH:MM")  }</Text>*/}
+                  <Text>{Moment( new Date(enddate) ).tz(RNLocalize.getTimeZone()).format("HH:mm")}</Text>
                 </TouchableOpacity>
               </Item>
             </CardItem >        
@@ -222,6 +226,7 @@ class MeetingSearchPage extends React.PureComponent  {
             <DateTimePicker 
               value    ={this.state.editDatetimeValue}
               mode     ={"time"}
+              minimumDate    = {new Date(this.state.now)}
               is24Hour ={true}
               display  ="spinner"
               onChange ={this.setTime}
@@ -457,15 +462,12 @@ class MeetingSearchPage extends React.PureComponent  {
           startdate      :this.state.startdate,
           enddate        :this.state.enddate,
           attendees      :attendees,
+          timezone       :RNLocalize.getTimeZone()
       }
-      console.log(this.state.startdate);
-      console.log(this.state.enddate);
 
       let isRequestSussce = false;
       let errorMessage = "";
       let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
-        // console.log("meeting/checkDoubleDateTime", result);
-        
         isRequestSussce = true;
         return result;
       }).catch((errorResult)=>{
@@ -481,7 +483,6 @@ class MeetingSearchPage extends React.PureComponent  {
             meetingParams        :meetingParams
           });
         } else {
-          // console.log(meetingParams);
           NavigationService.navigate("MeetingTimeForSearch", {
             searchMeetingResult: searchMeetingResult,
             meetingParams : meetingParams

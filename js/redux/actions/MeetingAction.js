@@ -204,12 +204,12 @@ export function getFreeDateTime(meetingParams, freeTimeUnit){
 			startdate:meetingParams.startdate,
 			enddate  :meetingParams.enddate,
 			attendees:meetingParams.attendees,
-			min      :freeTimeUnit
+			min      :freeTimeUnit,
+			timezone :RNLocalize.getTimeZone()
 		}
-		console.log(RNLocalize.getTimeZone());
 		
 		let getFreeDateTimeResult = await UpdateDataUtil.getFreeDateTime(user, content).then((result)=>{
-			console.log("result", result);
+			// console.log("result", result);
 			return result;
 		}).catch((e)=>{
 			console.log("e", e);

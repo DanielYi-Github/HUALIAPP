@@ -51,8 +51,8 @@ class MeetingItem extends Component {
 		}
 
 		let startDate, startTime, endDate, endTime;
-		let startDateTime = this.props.data.startdate.split(" ");
-		let endDateTime = this.props.data.enddate.split(" ");
+		let startDateTime = this.props.data.datetime.startdate.split(" ");
+		let endDateTime = this.props.data.datetime.enddate.split(" ");
 
 		let isCrossDate = startDateTime[0] == endDateTime[0]? false: true;
 

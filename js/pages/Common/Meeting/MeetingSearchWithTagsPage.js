@@ -5,6 +5,8 @@ import { tify, sify} from 'chinese-conv';
 import { connect }   from 'react-redux';
 import TagInput      from 'react-native-tags-input';
 import { bindActionCreators } from 'redux';
+import * as RNLocalize from "react-native-localize";
+
 
 import * as UpdateDataUtil    from '../../../utils/UpdateDataUtil';
 import * as NavigationService from '../../../utils/NavigationService';
@@ -365,13 +367,13 @@ class MeetingSearchWithTagsPage extends React.Component {
 
   checkHaveMeetingTime = async (id, startTime, endTime) => {
     let user = this.props.state.UserInfo.UserInfo;
-    let action = "meeting/checkDoubleDateTime";
-    let actionObject = {
+    let meetingParams = {
       startdate:startTime,
-      enddate: endTime,
-      attendees:[ {id:id} ]
+      enddate  : endTime,
+      attendees:[ {id:id} ],
+      timezone :RNLocalize.getTimeZone()
     }
-    let enableMeeting = await UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
+    let enableMeeting = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
       if (result.length == 0) {
         return true;
       } else {

@@ -851,7 +851,7 @@ export default {
 		crossDayMeeting            :"Cross day meetin",
 		avalableTime               :"Avalable schedule",
 		good                       :"Good!",
-		yourTimezone   :"Your local time",
-		meetingTimezone:"time"
+		yourTimezone   :"Your location time",
+		meetingTimezone:"Time"
 	}
 }

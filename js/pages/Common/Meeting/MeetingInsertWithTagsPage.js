@@ -5,6 +5,7 @@ import { tify, sify} from 'chinese-conv';
 import { connect }   from 'react-redux';
 import TagInput      from 'react-native-tags-input';
 import { bindActionCreators } from 'redux';
+import * as RNLocalize from "react-native-localize";
 
 import * as UpdateDataUtil    from '../../../utils/UpdateDataUtil';
 import * as NavigationService from '../../../utils/NavigationService';
@@ -323,7 +324,8 @@ class MeetingInsertWithTagsPage extends React.Component {
     let meetingParams = {
       startdate:startTime,
       enddate  : endTime,
-      attendees:[ {id:id} ]
+      attendees:[ {id:id} ],
+      timezone :RNLocalize.getTimeZone()
     }
     let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
       if (result.length == 0) {

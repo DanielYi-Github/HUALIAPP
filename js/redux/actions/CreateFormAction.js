@@ -330,7 +330,17 @@ function formatSubmitFormValue(allFormFormat = null) {
 		    	for(let [i, temps] of item.defaultvalue.entries()){
 		    		let value = { ROWINDEX : i.toString() };
 		    		for(let [j, temp] of temps.entries()){ 
-		    			value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+		    			if (temp.columntype == "cbotab") {
+		    				value[temp.component.id] = "";
+		    				for (let cboObject of temp.paramList) {
+		    					if (temp.defaultvalue == cboObject.paramcode) {
+		    						value[temp.component.id] = `${cboObject.paramname}_@1@_${temp.defaultvalue}`;
+		    					}
+		    				}
+		    			} else {
+		    				value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+		    			}
+		    			
 		    		}
 		    		values.push(value);
 		    	}

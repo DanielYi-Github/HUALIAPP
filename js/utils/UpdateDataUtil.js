@@ -4321,6 +4321,7 @@ export async function getFreeDateTime(user, content){
 				"content": Common.encrypt(JSON.stringify(content)),
 				// "lang"   : Common.encrypt(user.lang)
 			};
+			// console.log(params);
 
 			NetUtil.getRequestContent(params, url).then((data)=>{
 				if (data.code != 200) {
