@@ -807,7 +807,7 @@ let FormUnit = {
                   // "ITEM4": "全天_@1@_Ad",
                   // "ITEM5": "年假_@1@_10",
                   // "ITEM6": "1"
-                  if (temp.columntype == "cbo") {
+                  if (temp.columntype == "cbotab") {
                     value[temp.component.id] = "";
                     for (let cboObject of temp.paramList) {
                       if (temp.defaultvalue == cboObject.paramcode) {
@@ -934,7 +934,7 @@ let FormUnit = {
                   // "ITEM4": "全天_@1@_Ad",
                   // "ITEM5": "年假_@1@_10",
                   // "ITEM6": "1"
-                  if (temp.columntype == "cbo") {
+                  if (temp.columntype == "cbotab") {
                     value[temp.component.id] = "";
                     for (let cboObject of temp.paramList) {
                       if (temp.defaultvalue == cboObject.paramcode) {
@@ -972,7 +972,7 @@ let FormUnit = {
                   // "ITEM4": "全天_@1@_Ad",
                   // "ITEM5": "年假_@1@_10",
                   // "ITEM6": "1"
-                  if (temp.columntype == "cbo") {
+                  if (temp.columntype == "cbotab") {
                     value[temp.component.id] = "";
                     for (let cboObject of temp.paramList) {
                       if (temp.defaultvalue == cboObject.paramcode) {
