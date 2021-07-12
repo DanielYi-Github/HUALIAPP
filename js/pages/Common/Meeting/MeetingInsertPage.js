@@ -211,7 +211,15 @@ class MeetingInsertPage extends React.PureComponent  {
             50
           );
         } else {
-          ToastUnit.show('error', nextProps.state.Meeting.actionResultMsg, false, this.props.actions.resetMeetingMessage);          
+          let actionResultMsg = "";
+          let serverErrorString = nextProps.state.Meeting.actionResultMsg.indexOf('###');
+          if (serverErrorString < 0) {
+            actionResultMsg = nextProps.state.Meeting.actionResultMsg;
+          } else {
+            actionResultMsg = "伺服器調整中，請稍候再試。";
+          }
+
+          ToastUnit.show('error', actionResultMsg, false, this.props.actions.resetMeetingMessage);          
         }
     }
   }
@@ -270,7 +278,7 @@ class MeetingInsertPage extends React.PureComponent  {
     let nowTimeZone = RNLocalize.getTimeZone();
     let differentZone = this.state.timezone == nowTimeZone ? false : true;
     let timezone = nowTimeZone.split("/")[1];
-    console.log(timezone);
+    // console.log(timezone);
     return (
       <Container>
         <HeaderForGeneral
@@ -319,7 +327,10 @@ class MeetingInsertPage extends React.PureComponent  {
             <TouchableOpacity 
               style    ={{flex:1, flexDirection: 'column', padding: 10}}
               disabled ={!this.state.isEditable}
-              onPress  ={()=>{ this.showDateTimePicker(true); }}
+              onPress  ={()=>{ 
+                this.showDateTimePicker(true); 
+                Keyboard.dismiss();
+              }}
             >
               <Text>{this.dateFormat(startdate)}</Text>
               <Text>{Moment( new Date(startdate) ).tz(RNLocalize.getTimeZone()).format("HH:mm")}</Text>
@@ -327,7 +338,10 @@ class MeetingInsertPage extends React.PureComponent  {
             <TouchableOpacity 
               style    ={{flex:1, flexDirection: 'column', padding: 10}}
               disabled ={!this.state.isEditable}
-              onPress  ={()=>{ this.showDateTimePicker(false); }}
+              onPress  ={()=>{ 
+                this.showDateTimePicker(false); 
+                Keyboard.dismiss();
+              }}
             >
               <Text>{this.dateFormat(enddate)}</Text>
               <Text>{Moment( new Date(enddate) ).tz(RNLocalize.getTimeZone()).format("HH:mm")}</Text>
@@ -454,6 +468,7 @@ class MeetingInsertPage extends React.PureComponent  {
             onPress  = {()=>{
               this.setState({ actionSheetType:"M" });
               setTimeout( this.showActionSheet, 50);
+              Keyboard.dismiss();
             }}
           >
             <Icon name='clock-alert-outline' type="MaterialCommunityIcons" />

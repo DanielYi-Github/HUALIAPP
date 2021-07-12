@@ -16,7 +16,6 @@ export function bios_check() {
 
 		// 確認生物認證是否可使用, 生物識別類型, 錯誤碼
 	    const { available, biometryType, error } = await ReactNativeBiometrics.isSensorAvailable();
-	    console.log("available", available);
 	    if (available) {
 	    	let iemi = Common.getImei(); // 獲取設備憑證碼
 			if(iemi){
@@ -89,10 +88,10 @@ export function biometricInfo_check(){
 	return async (dispatch, getState) => {
 	 	// 設備有無使用者生物驗證資訊
     	let biosUser = await DeviceStorageUtil.get('UserBiometricInfomation');
-    	console.log("biosUser::::::", biosUser);
 	 	biosUser = biosUser ? JSON.parse(biosUser) : false;
 	 	 
 	 	if (biosUser) {
+    		console.log("biosUser::::::", biosUser);
 	 		// Server有無使用者生物驗證資訊
 	        UpdateDataUtil.getIemiExist( biosUser.iemi ).then((data) => {
 	        	if (data.content) {

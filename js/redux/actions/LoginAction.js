@@ -313,7 +313,6 @@ export function loginByToken(user) {
 		//開始顯示載入資料畫面
 		dispatch(login_doing());
 		UpdateDataUtil.getMBUserInfoByToken(user).then((result) => {
-
 			this.initialApi(user,"token");
 
 	  		DeviceStorageUtil.get('update').then((data) => {

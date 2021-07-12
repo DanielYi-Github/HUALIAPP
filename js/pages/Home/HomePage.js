@@ -76,8 +76,7 @@ class HomePage extends React.Component {
       isLoadCompanyData_ContactCO:false, // 是否已撈取CompanyData_ContactCO模組關聯所有資料,
     }
 
-    MessageRouter.initial(this.props.state, this.props.actions);// 處理訊息分流的類別
-    MessageRouter.addMessageListener(this.props.actions);       // 啟動訊息觸發的監聽器
+    
 
     let user         = props.state.UserInfo.UserInfo;
     let {langStatus} = props.state.Language;
@@ -98,6 +97,9 @@ class HomePage extends React.Component {
   };
 
   componentDidMount() {
+    MessageRouter.initial(this.props.state, this.props.actions);// 處理訊息分流的類別
+    MessageRouter.addMessageListener(this.props.actions);       // 啟動訊息觸發的監聽器
+    
     Dimensions.addEventListener("change", this.onChange);
 
     AppState.addEventListener('change', this.onChangeAppState);

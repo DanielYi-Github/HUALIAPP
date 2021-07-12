@@ -47,8 +47,8 @@ export function addMeeting(meetingParams){
 		});
 		dispatch(refreshing(false)); 
 		dispatch({
-			type: MeetingTypes.MEETING_ACTIONRESULT,
-			result:addMeetingResult,
+			type     :MeetingTypes.MEETING_ACTIONRESULT,
+			result   :addMeetingResult,
 			resultMsg:addMeetingResult.success ? null: addMeetingResult.msg
 		}); 
 
