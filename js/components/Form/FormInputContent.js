@@ -78,6 +78,7 @@ export default class FormInputContent extends Component {
 				);
 				break;
 			case "cbo":
+			case "cbotab":
 				inputComponent = (
 					<FormContentCbo 
 						data     ={this.props.data} 

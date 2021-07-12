@@ -189,8 +189,6 @@ export function checkDirectorPage(data, type = null){
 		
 		// 找出該訊息的EVENT 再進行調轉動作
 		let user = getState().UserInfo.UserInfo;
-
-
 		let OID  = data.oid ? data.oid: data.OID;
 		let sql  = `SELECT case when r.ISREAD is null then 'F' else r.ISREAD end ISREAD,
 					a.OID as MSGOID, a.TYPE, a.TITLE, a.CONTENT, a.ISPUSH, a.CRTDAT,
@@ -202,6 +200,7 @@ export function checkDirectorPage(data, type = null){
 		data = await SQLite.selectData(sql, []).then((result) => {
 			return result.item(0)
 		});
+		console.log("checkDirectorPage", data);
 		if (data.ISREAD == "F") updateMessageReadState(OID, user, dispatch, getState);
 
 

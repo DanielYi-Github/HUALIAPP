@@ -1829,7 +1829,6 @@ export async function updateMSGByOID(user,oid,lang) {
 
 			let lSelect = "SELECT * FROM THF_MSG WHERE OID=?";
 			SQLite.selectData(lSelect,[data.oid]).then((data1)=>{
-				console.log("updateMSGByOID", data1);
 				if(data1.length==0){
 					let lInsert = "INSERT INTO THF_MSG select ?,?,?,?,?,?,?,?,?,?,?,? ";
 					let nCrtDat = Common.dateFormat(data.crtdat);

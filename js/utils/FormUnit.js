@@ -731,7 +731,16 @@ let FormUnit = {
                 ROWINDEX: i.toString()
               };
               for (let [j, temp] of temps.entries()) {
-                value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+                if (temp.columntype == "cbotab") {
+                  value[temp.component.id] = "";
+                  for (let cboObject of temp.paramList) {
+                    if (temp.defaultvalue == cboObject.paramcode) {
+                      value[temp.component.id] = `${cboObject.paramname}_@1@_${temp.defaultvalue}`;
+                    }
+                  }
+                } else {
+                  value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+                }
               }
               values.push(value);
             }
@@ -760,7 +769,7 @@ let FormUnit = {
                   // "ITEM4": "全天_@1@_Ad",
                   // "ITEM5": "年假_@1@_10",
                   // "ITEM6": "1"
-                  if (temp.columntype == "cbo") {
+                  if (temp.columntype == "cbotab") {
                     value[temp.component.id] = "";
                     for (let cboObject of temp.paramList) {
                       if (temp.defaultvalue == cboObject.paramcode) {

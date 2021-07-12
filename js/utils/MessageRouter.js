@@ -5,6 +5,7 @@ import * as UpdateDataUtil from './UpdateDataUtil';
 import * as SQLite         from './SQLiteUtil';
 import DeviceStorageUtil   from './DeviceStorageUtil';
 import JPush          	   from './JpushUtil';
+import LoggerUtil          from './LoggerUtil';
 
 let MessageRouter = {
     async initial (props, actions){
@@ -12,7 +13,7 @@ let MessageRouter = {
     	JPush.getRegistrationID( result => console.log(result.registerID) );
 
 		// 接收推送通知
-		JPush.addNotificationListener((result) => {
+		JPush.addNotificationListener( async (result) => {
 			console.log("addNotificationListener", result);
 			if (result.notificationEventType == "notificationArrived"){
 				this.dealMessagesOriginalsource(result, props, true);
@@ -22,6 +23,7 @@ let MessageRouter = {
 					"appBadge":0
 				});
 
+				await this.dealMessagesOriginalsource(result, props, true);
 				// 測試非自定義的消息推送
 				result.extras.APPID = "Messages";
       			actions.checkDirectorPage(result.extras);
@@ -35,7 +37,7 @@ let MessageRouter = {
 				DeviceEventEmitter.emit('loadMsgState');
 			}else{
 				JPush.setBadge({
-					"badge":0,
+					"badge"   :0,
 					"appBadge":0
 				});
 			  	actions.checkDirectorPage(result.extras);
@@ -85,16 +87,22 @@ let MessageRouter = {
 				break;
 			default:
 				// 需要判斷是哪一種訊息再寫入資料庫中，後續再進行推送，需要討論
-				await UpdateDataUtil.updateMSGByOID(user, oid, lang);  
-				await UpdateDataUtil.updateEvent(user); //事件表
-				console.log("isOriginal", isOriginal);
+				let arr = [
+					UpdateDataUtil.updateMSGByOID(user, oid, lang),
+		  			UpdateDataUtil.updateEvent(user), 				//事件表				
+				];
+
+			  	await Promise.all(arr).then( async (data) => {
+			  	}).catch((e)=>{
+			  		LoggerUtil.addErrorLog("MessageRouter dealMessagesOriginalsource", "APP Action", "ERROR", e);
+			  	})
+			  		
 				if (isOriginal){
-					DeviceEventEmitter.emit('loadMsgState');
+					await DeviceEventEmitter.emit('loadMsgState');
 				}else{
 					this.emitCustomlMessage(user, oid);
 				}
 				break;
-				
 		}
 	},
 	// 處理本地化推送
