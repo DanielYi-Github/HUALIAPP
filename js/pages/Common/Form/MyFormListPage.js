@@ -416,6 +416,10 @@ class MyFormListPage extends React.Component {
                 if (index) {
                   this.setState({
                     defaultMainFormType: this.props.state.MyForm.FormTypes[index],
+                    defaultFormType: {  
+                      key  : "all",
+                      label: this.props.lang.MyFormListPage.FormTypeAll
+                    },
                     FormTypes:[
                       {
                         key  : "all",
@@ -428,6 +432,10 @@ class MyFormListPage extends React.Component {
                 } else {
                   this.setState({
                     defaultMainFormType: this.props.state.MyForm.FormTypes[index],
+                    defaultFormType: {  
+                      key  : "all",
+                      label: this.props.lang.MyFormListPage.FormTypeAll
+                    },
                     FormTypes:[{
                         key  : "all",
                         label: this.props.lang.MyFormListPage.FormTypeAll
