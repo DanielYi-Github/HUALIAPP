@@ -15,9 +15,11 @@ import * as NetworkAction   from '../redux/actions/NetworkAction';
 import * as LoginAction     from '../redux/actions/LoginAction';
 import * as UserInfoAction  from '../redux/actions/UserInfoAction';
 import * as BiometricAction from '../redux/actions/BiometricAction';
-// import * as HomeAction      from '../redux/actions/HomeAction';
-// import * as MessageAction   from '../redux/actions/MessageAction';
-// import MessageRouter   from '../utils/MessageRouter';
+
+import * as HomeAction      from '../redux/actions/HomeAction';
+import * as MessageAction   from '../redux/actions/MessageAction';
+import * as MeetingAction   from '../redux/actions/MeetingAction';
+import MessageRouter   from '../utils/MessageRouter';
 
 
 
@@ -36,10 +38,9 @@ class SplashPage extends React.Component {
     if (this.props.state.Login.enableAppInitialFunction) {
       this.props.actions.appInit( this.props.actions );      // APP初始化程序
       SplashScreen.hide();
-      // MessageRouter.initial(this.props.state, this.props.actions);// 處理訊息分流的類別
-      // MessageRouter.addMessageListener(this.props.actions);       // 啟動訊息觸發的監聽器
-    } else {
-      
+      MessageRouter.initial();                                          // 處理訊息分流的類別
+      MessageRouter.addListeners(this.props.state, this.props.actions); // 處理訊息分流的類別
+      MessageRouter.addMessageListener(this.props.actions);             // 啟動訊息觸發的監聽器
     }
   }
 
@@ -92,8 +93,9 @@ export default connect(
       ...LoginAction,
       ...UserInfoAction,
       ...BiometricAction,
-      // ...HomeAction,
-      // ...MessageAction,
+      ...HomeAction,
+      ...MessageAction,
+      ...MeetingAction
     }, dispatch)
   })
 )(SplashPageStyle);

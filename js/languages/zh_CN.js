@@ -821,6 +821,7 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		meetingPlace               :"会议室地点",
 		meetingSubjectRequire      :"会议主题必须填写",
 		alertMessage_equal         :"会议结束时间不能\"等于\"开始时间",
+		alertMessage_earlierNow    :"会议开始时间不能\"早于\"現在时间",
 		alertMessage_earlier       :"会议结束时间不能\"早于\"开始时间",
 		meetingPlaceRequire        :"会议室地点必须填写",
 		alert                      :"提醒！",

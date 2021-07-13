@@ -4061,7 +4061,6 @@ export async function updateDailyOralEnglish(user){
 	let sql = "SELECT MAX(TXDAT) AS TXDAT FROM THF_DAILY_ORAL_ENGLISH"
 	let data = await SQLite.selectData(sql,[])
 	let maxTxdat = data.item(0).TXDAT
-	console.log('maxTxdat:',maxTxdat);
 	let promise = new Promise((resolve,reject)=>{
 		//获取数据的API参数和URL
 		let enContent = Common.encrypt(maxTxdat ? maxTxdat : '')

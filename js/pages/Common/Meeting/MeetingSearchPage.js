@@ -429,7 +429,16 @@ class MeetingSearchPage extends React.PureComponent  {
 
   searchMeeting = async () =>{
     let attendees = this.state.attendees;
-    if ( new Date(this.state.startdate.replace(/-/g, "/")).getTime() >  new Date(this.state.enddate.replace(/-/g, "/")).getTime() ) {
+    if ( new Date(this.state.startdate.replace(/-/g, "/")).getTime() < new Date().getTime() ) {
+      Alert.alert(
+        this.props.lang.Common.Error,   // 表單動作失敗
+        this.props.lang.MeetingPage.alertMessage_earlierNow, //`會議開始時間不能\"早於\"現在時間`
+        [{
+            text: this.props.state.Language.lang.Common.Close,   // 關閉 
+            onPress: () => { }, 
+        }],
+      )
+    } else if ( new Date(this.state.startdate.replace(/-/g, "/")).getTime() >  new Date(this.state.enddate.replace(/-/g, "/")).getTime() ) {
       Alert.alert(
         this.props.lang.Common.Error,   // 表單動作失敗
         this.props.lang.MeetingPage.alertMessage_earlier, //`會議結束時間不能\"早於\"開始時間`

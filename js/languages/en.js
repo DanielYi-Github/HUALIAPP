@@ -817,6 +817,7 @@ export default {
 		meetingPlace               :"Location",
 		meetingSubjectRequire      :"Subject must be required",
 		alertMessage_equal         :"End time can not be equal start time",
+		alertMessage_earlierNow    :"Start time can not be earlier than now",
 		alertMessage_earlier       :"End time can not be earlier than start time",
 		meetingPlaceRequire        :"Location must be required",
 		alert                      :"Notice",

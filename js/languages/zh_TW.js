@@ -821,6 +821,7 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		meetingPlace               :"會議室地點",
 		meetingSubjectRequire      :"會議主題必須填寫",
 		alertMessage_equal         :"會議結束時間不能\"等於\"開始時間",
+		alertMessage_earlierNow    :"會議開始時間不能\"早於\"現在時間",
 		alertMessage_earlier       :"會議結束時間不能\"早於\"開始時間",
 		meetingPlaceRequire        :"會議室地點必須填寫",
 		alert                      :"提醒！",

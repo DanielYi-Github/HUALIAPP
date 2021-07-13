@@ -7,39 +7,43 @@ import DeviceStorageUtil   from './DeviceStorageUtil';
 import JPush          	   from './JpushUtil';
 import LoggerUtil          from './LoggerUtil';
 
-let MessageRouter = {
-    async initial (props, actions){
-    	JPush.init();
-    	JPush.getRegistrationID( result => console.log(result.registerID) );
 
+let MessageRouter = {
+    async initial (){
+    	JPush.init();
+    	JPush.getRegistrationID( result => console.log("registerID:", result.registerID) );
+	},
+	async addListeners(props, actions){
 		// 接收推送通知
 		JPush.addNotificationListener( async (result) => {
-			console.log("addNotificationListener", result);
-			if (result.notificationEventType == "notificationArrived"){
-				this.dealMessagesOriginalsource(result, props, true);
-			}else{
-				JPush.setBadge({
-					"badge":0,
-					"appBadge":0
-				});
+			// 判斷是不是冷啟動
+      		let isColdActive = await DeviceStorageUtil.get('isColdActive');
+      		isColdActive = (isColdActive === 'true');
 
-				await this.dealMessagesOriginalsource(result, props, true);
-				// 測試非自定義的消息推送
-				result.extras.APPID = "Messages";
-      			actions.checkDirectorPage(result.extras);
-			}
+      		if (isColdActive) {
+      			// 保存訊息
+      			DeviceStorageUtil.set('storeNotificationMsg', result);
+    			DeviceStorageUtil.set('isColdActive', false);
+      		} else {
+				if (result.notificationEventType == "notificationArrived"){
+					this.dealMessagesOriginalsource(result, props, true);
+				}else{
+					JPush.setBadge({ "badge":0, "appBadge":0 });
+					await this.dealMessagesOriginalsource(result, props, true);
+					// 測試非自定義的消息推送
+					result.extras.APPID = "Messages";
+	      			actions.checkDirectorPage(result.extras);
+				}
+      		}
 		});
 
 		// 接收本地通知
 		JPush.addLocalNotificationListener((result) => {
-			console.log("notificationArrived", result);
+			// console.log("notificationArrived", result);
 			if (result.notificationEventType == "notificationArrived"){
 				DeviceEventEmitter.emit('loadMsgState');
 			}else{
-				JPush.setBadge({
-					"badge"   :0,
-					"appBadge":0
-				});
+				JPush.setBadge({ "badge":0, "appBadge":0 });
 			  	actions.checkDirectorPage(result.extras);
 			}
 		});
@@ -162,6 +166,7 @@ let MessageRouter = {
 	addMessageListener(actions){
 		DeviceEventEmitter.addListener('loadMsgState',(data)=>{
 		  actions.loadMessageIntoState();
+		  actions.getMeetings();
 		})
 	},
 	// 移除訊息監聽
@@ -185,7 +190,28 @@ let MessageRouter = {
 			}
 		});
 		return promise;
-	}
+	},
+	// 針對冷啟動取得跳頁訊息
+	async getStoreNotificationMsg(props, actions){
+		let storeNotificationMsg = await DeviceStorageUtil.get('storeNotificationMsg');
+		if (storeNotificationMsg) {
+			let result = JSON.parse(storeNotificationMsg);
+			if (result.notificationEventType == "notificationArrived"){
+				this.dealMessagesOriginalsource(result, props, true);
+			}else{
+				JPush.setBadge({ "badge":0, "appBadge":0 });
+				// await this.dealMessagesOriginalsource(result, props, true);
+				
+				// 測試非自定義的消息推送
+				result.extras.APPID = "Messages";
+      			actions.checkDirectorPage(result.extras);
+			}
+			DeviceStorageUtil.remove('storeNotificationMsg');
+		} else {
+			// console.log(2);
+		}
+    	DeviceStorageUtil.set('isColdActive', false);
+	},
 }
 
 export default MessageRouter;

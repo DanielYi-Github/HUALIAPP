@@ -87,7 +87,7 @@ class MeetingInsertPage extends React.PureComponent  {
             startTime = new Date( meetingParam.startdate.replace(/-/g, "/") ).getTime();
             endTime   = new Date( meetingParam.enddate.replace(/-/g, "/") ).getTime();
 
-            now       = isChangeTime ? startTime-28800000 : startTime;
+            // now       = isChangeTime ? startTime-28800000 : startTime;
             startTime = isChangeTime ? startTime-28800000 : startTime;
             endTime   = isChangeTime ? endTime-28800000 : endTime;
             attendees = meetingParam.attendees;
@@ -569,9 +569,10 @@ class MeetingInsertPage extends React.PureComponent  {
 
   showDateTimePicker = (editStartorEndDatetime) => {
     let startdate = new Date( this.state.startdate.replace(/-/g, "/") ).getTime();
+    console.log(this.state.startdate.replace(/-/g, "/"));
     let enddate = new Date( this.state.enddate.replace(/-/g, "/") ).getTime();
-    startdate = this.state.isChangeTime ? startdate-28800000: startdate;
-    enddate = this.state.isChangeTime ? enddate-28800000: enddate;
+    // startdate = this.state.isChangeTime ? startdate-28800000: startdate;
+    // enddate = this.state.isChangeTime ? enddate-28800000: enddate;
 
       if (this.state.isEndDateChange) {
       } else {
@@ -934,6 +935,15 @@ class MeetingInsertPage extends React.PureComponent  {
       Alert.alert(
         this.props.lang.Common.Error,   
         this.props.lang.MeetingPage.meetingSubjectRequire, //`會議主題必須填寫`
+        [{
+            text: this.props.state.Language.lang.Common.Close,   // 關閉 
+            onPress: () => { }, 
+        }],
+      )
+    } else if ( new Date(this.state.startdate.replace(/-/g, "/")).getTime() < new Date().getTime() ) {
+      Alert.alert(
+        this.props.lang.Common.Error,   // 表單動作失敗
+        this.props.lang.MeetingPage.alertMessage_earlierNow, //`會議開始時間不能\"早於\"現在時間`
         [{
             text: this.props.state.Language.lang.Common.Close,   // 關閉 
             onPress: () => { }, 

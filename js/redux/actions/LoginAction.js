@@ -736,9 +736,9 @@ export function loginChangeAccount(account, password, checkAccType, actions, bio
 		    break;
 		  default:
 		};
-
+		
 		if (checkResult.result) {
-			biometricEnable ? actions.setIsBiometricEnable(user, false) : null;  //删除生物識別資訊
+			biometricEnable ? actions.setIsBiometricEnable(userChange, false) : null;  //删除生物識別資訊
 			actions.deleteAllForms();                                            //消除所有清單內容
 
 			// 先註記需要更換帳號的資訊
@@ -770,6 +770,7 @@ export function loginChangeAccount(account, password, checkAccType, actions, bio
 			  default:
 			};
 		}
+		
 	}
 }
 

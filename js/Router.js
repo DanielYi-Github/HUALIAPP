@@ -361,6 +361,7 @@ class Router extends React.Component {
 
   componentDidMount () {
     AppState.addEventListener('change', this.onChangeAppState)
+    DeviceStorageUtil.set('isColdActive', true); // 記錄是不是冷啟動
   }
   
   componentWillUnmount () {

@@ -128,7 +128,7 @@ class LoginPage extends React.Component {
     let user            = this.props.UserInfo.UserInfo;
     let checkAccType    = this.props.Login.checkAccType;
     let biometricEnable = this.props.Biometric.biosUser.biometricEnable;
-
+    
     //進行變更帳號登入的動作
     this.props.actions.loginChangeAccount(
       account, 

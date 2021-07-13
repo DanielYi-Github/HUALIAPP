@@ -817,6 +817,7 @@ export default {
 		meetingPlace               :"Vị trí phòng họp",
 		meetingSubjectRequire      :"Chủ đề của cuộc họp phải được điền vào",
 		alertMessage_equal         :"Thời gian kết thúc cuộc họp không được bằng thời gian bắt đầu",
+		alertMessage_earlierNow    :"Thời gian bắt đầu không thể sớm hơn bây giờ",
 		alertMessage_earlier       :"Thời gian kết thúc cuộc họp không được sớm hơn thời gian bắt đầu",
 		meetingPlaceRequire        :"Vị trí phòng họp phải được điền vào",
 		alert                      :"nhắc lại!",
