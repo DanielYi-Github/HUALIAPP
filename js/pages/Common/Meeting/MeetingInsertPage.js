@@ -28,7 +28,7 @@ class MeetingInsertPage extends React.PureComponent  {
       // console.log(Moment( new Date() ).tz(RNLocalize.getTimeZone()).format());
       // console.log(new Date( Moment( new Date() ).tz(RNLocalize.getTimeZone()).format() ));
 
-      let oid              = "";
+      let oid              = null;
       let isParams         = this.props.route.params ? true : false;
       let isEditable       = true;                                  //是不是在編輯中
       let headerName       = props.lang.MeetingPage.insertMeeting; 
@@ -365,10 +365,12 @@ class MeetingInsertPage extends React.PureComponent  {
             }}
             disabled= {!this.state.isEditable}
             onPress = {()=>{
+              // console.log(this.state);
               NavigationService.navigate("MeetingInsertChairperson", {
                 startdate: this.state.startdate,
                 enddate  : this.state.enddate,
-                onPress  : this.selectChairperson
+                onPress  : this.selectChairperson,
+                oid      : this.state.oid
               });
             }}
           >
@@ -406,6 +408,7 @@ class MeetingInsertPage extends React.PureComponent  {
                         startdate: this.state.startdate,
                         enddate  : this.state.enddate,
                         onPress  : this.selectAttendees,
+                        oid      : this.state.oid
                       });
                     }}
                   />

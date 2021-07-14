@@ -36,7 +36,8 @@ class MeetingInsertWithTagsPage extends React.Component {
       data              :[],          //搜尋出來的資料
       attendees         :this.props.route.params.attendees,  //參與人
       isFooterRefreshing:false,
-      isEnd             :false        //紀錄搜尋結果是否已經沒有更多資料
+      isEnd             :false,        //紀錄搜尋結果是否已經沒有更多資料
+      oid               :this.props.route.params.oid
     };
   }
 
@@ -185,8 +186,8 @@ class MeetingInsertWithTagsPage extends React.Component {
                   tags                ={tags}
                   inputContainerStyle ={{ height: 0 }}
                   tagsViewStyle       ={{ margin:0 }}
-                  tagStyle={{backgroundColor:"#DDDDDD", borderWidth:0}}
-                  tagTextStyle={{color:"#666"}}
+                  tagStyle            ={{backgroundColor:"#DDDDDD", borderWidth:0}}
+                  tagTextStyle        ={{color:"#666"}}
                 />
               </Item> 
             </Content>
@@ -236,7 +237,6 @@ class MeetingInsertWithTagsPage extends React.Component {
         } else {
           let keyword = this.removeSpace(this.state.keyword); 
           let lowKeyword = keyword.toLowerCase(); 
-          console.log(keyword, lowKeyword);
           searchList = [
             UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:keyword}),
             UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:lowKeyword}),
@@ -325,7 +325,8 @@ class MeetingInsertWithTagsPage extends React.Component {
       startdate:startTime,
       enddate  : endTime,
       attendees:[ {id:id} ],
-      timezone :RNLocalize.getTimeZone()
+      timezone :RNLocalize.getTimeZone(),
+      oid : this.state.oid
     }
     let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
       if (result.length == 0) {

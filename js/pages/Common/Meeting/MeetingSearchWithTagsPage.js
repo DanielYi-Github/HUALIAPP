@@ -148,7 +148,7 @@ class MeetingSearchWithTagsPage extends React.Component {
               </Left>
               <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>
                   <Title style={{color:this.props.style.color}} onPress={()=>{ this.setState({ isShowSearch:true });}}>
-                    {"新增與會人員"}
+                    {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd} ${this.props.lang.MeetingPage.attendees}`}
                   </Title>
               </Body>
               <Right style={{alignItems: 'center'}}>
@@ -169,7 +169,7 @@ class MeetingSearchWithTagsPage extends React.Component {
             </Header>
         }
         <Label style={{marginLeft: 5, paddingTop: 20, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder }}>
-          {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd}${"與會人員"}`}
+          {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd} ${this.props.lang.MeetingPage.attendees}`}
         </Label>
         <View style={{flex:0.3, backgroundColor: this.props.style.InputFieldBackground}}>
             <Content ref ={(c) => { this._content = c; }}>
@@ -190,7 +190,7 @@ class MeetingSearchWithTagsPage extends React.Component {
 
         <View style={{flex: 1, paddingTop: 20}}>
           <Label style={{marginLeft: 5, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
-            {`${this.props.state.Language.lang.CreateFormPage.QuickSelect}${"與會人員"}`}
+            {`${this.props.state.Language.lang.CreateFormPage.QuickSelect} ${this.props.lang.MeetingPage.attendees}`}
           </Label>
           <FlatList
             keyExtractor          ={(item, index) => index.toString()}
@@ -403,7 +403,8 @@ export let MeetingSearchWithTagsPageStyle = connectStyle( 'Page.FormPage', {} )(
 
 export default connect(
   (state) => ({
-    state: { ...state }
+    state: { ...state },
+    lang: { ...state.Language.lang }
   }),
   (dispatch) => ({
     actions: bindActionCreators({

@@ -29,7 +29,8 @@ class MeetingInsertChairpersonPage extends React.Component {
       searchedData      :[],          //關鍵字搜尋出來的資料
       data              :[],
       isFooterRefreshing:false,
-      isEnd             :false        //紀錄搜尋結果是否已經沒有更多資料
+      isEnd             :false,        //紀錄搜尋結果是否已經沒有更多資料
+      oid               :this.props.route.params.oid
     };
   }
 
@@ -264,7 +265,8 @@ class MeetingInsertChairpersonPage extends React.Component {
       startdate: startTime,
       enddate  : endTime,
       attendees: [ {id:id} ],
-      timezone : RNLocalize.getTimeZone()
+      timezone : RNLocalize.getTimeZone(),
+      oid : this.state.oid
     }
     let enableMeeting = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
       if (result.length == 0) {
