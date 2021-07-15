@@ -25,6 +25,7 @@ import RecruitPage               from './pages/Introduction/RecruitPage';
 import RecruitDetailPage         from './pages/Introduction/RecruitDetailPage';
 import ContactUsPage             from './pages/Introduction/ContactUsPage';
 import ShoseIntroducePage        from './pages/Introduction/ShoseIntroducePage';
+import OfficialWebsitePage       from './pages/Introduction/OfficialWebsitePage';
 
 import LoginPage           from './pages/Authentication/LoginPage';
 import InitialPasswordPage from './pages/Authentication/InitialPasswordPage';
@@ -175,6 +176,11 @@ function IntroductionDrawer(props) {
                       name      ={page.paramcode} 
                       component ={ShoseIntroducePage} 
                       options   ={{ drawerLabel:lang.ShoseIntroducePage.ShoemakingInstroduce}}/>
+            case "OfficialWebsite":
+              return <Drawer.Screen 
+                      name      ={page.paramcode} 
+                      component ={OfficialWebsitePage} 
+                      options   ={{ drawerLabel:lang.OfficialWebsitePage.Title}}/>
           }
         })
       }

@@ -90,6 +90,9 @@ export default {
 		CoreValueContent9        :'★ 言行诚实正直',
 		CoreValueContent10       :'★ 脚踏实地，言行一致'
 	},
+	OfficialWebsitePage:{
+		Title:"集团官网"
+	},
 	LoginPage: {
 		LoginButton: '登录',
 		ForgetPassword: '忘记密码?',

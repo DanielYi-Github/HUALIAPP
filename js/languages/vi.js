@@ -90,6 +90,9 @@ export default {
 		CoreValueContent9        : '★ Thật thà, chính trực',
 		CoreValueContent10       : '★ Thiết thực, nói đi đôi với làm'
 	},
+	OfficialWebsitePage:{
+		Title:"Trang web chính thức của nhóm"
+	},
 	LoginPage: {
 		LoginButton          : 'Đăng nhập',
 		ForgetPassword       : 'Quên Mật mã',

@@ -90,6 +90,9 @@ export default {
 		CoreValueContent9        :'★ 言行誠實正直',
 		CoreValueContent10       :'★ 腳踏實地，言行一致'
 	},	
+	OfficialWebsitePage:{
+		Title:"集團官網"
+	},
 	LoginPage: {
 		LoginButton          :'登入',
 		ForgetPassword       :'忘記密碼?',

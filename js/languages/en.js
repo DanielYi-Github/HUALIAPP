@@ -90,6 +90,9 @@ export default {
 		CoreValueContent9        :'★ Act with Integrity',
 		CoreValueContent10       :'★ Be True to Your Commitments'
 	},
+	OfficialWebsitePage:{
+		Title:"Official website"
+	},
 	LoginPage: {
 		LoginButton          :'Enter',
 		ForgetPassword       :'Forgot your password?',
