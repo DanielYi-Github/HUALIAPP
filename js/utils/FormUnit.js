@@ -115,9 +115,9 @@ let FormUnit = {
           // 請整天的情況下
           if (isWholeDay) {
             if (formItem.columntype == "date"){
-              for(let lastRecord of parentItem.defaultvalue){
-                // 是否同姓名
-                if (lastRecord[1].defaultvalue == parentItem.listComponent[1].defaultvalue) {
+              for(let [index, lastRecord] of parentItem.defaultvalue.entries() ){
+                // 是否同姓名, 並且確認如果是編輯自己已新增的資料，則不做驗證
+                if (lastRecord[1].defaultvalue == parentItem.listComponent[1].defaultvalue && index != editCheckItemIndex) {
                   // 被比對的對象是否整日
                   if(lastRecord[4].defaultvalue == "true"){
                     // 起始日必須晚於上一筆起迄日
@@ -144,9 +144,9 @@ let FormUnit = {
           } else {
             // 一定要先選日期，才可選時間
             if (formItem.columntype == "date"){
-                for(let lastRecord of parentItem.defaultvalue){
+                for(let [index, lastRecord] of parentItem.defaultvalue.entries() ){
                   // 是否同姓名
-                  if (lastRecord[1].defaultvalue == parentItem.listComponent[1].defaultvalue) {
+                  if (lastRecord[1].defaultvalue == parentItem.listComponent[1].defaultvalue && index != editCheckItemIndex) {
                     // 被比對的對象是否整日
                     if(lastRecord[4].defaultvalue == "true"){
                       // 起始日必須晚於上一筆起迄日
@@ -163,9 +163,9 @@ let FormUnit = {
             }
 
             if (formItem.columntype == "time"){
-                for(let lastRecord of parentItem.defaultvalue){
+                for(let [index, lastRecord] of parentItem.defaultvalue.entries() ){
                   // 是否同姓名
-                  if (lastRecord[1].defaultvalue == parentItem.listComponent[1].defaultvalue) {
+                  if (lastRecord[1].defaultvalue == parentItem.listComponent[1].defaultvalue && index != editCheckItemIndex ) {
                     // 是否是同一日，是，則起時不能早於上一筆的迄時：否則沒差
                     if (lastRecord[5].defaultvalue == parentItem.listComponent[5].defaultvalue ) {
                       // 否起始時間早於上一筆起迄時間
