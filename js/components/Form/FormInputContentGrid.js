@@ -280,14 +280,11 @@ class FormInputContentGrid extends Component {
 
 	showEditModal = async (data, editCheckItemIndex = -1) => {
 		this.setState({loadingMark:true});
-
 		//檢視一下要編輯的項目有沒有進行過可編輯化
 		if (!data.listComponent[0].hasOwnProperty("show")) {
 			data = await this.editablelize(data);
 		}
-
 		this.setState({ loadingMark:false });
-
 
 		NavigationService.navigate("FormInputContentGridPage", {
 			propsData         : this.props.data,
@@ -301,8 +298,12 @@ class FormInputContentGrid extends Component {
 	}
 
 	confirmFormData = async (value) => {
+		// console.log(value);
 		if (this.state.editCheckItem) {
+			// console.log("this.state.editCheckItem", this.state.editCheckItem);
+			// console.log(value.defaultvalue, this.state.editCheckItemIndex);
 			value.defaultvalue[this.state.editCheckItemIndex] = this.deepClone(value.listComponent);
+			// console.log("value", value);
 		} else {
 			// 將自己的值新增到 this.state.data 的 defaultvalue 裡面
 			if (value.defaultvalue == null) {
@@ -322,7 +323,6 @@ class FormInputContentGrid extends Component {
 		value.listComponent = this.deepClone(this.props.data.listComponent);
 		// 送值
 		await this.props.onPress(this.deepClone(value), this.props.data);
-
 		this.modalWrapperClose();
 	}
 	

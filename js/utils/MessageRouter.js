@@ -173,8 +173,8 @@ let MessageRouter = {
 	removeMessageListener(actions){
 		// JPushModule.removeReceiveCustomMsgListener();
 		// JPushModule.removeReceiveNotificationListener();
-		JPush.removeLocalNotification();
-		JPush.removeListener();
+		// JPush.removeLocalNotification();
+		// JPush.removeListener();
 	},
 	// 判斷應用是否啟用ＡＰＰ通知功能
 	getIsAppNotificationEnable(){

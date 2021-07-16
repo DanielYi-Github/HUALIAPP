@@ -36,14 +36,14 @@ export function appInit(initActions/*, downloadProgressCallback*/) {
 		let lang = getState().Language.lang;
 		let isColdActive = true; 						// 是不是冷啟動
       	addDownLoadFileListener(initActions, dispatch); // 新增檔案下載監聽器
-
+      	
 		if (netStatus) {
 			initActions.loadLoginMode();  					// 檢核登陸模式 tab/single
 			initActions.getJpushRegistrationID();  			// 取得Jpush的註冊ID
 			initActions.setThemeState( null, netStatus );  	// 設定APP主題風格
     		initActions.bios_check(); 						// 檢查設備是否支持生物識別
     		initActions.biometricInfo_check();				// 檢查server與設備有無使用者生物識別資訊且一致
-
+    		
 			await UpgradeDBTableUtil.UpgradeDBTable(); 	// 檢查DB表有無更新
 			await UpdateDataUtil.updateVersion();		// 檢查DB表有無APP版本號更新   
 
@@ -70,10 +70,13 @@ export function appInit(initActions/*, downloadProgressCallback*/) {
 			} else {
 				intoAppProgress(initActions, getState());
 			}
+
 		} else {
 			initActions.setThemeState(null,netStatus);  // 設定APP主題風格
 			intoAppProgress(initActions, getState(), netStatus, lang);
 		}
+		
+
 	}
 }
 
@@ -88,6 +91,7 @@ async function intoAppProgress(initActions, State, netStatus=true, lang){
 	user = user ? JSON.parse(user) : false;
 
 	// 有無網路
+	
 	if (netStatus) {
 		
 		let arr = [
@@ -100,8 +104,10 @@ async function intoAppProgress(initActions, State, netStatus=true, lang){
 			initActions.setIntroductionDrawerPages(data[0]); 
 			initActions.setIntroductionPageContent(data[1]); 
 
+
 			// 確認是否是使用帳號切換登入方式來登入：是，開始進行單入步驟；否，進行正常登入
 			let loginChangeUserInfo = State.Login.loginChangeUserInfo;
+			
 			if (Object.entries(loginChangeUserInfo).length) {
 				switch (loginChangeUserInfo.checkAccType) {
 					case "AD":
@@ -116,10 +122,12 @@ async function intoAppProgress(initActions, State, netStatus=true, lang){
 				if (user) {
 					initActions.loadUserInfoState(user);
 					initActions.loginByToken(user);
+				
 				} else {
 					Navigation.navigate('IntroductionDrawer');
 				}
 			}
+			
 
 		}).catch(reason => {
 			LoggerUtil.addErrorLog("InitialPage initUser", "APP Page in InitialPage", "WARN", reason);
@@ -142,8 +150,8 @@ async function intoAppProgress(initActions, State, netStatus=true, lang){
 		    lang.Common.NoInternetAlert
 		  );
 		}
-
 	}
+	
 }
 
 async function  getNetworkStatus(){

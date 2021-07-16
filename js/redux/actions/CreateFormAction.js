@@ -161,7 +161,7 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 			// console.log(value, formItem, formFormat[pageIndex].content);
 			// 進行該欄位的新值舊值更換
 			formItem = await FormUnit.updateFormValue( value, formItem, formFormat[pageIndex].content );
-			// console.log("formItem", formItem);
+			console.log("formItem", formItem);
 			formFormat[pageIndex].content[editIndex] = formItem;
 			formFormat[formFormat.length-1].content[allIndex] = formItem;
 
@@ -171,17 +171,12 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 										formItem, 
 										formFormat[pageIndex].content 
 									);
-			// console.log(columnactionValue);
-
 			// 欄位隱藏或顯示控制
 			// 判斷該值是否填寫表單中顯示
-			// console.log(columnactionValue, formFormat[pageIndex].content);
 			formFormat[pageIndex].content = FormUnit.checkFormFieldShow(
 												columnactionValue.columnList, 
 												formFormat[pageIndex].content
 											);
-			// console.log('formFormat[pageIndex].content', formFormat[pageIndex].content);
-
 			// 判斷該值是否全部表單中顯示
 			formFormat[formFormat.length-1].content = FormUnit.checkFormFieldShow(
 														columnactionValue.columnList, 

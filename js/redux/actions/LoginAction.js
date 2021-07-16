@@ -310,11 +310,11 @@ async function checkLoginByEmpid(user, lang){
 
 export function loginByToken(user) {
 	return dispatch => {
+
 		//開始顯示載入資料畫面
 		dispatch(login_doing());
 		UpdateDataUtil.getMBUserInfoByToken(user).then((result) => {
 			this.initialApi(user,"token");
-
 	  		DeviceStorageUtil.get('update').then((data) => {
 	  		  data = data ? JSON.parse(data) : data;	
 	  	      if( data=='Y'){
@@ -332,6 +332,7 @@ export function loginByToken(user) {
 
 export function loginByImei(biosInfo,langStatus) {
 	return dispatch => {
+		console.log("loginByImei");
 		//開始顯示載入資料畫面
 		dispatch(login_doing());
 		UpdateDataUtil.getMBUserInfoByImei(biosInfo,langStatus).then((user) => {
@@ -355,8 +356,9 @@ export function loginByImei(biosInfo,langStatus) {
 }
 
 /*****APP登入後進行的一連串配置*****/
-export function initialApi(user,way=false){
+export function initialApi( user, way=false ){
 	return (dispatch, getState) => {
+
 		LoggerUtil.uploadLocalDBErrorLog(user); 	// 將資料庫的log上傳至server
 
 		//運行時間最久，最先執行
@@ -400,14 +402,15 @@ export function initialApi(user,way=false){
 				enable:true
 			});
 			
+	  		
 			NavigationService.navigate('HomeTabNavigator', {screen: 'Home'});
 			DeviceStorageUtil.set("lastUpdateTime", new Date().getTime()); // localstorage記錄此次版本更新的時間
 
 			user = await getUserInfoWithImage(user); 	//處理使用者圖片的後續處理
 			dispatch(setUserInfo(user));				//將資料存放在UserInfoReducer的state裡
+			
 	  	}).catch((e)=>{
-	  		console.log("e", e);
-
+	  		console.log("eeeeeeees", e);
 	  		switch(way) {
 	  		  case "token":
 	  		    dispatch(logout('code:'+e, true));
@@ -426,8 +429,9 @@ export function initialApi(user,way=false){
 	  		    dispatch(logout());
 	  		}
 	  		LoggerUtil.addErrorLog("LoginAction initialApi", "APP Action", "ERROR", e);
+	  		
 	  	})	
-
+		
   		//後期	            
 		UpdateDataUtil.updateVisitLogToServer(user);			//update功能訪問數量回Server	  	
   		UpdateDataUtil.getSurveySOPSwitch(user).then((data)=>{ 	//是否顯示防疫專區SOP的按鈕

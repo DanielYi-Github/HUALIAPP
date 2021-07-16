@@ -376,14 +376,16 @@ class Router extends React.Component {
 
   onChangeAppState = async nextAppState => {
     this.setState({ initialActiveCount: this.state.initialActiveCount+1 });
+    // console.log("this.state.initialActiveCount", this.state.initialActiveCount);
     // 熱起動資料重新刷新的條件，有網路、冷啟動不算、畫面在APP當中、user資料有值
     if ( 
       this.props.state.Network.networkStatus && 
-      this.state.initialActiveCount > 2 && 
+      this.state.initialActiveCount > 3 && 
       !showSecurityScreenFromAppState(nextAppState) 
     ) {
       let user = await DeviceStorageUtil.get('User');
       if (user !== "") {
+        // console.log("this.props.actions.appHotInit");
         this.props.actions.appHotInit(this.props.actions);
       }
     }
