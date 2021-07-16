@@ -7,6 +7,7 @@ import ActionSheet  from 'react-native-actionsheet';
 import SearchInput, { createFilter } from 'react-native-search-filter'; 
 const KEYS_TO_FILTERS = ['EMPID', 'DEPNAME', 'NAME', 'MAIL', 'SKYPE', 'CELLPHONE','TELPHONE','JOBTITLE'];
 import DateFormat             from  'dateformat';
+import * as RNLocalize from "react-native-localize";
 
 import * as NavigationService from '../../../utils/NavigationService';
 import HeaderForGeneral       from '../../../components/HeaderForGeneral';
@@ -150,6 +151,9 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
     startdate = isChangeTime ? startdate.getTime()-28800000: startdate.getTime();
     enddate   = isChangeTime ? enddate.getTime()-28800000: enddate.getTime();
 
+    let nowTimeZone = RNLocalize.getTimeZone();
+    let timezone = nowTimeZone.split("/")[1];
+
     if (this.props.state.Meeting.isRefreshing) {
       component = (
         <Spinner />
@@ -165,7 +169,7 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
                   {this.props.lang.MeetingPage.noSuggestMeetingTime} 
                 </Text>
                     <Text style={{color:"#757575", fontWeight: 'bold'}}>
-                      {`${DateFormat( startdate, "m/dd HH:MM")} - ${DateFormat( enddate, "mm/dd HH:MM")}`}
+                      {`${DateFormat( startdate, "m/dd HH:MM")} - ${DateFormat( enddate, "mm/dd HH:MM")} ( ${timezone} ${this.props.lang.MeetingPage.meetingTimezone})`}
                     </Text>
                 <Body style={{width: '100%', flexDirection: 'row', alignContent: 'space-between', marginTop: 3, marginBottom: 3}} >
                   <Text style={{color:"#757575", fontWeight: 'bold'}}>

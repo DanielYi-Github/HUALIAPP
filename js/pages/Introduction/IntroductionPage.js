@@ -229,6 +229,7 @@ class IntroductionPage extends React.Component {
 
   // 服務項目
   renderServiceItems = (key) => {
+    let initialPage = this.props.state.Language.lang.InitialPage;
     return(
       <View key={key}>
         <Title style={{paddingTop:30, alignSelf: 'center'}}>{this.props.state.Language.lang.InitialPage.ServiceItems}</Title>
@@ -240,58 +241,11 @@ class IntroductionPage extends React.Component {
               style={{height:"100%", width:"100%"}}
             />
           </CardItem>
-          <CardItem>
-            <Body style={{flexDirection:"column"}}>
-              <Body style={{flexDirection:"row"}}>
-                <Body>
-                    <Button 
-                        rounded
-                        light
-                        style = {
-                          {
-                            alignSelf: 'center',
-                            height: 55,
-                            width: 55,
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                          }
-                        }
-                      >
-                      <Icon name={"pricetag"}/>
-                    </Button>
-                    <Text style={{paddingTop:5}}>{this.props.state.Language.lang.InitialPage.MajorCmmodities}</Text>
-                </Body>
-                <Body>
-                  <Button 
-                    rounded
-                    light
-                    style = {
-                        {
-                          alignSelf: 'center',
-                          height: 55,
-                          width: 55,
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }
-                      } >
-                    <Icon name={"cellular"}/>
-                  </Button>
-                  <Text style={{paddingTop:5}}>{this.props.state.Language.lang.InitialPage.ConsecutiveGrowth}</Text>
-                </Body>
-              </Body>
-              <Body style={{flexDirection:"row", paddingTop:15}}>
-                <Body>
-                  <Text>
-                  {this.props.state.Language.lang.InitialPage.ConsecutiveGrowthContet1}
-                  </Text>
-                </Body>
-                <Body>
-                  <Text>
-                  {this.props.state.Language.lang.InitialPage.ConsecutiveGrowthContet2}
-                  </Text>
-                </Body>
-              </Body>
-            </Body>
+          <CardItem style={{flexDirection: 'column'}}>
+            { this.showGroupServiceItem("people-outline", initialPage.MajorCmmodities, initialPage.ConsecutiveGrowthContet1, "first") }
+            { this.showGroupServiceItem("desktop-outline", initialPage.DesignSuperiority, initialPage.ConsecutiveGrowthContet2) }
+            { this.showGroupServiceItem("thumbs-up", initialPage.QualitySuperiority, initialPage.ConsecutiveGrowthContet3) }
+            { this.showGroupServiceItem("rocket-outline", initialPage.SpeedSuperiority, initialPage.ConsecutiveGrowthContet4, "last") }
           </CardItem>
         </Card>
       </View>
@@ -395,6 +349,32 @@ class IntroductionPage extends React.Component {
         </Card>
         </Content>
       </ModalWrapper>
+    );
+  }
+
+  showGroupServiceItem = (iconName, title, content, position) => {
+    let marginTop = position == "first" ? 0 : 15; 
+    let marginBottom = position == "last" ? 30 : 15;
+    return(
+      <Body style={{flexDirection: 'row', marginTop: marginTop, marginBottom: marginBottom}} >
+        <Body style={{flex:4}}>
+            <Button rounded light
+                style = {{
+                    alignSelf: 'center',
+                    height: 55,
+                    width: 55,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
+              >
+              <Icon name={iconName}/>
+            </Button>
+            <Text style={{paddingTop:5}}>{title}</Text>
+        </Body>
+        <Body style={{flex:6}}>
+          <Text>{content}</Text>
+        </Body>
+      </Body>
     );
   }
 }

@@ -298,12 +298,8 @@ class FormInputContentGrid extends Component {
 	}
 
 	confirmFormData = async (value) => {
-		// console.log(value);
 		if (this.state.editCheckItem) {
-			// console.log("this.state.editCheckItem", this.state.editCheckItem);
-			// console.log(value.defaultvalue, this.state.editCheckItemIndex);
 			value.defaultvalue[this.state.editCheckItemIndex] = this.deepClone(value.listComponent);
-			// console.log("value", value);
 		} else {
 			// 將自己的值新增到 this.state.data 的 defaultvalue 裡面
 			if (value.defaultvalue == null) {
@@ -323,12 +319,13 @@ class FormInputContentGrid extends Component {
 		value.listComponent = this.deepClone(this.props.data.listComponent);
 		// 送值
 		await this.props.onPress(this.deepClone(value), this.props.data);
-		this.modalWrapperClose();
+		this.modalWrapperClose(value.defaultvalue);
 	}
 	
-	modalWrapperClose = () => {
+	modalWrapperClose = (defaultvalue) => {
 		// this.state.data 變回原本的state
 		let value = this.state.data;
+		value.defaultvalue = this.deepClone(defaultvalue);
 		value.listComponent = this.deepClone(this.props.data.listComponent);
 		this.setState({
 			data: value,

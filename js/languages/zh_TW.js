@@ -66,11 +66,16 @@ export default {
 		IntroductionContent1     :'中山華利實業集團股份有限公司從事運動鞋履的開發設計、生產與銷售，是全球領先的運動鞋專業製造商，主要為Nike、Converse、Vans、Puma、UGG、Columbia、Under Armour、HOKA ONE ONE等全球知名運動品牌提供開發設計與製造服務。公司管理總部及開發設計中心位於廣東中山，生產製造工廠位於越南、多明尼加及緬甸等地，貿易中心位於香港、中山和臺灣。公司員工超過10萬人，年產鞋履超過1.8億雙，是世界多家知名運動鞋履品牌的主要製造商和策略合作夥伴。',
 		IntroductionContent2     :'集團擁有3000多人的開發設計及技術團隊，創始人超過50年的鞋業經歷，使得集團積累和沉澱了深厚的鞋履開發和製造功底，在鞋履開發和工藝流程方面擁有行業領先的技術水準。務實創新的管理團隊和經驗豐富、訓練有素、熱誠敬業的員工造就了集團長期穩定的經營，集團憑藉良好的產品品質、突出的開發設計能力、快速回應能力和優質的服務成為客戶的策略性聯盟和夥伴。',
 		IntroductionContent3     :'展望未來，我們仍將繼續秉持“以人為本、快樂制鞋、科技管理、創造利潤、代代相傳、永續經營”的理念，在強化制鞋核心技術、改善生產製造過程、提供優勢服務的同時，更肩負保障員工利益，有效利用地球資源的責任，以增進企業與員工、企業與環境的平衡和諧，打造最值得信賴的鞋類生產製造典範，成為全球鞋履製造業的領航者。',
-		ServiceItems             :'服務項目',
-		MajorCmmodities          :'主要商品',
-		ConsecutiveGrowth        :'持續成長',
-		ConsecutiveGrowthContet1 :'主要負責世界前十大知名品牌鞋類，服務過的客戶產品暢銷全世界。',
-		ConsecutiveGrowthContet2 :'主力生產品牌加硫鞋及冷粘鞋，以卓越的製造品質，在經濟不景氣的情況下仍能持續擴廠、穩定接單。',
+		ServiceItems             :'服務優勢',
+		MajorCmmodities          :'客戶資源優勢',
+		ConsecutiveGrowthContet1 :'公司積累了寶貴的全球知名運動鞋履客戶資源，公司是Nike、Converse、Vans、Puma、UGG、Columbia、Under Armour、HOKA ONE ONE的重要要製造商和策略合作夥伴。公司跟隨客戶快速成長。',
+		DesignSuperiority        :'開發設計優勢',
+		ConsecutiveGrowthContet2 :'公司擁有經驗豐富的設計開發團隊，積累和沈淀了深厚的鞋履開發和製造經驗。公司熟悉客戶設計理念，能夠利用自身積累的專業經驗和技術優勢，參與客戶的產品開發過程，對品牌的產品設計形成重要補充。',
+		QualitySuperiority       :'品質優勢',
+		ConsecutiveGrowthContet3 :'公司的產品質量得到了客戶的高度認可，獲得多項榮譽，2018與2019年連續兩年獲得Nike美國總部頒發的品質大獎。',
+		SpeedSuperiority         :'快速交付能力優勢',
+		ConsecutiveGrowthContet4 :'公司憑藉突出的開發設計優勢、規模化採購和製造優勢及精細化管理能力，形成了“快速設計製樣、快速爬坡量產、快速產品交付”等運營能力。',
+
 		ManagementIdea           :'經營理念',
 		Vision                   :'VISION 願景',
 		VisionContent1           :'以不斷的創新，積極的熱情及卓越的客戶服務，成為世界級的鞋業製造商。',
@@ -756,7 +761,7 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		ensorDescription      :'Touch sensor', 		// Android
 		sensorErrorDescription:'失敗', 			// Android
 		cancelText            :'取消', 				// Android
-		fallbackLabel         :'Show Passcode',
+		fallbackLabel         :'顯示密碼',
 		promptMessage         :"驗證已繼續",
 		faceIdInInvalid       :"面部辨識失敗",
 		vertifyToKeepGoing    :"驗證身分已繼續",

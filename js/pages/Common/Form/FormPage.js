@@ -708,18 +708,14 @@ class FormPage extends React.Component {
       )
       */
     } else {
-      // alert(this.props.Language.RejectText);  //拒絕 需填寫簽核意見
       Alert.alert(
-        this.props.Language.Sign,  //表單簽核
+        this.props.Language.Sign,
         this.props.Language.RejectText,
         [
-          null,
-          {
-            text: "OK", 
-            onPress: console.log("OK")
-          },
+          { text: "OK", onPress: () => console.log("OK Pressed") }
         ],
-      )
+        { cancelable: false }
+      );
     }   
   }
 
