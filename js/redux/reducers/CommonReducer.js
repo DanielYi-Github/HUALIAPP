@@ -17,21 +17,22 @@ const initialState = {
     defaultCO    : false, //預設辦公室
     companyList  : [],    //公司清單
   },
-  isDirectionNavigate  :false,
-  directionType        :null,
-  directionValue       :null,
-  keywordSearchResult  :[],
-  waterViewConfig      :[],
-  bannerImages         :[],     //首頁banner的圖片資料
-  turnOnAppleVerify    :false,  //蘋果驗證機制
-  IntroductionDrawerPages:[],   //公開畫面參數
-  IntroductionPageContent:[],   //公開畫面-集團介紹顯示內容參數
-  enableAuthentication :false,
-  isAuthenticateApprove:false,
-  navigatePage         :null,
-  enableScreenShot     :false,
+  isDirectionNavigate          :false,
+  directionType                :null,
+  directionValue               :null,
+  keywordSearchResult          :[],
+  waterViewConfig              :[],
+  bannerImages                 :[],     //首頁banner的圖片資料
+  turnOnAppleVerify            :false,  //蘋果驗證機制
+  IntroductionDrawerPages      :[],   //公開畫面參數
+  IntroductionPageContent      :[],   //公開畫面-集團介紹顯示內容參數
+  enableAuthentication         :false,
+  isAuthenticateApprove        :false,
+  navigatePage                 :null,
+  enableScreenShot             :false,
   isShowAndroidChangeAPPMessage:false,
-  enable_APP_SurveySOP:false,
+  enable_APP_SurveySOP         :false,
+  enable_APP_MeetingSOP        :false
 };
 
 export default function common(state = initialState, action = {}) {
@@ -170,6 +171,11 @@ export default function common(state = initialState, action = {}) {
       return {
         ...state,
         enable_APP_SurveySOP:action.enable
+      }
+    case types.ENABLE_APP_MeetingSOP:
+      return {
+        ...state,
+        enable_APP_MeetingSOP:action.enable
       }
     default:
       return state;

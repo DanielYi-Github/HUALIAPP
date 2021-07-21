@@ -61,6 +61,7 @@ export function checkBySingle(userid) {
 	return async (dispatch, getState) => {
 		let lang = getState().Language.langStatus;		//給定手機語系
         await UpdateDataUtil.getSingleUser(userid,lang).then( async (data) => {
+        	console.log("getSingleUser", data);
 		  	dispatch(setAccountType(data.type));
 		  	if (data.type=="EMPID") this.checkEmpidIsFirstLogin(userid, data);
 		}).catch((e)=>{
@@ -358,7 +359,7 @@ export function loginByImei(biosInfo,langStatus) {
 /*****APP登入後進行的一連串配置*****/
 export function initialApi( user, way=false ){
 	return (dispatch, getState) => {
-
+		// console.log("initialApiinitialApiinitialApiinitialApiinitialApi",user);
 		LoggerUtil.uploadLocalDBErrorLog(user); 	// 將資料庫的log上傳至server
 
 		//運行時間最久，最先執行
@@ -385,8 +386,8 @@ export function initialApi( user, way=false ){
 			UpdateDataUtil.updateEvent(user),		//事件表
 			UpdateDataUtil.updateBanner(user),		//Banner
 			UpdateDataUtil.updateModule(user),		//module
-			UpdateDataUtil.setLoginInfo(user),
   			UpdateDataUtil.updateRead(user),		//訊息讀取表       
+			UpdateDataUtil.setLoginInfo(user),
 			UpdateDataUtil.updateDailyOralEnglish(user) //每日英语
 		];
 
@@ -401,7 +402,6 @@ export function initialApi( user, way=false ){
 				type: types.ENABLE_APP_INITIAL,
 				enable:true
 			});
-			
 	  		
 			NavigationService.navigate('HomeTabNavigator', {screen: 'Home'});
 			DeviceStorageUtil.set("lastUpdateTime", new Date().getTime()); // localstorage記錄此次版本更新的時間
@@ -411,6 +411,7 @@ export function initialApi( user, way=false ){
 			
 	  	}).catch((e)=>{
 	  		console.log("eeeeeeees", e);
+	  		
 	  		switch(way) {
 	  		  case "token":
 	  		    dispatch(logout('code:'+e, true));
@@ -430,18 +431,29 @@ export function initialApi( user, way=false ){
 	  		}
 	  		LoggerUtil.addErrorLog("LoginAction initialApi", "APP Action", "ERROR", e);
 	  		
+	  		
 	  	})	
 		
   		//後期	            
 		UpdateDataUtil.updateVisitLogToServer(user);			//update功能訪問數量回Server	  	
   		UpdateDataUtil.getSurveySOPSwitch(user).then((data)=>{ 	//是否顯示防疫專區SOP的按鈕
-  			dispatch({									//恢復運行初始化程序
+  			dispatch({											
   				type: CommonTypes.ENABLE_APP_SurveySOP,
   				enable:data
   			});
   		}).catch(e=>{
-  			console.log(e);
+  			console.log("getSurveySOPSwitch Error", e);
   		})
+  		/*
+  		UpdateDataUtil.getMeetingSOPSwitch(user).then((data)=>{ //是否顯示會議預約SOP的按鈕
+  			dispatch({												
+  				type: CommonTypes.ENABLE_APP_MeetingSOP,
+  				enable:data
+  			});
+  		}).catch(e=>{
+  			console.log("getMeetingSOPSwitch Error", e);
+  		})
+  		*/
 	}
 }
 
@@ -612,7 +624,7 @@ function setUserInfo(data) {
 }
 
 // 新增熱起動的資料撈取
-export function hotInitialApi( user, way=false ){
+export function hotInitialApi( user, way=false, initActions){
 	return (dispatch, getState) => {
 		LoggerUtil.uploadLocalDBErrorLog(user); 	// 將資料庫的log上傳至server
 
@@ -626,13 +638,14 @@ export function hotInitialApi( user, way=false ){
 
 		// 輪播圖、公告資訊、消息 進行重新獲取
 		let arr = [
-  			// UpdateDataUtil.updateMSG(user), 	//手機消息-執行最久
+  			UpdateDataUtil.updateMSG(user), 	//手機消息-執行最久
   			UpdateDataUtil.updateNotice(user),	//公告資訊				
 			UpdateDataUtil.updateBanner(user),	//Banner
 			UpdateDataUtil.setLoginInfo(user),
   		];
 
 	  	Promise.all(arr).then( async (data) => {
+    		initActions.loadMessageIntoState();
 	  		loadBannerImagesIntoState(dispatch, getState);//撈取HomePage Banners資料
 	  	}).catch((e)=>{
 	  		switch(way) {

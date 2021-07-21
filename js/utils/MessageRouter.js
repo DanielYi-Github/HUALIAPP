@@ -16,6 +16,7 @@ let MessageRouter = {
 	async addListeners(props, actions){
 		// 接收推送通知
 		JPush.addNotificationListener( async (result) => {
+			// console.log("addNotificationListener", result);
 			// 判斷是不是冷啟動
       		let isColdActive = await DeviceStorageUtil.get('isColdActive');
       		isColdActive = (isColdActive === 'true');

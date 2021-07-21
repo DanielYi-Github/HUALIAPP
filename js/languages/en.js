@@ -258,7 +258,8 @@ export default {
 		selectThemeMode       :"Select Themes",
 		changeThemeNoticeText :"Change the theme will reboot the app. Would you keep going?",
 		operationManual       :"Operation Manual",
-		operationManualCovid19:"Health Survey Operation Manual"
+		operationManualCovid19:"Health Survey Operation Manual",
+		operationManualMeeting:"Arranging Meetings Operation Manual"
 	},
 	MineDetailPage: {
 		Title                            :'My Information',

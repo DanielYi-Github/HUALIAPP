@@ -46,7 +46,7 @@ export function getFormFormat(formID){
 		FormUnit.language = getState().Language.lang.FormUnit;
 		
 		UpdateDataUtil.getBPMCreateForm(user, content).then( async (data)=>{
-			console.log("getBPMCreateForm", data);
+			// console.log("getBPMCreateForm", data);
 			let stepsTitle       = [];
 			let apList           = [];
 			let apListIndex      = -1;
@@ -161,7 +161,6 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 			// console.log(value, formItem, formFormat[pageIndex].content);
 			// 進行該欄位的新值舊值更換
 			formItem = await FormUnit.updateFormValue( value, formItem, formFormat[pageIndex].content );
-			console.log("formItem", formItem);
 			formFormat[pageIndex].content[editIndex] = formItem;
 			formFormat[formFormat.length-1].content[allIndex] = formItem;
 

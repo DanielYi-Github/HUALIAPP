@@ -258,7 +258,8 @@ export default {
 		selectThemeMode: "Chọn chế độ chủ đề",
 		changeThemeNoticeText: "Chuyển đổi chế độ chủ đề sẽ khởi động lại APP, vui lòng xác nhận xem có tiếp tục không?",
 		operationManual: "Hướng dẫn vận hành",
-		operationManualCovid19:"Khảo sát sức khỏe Hướng dẫn vận hành"
+		operationManualCovid19:"Khảo sát sức khỏe Hướng dẫn vận hành",
+		operationManualMeeting:"Sắp xếp các cuộc họp Sổ tay hướng dẫn vận hành"
 	},
 	MineDetailPage: {
 		Title                            : 'Thông tin của tôi ',

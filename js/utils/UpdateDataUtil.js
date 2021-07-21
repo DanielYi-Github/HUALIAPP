@@ -311,7 +311,7 @@ export async function updateMSG(user) {
 		};
 		let url = "data/getMsg";
 		
-		NetUtil.getRequestContent(params, url).then( async (data)=>{
+		NetUtil.getRequestContent(params, url).then( async (data)=>{			
 			if (data.code != 200) reject(data);		// code如果錯誤則直接回報錯誤
 			
 			// 共用參數			
@@ -399,7 +399,7 @@ export async function updateNotice(user) {
 	let lData = await SQLite.selectData(lSQL, []);
 	let ltxdat = lData.item(0).TXDAT; //更新時間
 	let promise = new Promise((resolve, reject) => {
-
+	// console.log("ltxdat", ltxdat);
 		let params = {
 			"token": Common.encrypt(user.token),
 			"userId": Common.encrypt(user.loginID),
@@ -412,6 +412,7 @@ export async function updateNotice(user) {
 			let start = new Date().getTime();
 
 			NetUtil.getRequestContent(params, url).then((data) => {
+				// console.log(url, data);
 				if (data.code == 200) {
 					data = data.content;
 
@@ -550,6 +551,7 @@ export async function updateContact(user) {
 				companyList: [],
 				maxDat     : ltxdat
 			}
+			console.log("content", content);
 
 			let params = {
 				"token"  :Common.encrypt(user.token),
@@ -560,8 +562,8 @@ export async function updateContact(user) {
 			let url = "data/getContactData";
 
 			NetUtil.getRequestContent(params, url).then((data)=>{
-				// console.log(data);
 				if (data.code != 200) {
+					console.log();
 					reject(data); //已在其他裝置登入
 					return promise;
 				}
@@ -776,10 +778,10 @@ export async function updateMasterData(user) {
 			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(ltxdat ? ltxdat : '')
 		}
-
 		if (ltxdat === null) {
 			let start = new Date().getTime();
 			NetUtil.getRequestContent(params, url).then((data) => {
+
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
@@ -3228,6 +3230,7 @@ export async function updateModule(user){
 * @return void
 */
 export async function setLoginInfo(user) {
+	console.log("setLoginInfo", user);
 	let url = 'data/setLoginInfo';
 	let content = {
 		"userid"         : user.loginID,
@@ -3245,6 +3248,8 @@ export async function setLoginInfo(user) {
 		"userId": Common.encrypt(user.loginID),
 		"content": Common.encrypt(JSON.stringify(content))
 	};
+
+	console.log(params);
 
 	let promise = new Promise((resolve, reject) => {
 		NetUtil.getRequestContent(params, url).then((data) => {
@@ -4009,6 +4014,28 @@ export async function getSurveySOPSwitch(user){
 		let url = "public/getSwitch";
 		let params = {
 			"content": "EpiHelp"
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+ 			resolve(data);
+		})
+	});
+	return promise;
+}
+
+/**
+* 取得是否顯示會議預約SOP的按鈕
+* @param user資料
+*/
+export async function getMeetingSOPSwitch(user){
+	let promise = new Promise((resolve, reject) => {
+		let url = "public/getSwitch";
+		let params = {
+			"content": "MeetingSop"
 		};
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {

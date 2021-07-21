@@ -628,7 +628,7 @@ let FormUnit = {
     for(let actionValue of columnactionValue){
       for(let content of formFormat){        // 判斷該值是否填寫表單中顯示
         if (actionValue.id == content.component.id) {
-          content.defaultvalue = actionValue.value == "" ? content.defaultvalue : this.deepClone(actionValue.value);
+          content.defaultvalue = actionValue.value === "" ? content.defaultvalue : this.deepClone(actionValue.value);
           content.paramList    = actionValue.paramList;
           content.show         = actionValue.visible;
           content.required     = (actionValue.required) ? "Y" : "F";

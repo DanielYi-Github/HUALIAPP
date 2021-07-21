@@ -8,6 +8,9 @@ import * as HomeAction        from './redux/actions/HomeAction';
 import * as ThemeAction       from './redux/actions/ThemeAction';
 import * as CommonAction      from './redux/actions/CommonAction';
 import * as LoginAction       from './redux/actions/LoginAction';
+// import * as MeetingAction       from './redux/actions/MeetingAction';
+import * as MessageAction   from './redux/actions/MessageAction';
+
 
 import { SafeAreaProvider, SafeAreaView }     from 'react-native-safe-area-context';
 import { NavigationContainer, useIsFocused }  from '@react-navigation/native';
@@ -435,7 +438,8 @@ const appRouter = connect(
       ...HomeAction,
       ...ThemeAction,
       ...CommonAction,
-      ...LoginAction
+      ...LoginAction,
+      ...MessageAction
     }, dispatch)
   })
 )(Router);

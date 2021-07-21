@@ -258,7 +258,8 @@ export default {
 		selectThemeMode      :"选择皮肤",
 		changeThemeNoticeText:"皮肤切换将会重新启动APP，请问确定是否继续?",
 		operationManual:"操作说明",
-		operationManualCovid19:"防疫专区说明"
+		operationManualCovid19:"防疫专区说明",
+		operationManualMeeting:"会议预约说明"
 	},
 	MineDetailPage: {
 		Title                            :'我的信息',
