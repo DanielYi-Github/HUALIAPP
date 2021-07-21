@@ -430,8 +430,6 @@ export function initialApi( user, way=false ){
 	  		    dispatch(logout());
 	  		}
 	  		LoggerUtil.addErrorLog("LoginAction initialApi", "APP Action", "ERROR", e);
-	  		
-	  		
 	  	})	
 		
   		//後期	            
@@ -444,7 +442,7 @@ export function initialApi( user, way=false ){
   		}).catch(e=>{
   			console.log("getSurveySOPSwitch Error", e);
   		})
-  		/*
+  		
   		UpdateDataUtil.getMeetingSOPSwitch(user).then((data)=>{ //是否顯示會議預約SOP的按鈕
   			dispatch({												
   				type: CommonTypes.ENABLE_APP_MeetingSOP,
@@ -453,7 +451,7 @@ export function initialApi( user, way=false ){
   		}).catch(e=>{
   			console.log("getMeetingSOPSwitch Error", e);
   		})
-  		*/
+  		
 	}
 }
 
