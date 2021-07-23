@@ -551,7 +551,6 @@ export async function updateContact(user) {
 				companyList: [],
 				maxDat     : ltxdat
 			}
-			console.log("content", content);
 
 			let params = {
 				"token"  :Common.encrypt(user.token),
@@ -563,7 +562,6 @@ export async function updateContact(user) {
 
 			NetUtil.getRequestContent(params, url).then((data)=>{
 				if (data.code != 200) {
-					console.log();
 					reject(data); //已在其他裝置登入
 					return promise;
 				}
@@ -1177,7 +1175,6 @@ export async function updateBanner(user){
 
 		if (ltxdat === null) {
 			NetUtil.getRequestContent(params, url).then((data) => {
-				// console.log(data);
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
@@ -1900,6 +1897,7 @@ export async function getBPMForm(user,content){
 			"userId" : Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
+		// console.log(params);
 
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {
@@ -3230,7 +3228,7 @@ export async function updateModule(user){
 * @return void
 */
 export async function setLoginInfo(user) {
-	console.log("setLoginInfo", user);
+	// console.log("setLoginInfo", user);
 	let url = 'data/setLoginInfo';
 	let content = {
 		"userid"         : user.loginID,
@@ -3249,7 +3247,7 @@ export async function setLoginInfo(user) {
 		"content": Common.encrypt(JSON.stringify(content))
 	};
 
-	console.log(params);
+	// console.log(params);
 
 	let promise = new Promise((resolve, reject) => {
 		NetUtil.getRequestContent(params, url).then((data) => {

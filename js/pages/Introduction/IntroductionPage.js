@@ -28,10 +28,10 @@ class IntroductionPage extends React.Component {
         { key: 'en', text: 'English'}, 
         { key: 'vi', text: 'Tiếng Việt'}, 
       ],
-      loginButton: false,
-      bioMark: true,
-      isAlreadyShowAdvertisement:false,
-      isShowAdvertisementAgain:false
+      loginButton               : false,
+      bioMark                   : true,
+      isAlreadyShowAdvertisement: false,
+      isShowAdvertisementAgain  : false
     }
   } 
 
@@ -41,6 +41,7 @@ class IntroductionPage extends React.Component {
     if(this.props.state.Login.logoutInfo !== null){
       ToastUnit.show('error', this.props.state.Login.logoutInfo);
       this.props.actions.reset_mix();
+      this.loginWay();
     }
   }
 
@@ -110,9 +111,7 @@ class IntroductionPage extends React.Component {
   }
 
   loginWay = async() => {
-    // console.log(this.props.state.Biometric);
     //決定是否直接跳轉生物識別畫面
-    // if( this.props.state.BiosUserInfo.BiosUser.isBios && this.props.state.BiosUserInfo.supportBios ){
     if(this.props.state.Biometric.biosUser.biometricEnable){
       NavigationService.navigate('AuthStack', {screen:'LoginByBios'});
     }else{

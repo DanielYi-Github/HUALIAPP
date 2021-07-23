@@ -34,6 +34,8 @@ let NetUtil = {
 			body: JSON.stringify(params)
 		};
 
+		// console.log(url, fetchOptions);
+
 		/* 之後再量想想如何處理請求過久問題
 		let isTimeOut = false; 
 		let timeout = setTimeout(function() {
@@ -107,7 +109,8 @@ let NetUtil = {
 					}
 				} else {
 					response.text().then( err => {
-						LoggerUtil.addErrorLog(url, "API request in APP", "FATAL", err);
+						console.log("err", err);
+						// LoggerUtil.addErrorLog(url, "API request in APP", "FATAL", err);
 					});
 					return { message:"Response Error!", code:-2 }; 
 				}

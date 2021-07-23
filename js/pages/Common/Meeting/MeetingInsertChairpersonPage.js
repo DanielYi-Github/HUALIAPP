@@ -9,6 +9,7 @@ import * as RNLocalize from "react-native-localize";
 
 import * as UpdateDataUtil    from '../../../utils/UpdateDataUtil';
 import * as NavigationService from '../../../utils/NavigationService';
+import ToastUnit              from '../../../utils/ToastUnit';
 import HeaderForSearch        from '../../../components/HeaderForSearch';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 
@@ -77,9 +78,8 @@ class MeetingInsertChairpersonPage extends React.Component {
                 tKeyword       :"",
                 searchedData   :[],
                 isEnd:false
-              });
-            }
-          }
+            });
+          }}
           searchButtomOnPress={()=>{
             Keyboard.dismiss();
             // 搜尋的值不能為空白
@@ -159,6 +159,17 @@ class MeetingInsertChairpersonPage extends React.Component {
           })
         }).catch((err) => {
           console.log(err);
+          ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
+          this.setState({ 
+            isShowSearch   :false,
+            isSearch       :false,
+            isChinesKeyword:false, 
+            keyword        :"",    
+            sKeyword       :"",    
+            tKeyword       :"",
+            searchedData   :[],
+            isEnd:false
+          });
         })
       } else {
         let actionObject = { condition:"" }; //查詢使用

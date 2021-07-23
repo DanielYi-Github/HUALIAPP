@@ -812,6 +812,7 @@ export default {
 		meetingdescription         :"Description",
 		chairperson                :"Chairperson",
 		chairpersonChoose          :"Select Chairperson",
+		searchError 			   :"Network connect error! Please try it later.",
 		attendees                  :"Attendees",
 		attendeesInvite            :"Invite Attendees",
 		meetingMode                :"Meeting Room",

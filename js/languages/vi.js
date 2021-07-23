@@ -812,6 +812,7 @@ export default {
 		meetingdescription         :"Sự miêu tả",
 		chairperson                :"Chủ tọa hội nghị",
 		chairpersonChoose          :"Chọn người chủ trì hội nghị",
+		searchError 			   :"Kết nối mạng không bình thường, vui lòng thử lại sau!",
 		attendees                  :"Những người tham gia",
 		attendeesInvite            :"Mời người tham gia",
 		meetingMode                :"Phương thức tham gia",

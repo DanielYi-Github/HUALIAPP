@@ -247,6 +247,18 @@ class MeetingSearchWithTagsPage extends React.Component {
            isEnd:isEnd
           })
         }).catch((err) => {
+          ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
+          this.setState({ 
+            isShowSearch   :false,
+            isSearch       :false,
+            isChinesKeyword:false, 
+            keyword        :"",    
+            sKeyword       :"",    
+            tKeyword       :"",
+            searchedData   :[],
+            searchedCount  :0,
+            isEnd          :false
+          });
           console.log(err);
         })
       } else {

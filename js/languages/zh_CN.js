@@ -816,6 +816,7 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		meetingdescription         :"说明",
 		chairperson                :"会议主席",
 		chairpersonChoose          :"选择会议主席",
+		searchError 			   :"网络连线异常，请稍后再试！",
 		attendees                  :"与会人员",
 		attendeesInvite            :"邀请与会人员",
 		meetingMode                :"与会方式",

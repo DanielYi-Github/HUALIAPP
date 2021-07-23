@@ -61,7 +61,6 @@ export function checkBySingle(userid) {
 	return async (dispatch, getState) => {
 		let lang = getState().Language.langStatus;		//給定手機語系
         await UpdateDataUtil.getSingleUser(userid,lang).then( async (data) => {
-        	console.log("getSingleUser", data);
 		  	dispatch(setAccountType(data.type));
 		  	if (data.type=="EMPID") this.checkEmpidIsFirstLogin(userid, data);
 		}).catch((e)=>{
@@ -359,10 +358,10 @@ export function loginByImei(biosInfo,langStatus) {
 /*****APP登入後進行的一連串配置*****/
 export function initialApi( user, way=false ){
 	return (dispatch, getState) => {
-		// console.log("initialApiinitialApiinitialApiinitialApiinitialApi",user);
-		LoggerUtil.uploadLocalDBErrorLog(user); 	// 將資料庫的log上傳至server
 
 		//運行時間最久，最先執行
+		
+		LoggerUtil.uploadLocalDBErrorLog(user); 	// 將資料庫的log上傳至server
   		UpdateDataUtil.updateContact(user); //通訊錄	
   		UpdateDataUtil.updateMSG(user); 	//手機消息-執行最久
 
@@ -375,8 +374,10 @@ export function initialApi( user, way=false ){
   		}).catch(e=>{
   			console.log(e);
   		})
+  		
 
   		//首頁必須出現 統一執行
+  		
 		let arr = [
 			UpdateDataUtil.updateAPP(user),
   			UpdateDataUtil.updateNotice(user),		//公告資訊				
@@ -410,7 +411,6 @@ export function initialApi( user, way=false ){
 			dispatch(setUserInfo(user));				//將資料存放在UserInfoReducer的state裡
 			
 	  	}).catch((e)=>{
-	  		console.log("eeeeeeees", e);
 	  		
 	  		switch(way) {
 	  		  case "token":
@@ -430,7 +430,9 @@ export function initialApi( user, way=false ){
 	  		    dispatch(logout());
 	  		}
 	  		LoggerUtil.addErrorLog("LoginAction initialApi", "APP Action", "ERROR", e);
+	  		
 	  	})	
+		
 		
   		//後期	            
 		UpdateDataUtil.updateVisitLogToServer(user);			//update功能訪問數量回Server	  	
@@ -627,6 +629,10 @@ export function hotInitialApi( user, way=false, initActions){
 		LoggerUtil.uploadLocalDBErrorLog(user); 	// 將資料庫的log上傳至server
 
 		//取得首頁常見功能要顯示幾個
+		UpdateDataUtil.updateNotice(user);	//公告資訊				
+		UpdateDataUtil.updateBanner(user);	//Banner
+		UpdateDataUtil.setLoginInfo(user);
+		UpdateDataUtil.updateVisitLogToServer(user);	//update功能訪問數量回Server	  	
 		UpdateDataUtil.getHomeIconNum(user).then((data)=>{
 			dispatch({									
 				type: HomeTypes.SET_HONE_FUNCTION_NUMBER,
@@ -637,21 +643,22 @@ export function hotInitialApi( user, way=false, initActions){
 		// 輪播圖、公告資訊、消息 進行重新獲取
 		let arr = [
   			UpdateDataUtil.updateMSG(user), 	//手機消息-執行最久
-  			UpdateDataUtil.updateNotice(user),	//公告資訊				
-			UpdateDataUtil.updateBanner(user),	//Banner
-			UpdateDataUtil.setLoginInfo(user),
+			UpdateDataUtil.updateEvent(user)    //事件表
   		];
 
 	  	Promise.all(arr).then( async (data) => {
     		initActions.loadMessageIntoState();
 	  		loadBannerImagesIntoState(dispatch, getState);//撈取HomePage Banners資料
 	  	}).catch((e)=>{
+	  		// console.log("LoginAction hotInitialApi", e, way);
+	  		console.log("網路他媽的又異常", e, way);
+	  		/*
 	  		switch(way) {
 	  		  case "token":
 	  		    dispatch(logout('code:'+e, true));
 	  		    break;
 	  		  case "ad":
-	  		    dispatch(logout("API Error, Please try it later.", true)); //登入失敗，跳至登入頁
+	  		    dispatch(logout("登入期間過久，請重新登入", true)); //登入失敗，跳至登入頁
 	  		    break;
 	  		  case "empid":
 	  		    dispatch(logout('code:'+e, true));
@@ -661,14 +668,13 @@ export function hotInitialApi( user, way=false, initActions){
 	  		    dispatch(check_done());
 	  		    break;
 	  		  default:
-	  		    dispatch(logout());
+	  		    dispatch(logout("登入期間過久，請重新登入", true));
 	  		}
-	  		LoggerUtil.addErrorLog("LoginAction hotInitialApi", "APP Action", "ERROR", e);
-	  		console.log("LoginAction hotInitialApi", e);
+	  		*/
+	  		// LoggerUtil.addErrorLog("LoginAction hotInitialApi", "APP Action", "ERROR", e);
 	  	})	
 
   		//後期	            
-		UpdateDataUtil.updateVisitLogToServer(user);	//update功能訪問數量回Server	  	
   		UpdateDataUtil.updateRead(user);				//訊息讀取表       
 	}
 }
@@ -684,8 +690,6 @@ export function hotInitialUpgradAPP(){
 	}
 }
 /*****配置結束*****/
-
-
 
 function login_doing() {
 	return {
@@ -715,10 +719,12 @@ export function userLogout(){
 }
 
 // 主要處理token登入過程中，會發生的錯誤事件，且會強制跳至集團介紹畫面
-export function logout(message = null, loginPage = null) {
+export function logout(message = null, loginPage = false) {
 	return {
 		type: types.UNLOGIN,
-		message
+		message,
+		// userLogout:loginPage
+		// userLogout:false
 	};
 }
 

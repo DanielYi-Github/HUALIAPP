@@ -817,6 +817,7 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		meetingdescription         :"說明",
 		chairperson                :"會議主席",
 		chairpersonChoose          :"選擇會議主席",
+		searchError 			   :"網路連線異常，請稍後再試！",
 		attendees                  :"與會人員",
 		attendeesInvite            :"邀請與會人員",
 		meetingMode                :"與會方式",
