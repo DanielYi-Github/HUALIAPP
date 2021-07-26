@@ -23,7 +23,12 @@ export function initBroadcastData() {
                     left join THF_LANGUAGE c on b.LANGID = c.LANGID and c.LANGTYPE = '${lang}'
                     left join THF_LANGUAGE d on a.CLASS3 = d.LANGID and d.LANGTYPE = '${lang}'
                     left join THF_LANGUAGE e on a.LEN = e.LANGID and e.LANGTYPE = '${lang}'
-                    where a.CLASS1 = 'Broadcast' and a.STATUS = 'Y' `
+                    where a.CLASS1 = 'Broadcast' and a.STATUS = 'Y' and a.OID in 
+                    (
+                      select DATA_OID 
+                      from THF_PERMISSION 
+                      where DATA_TYPE='masterdata'
+                    )`
         SQLite.selectData(sql,[]).then(result => {
             let raw = result.raw()
             let data = []
