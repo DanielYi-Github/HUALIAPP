@@ -148,6 +148,34 @@ let UpgradeDBTableUtil = {
 					console.log(e);
 				});
 			}
+		});
+		//檢查該表單有無此欄位
+		SQLite.checkTableField("THF_MASTERDATA", "CLASS6").then((data)=>{
+			if (!data) {
+			  SQLite.dropTable("THF_MASTERDATA").then((result)=>{
+				if (result) {
+				  let createTable = `CREATE TABLE THF_MASTERDATA ( 
+									  OID char ( 32 ) NOT NULL, 
+									  CLASS1 varchar ( 255 ), 
+									  CLASS2 varchar ( 255 ), 
+									  CLASS3 varchar ( 255 ), 
+									  CLASS4 varchar ( 255 ), 
+									  CLASS5 varchar ( 255 ), 
+									  CLASS6 varchar ( 255 ), 
+									  LEN varchar ( 255 ), 
+									  CONTENT varchar ( 2000 ) NOT NULL, 
+									  SORT int NOT NULL, 
+									  STATUS char ( 1 ) NOT NULL DEFAULT 'Y', 
+									  CRTDAT numeric NOT NULL DEFAULT (datetime('now','+8 hour')), 
+									  TXDAT numeric DEFAULT (datetime('now','+8 hour')), 
+									  PRIMARY KEY(OID) 
+									)`;
+				   SQLite.createTable(createTable).then((e)=>{
+					  console.log(e);
+				   });
+				}
+			  });
+			}
 		  });
 	},
 }

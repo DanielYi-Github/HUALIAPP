@@ -42,10 +42,10 @@ function setLoading(loading) {
 export function initDailyOralEnglish() {
     return async (dispatch, getState) => {
         dispatch(setLoading(true))//加载中
-        SQLite.selectData("select count(1) as COUNT from THF_DAILY_ORAL_ENGLISH where date(PUSHDATE) <= date('now')", []).then(result => {
+        SQLite.selectData("select count(1) as COUNT from THF_DAILY_ORAL_ENGLISH where date(PUSHDATE) <= date('now') and STATUS = 'Y' ", []).then(result => {
             let count = result.raw()[0].COUNT
             dispatch(setTotalCount(count))
-            return SQLite.selectData("select * from THF_DAILY_ORAL_ENGLISH where date(PUSHDATE) <= date('now')  order by date(PUSHDATE) desc limit 0,10 ", [])
+            return SQLite.selectData("select * from THF_DAILY_ORAL_ENGLISH where date(PUSHDATE) <= date('now') and STATUS = 'Y' order by date(PUSHDATE) desc limit 0,10 ", [])
         }).then(result => {
             let data = [];
             let raw = result.raw()
@@ -71,7 +71,7 @@ export function loadMoreDailyOralEnglishData() {
             return
         }
         let count = num * size
-        SQLite.selectData("select * from THF_DAILY_ORAL_ENGLISH where date(PUSHDATE) <= date('now') order by date(PUSHDATE) desc limit " + count + "," + size, []).then(result => {
+        SQLite.selectData("select * from THF_DAILY_ORAL_ENGLISH where date(PUSHDATE) <= date('now') and STATUS = 'Y' order by date(PUSHDATE) desc limit " + count + "," + size, []).then(result => {
             let data = [];
             let raw = result.raw()
             for (let item of raw) {

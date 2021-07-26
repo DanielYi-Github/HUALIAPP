@@ -60,6 +60,12 @@ class DailyOralEnglishDetailPage extends Component {
         )
     }
 
+    componentDidUpdate(prevProps, prevState){
+        if (this.props.route.params.data.PUSHDATE != prevProps.route.params.data.PUSHDATE) {
+            this.loadDailyOralEnglishDetailData()
+        }
+    }
+
     loadDailyOralEnglishDetailData() {
         let data = this.props.route.params.data
         this.setState({
