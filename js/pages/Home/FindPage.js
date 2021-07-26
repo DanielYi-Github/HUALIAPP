@@ -328,9 +328,9 @@ class FindPage extends React.Component {
   }
 
   showFunctionPage(item) {
-    let appID = item.item.ID;
+    let app = item.item;
     let userID = this.props.state.UserInfo.UserInfo.id;
-    this.props.actions.navigateFunctionPage(appID, userID);
+    this.props.actions.navigateFunctionPage(app, userID);
   }
 
   onSubmitEditing = () => {

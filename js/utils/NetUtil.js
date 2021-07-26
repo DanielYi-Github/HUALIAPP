@@ -34,6 +34,8 @@ let NetUtil = {
 			body: JSON.stringify(params)
 		};
 
+		// console.log(url, fetchOptions);
+
 		/* 之後再量想想如何處理請求過久問題
 		let isTimeOut = false; 
 		let timeout = setTimeout(function() {
@@ -55,50 +57,60 @@ let NetUtil = {
 					switch (responseJson.code) {
 						case "200": 	// 資料請求成功，內容正確
 							responseJson.code = 200
+							// console.log(url, responseJson);
 							return responseJson;
 							break;
 						case "24": 	// 資料請求成功，內容正確
 							responseJson.code = 200
+							// console.log(url, responseJson);
 							return responseJson;
 							break;
 						case "13": 		// 憑證不存在
 							return responseJson; 
 							break;
 						case "0": 		// token失效
+							// console.log(url, responseJson);
 							responseJson.code = 0;
 							responseJson.message = responseJson.message=="" ? "Token Error" : responseJson.message;
 							LoggerUtil.addErrorLog(url, "API request in APP", "DEBUG", responseJson);
 							return responseJson; 
 							break;
 						case "204": 	// 成功請求但是沒有返回內容
+							// console.log(url, responseJson);
 							LoggerUtil.addErrorLog(url, "API request in APP", "DEBUG", responseJson);
 							return responseJson; 
 							break;
 						case "400": 	// 錯誤的請求  不存在的域名
+							// console.log(url, responseJson);
 							LoggerUtil.addErrorLog(url, "API request in APP", "WARN", responseJson);
 							return responseJson; 
 							break;
 						case "401": 	// 沒有認證權限 認證錯誤
+							// console.log(url, responseJson);
 							LoggerUtil.addErrorLog(url, "API request in APP", "WARN", responseJson);
 							return responseJson; 
 							break;
 						case "500": 	// 服務器出錯
+							// console.log(url, responseJson);
 							LoggerUtil.addErrorLog(url, "API request in APP", "FATAL", responseJson);
 							return responseJson; 
 							break;
 						case "10": 		// 帳號錯誤
 						case "11": 		// 密碼錯誤
 						case "12": 		// 人員不存在
+							// console.log(url, responseJson);
 							LoggerUtil.addErrorLog(url, "API request in APP", "DEBUG", responseJson);
 							return responseJson; 
 							break;
 						default: 		// 上述皆沒返回表示其他錯誤產生
+							// console.log(url, responseJson);
 							LoggerUtil.addErrorLog(url, "API request in APP", "WARN", responseJson);
 							return responseJson; 
 					}
 				} else {
 					response.text().then( err => {
-						LoggerUtil.addErrorLog(url, "API request in APP", "FATAL", err);
+						console.log("err", err);
+						// LoggerUtil.addErrorLog(url, "API request in APP", "FATAL", err);
 					});
 					return { message:"Response Error!", code:-2 }; 
 				}

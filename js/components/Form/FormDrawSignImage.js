@@ -19,12 +19,12 @@ class FormDrawSignImage extends Component {
 		let required = (this.props.data.required == "Y") ? "*" : "  ";
 		let data = this.props.data;
 		let image = data.defaultvalue.substr( data.defaultvalue.indexOf(";")+1 );
-
+		let name = data.component.name == "null" ? "" : data.component.name
 		return (
 			<Content contentContainerStyle={{width:this.props.style.PageSize.width*0.88, alignItems: 'flex-start'}}>
               <Item fixedLabel style={{borderBottomWidth: 0, paddingTop: 15, paddingBottom: 0}}>
   	 			  	<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
-  	                <Label>{data.component.name}123455</Label>
+  	                <Label>{name}</Label>
 			  </Item>
 			  <Item>
 			  	<Thumbnail square 

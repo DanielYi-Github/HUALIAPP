@@ -195,6 +195,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 
 		Promise.all([p1, p2, p3]).then( async (value) => {
 			console.log("value", value);
+			let isLevelEditable  = value[0].edit == "Y" ? true : false;             //判斷這關卡能不能編輯
 			let handsign         = value[0] ? value[0].handsign : false;			//是否需要手寫板簽名
 			let showsign         = value[0] ? value[0].showsign : false;			//是否需要顯示核決層級
 			let signresult       = value[0] ? value[0].signresult : false;			//是否需要顯示回簽
@@ -230,9 +231,6 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 			
 			// 表單具體內容
 			tmpList = value[0] ? value[0].comList : []; 
-
-
-			//////
 			for(var i in tmpList){
 				if(tmpList[i].columntype == "ap"){
 					let temp = {
@@ -246,7 +244,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					// 附值進defaultvalue
 					tmpList[i] = await FormUnit.formatEditalbeFormField(tmpList[i]);	// 取得該欄位的動作
 					// 整理成可編輯的表格格式
-					if ( tmpList[i].isedit == "Y" ) {
+					if ( tmpList[i].isedit == "Y" && isLevelEditable ) {
 						for(let j in tmpList[i].listComponent){
 							tmpList[i].listComponent[j].defaultvalue = null;
 						}
@@ -254,12 +252,10 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 
 					tmpList[i].show = true; 	   		   // 該欄位要不要顯示
 					tmpList[i].requiredAlbert = false; 	   // 該欄位空值警告
-					tmpList[i].actionValue = await FormUnit.getActionValue(userData, tmpList[i]);	// 取得該欄位的動作
+					tmpList[i].actionValue = isLevelEditable ? await FormUnit.getActionValue(userData, tmpList[i]): null;	// 取得該欄位的動作
 					apList[apListIndex].content.push(tmpList[i]);	
 				}
 			}
-
-			/////
 			
 			// 判斷附件有沒有值
 			tmpList = value[0] ? value[0].tmpBotomList : []; 
@@ -302,6 +298,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					bpmImage,
 					allowAddSign,
 					allowAddAnnounce,
+					isLevelEditable
 				) 
 			); 
 			
@@ -336,7 +333,7 @@ function dealArraytoObject(array) {
 	return array;
 }
 
-function loadFormContent(data, records, signBtns, handsign, showsign, signresult, bpmImage, allowAddSign, allowAddAnnounce) {
+function loadFormContent(data, records, signBtns, handsign, showsign, signresult, bpmImage, allowAddSign, allowAddAnnounce, isLevelEditable) {
 	return {
 		type: types.LOADFORMCONTENT,
 		data,
@@ -347,7 +344,8 @@ function loadFormContent(data, records, signBtns, handsign, showsign, signresult
 		signresult,
 		bpmImage,
 		allowAddSign, 
-		allowAddAnnounce
+		allowAddAnnounce,
+		isLevelEditable
 	}
 }
 
@@ -379,7 +377,7 @@ function isNull( str ){
 	return re.test(str);
 }
 
-export function submitSignForm(user, form, info, allowAddValue){
+export function submitSignForm(user, form, info, allowAddValue, isLevelEditable){
 	return async (dispatch, getState) => {
 		dispatch( refresh() ); //顯示載入動態
 
@@ -411,14 +409,17 @@ export function submitSignForm(user, form, info, allowAddValue){
 
 		/*整理表單可編輯欄位回傳資料*/
 		let listComponent = [];
-		let FormContent = getState().Form.FormContent;
-		for (let i = 2, length = FormContent.length; i < length; i++) {
-			for(let content of FormContent[i].content){
-				// if (content.isedit == "Y") listComponent.push(content);
-				listComponent.push(content);
+		// 判斷現在這個關卡需不需要編輯
+		if (isLevelEditable) {
+			let FormContent = getState().Form.FormContent;
+			for (let i = 2, length = FormContent.length; i < length; i++) {
+				for(let content of FormContent[i].content){
+					// if (content.isedit == "Y") listComponent.push(content);
+					listComponent.push(content);
+				}
 			}
+			listComponent = await FormUnit.formatSubmitFormValue(listComponent);
 		}
-		listComponent = await FormUnit.formatSubmitFormValue(listComponent);
 
 		/**
 		* 簽核送出
@@ -448,7 +449,8 @@ export function submitSignForm(user, form, info, allowAddValue){
 			asType       : asType,
 			asMembers    : asMembers,
 		}
-		console.log(sign);
+		// console.log("sign",sign);
+		
 		
 		//	簽核狀況判斷
 		let data = {};
@@ -522,7 +524,7 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 		let formFormat = getState().Form.FormContent;
 		let editIndex  = formFormat[pageIndex].content.indexOf(formItem);
 		
-		console.log(1);
+		// console.log(1);
 		// 欄位自己的規則比較
 		let ruleCheck = await FormUnit.formFieldRuleCheck(
 								value, 
@@ -531,36 +533,29 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 								formItem.columntype
 							  );
 		if( ruleCheck != true){
-		console.log(2);
-
+			// console.log(2);
 			dispatch(updateDefaultValueError(ruleCheck.message));
 		} else {
-		console.log(3);
-			
+			// console.log(3);
 			// 進行該欄位的新值舊值更換
 			formItem = await FormUnit.updateFormValue( value, formItem, formFormat[pageIndex].content );
 			formFormat[pageIndex].content[editIndex] = formItem;
 
 			// 判斷是否有url 的 action動作
-			// console.log(formFormat);
-		console.log(4);
-			
+			// console.log(4);
 			let	columnactionValue = await FormUnit.getColumnactionValue(
 										getState().UserInfo.UserInfo, 
 										formItem, 
 										formFormat[pageIndex].content,
 										formFormat
 									);
-			
 			// 欄位隱藏或顯示控制
 			// 判斷該值是否填寫表單中顯示
-		console.log(5);
-			// 
+			// console.log(5);
 			formFormat[pageIndex].content = FormUnit.checkFormFieldShow(
 												columnactionValue.columnList, 
 												formFormat[pageIndex].content
 											);	
-			
 			dispatch(updateDefaultValue(formFormat));
 		}
 		

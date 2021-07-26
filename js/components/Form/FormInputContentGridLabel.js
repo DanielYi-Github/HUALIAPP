@@ -14,13 +14,14 @@ export default class FormInputContentGridLabel extends Component {
 		let value = this.props.data.defaultvalue;
 		switch(this.props.data.columntype) {
 			case "cbo":
+			case "cbotab":
 				for(let param of this.props.data.paramList){
 					if (param.paramcode == value) {
 						value = param.paramname;			
 					}
 				}
 				break;
-			case "tabrdo":
+			case "rdotab":
 				value = value.toString();
 				for(let param of this.props.data.paramList){
 					if (param.paramcode == value) {

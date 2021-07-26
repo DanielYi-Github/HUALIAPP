@@ -134,7 +134,6 @@ class AboutPage extends React.Component {
             <Body style={{flex:0}}>
               <Card>
                 <CardItem button onPress={()=>{ 
-                  // NavigationService.navigate("Operation"); 
                   NavigationService.navigate("ViewFile",{
                     url: "data/getSOP",
                     content:{},
@@ -161,6 +160,27 @@ class AboutPage extends React.Component {
                     }}>
                       <Left>
                         <Text>{lang.MinePage.operationManualCovid19}</Text>
+                      </Left>
+                      <Right style={{flex: 0}}>
+                        <Icon name="arrow-forward"/>
+                      </Right>
+                    </CardItem>
+                  </Card> 
+                :
+                  null
+              }
+
+              { this.props.state.Common.enable_APP_MeetingSOP ? 
+                  <Card>
+                    <CardItem button onPress={()=>{ 
+                      NavigationService.navigate("ViewFile",{
+                        url: "data/getMeetingSop",
+                        content:{},
+                        pageTtile:lang.MinePage.operationManualMeeting
+                      }); 
+                    }}>
+                      <Left>
+                        <Text>{lang.MinePage.operationManualMeeting}</Text>
                       </Left>
                       <Right style={{flex: 0}}>
                         <Icon name="arrow-forward"/>

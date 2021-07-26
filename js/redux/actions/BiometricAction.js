@@ -91,6 +91,7 @@ export function biometricInfo_check(){
 	 	biosUser = biosUser ? JSON.parse(biosUser) : false;
 	 	 
 	 	if (biosUser) {
+    		console.log("biosUser::::::", biosUser);
 	 		// Server有無使用者生物驗證資訊
 	        UpdateDataUtil.getIemiExist( biosUser.iemi ).then((data) => {
 	        	if (data.content) {

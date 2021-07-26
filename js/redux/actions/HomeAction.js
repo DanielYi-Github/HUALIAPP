@@ -204,85 +204,86 @@ async function getWebViewUrl(user,WebViewID){
 	return webViewUrl;
   }
 
-export function navigateFunctionPage(appID = null, userID = null) {
+  export function navigateFunctionPage(app = null, userID = null) {
 	return async (dispatch, getState) => {
 		let recordHitCount = true;
-		//判斷是否帶有WebView關鍵字來作為是否開啟WebView共用模板
-		if(appID.includes('WebView')){
-			let urlData=await getWebViewUrl(getState().UserInfo.UserInfo,appID);
-			NavigationService.navigate("CreateWebView", {WebViewID:appID, urlData:urlData});
-		}else{
-			switch (appID) {
-				case "Sign":
-					NavigationService.navigate("FormTypeList");
-					break;
-				case "MyForm":
-					NavigationService.navigate("MyFormList");
-					break;
-				case "G00010": //派車單
-					NavigationService.navigate("CreateForm", {FormID: "G00010"});
-					break;
-				case "H00070": //台籍幹部休假單
-					NavigationService.navigate("CreateForm", {FormID: "H00070"});
-					break;
-				case "M00030": //重要事項通報申請單
-					NavigationService.navigate("CreateForm", {FormID: "M00030"});
-					break;
-				case "G00040": //物品放行單
-					NavigationService.navigate("CreateForm", {FormID: "G00040"});
-					break;
-				case "H00020": //請假單
-					NavigationService.navigate("CreateForm", {FormID: "H00020"});
-					break;
-				case "H00060": //海外陸籍幹部休假單
-					NavigationService.navigate("CreateForm", {FormID: "H00060"});
-					break;
-				case "Survey": //問券調查
-					NavigationService.navigate("Survey", {SurveyOID: "B8BF35C543F2D569E050000A76006341"});
-					break;
-				case "DaliyTempSurvey": //每日體溫回報
-					NavigationService.navigate("Survey", {SurveyOID: "B8FC46FC2A55661DE050000A76003F57"});
-					break;
-				case "OutDoorSurvey": //春節出行情況
-					NavigationService.navigate("Survey", {SurveyOID: "B936DC6D18263433E050000A760072A0"});
-					break;
-				case "Documents": //集團文件
-					NavigationService.navigate("DocumentCategories");
-					break;
-				case "ManageDocuments": //管理文章
-					NavigationService.navigate("ManageDocument");
-					break;
-				case "Birthday": //生日祝福
-					NavigationService.navigate("BirthdayWeek");
-					break;
-				case "Mail":
-					navigateMailFunction(getState(), dispatch);				
-					break;
-				case "Salary": //薪資查詢
-					/*
-						1.顯示驗證畫面
-						1.確認是否開啟生物認證
-						2.有 驗證結束直接跳頁
-						3.無 輸入密碼驗證再跳頁
-					*/
-					if (getState().Common.isAuthenticateApprove) {
-						recordHitCount = true;
-						NavigationService.navigate("Salary");
-					}else{
-						recordHitCount = false;
-						dispatch({
-							type: commonTypes.ACTIVATE_AUTHENTICATION,
-							navigatePage: appID
-						});
-						NavigationService.navigate("Authentication");
-					}
-					break;
-				default:
-					NavigationService.navigate(appID);
-					break;
-			}
+		let appID = app.ID
+		let appType = app.TYPE
+		switch(appType){
+			case "W": //Web
+				NavigationService.navigate("CreateWebView", {WebViewID:appID, data:app});
+				break;
+			case "P": //Portal
+				switch (appID) {
+					case "Sign":
+						NavigationService.navigate("FormTypeList");
+						break;
+					case "MyForm":
+						NavigationService.navigate("MyFormList");
+						break;
+					case "G00010": //派車單
+						NavigationService.navigate("CreateForm", {FormID: "G00010"});
+						break;
+					case "H00070": //台籍幹部休假單
+						NavigationService.navigate("CreateForm", {FormID: "H00070"});
+						break;
+					case "M00030": //重要事項通報申請單
+						NavigationService.navigate("CreateForm", {FormID: "M00030"});
+						break;
+					case "G00040": //物品放行單
+						NavigationService.navigate("CreateForm", {FormID: "G00040"});
+						break;
+					case "H00020": //請假單
+						NavigationService.navigate("CreateForm", {FormID: "H00020"});
+						break;
+					case "H00060": //海外陸籍幹部休假單
+						NavigationService.navigate("CreateForm", {FormID: "H00060"});
+						break;
+					case "Survey": //問券調查
+						NavigationService.navigate("Survey", {SurveyOID: "B8BF35C543F2D569E050000A76006341"});
+						break;
+					case "DaliyTempSurvey": //每日體溫回報
+						NavigationService.navigate("Survey", {SurveyOID: "B8FC46FC2A55661DE050000A76003F57"});
+						break;
+					case "OutDoorSurvey": //春節出行情況
+						NavigationService.navigate("Survey", {SurveyOID: "B936DC6D18263433E050000A760072A0"});
+						break;
+					case "Documents": //集團文件
+						NavigationService.navigate("DocumentCategories");
+						break;
+					case "ManageDocuments": //管理文章
+						NavigationService.navigate("ManageDocument");
+						break;
+					case "Birthday": //生日祝福
+						NavigationService.navigate("BirthdayWeek");
+						break;
+					case "Mail":
+						navigateMailFunction(getState(), dispatch);				
+						break;
+					case "Salary": //薪資查詢
+						/*
+							1.顯示驗證畫面
+							1.確認是否開啟生物認證
+							2.有 驗證結束直接跳頁
+							3.無 輸入密碼驗證再跳頁
+						*/
+						if (getState().Common.isAuthenticateApprove) {
+							recordHitCount = true;
+							NavigationService.navigate("Salary");
+						}else{
+							recordHitCount = false;
+							dispatch({
+								type: commonTypes.ACTIVATE_AUTHENTICATION,
+								navigatePage: app
+							});
+							NavigationService.navigate("Authentication");
+						}
+						break;
+					default:
+						NavigationService.navigate(appID);
+						break;
+				}
 		}
-		
 
 		if (recordHitCount) {
 			let iSQL = `insert into THF_APPVISITLOG(USERID,APPID) values('${userID}','${appID}')`;
