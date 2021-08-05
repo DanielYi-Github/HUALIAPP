@@ -11,9 +11,9 @@ export function iniDeputyData(){
 	return async (dispatch) => {
 		dispatch(isLoading(true));
 		console.log("this",this);
-		await this.paramInit();
-		await this.cboParamInit();
-		await this.loadBPMDeputySetting();
+		await this.paramInit();				// 捞取代理人下拉参数档资料
+		await this.cboParamInit();			// 捞取流程分类及流程名称
+		await this.loadBPMDeputySetting();	// 捞取代理人API资料
 		dispatch(isLoading(false));
 	}
 }
@@ -22,9 +22,9 @@ export function loadBPMDeputySetting() {
 	return async (dispatch, getState) => {
 	    await UpdateDataUtil.getBPMDeputySetting(getState().UserInfo.UserInfo).then(async (data) => {
 	    	console.log("loadBPMDeputySetting", data);
-			dispatch(setDeputyBasic(data));
-	    	await this.basicInit(data);
-	    	this.getDeputyTip();
+			dispatch(setDeputyBasic(data));	// Call API返回资料存到redux
+	    	await this.basicInit(data);		// 处理转化数据格式
+	    	this.getDeputyTip();			// 代理启动状态
 	    }).catch((e) => {
 	    	console.log(e);
 	    	if(e.code==0){
@@ -480,11 +480,11 @@ export function basicInit(data){
 				basicClone.deputyRules.listComponent = conTempList;
 				basicClone.deputyRules.defaultvalue = [];
         	}
-
         	//時間戳轉換為API格式
 	        if (basicClone.startExecuteTime == -1) {
 	          basicClone.startExecuteTime = (new Date()).getTime();
 	        }
+			console.log('basicClone.startExecuteTime', basicClone.startExecuteTime);
 	        let startExecuteTime = Common.dateFormatNoSecond(basicClone.startExecuteTime, "/");
 	        if (basicClone.endExecuteTime == -1) {
 	          basicClone.endExecuteTime = (new Date()).getTime() + 24 * 60 * 60 * 1000 - 1;
@@ -558,8 +558,8 @@ export function setBPMDeputy(content, msg){
 
 export function getDeputyTip(){
 	return (dispatch, getState) => {
-		let Deputy=getState().Deputy;
-		let lang=getState().Language.lang.DeputyPage;
+		let Deputy = getState().Deputy;
+		let lang = getState().Language.lang.DeputyPage;
     	let stateName = "";
 	    if (Deputy.deputyState != null && Deputy.deputyWay != null) {
 	        //取得初始化內容進行判斷

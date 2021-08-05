@@ -31,7 +31,7 @@ class DeputyPage extends React.Component {
     //過濾關鍵字所查詢的資料
     let lang = this.props.state.Language.lang.DeputyPage;
     let Deputy=this.props.state.Deputy;
-    console.log(Deputy);
+    console.log('render-Deputy',Deputy);
     return (
       <Container>
         {/*標題列*/}
