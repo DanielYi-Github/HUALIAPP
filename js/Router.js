@@ -8,6 +8,9 @@ import * as HomeAction        from './redux/actions/HomeAction';
 import * as ThemeAction       from './redux/actions/ThemeAction';
 import * as CommonAction      from './redux/actions/CommonAction';
 import * as LoginAction       from './redux/actions/LoginAction';
+// import * as MeetingAction       from './redux/actions/MeetingAction';
+import * as MessageAction   from './redux/actions/MessageAction';
+
 
 import { SafeAreaProvider, SafeAreaView }     from 'react-native-safe-area-context';
 import { NavigationContainer, useIsFocused }  from '@react-navigation/native';
@@ -25,6 +28,7 @@ import RecruitPage               from './pages/Introduction/RecruitPage';
 import RecruitDetailPage         from './pages/Introduction/RecruitDetailPage';
 import ContactUsPage             from './pages/Introduction/ContactUsPage';
 import ShoseIntroducePage        from './pages/Introduction/ShoseIntroducePage';
+import OfficialWebsitePage       from './pages/Introduction/OfficialWebsitePage';
 
 import LoginPage           from './pages/Authentication/LoginPage';
 import InitialPasswordPage from './pages/Authentication/InitialPasswordPage';
@@ -175,6 +179,11 @@ function IntroductionDrawer(props) {
                       name      ={page.paramcode} 
                       component ={ShoseIntroducePage} 
                       options   ={{ drawerLabel:lang.ShoseIntroducePage.ShoemakingInstroduce}}/>
+            case "OfficialWebsite":
+              return <Drawer.Screen 
+                      name      ={page.paramcode} 
+                      component ={OfficialWebsitePage} 
+                      options   ={{ drawerLabel:lang.OfficialWebsitePage.Title}}/>
           }
         })
       }
@@ -361,6 +370,7 @@ class Router extends React.Component {
 
   componentDidMount () {
     AppState.addEventListener('change', this.onChangeAppState)
+    DeviceStorageUtil.set('isColdActive', true); // 記錄是不是冷啟動
   }
   
   componentWillUnmount () {
@@ -369,14 +379,16 @@ class Router extends React.Component {
 
   onChangeAppState = async nextAppState => {
     this.setState({ initialActiveCount: this.state.initialActiveCount+1 });
+    // console.log("this.state.initialActiveCount", this.state.initialActiveCount);
     // 熱起動資料重新刷新的條件，有網路、冷啟動不算、畫面在APP當中、user資料有值
     if ( 
       this.props.state.Network.networkStatus && 
-      this.state.initialActiveCount > 2 && 
+      this.state.initialActiveCount > 3 && 
       !showSecurityScreenFromAppState(nextAppState) 
     ) {
       let user = await DeviceStorageUtil.get('User');
       if (user !== "") {
+        // console.log("this.props.actions.appHotInit");
         this.props.actions.appHotInit(this.props.actions);
       }
     }
@@ -426,7 +438,8 @@ const appRouter = connect(
       ...HomeAction,
       ...ThemeAction,
       ...CommonAction,
-      ...LoginAction
+      ...LoginAction,
+      ...MessageAction
     }, dispatch)
   })
 )(Router);

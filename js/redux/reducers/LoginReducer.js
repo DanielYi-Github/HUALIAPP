@@ -110,7 +110,6 @@ export default function login(state = initialState, action = {}) {
 
       SQLite.cleanTableData(deleteTables).then( async () => {
         await DeviceStorageUtil.remove('User');
-
         if (action.userLogout) {
           NavigationService.goBackToTop();  // 人為登出
         } else {

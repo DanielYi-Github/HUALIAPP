@@ -4,6 +4,7 @@ import { View, FlatList } from 'react-native';
 import Modal from "react-native-modal";
 import * as NavigationService from '../../utils/NavigationService';
 import WaterMarkView     from '../WaterMarkView';
+import FormContentGridLabel from './FormContentGridLabel'
 
 class FormContentGrid extends Component {
 	constructor(props) {
@@ -27,7 +28,9 @@ class FormContentGrid extends Component {
 			for (let j = 0; j < fieldCount; j++) {
 				items.push({
 					label: data.listComponent[j].component.name,
-					value: data.listComponent[j].defaultvalue[i]
+					value: data.listComponent[j].defaultvalue[i],
+					columntype: data.listComponent[j].columntype,
+					paramList: data.listComponent[j].paramList
 				});
 			}
 			itemsArray.push(items);
@@ -147,29 +150,11 @@ class FormContentGrid extends Component {
 
 		if (showAll) {
 			for (var i in item) {
-				data.push(
-					<View key={i} style={{flexDirection: 'row', flex:1, alignItems: 'flex-start'}}>
-						<View style={{flex:0}}>
-							<Text>{item[i].label} : </Text>
-						</View>
-						<View style={{flex:1}}>
-							<Text>{item[i].value}</Text>
-						</View>
-					</View>
-				);
+				data.push(<FormContentGridLabel key={i} data={item[i]} />)
 			}
 		} else { 
 			for (var i in item) {
-				data.push(
-					<View key={i} style={{flexDirection: 'row', flex:1, alignItems: 'flex-start'}}>
-						<View style={{flex:0}}>
-							<Text>{item[i].label} : </Text>
-						</View>
-						<View style={{flex:1}}>
-							<Text>{item[i].value}</Text>
-						</View>
-					</View>
-				);
+				data.push(<FormContentGridLabel key={i} data={item[i]} />)
 
 				if (i == 3) break; 
 			}
@@ -293,16 +278,7 @@ class FormContentGrid extends Component {
 	renderGridItem_bigger = (item) => {
 		let data = [];
 		for (var i in item) {
-			data.push(
-				<View key={i} style={{flexDirection: 'row', flex:1, alignItems: 'flex-start', padding: 5}}>
-					<View style={{flex:0}}>
-						<Text>{item[i].label} : </Text>
-					</View>
-					<View style={{flex:1}}>
-						<Text>{item[i].value}</Text>
-					</View>
-				</View>
-			);
+			data.push(<FormContentGridLabel key={i} data={item[i]} style={{padding:5}} />)
 		}
 		return data;
 	}

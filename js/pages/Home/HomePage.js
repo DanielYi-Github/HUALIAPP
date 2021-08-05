@@ -27,6 +27,7 @@ import NoticeTabList             from '../../components/NoticeTabList';
 import WaterMarkView             from '../../components/WaterMarkView';
 import ExplainCardItem           from '../../components/ExplainCardItem';
 import MainPageBackground        from '../../components/MainPageBackground';
+import BroadcastCard from "../../components/Broadcast/BroadcastCard";
 
 const showSecurityScreenFromAppState = appState =>['background', 'inactive'].includes(appState);
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -76,9 +77,6 @@ class HomePage extends React.Component {
       isLoadCompanyData_ContactCO:false, // 是否已撈取CompanyData_ContactCO模組關聯所有資料,
     }
 
-    MessageRouter.initial(this.props.state, this.props.actions);// 處理訊息分流的類別
-    MessageRouter.addMessageListener(this.props.actions);       // 啟動訊息觸發的監聽器
-
     let user         = props.state.UserInfo.UserInfo;
     let {langStatus} = props.state.Language;
 
@@ -93,13 +91,10 @@ class HomePage extends React.Component {
     Platform.OS == 'android' ? props.actions.enableScreenShot(false) : null; //啟動禁止截圖的功能(android專屬)  
   }
 
-  onChange = ({ window, screen }) => {
-    
-  };
 
   componentDidMount() {
-    Dimensions.addEventListener("change", this.onChange);
-
+    MessageRouter.getStoreNotificationMsg(this.props.state, this.props.actions); // 針對冷啟動取得跳頁訊息
+    
     AppState.addEventListener('change', this.onChangeAppState);
     if (this.props.state.Home.NoticeData.length == 0 && !this.props.state.Home.isRefreshing) {
       this.props.actions.loadInitialNoticeData(); //撈取公告列表資料 
@@ -324,6 +319,9 @@ class HomePage extends React.Component {
              </Body>
            </CardItem>
           </Card>
+
+          {/* 廣播 */}
+          <BroadcastCard/>
 
           {/*公告資訊*/}
           <Card>
@@ -550,9 +548,9 @@ class HomePage extends React.Component {
   }
 
   showFunctionPage(item) {
-    let appID = item.item.ID;
+    let app = item.item;
     let userID = this.props.state.UserInfo.UserInfo.id;
-    this.props.actions.navigateFunctionPage(appID, userID);
+    this.props.actions.navigateFunctionPage(app, userID);
   }
 
   LoadFunctionDataRelateData = () =>{

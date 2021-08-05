@@ -21,7 +21,7 @@ import FormContentGrid     		 from './FormContentGrid';
 import FormInputContentGrid      from './FormInputContentGrid';
 import FormContentGridForEvaluation  from './FormContentGridForEvaluation';
 import FormInputContentGridForDeputy from './FormInputContentGridForDeputy';
-import FormContentTabRdo            from './FormContentTabRdo';
+import FormContentRdoTab            from './FormContentRdoTab';
 
 export default class FormInputContent extends Component {
 	constructor(props) {
@@ -78,6 +78,7 @@ export default class FormInputContent extends Component {
 				);
 				break;
 			case "cbo":
+			case "cbotab":
 				inputComponent = (
 					<FormContentCbo 
 						data     ={this.props.data} 
@@ -294,9 +295,9 @@ export default class FormInputContent extends Component {
 					render.push(<FormContentChk  data={this.state.data}/>);
 				  break;
 				*/
-			case "tabrdo": // 多欄位選單統一編輯
+			case "rdotab": // 多欄位選單統一編輯
 				inputComponent = (
-					<FormContentTabRdo 
+					<FormContentRdoTab 
 		  				data     ={this.props.data} 
 		  				editable ={this.props.editable} 
 		  				onPress  ={this.props.onPress}

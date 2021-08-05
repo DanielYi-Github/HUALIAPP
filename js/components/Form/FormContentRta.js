@@ -113,6 +113,7 @@ class FormContentRta extends Component {
             <Content 
               style={{borderBottomWidth: 1, borderBottomColor: '#D9D5DC'}} 
               contentContainerStyle={{ width: this.props.style.PageSize.width*0.88 }}
+              scrollEnabled={false}
             >
               <View style={{width: '100%'}}>
                 <Item fixedLabel style={{borderBottomWidth: 0, paddingTop: 15, paddingBottom: 15}}>
@@ -127,6 +128,7 @@ class FormContentRta extends Component {
                            source={{ html: FixTinyText+CopyPastDisable+this.props.data.defaultvalue}}
                            style={{ width: "100%", height: this.state.height, backgroundColor: 'transparent' }}
                            onMessage={event => this.onMessage(event.nativeEvent.data) }
+                           scrollEnabled={false}
                       />
                     :
                       <WebView
@@ -136,6 +138,8 @@ class FormContentRta extends Component {
                            javaScriptEnabled // 仅限Android平台。iOS平台JavaScript是默认开启的。
                            domStorageEnabled // 适用于安卓
                            onMessage={event => this.onMessage(event.nativeEvent.data) }
+                           scrollEnabled={false}
+                           
                       />
                     }
                 </View>

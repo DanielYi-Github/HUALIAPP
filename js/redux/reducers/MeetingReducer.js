@@ -31,6 +31,13 @@ export default function index(state = initialState, action = {}) {
         actionResultMsg:action.resultMsg,
         meetingList    :action.result.success? []:state.meetingList,
       }
+    case types.MEETING_CANCELRESULT:
+      return {
+        ...state,
+        actionResult   :action.result,
+        actionResultMsg:action.resultMsg,
+        meetingList    :action.result.success? []:state.meetingList,
+      }
     case types.MEETING_RESET:
       return {
         ...state,
@@ -46,12 +53,16 @@ export default function index(state = initialState, action = {}) {
     case types.GET_MEETINGS:
       return{
         ...state,
+        actionResult          : null,
+        actionResultMsg       : "",
         meetingList:action.meetingsResult
       }
     case types.GET_MEETINGSPERSON_DATETIME:
       return{
         ...state,
-        person_meetingDateTime:action.meetingsResult
+        person_meetingDateTime:action.meetingsResult,
+        actionResult          : null,
+        actionResultMsg       : "",
       }
     case types.MEETING_REFRESHING:
       return{
@@ -62,6 +73,12 @@ export default function index(state = initialState, action = {}) {
       return{
         ...state,
         suggestMeetingDateTime:action.getFreeDateTimeResult
+      }
+    case types.MEETING_RESETMEETINGMESSAGE:
+      return{
+        ...state,
+        actionResult          : null,
+        actionResultMsg       : "",
       }
     default:
       return state;

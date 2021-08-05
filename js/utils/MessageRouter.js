@@ -5,37 +5,46 @@ import * as UpdateDataUtil from './UpdateDataUtil';
 import * as SQLite         from './SQLiteUtil';
 import DeviceStorageUtil   from './DeviceStorageUtil';
 import JPush          	   from './JpushUtil';
+import LoggerUtil          from './LoggerUtil';
+
 
 let MessageRouter = {
-    async initial (props, actions){
+    async initial (){
     	JPush.init();
-    	JPush.getRegistrationID( result => console.log(result.registerID) );
-
+    	JPush.getRegistrationID( result => console.log("registerID:", result.registerID) );
+	},
+	async addListeners(props, actions){
 		// 接收推送通知
-		JPush.addNotificationListener((result) => {
-			if (result.notificationEventType == "notificationArrived"){
-				this.dealMessagesOriginalsource(result, props, true);
-			}else{
-				JPush.setBadge({
-					"badge":0,
-					"appBadge":0
-				});
+		JPush.addNotificationListener( async (result) => {
+			// console.log("addNotificationListener", result);
+			// 判斷是不是冷啟動
+      		let isColdActive = await DeviceStorageUtil.get('isColdActive');
+      		isColdActive = (isColdActive === 'true');
 
-				// 測試非自定義的消息推送
-				result.extras.APPID = "Messages";
-      			actions.checkDirectorPage(result.extras);
-			}
+      		if (isColdActive) {
+      			// 保存訊息
+      			DeviceStorageUtil.set('storeNotificationMsg', result);
+    			DeviceStorageUtil.set('isColdActive', false);
+      		} else {
+				if (result.notificationEventType == "notificationArrived"){
+					this.dealMessagesOriginalsource(result, props, true);
+				}else{
+					JPush.setBadge({ "badge":0, "appBadge":0 });
+					await this.dealMessagesOriginalsource(result, props, true);
+					// 測試非自定義的消息推送
+					result.extras.APPID = "Messages";
+	      			actions.checkDirectorPage(result.extras);
+				}
+      		}
 		});
 
 		// 接收本地通知
 		JPush.addLocalNotificationListener((result) => {
+			// console.log("notificationArrived", result);
 			if (result.notificationEventType == "notificationArrived"){
 				DeviceEventEmitter.emit('loadMsgState');
 			}else{
-				JPush.setBadge({
-					"badge":0,
-					"appBadge":0
-				});
+				JPush.setBadge({ "badge":0, "appBadge":0 });
 			  	actions.checkDirectorPage(result.extras);
 			}
 		});
@@ -83,14 +92,22 @@ let MessageRouter = {
 				break;
 			default:
 				// 需要判斷是哪一種訊息再寫入資料庫中，後續再進行推送，需要討論
-				await UpdateDataUtil.updateMSGByOID(user, oid, lang);  
+				let arr = [
+					UpdateDataUtil.updateMSGByOID(user, oid, lang),
+		  			UpdateDataUtil.updateEvent(user), 				//事件表				
+				];
+
+			  	await Promise.all(arr).then( async (data) => {
+			  	}).catch((e)=>{
+			  		LoggerUtil.addErrorLog("MessageRouter dealMessagesOriginalsource", "APP Action", "ERROR", e);
+			  	})
+			  		
 				if (isOriginal){
-					DeviceEventEmitter.emit('loadMsgState');
+					await DeviceEventEmitter.emit('loadMsgState');
 				}else{
 					this.emitCustomlMessage(user, oid);
 				}
 				break;
-				
 		}
 	},
 	// 處理本地化推送
@@ -150,14 +167,15 @@ let MessageRouter = {
 	addMessageListener(actions){
 		DeviceEventEmitter.addListener('loadMsgState',(data)=>{
 		  actions.loadMessageIntoState();
+		  actions.getMeetings();
 		})
 	},
 	// 移除訊息監聽
 	removeMessageListener(actions){
 		// JPushModule.removeReceiveCustomMsgListener();
 		// JPushModule.removeReceiveNotificationListener();
-		JPush.removeLocalNotification();
-		JPush.removeListener();
+		// JPush.removeLocalNotification();
+		// JPush.removeListener();
 	},
 	// 判斷應用是否啟用ＡＰＰ通知功能
 	getIsAppNotificationEnable(){
@@ -173,7 +191,28 @@ let MessageRouter = {
 			}
 		});
 		return promise;
-	}
+	},
+	// 針對冷啟動取得跳頁訊息
+	async getStoreNotificationMsg(props, actions){
+		let storeNotificationMsg = await DeviceStorageUtil.get('storeNotificationMsg');
+		if (storeNotificationMsg) {
+			let result = JSON.parse(storeNotificationMsg);
+			if (result.notificationEventType == "notificationArrived"){
+				this.dealMessagesOriginalsource(result, props, true);
+			}else{
+				JPush.setBadge({ "badge":0, "appBadge":0 });
+				// await this.dealMessagesOriginalsource(result, props, true);
+				
+				// 測試非自定義的消息推送
+				result.extras.APPID = "Messages";
+      			actions.checkDirectorPage(result.extras);
+			}
+			DeviceStorageUtil.remove('storeNotificationMsg');
+		} else {
+			// console.log(2);
+		}
+    	DeviceStorageUtil.set('isColdActive', false);
+	},
 }
 
 export default MessageRouter;

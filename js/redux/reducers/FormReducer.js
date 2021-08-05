@@ -26,7 +26,8 @@ const initialState = {
   allowAddAnnounce   :false,    // 是否需要加會
   loadMessgae        :null,
   loadMessgaeType    :null,
-  bpmImage           :false 
+  bpmImage           :false,
+  isLevelEditable    :false     // 判斷這關卡能不能編輯
 };
 
 export default function Form(state = initialState, action = {}) {
@@ -72,16 +73,17 @@ export default function Form(state = initialState, action = {}) {
     case types.LOADFORMCONTENT:
       return {
         ...state,
-        FormContent : action.data,
-        FormRecords : action.records,
-        FormSignBtns: action.signBtns,
-        handsign    : action.handsign,      // 是否需要手寫板簽名
-        showsign    : action.showsign,      // 是否需要顯示核決層級
-        signresult  : action.signresult,    // 是否需要顯示回簽
-        allowAddSign: action.allowAddSign,  // 是否需要加簽
+        FormContent     : action.data,
+        FormRecords     : action.records,
+        FormSignBtns    : action.signBtns,
+        handsign        : action.handsign,      // 是否需要手寫板簽名
+        showsign        : action.showsign,      // 是否需要顯示核決層級
+        signresult      : action.signresult,    // 是否需要顯示回簽
+        allowAddSign    : action.allowAddSign,  // 是否需要加簽
         allowAddAnnounce: action.allowAddAnnounce,  // 是否需要加會
-        bpmImage    : action.bpmImage ? action.bpmImage : false ,
-        isRefreshing: false,
+        bpmImage        : action.bpmImage ? action.bpmImage : false ,
+        isRefreshing    : false,
+        isLevelEditable : action.isLevelEditable // 判斷這關卡能不能編輯
       };
     case types.UPDATEDEFAULTVALUE_FOR_FORMSIGN:
       return {
@@ -130,19 +132,20 @@ export default function Form(state = initialState, action = {}) {
             defaultCO  : false,   //預設辦公室
             companyList: [],      //公司清單
           },
-          FormContent :{},
-          FormRecords :[],
-          FormSignBtns:null,
-          isRefreshing:false,
-          isLoadDone  :false,  // 是否已經全部撈取完畢
-          isSignDone  :false,  // 簽核過程是否已結束
-          submitResult:null,
+          FormContent        :{},
+          FormRecords        :[],
+          FormSignBtns       :null,
+          isRefreshing       :false,
+          isLoadDone         :false,  // 是否已經全部撈取完畢
+          isSignDone         :false,  // 簽核過程是否已結束
+          submitResult       :null,
           submitResultMessage:null,
-          handsign    :null,    // 是否需要手寫板簽名
-          showsign    :null,    // 是否需要顯示核決層級
-          signresult  :null,    // 是否需要顯示回簽
-          loadMessgae :null,
-          bpmImage    :false 
+          handsign           :null,    // 是否需要手寫板簽名
+          showsign           :null,    // 是否需要顯示核決層級
+          signresult         :null,    // 是否需要顯示回簽
+          loadMessgae        :null,
+          bpmImage           :false ,
+          isLevelEditable    :false
       };
     
     case types.SHOW_FORMLOADMESSAGE:
