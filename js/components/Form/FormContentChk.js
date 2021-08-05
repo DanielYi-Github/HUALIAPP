@@ -31,12 +31,12 @@ class FormContentChk extends Component {
 		let tagsArray = [];
 		this.props.data.defaultvalue = this.props.data.defaultvalue ? this.props.data.defaultvalue : [];
 		for(let value of this.props.data.defaultvalue) {
-			for(let component of this.props.data.listComponent){
-				if (value == component.component.id) tagsArray.push(component.component.name);
-			}
+			tagsArray.push(value.COLUMN2)
+			// for(let component of this.props.data.listComponent){
+				// if (value == component.component.id) tagsArray.push(component.component.name);
+			// }
 		}
 		let tags = { tag: '', tagsArray: tagsArray }
-
 		/*
 		let tagsArray = [];
 		this.props.data.defaultvalue = this.props.data.defaultvalue ? this.props.data.defaultvalue : [];
@@ -84,7 +84,6 @@ class FormContentChk extends Component {
                     <Item fixedLabel error={this.props.data.requiredAlbert} /> 
 	            </View>
 			);
-			
 		} else {
 			let value = this.props.lang.Common.None;
 			if ( this.props.data.defaultvalue.length == 0) {
@@ -106,8 +105,6 @@ class FormContentChk extends Component {
 					    />
 					  </Item>
 			} else {
-
-
 				renderItem = 
 					<View style={{width: '100%'}}>
 		            	<Item fixedLabel style={{borderBottomWidth: 0, paddingTop: 15}}>

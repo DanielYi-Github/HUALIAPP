@@ -40,8 +40,8 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
 
   // JPush初始化配置
-//  [JPUSHService setupWithOption:launchOptions appKey:@"e7a57168bda804f805591a73" channel:nil apsForProduction:nil]; //正式機
-  [JPUSHService setupWithOption:launchOptions appKey:@"28f3772e7480958cbd4c0a94" channel:nil apsForProduction:nil]; //測試機
+  [JPUSHService setupWithOption:launchOptions appKey:@"e7a57168bda804f805591a73" channel:nil apsForProduction:nil]; //正式機
+//  [JPUSHService setupWithOption:launchOptions appKey:@"28f3772e7480958cbd4c0a94" channel:nil apsForProduction:nil]; //測試機
   
   // APNS
   JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];

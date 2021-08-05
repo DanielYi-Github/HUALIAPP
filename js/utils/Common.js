@@ -4,6 +4,7 @@ import CryptoJS from 'crypto-js'
 import Md5Encrypt from "react-native-md5";
 import {AES_KEY,AES_VI} from './Contant';
 import * as DeviceInfo     from './DeviceInfoUtil';
+import * as RNLocalize from "react-native-localize";
 
 import ReactNativeBiometrics from 'react-native-biometrics'
 
@@ -74,7 +75,9 @@ let Common = {
 	dateFormat(date){
 		if (date == null) {
 		} else {
-			date = date.replace(' ', 'T');
+			if (typeof date == "string") {
+				date = Date.parse(date.replace(/-/g, "/"));
+			}
 		}
 
 		var time = new Date( date );
@@ -89,7 +92,9 @@ let Common = {
 	dateFormatNoSecond(date,separator){
 		if (date == null) {
 		} else {
-			date = date.replace(' ', 'T');
+			if (typeof date == "string") {
+				date = Date.parse(date.replace(/-/g, "/"));
+			}
 		}
 		var time = new Date(date);
 		var y = time.getFullYear();
@@ -102,7 +107,9 @@ let Common = {
 	dateFormatNoTime(date){
 		if (date == null) {
 		} else {
-			date = date.replace(' ', 'T');
+			if (typeof date == "string") {
+				date = Date.parse(date.replace(/-/g, "/"));
+			}
 		}
 		var time = new Date(date);
 		var y = time.getFullYear();
@@ -114,7 +121,9 @@ let Common = {
 	dateFormatNoYear(date){
 		if (date == null) {
 		} else {
-			date = date.replace(' ', 'T');
+			if (typeof date == "string") {
+				date = Date.parse(date.replace(/-/g, "/"));
+			}
 		}
 		var time = new Date(date);
 		var m = time.getMonth()+1;
@@ -126,7 +135,9 @@ let Common = {
 	dateFormatInbusdat(date){
 		if (date == null) {
 		} else {
-			date = date.replace(' ', 'T');
+			if (typeof date == "string") {
+				date = Date.parse(date.replace(/-/g, "/"));
+			}
 		}
 		// date = date.replace(/\-/g, "/").replace(".0","");
 		var time = new Date(date).getTime(); 
@@ -139,7 +150,9 @@ let Common = {
 	dateFormatNoYearTime(date){
 		if (date == null) {
 		} else {
-			date = date.replace(' ', 'T');
+			if (typeof date == "string") {
+				date = Date.parse(date.replace(/-/g, "/"));
+			}
 		}
 		var time = new Date(date);
 		var m = time.getMonth()+1;

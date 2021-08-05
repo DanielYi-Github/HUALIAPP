@@ -69,15 +69,16 @@ class FormPage extends React.Component {
       showFormSignActionSheet:false,
       showFormSignTextInput  :false,
       showFormDrawSignImage  :false,
-      handsign    :null,    // 是否需要手寫板簽名
-      showsign    :null,    // 是否需要顯示核決層級
-      signresult  :null,    // 是否需要顯示回簽
-      isAllowAdd  :null,    // 是否顯示加會簽
-      allowAddValue:null,   // 加會簽的值
-      signImage   :null,    // 圖片base64
-      fabActive   :false,   // 顯示簽核的元件
-      // showSignModal:false   // 顯示簽核案件的背景圖
-      bpmImage : false,    // 顯示表單的完整圖片
+      handsign        :null,      // 是否需要手寫板簽名
+      showsign        :null,      // 是否需要顯示核決層級
+      signresult      :null,      // 是否需要顯示回簽
+      isAllowAdd      :null,      // 是否顯示加會簽
+      allowAddValue   :null,      // 加會簽的值
+      signImage       :null,      // 圖片base64
+      fabActive       :false,     // 顯示簽核的元件
+      // showSignModal:false      // 顯示簽核案件的背景圖
+      bpmImage        : false,    // 顯示表單的完整圖片
+      isLevelEditable : false     // 判斷這關卡能不能編輯
     }
   }
 
@@ -111,7 +112,8 @@ class FormPage extends React.Component {
           allowAddAnnounce:nextProps.state.Form.allowAddAnnounce,       // 是否加會
         },
         signresult:nextProps.state.Form.signresult,
-        bpmImage  :nextProps.state.Form.bpmImage   
+        bpmImage  :nextProps.state.Form.bpmImage,
+        isLevelEditable : nextProps.state.Form.isLevelEditable  
       });
     }
     if (nextProps.state.Form.submitResult && nextProps.state.Form.isSignDone) {
@@ -706,18 +708,14 @@ class FormPage extends React.Component {
       )
       */
     } else {
-      // alert(this.props.Language.RejectText);  //拒絕 需填寫簽核意見
       Alert.alert(
-        this.props.Language.Sign,  //表單簽核
+        this.props.Language.Sign,
         this.props.Language.RejectText,
         [
-          null,
-          {
-            text: "OK", 
-            onPress: console.log("OK")
-          },
+          { text: "OK", onPress: () => console.log("OK Pressed") }
         ],
-      )
+        { cancelable: false }
+      );
     }   
   }
 
@@ -726,7 +724,8 @@ class FormPage extends React.Component {
       this.props.state.UserInfo.UserInfo,
       this.state.Form,
       signInfo,
-      this.state.allowAddValue
+      this.state.allowAddValue,
+      this.state.isLevelEditable
     );
   }
 

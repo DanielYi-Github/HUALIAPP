@@ -46,7 +46,7 @@ export function getFormFormat(formID){
 		FormUnit.language = getState().Language.lang.FormUnit;
 		
 		UpdateDataUtil.getBPMCreateForm(user, content).then( async (data)=>{
-			console.log("getBPMCreateForm", data);
+			// console.log("getBPMCreateForm", data);
 			let stepsTitle       = [];
 			let apList           = [];
 			let apListIndex      = -1;
@@ -161,7 +161,6 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 			// console.log(value, formItem, formFormat[pageIndex].content);
 			// 進行該欄位的新值舊值更換
 			formItem = await FormUnit.updateFormValue( value, formItem, formFormat[pageIndex].content );
-			// console.log("formItem", formItem);
 			formFormat[pageIndex].content[editIndex] = formItem;
 			formFormat[formFormat.length-1].content[allIndex] = formItem;
 
@@ -171,17 +170,12 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 										formItem, 
 										formFormat[pageIndex].content 
 									);
-			// console.log(columnactionValue);
-
 			// 欄位隱藏或顯示控制
 			// 判斷該值是否填寫表單中顯示
-			// console.log(columnactionValue, formFormat[pageIndex].content);
 			formFormat[pageIndex].content = FormUnit.checkFormFieldShow(
 												columnactionValue.columnList, 
 												formFormat[pageIndex].content
 											);
-			// console.log('formFormat[pageIndex].content', formFormat[pageIndex].content);
-
 			// 判斷該值是否全部表單中顯示
 			formFormat[formFormat.length-1].content = FormUnit.checkFormFieldShow(
 														columnactionValue.columnList, 
@@ -330,7 +324,17 @@ function formatSubmitFormValue(allFormFormat = null) {
 		    	for(let [i, temps] of item.defaultvalue.entries()){
 		    		let value = { ROWINDEX : i.toString() };
 		    		for(let [j, temp] of temps.entries()){ 
-		    			value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+		    			if (temp.columntype == "cbotab") {
+		    				value[temp.component.id] = "";
+		    				for (let cboObject of temp.paramList) {
+		    					if (temp.defaultvalue == cboObject.paramcode) {
+		    						value[temp.component.id] = `${cboObject.paramname}_@1@_${temp.defaultvalue}`;
+		    					}
+		    				}
+		    			} else {
+		    				value[temp.component.id] = temp.defaultvalue ? temp.defaultvalue : "";
+		    			}
+		    			
 		    		}
 		    		values.push(value);
 		    	}
@@ -359,7 +363,7 @@ function formatSubmitFormValue(allFormFormat = null) {
   		    			// "ITEM4": "全天_@1@_Ad",
   		    			// "ITEM5": "年假_@1@_10",
   		    			// "ITEM6": "1"
-  		    			if (temp.columntype == "cbo") {
+  		    			if (temp.columntype == "cbotab") {
   		    				value[temp.component.id] = "";
   		    				for (let cboObject of temp.paramList) {
   		    					if (temp.defaultvalue == cboObject.paramcode) {

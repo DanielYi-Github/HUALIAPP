@@ -184,7 +184,7 @@ export function loadWaterMarkViewConfig(){
 }
 
 // for Messages
-export function checkDirectorPage(data){
+export function checkDirectorPage(data, type = null){
 	return async (dispatch, getState) => {
 		
 		// 找出該訊息的EVENT 再進行調轉動作
@@ -201,17 +201,9 @@ export function checkDirectorPage(data){
 			return result.item(0)
 		});
 		console.log("checkDirectorPage", data);
-		/*
-		if (data.TYPE == "meeting") {
-			data.APPID = "MeetingInsert";
-			data.CONTENT1 = {
-				meetingId : "c9bb34a32031c9fcbd11b59c90224211"
-			}
-		} 
-		*/
-		
 		if (data.ISREAD == "F") updateMessageReadState(OID, user, dispatch, getState);
-		// console.log("checkDirectorPage", data);
+
+
 
 		switch (data.APPID) {
 			case "CreateForm": 			// 派車單、台籍休假單... 

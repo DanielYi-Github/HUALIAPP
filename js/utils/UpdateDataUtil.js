@@ -1,5 +1,6 @@
 import { Platform }      from 'react-native';
 import NetInfo           from "@react-native-community/netinfo";
+import * as RNLocalize from "react-native-localize";
 import DeviceStorageUtil from './DeviceStorageUtil';
 import * as SQLite       from './SQLiteUtil';
 import * as Device       from './DeviceInfoUtil';
@@ -253,7 +254,6 @@ export async function updateAPP(user) {
 				} else {
 					insertSQL += "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?),";
 				}
-
 				apps = apps.concat([
 					data[i].oid,
 					data[i].id,
@@ -311,7 +311,7 @@ export async function updateMSG(user) {
 		};
 		let url = "data/getMsg";
 		
-		NetUtil.getRequestContent(params, url).then( async (data)=>{
+		NetUtil.getRequestContent(params, url).then( async (data)=>{			
 			if (data.code != 200) reject(data);		// code如果錯誤則直接回報錯誤
 			
 			// 共用參數			
@@ -352,6 +352,7 @@ export async function updateMSG(user) {
 			let executeInsertMSGArraySQL = [];
 			
 			for (let [ index, insertData] of data.entries() ) {
+				// console.log(insertData, index);
 				prepareToInsertMSGArray = prepareToInsertMSGArray.concat([
 					insertData.oid,
 					insertData.type,
@@ -398,7 +399,7 @@ export async function updateNotice(user) {
 	let lData = await SQLite.selectData(lSQL, []);
 	let ltxdat = lData.item(0).TXDAT; //更新時間
 	let promise = new Promise((resolve, reject) => {
-
+	// console.log("ltxdat", ltxdat);
 		let params = {
 			"token": Common.encrypt(user.token),
 			"userId": Common.encrypt(user.loginID),
@@ -411,6 +412,7 @@ export async function updateNotice(user) {
 			let start = new Date().getTime();
 
 			NetUtil.getRequestContent(params, url).then((data) => {
+				// console.log(url, data);
 				if (data.code == 200) {
 					data = data.content;
 
@@ -559,7 +561,6 @@ export async function updateContact(user) {
 			let url = "data/getContactData";
 
 			NetUtil.getRequestContent(params, url).then((data)=>{
-				// console.log(data);
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
@@ -766,7 +767,6 @@ export async function updateMasterData(user) {
 	let lSQL = "SELECT MAX(TXDAT) as TXDAT FROM THF_MASTERDATA"; //取最大的更新時間
 	let lData = await SQLite.selectData(lSQL, []);
 	let ltxdat = lData.item(0).TXDAT; //更新時間
-	
 	let promise = new Promise((resolve, reject) => {
 
 		let url = "data/getMasterData";
@@ -775,54 +775,35 @@ export async function updateMasterData(user) {
 			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(ltxdat ? ltxdat : '')
 		}
-
+		//资料转换格式方法
+		let dataFun = row => {
+			let array = []
+			array.push(row.oid)
+			array.push(row.class1)
+			array.push(row.class2)
+			array.push(row.class3)
+			array.push(row.class4)
+			array.push(row.class5)
+			array.push(row.class6)
+			array.push(row.len)
+			array.push(row.content)
+			array.push(row.sort)
+			array.push(row.status)
+			array.push(Common.dateFormat(row.crtdat))
+			array.push(Common.dateFormat(row.txdat))
+			return array
+		}
 		if (ltxdat === null) {
-			let start = new Date().getTime();
 			NetUtil.getRequestContent(params, url).then((data) => {
+
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
 				}
-				data = data.content;
-
-				let max = 30;
-				let lInsert = "INSERT INTO THF_MASTERDATA ";
-				let iArray = [];
-				let execute = [];
-				
-				for (let i in data) {
-					i = parseInt(i);
-					iArray = iArray.concat([ 
-						data[i].oid,  
-						data[i].class1,  
-						data[i].class2,  
-						data[i].class3,  
-						data[i].class4,
-						data[i].class5, 
-						data[i].len, 
-						data[i].content, 
-						data[i].sort, 
-						data[i].status,
-						Common.dateFormat(data[i].txdat), 
-						Common.dateFormat(data[i].crtdat)
-					]);
-					
-					if( (i+1)%max == 0 ){
-						//達到分批數量，要重置資料
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,? ";
-						execute.push([lInsert, iArray]);
-						lInsert = "INSERT INTO THF_MASTERDATA ";
-						iArray = [];
-					}else if( i == data.length-1 ){
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,? ";
-						execute.push([lInsert, iArray]);
-					}else{
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,? union all";
-					}
-				}
-
-				SQLite.insertData_new(execute).then(()=>{
-				let end = new Date().getTime();
+				content = data.content;
+				let excuteList = Common.tranBatchInsertSQL('THF_MASTERDATA',content,dataFun,13,30)
+				SQLite.insertData_new(excuteList).then(()=>{
+					let end = new Date().getTime();
 					console.log("updateMasterData_end:"+ (end - start) / 1000);
 					resolve();
 				});
@@ -833,51 +814,12 @@ export async function updateMasterData(user) {
 					reject(data); //已在其他裝置登入
 					return promise;
 				}
-				data = data.content;
-
-				let max = 30;
-				let dArray = [];
-				let iArray = [];
-				let lDelete = "DELETE FROM THF_MASTERDATA WHERE OID in (";
-				let lInsert = "INSERT INTO THF_MASTERDATA ";
-				let dExecute = [];
-				let iExecute = [];
-				let index = 0;
-				
-				for (let i = 0; i < data.length; i++) {
-					index++;
-
-					dArray = dArray.concat([data[i].oid]);
-					
-					let nCrtDat = Common.dateFormat(data[i].crtdat);
-					let nTxDat = Common.dateFormat(data[i].txdat);
-					iArray = iArray.concat([data[i].oid, data[i].class1, data[i].class2, data[i].class3, data[i].class4,
-						data[i].class5,data[i].len,data[i].content,data[i].sort,data[i].status,nCrtDat, nTxDat
-					]);
-					
-					if(index==max){
-						lDelete+= "?)";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,? ";
-						dExecute.push(SQLite.deleteData(lDelete, dArray));
-						iExecute.push(SQLite.insertData(lInsert, iArray));
-						dArray = [];
-						iArray = [];
-						lDelete = "DELETE FROM THF_MASTERDATA WHERE OID in (";
-						lInsert = "INSERT INTO THF_MASTERDATA ";
-						index = 0;
-					}else if(i==data.length-1){
-						lDelete+= "?)";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,? ";
-						dExecute.push(SQLite.deleteData(lDelete, dArray));
-						iExecute.push(SQLite.insertData(lInsert, iArray));
-					}else{
-						lDelete+= "?,";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,? union all";
-					}
-				}
-				
-				Promise.all(dExecute).then(()=>{
-					Promise.all(iExecute).then(()=>{
+				content = data.content;
+				let excuteList = Common.tranDiffUpdateSQL('THF_MASTERDATA',content,dataFun,13,30)
+				const dExcuteList = excuteList['dExcuteList']
+				const iExcuteList = excuteList['iExcuteList']
+				Promise.all(dExcuteList.map(excute => SQLite.deleteData(excute[0], excute[1]))).then(()=>{
+					Promise.all(iExcuteList.map(excute => SQLite.insertData(excute[0],excute[1]))).then(()=>{
 						let end = new Date().getTime();
 						console.log("updateMasterData:"+ (end - start) / 1000);
 						resolve();
@@ -1174,7 +1116,6 @@ export async function updateBanner(user){
 
 		if (ltxdat === null) {
 			NetUtil.getRequestContent(params, url).then((data) => {
-				// console.log(data);
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
@@ -1897,6 +1838,7 @@ export async function getBPMForm(user,content){
 			"userId" : Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
+		// console.log(params);
 
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {
@@ -2815,7 +2757,6 @@ export async function getCreateFormDetailFormat(user, url, content = {}){
 			"userId" :Common.encrypt(user.loginID),
 			"content":Common.encrypt(content)
 		}
-		
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
@@ -3228,15 +3169,17 @@ export async function updateModule(user){
 * @return void
 */
 export async function setLoginInfo(user) {
+	// console.log("setLoginInfo", user);
 	let url = 'data/setLoginInfo';
 	let content = {
-		"userid": user.loginID,
-		"ip": await Device.getIP(),
-		"platform": Platform.OS,
+		"userid"         : user.loginID,
+		"ip"             : await Device.getIP(),
+		"platform"       : Platform.OS,
 		"platformversion": Device.getSystemVersion(),
-		"model": Device.getModel(),
-		"appversion": Device.getVersion(),
-		"empid": user.id
+		"model"          : Device.getModel(),
+		"appversion"     : Device.getVersion(),
+		"empid"          : user.id,
+		"timezone"       : RNLocalize.getTimeZone()
 	}
 	
 	let params = {
@@ -3244,6 +3187,8 @@ export async function setLoginInfo(user) {
 		"userId": Common.encrypt(user.loginID),
 		"content": Common.encrypt(JSON.stringify(content))
 	};
+
+	// console.log(params);
 
 	let promise = new Promise((resolve, reject) => {
 		NetUtil.getRequestContent(params, url).then((data) => {
@@ -4022,6 +3967,28 @@ export async function getSurveySOPSwitch(user){
 }
 
 /**
+* 取得是否顯示會議預約SOP的按鈕
+* @param user資料
+*/
+export async function getMeetingSOPSwitch(user){
+	let promise = new Promise((resolve, reject) => {
+		let url = "public/getSwitch";
+		let params = {
+			"content": "MeetingSop"
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+ 			resolve(data);
+		})
+	});
+	return promise;
+}
+
+/**
 共用模板
 * 取得webView網址
 * @param user資料
@@ -4060,7 +4027,6 @@ export async function updateDailyOralEnglish(user){
 	let sql = "SELECT MAX(TXDAT) AS TXDAT FROM THF_DAILY_ORAL_ENGLISH"
 	let data = await SQLite.selectData(sql,[])
 	let maxTxdat = data.item(0).TXDAT
-	console.log('maxTxdat:',maxTxdat);
 	let promise = new Promise((resolve,reject)=>{
 		//获取数据的API参数和URL
 		let enContent = Common.encrypt(maxTxdat ? maxTxdat : '')
@@ -4099,6 +4065,7 @@ export async function updateDailyOralEnglish(user){
 			NetUtil.getRequestContent(params,url).then(data => {
 				if (data.code != '200') reject(data)//code错误则直接回报错误
 				let content = data.content
+				console.log('updateDailyOralEnglish:',content);
 				let excuteList = Common.tranDiffUpdateSQL('THF_DAILY_ORAL_ENGLISH',content,dataFun,8,30)
 				const dExcuteList = excuteList['dExcuteList']
 				const iExcuteList = excuteList['iExcuteList']
@@ -4201,6 +4168,32 @@ export async function modifyMeeting(user, content){
 
 /**
 共用模板
+* 刪除會議
+* @param user資料
+*/
+export async function cancelMeeting(user, content){
+
+	let promise = new Promise((resolve, reject) => {
+		let url = "meeting/cancel";
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+		};
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+ 			resolve(data);
+		})
+	});
+	return promise;
+}
+
+/**
+共用模板
 * 取得會議
 * @param user資料
 */
@@ -4266,6 +4259,7 @@ export async function getPersonDateTime(user, content){
 				"content": Common.encrypt(JSON.stringify(content)),
 				// "lang"   : Common.encrypt(user.lang)
 			};
+			// console.log(params);
 			NetUtil.getRequestContent(params, url).then((data)=>{
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
@@ -4292,6 +4286,7 @@ export async function getFreeDateTime(user, content){
 				"content": Common.encrypt(JSON.stringify(content)),
 				// "lang"   : Common.encrypt(user.lang)
 			};
+			// console.log(params);
 
 			NetUtil.getRequestContent(params, url).then((data)=>{
 				if (data.code != 200) {

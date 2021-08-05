@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import {Card, CardItem, Left, Body, Right, Icon, Text, Button, connectStyle, Thumbnail, Title, Label } from 'native-base';
-import DateFormat from  'dateformat';
 
 class MeetingItem extends Component {
 	constructor(props) {
@@ -10,10 +9,15 @@ class MeetingItem extends Component {
 
 	render() {
 		let image, imageText = this.props.data.meetingMode;
+		// 缺丁丁跟微軟
 		switch(imageText) {
 		  case "M":
-		    image = require("../../image/meeting/MicrosoftLync.png");
-		    imageText = "MicrosoftLync";
+		    image = require("../../image/meeting/Team.png");
+		    imageText = "Teams";
+		    break;
+		  case "D":
+		    image = require("../../image/meeting/Ding.png");
+		    imageText = "釘釘";
 		    break;
 		  case "S":
 		    image = require("../../image/meeting/Skype.png");
@@ -21,7 +25,7 @@ class MeetingItem extends Component {
 		    break;
 		  case "T":
 		    image = require("../../image/meeting/Tencent.png");
-		    imageText = "Tencent";
+		    imageText = "騰訊會議";
 		    break;
 		  case "W":
 		    image = require("../../image/meeting/WeChart.png");
@@ -46,6 +50,30 @@ class MeetingItem extends Component {
 			}
 		}
 
+		let startDate, startTime, endDate, endTime;
+		let startDateTime = this.props.data.datetime.startdate.split(" ");
+		let endDateTime = this.props.data.datetime.enddate.split(" ");
+
+		let isCrossDate = startDateTime[0] == endDateTime[0]? false: true;
+
+		startDate = startDateTime[0].split("-");
+		startTime = startDateTime[1].split(":");
+		endDate = endDateTime[0].split("-");
+		endTime = endDateTime[1].split(":");
+
+		startDate[1] = startDate[1].indexOf('0') == 0 ? startDate[1].replace('0', ''): startDate[1];
+		startDate[2] = startDate[2].indexOf('0') == 0 ? startDate[2].replace('0', ''): startDate[2];
+		endDate[1] = endDate[1].indexOf('0') == 0 ? endDate[1].replace('0', ''): endDate[1];
+		endDate[2] = endDate[2].indexOf('0') == 0 ? endDate[2].replace('0', ''): endDate[2];
+
+		let meetingTime = "";
+
+		if (isCrossDate) {
+			meetingTime= `${startDate[1]}/${startDate[2]} ${startTime[0]}:${startTime[1]} - ${endDate[1]}/${endDate[2]} ${endTime[0]}:${endTime[1]}`;
+		} else {
+			meetingTime = `${startTime[0]}:${startTime[1]} - ${endTime[0]}:${endTime[1]}`;
+		}
+
 		let cardItem = (
 				<CardItem button onPress={this.props.onPress}>				
 				    <Left style={{flex:0.25, flexDirection: 'column', borderWidth: 0}}> 
@@ -63,14 +91,14 @@ class MeetingItem extends Component {
 							<View style={{flex:1}}>
 								<Title style={{alignSelf: 'flex-start'}}> {this.props.data.subject}</Title>
 							</View>
-							<Text style={{flex:0, marginRight: 0}}>{this.props.data.datetime.starttime}-{this.props.data.datetime.endtime}</Text>
+							<Text style={{flex:0, marginRight: 0}}>{meetingTime}</Text>
 						</View>
 						<View style={{
 							width         : '100%', 
 							marginLeft: 7
 						}}>
-							<Label>會議主席：{this.props.data.chairperson.name}</Label>
-							<Label>與會人員：{attendeesString}</Label>
+							<Label>{this.props.lang.chairperson}：{this.props.data.chairperson.name}</Label>
+							<Label>{this.props.lang.attendees}：{attendeesString}</Label>
 						</View>
 					</Body>
 					<Right style={{flex:0}}>
