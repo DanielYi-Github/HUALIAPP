@@ -38,6 +38,11 @@ class MineDetailPage extends React.Component {
             showNoUserDataAlert:!isUser,
             CarAdministrator:data
           });
+        }).catch((e)=>{
+          this.setState({
+            showNoUserDataAlert:!isUser,
+            CarAdministrator: e
+          });
         });
       }
     });
@@ -210,29 +215,42 @@ class MineDetailPage extends React.Component {
       } else {
         // 上傳圖片
         // this.props.actions.updateUserdata(this.props.state.UserInfo.UserInfo, "picture", response.data);
+        console.log(this.props.state.UserInfo.UserInfo, response.data);
         this.props.actions.updateUserImage(this.props.state.UserInfo.UserInfo, "picture", response.data);
       }
     });
   }
 
   goCarAdministrator = () => {
-    SQLite.selectData(`select * from THF_CONTACT where status='Y' and NAME=? and CO=?`, [this.state.CarAdministrator.name, this.state.CarAdministrator.company]).then((result) => {
-      if (result.length == 0) {
-        let page = this.props.state.Language.lang.ContactDetailPage;
-        Alert.alert(
-          page.NoAdministratorTitle,
-          page.NoAdministratorText,
-          [
-            { text: page.Comfirm, onPress: () =>{} },
-          ],
-          { cancelable: false }
-        )
-      } else {
-        NavigationService.navigate("ContactDetail", {
-          data: result.item(0),
-        });
-      }
-    });
+    let page = this.props.state.Language.lang.ContactDetailPage;
+    if ( typeof this.state.CarAdministrator.name == 'undefined') {
+      Alert.alert(
+        page.NoAdministratorTitle,
+        page.NoAdministratorText,
+        [
+          { text: page.Comfirm, onPress: () =>{} },
+        ],
+        { cancelable: false }
+      )
+    } else {
+      SQLite.selectData(`select * from THF_CONTACT where status='Y' and NAME=? and CO=?`, [this.state.CarAdministrator.name, this.state.CarAdministrator.company]).then((result) => {
+        if (result.length == 0) {
+          Alert.alert(
+            page.NoAdministratorTitle,
+            page.NoAdministratorText,
+            [
+              { text: page.Comfirm, onPress: () =>{} },
+            ],
+            { cancelable: false }
+          )
+        } else {
+          NavigationService.navigate("ContactDetail", {
+            data: result.item(0),
+          });
+        }
+      });
+
+    }
   }
 }
 

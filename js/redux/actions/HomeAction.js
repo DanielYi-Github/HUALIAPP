@@ -202,9 +202,9 @@ async function getWebViewUrl(user,WebViewID){
 		return null;
 	}); 
 	return webViewUrl;
-  }
+}
 
-  export function navigateFunctionPage(app = null, userID = null) {
+export function navigateFunctionPage(app = null, userID = null) {
 	return async (dispatch, getState) => {
 		let recordHitCount = true;
 		let appID = app.ID
@@ -389,6 +389,7 @@ async function navigateMailFunction(state, dispatch){
 	let mail_isNull = (user.membereMail == "" || user.membereMail == null) ? true : false; 
 
 	if (mail_isNull) { //郵箱為空
+	// if (true) { //郵箱為空
 		//郵件伺服器連線出現問題，請稍後再試!
 		toastShow(state.Language.lang.MailPage.mailError);	 
 	} else {
