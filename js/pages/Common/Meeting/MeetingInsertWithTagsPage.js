@@ -252,7 +252,7 @@ class MeetingInsertWithTagsPage extends React.Component {
            isEnd:isEnd
           })
         }).catch((err) => {
-          ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
+          // ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
           this.setState({ 
             isShowSearch   :false,
             isSearch       :false,
@@ -262,8 +262,14 @@ class MeetingInsertWithTagsPage extends React.Component {
             tKeyword       :"",
             searchedData   :[],
             searchedCount  :0,
-            isEnd          :false
+            isEnd          :false,
+            isFooterRefreshing:false
           });
+
+          let message = this.props.lang.MeetingPage.searchError;
+          setTimeout(function(){ 
+            ToastUnit.show('error', message);
+          }, 300);
           console.log(err);
         })
       } else {
@@ -276,7 +282,26 @@ class MeetingInsertWithTagsPage extends React.Component {
             isFooterRefreshing:false,
             isEnd             :isEnd
           });
-        });
+        }).catch((err) => {
+          this.setState({ 
+            isShowSearch   :false,
+            isSearch       :false,
+            isChinesKeyword:false, 
+            keyword        :"",    
+            sKeyword       :"",    
+            tKeyword       :"",
+            searchedData   :[],
+            searchedCount  :0,
+            isEnd          :false,
+            isFooterRefreshing:false
+          });
+
+          let message = this.props.lang.MeetingPage.searchError;
+          setTimeout(function(){ 
+            ToastUnit.show('error', message);
+          }, 300);
+          console.log(err);
+        })
       }
     }
   }

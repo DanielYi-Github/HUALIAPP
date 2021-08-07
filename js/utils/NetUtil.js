@@ -66,6 +66,9 @@ let NetUtil = {
 							return responseJson;
 							break;
 						case "13": 		// 憑證不存在
+							// return responseJson; 
+							responseJson.message = responseJson.message=="" ? "憑證不存在" : responseJson.message;
+							LoggerUtil.addErrorLog(url, "API request in APP", "DEBUG", responseJson);
 							return responseJson; 
 							break;
 						case "0": 		// token失效

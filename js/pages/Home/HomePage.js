@@ -27,6 +27,7 @@ import NoticeTabList             from '../../components/NoticeTabList';
 import WaterMarkView             from '../../components/WaterMarkView';
 import ExplainCardItem           from '../../components/ExplainCardItem';
 import MainPageBackground        from '../../components/MainPageBackground';
+import BroadcastCard from "../../components/Broadcast/BroadcastCard";
 
 const showSecurityScreenFromAppState = appState =>['background', 'inactive'].includes(appState);
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -318,6 +319,9 @@ class HomePage extends React.Component {
              </Body>
            </CardItem>
           </Card>
+
+          {/* 廣播 */}
+          <BroadcastCard/>
 
           {/*公告資訊*/}
           <Card>
