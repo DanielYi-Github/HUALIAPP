@@ -9,28 +9,34 @@ export default class FormContentGridLabel extends Component {
 
     render() {
         let value = this.props.data.value;
-        switch (this.props.data.columntype) {
-            case "cbo":
-            case "cbotab":
-                for (let param of this.props.data.paramList) {
-                    if (param.paramcode == value) {
-                        value = param.paramname;
+
+        try{
+            switch (this.props.data.columntype) {
+                // case "cbo":
+                case "cbotab":
+                    for (let param of this.props.data.paramList) {
+                        if (param.paramcode == value) {
+                            value = param.paramname;
+                        }
                     }
-                }
-                break;
-            case "rdotab":
-                value = value.toString();
-                for (let param of this.props.data.paramList) {
-                    if (param.paramcode == value) {
-                        value = param.paramname;
+                    break;
+                
+                case "rdotab":
+                    value = value.toString();
+                    for (let param of this.props.data.paramList) {
+                        if (param.paramcode == value) {
+                            value = param.paramname;
+                        }
                     }
-                }
-                break;
-            case "hidetxt":
-                return null;
-                break;
-            default:
-            // code block
+                    break;
+                case "hidetxt":
+                    return null;
+                    break;
+                default:
+                // code block
+            }
+        } catch (err) {
+            value = this.props.data.value;
         }
 
         value = (value == null || value == "null" || value == "" || value == " ") ? " " : value;
