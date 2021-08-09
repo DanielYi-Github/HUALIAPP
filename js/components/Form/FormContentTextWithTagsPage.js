@@ -300,7 +300,7 @@ class FormContentTextWithTagsPage extends React.Component {
         style   ={{padding: 15, backgroundColor: this.props.style.InputFieldBackground}} 
         onPress ={()=>{ this.addTag(item.item);}} 
       >
-        <Label>{item.item.COLUMN2}</Label>
+        <Label>{item.item.COLUMN2}</Label><Text note>{item.item.COLUMN1}</Text>
       </Item>
     );
   }
@@ -315,7 +315,7 @@ class FormContentTextWithTagsPage extends React.Component {
       let isAdded = false;
 
       for(let value of data.defaultvalue){
-        if(item.COLUMN2 == value.COLUMN2) isAdded = true; 
+        if(item.COLUMN1 == value.COLUMN1) isAdded = true; 
       }
 
       if (isAdded) {
