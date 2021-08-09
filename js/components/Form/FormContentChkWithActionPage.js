@@ -132,7 +132,13 @@ class FormContentChkWithActionPage extends React.Component {
               </Left>
               <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>
                   <Title style={{color:this.props.style.color}} onPress={()=>{ this.setState({ isShowSearch:true });}}>
-                    {this.state.data.component.name}{selectCount}
+                    {
+                      (selectCount == 0) ? 
+                      this.state.data.component.name
+                      :
+                      selectCount 
+                    }
+                    
                   </Title>
               </Body>
               <Right style={{alignItems: 'center'}}>
@@ -261,8 +267,8 @@ class FormContentChkWithActionPage extends React.Component {
         style   ={{padding: 15, backgroundColor: this.props.style.InputFieldBackground}} 
         onPress ={()=>{ this.checkSelectedArray(item.item); }} 
       >
-        <Label>{item.item.COLUMN2}</Label>
         {checkIcon}
+        <Label>{item.item.COLUMN2}</Label><Text note>{item.item.COLUMN1}</Text>
       </Item>
     );
   }

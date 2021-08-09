@@ -323,7 +323,7 @@ class MeetingSearchWithTagsPage extends React.Component {
           this.addTag(item.item);
         }} 
       >
-        <Label>{item.item.name}</Label>
+        <Label>{item.item.name}</Label><Text note>{item.item.id}</Text>
       </Item>
     );
   }
@@ -333,7 +333,7 @@ class MeetingSearchWithTagsPage extends React.Component {
       let isAdded = false;
 
       for(let value of attendees){
-        if(item.name == value.name) isAdded = true; 
+        if(item.id == value.id) isAdded = true; 
       }
 
       if (isAdded) {
