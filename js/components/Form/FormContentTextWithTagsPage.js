@@ -300,7 +300,7 @@ class FormContentTextWithTagsPage extends React.Component {
         style   ={{padding: 15, backgroundColor: this.props.style.InputFieldBackground}} 
         onPress ={()=>{ this.addTag(item.item);}} 
       >
-        <Label>{item.item.COLUMN2}</Label><Text note>{item.item.COLUMN1}</Text>
+        <Label>{item.item.COLUMN2}</Label><Text note>{item.item.COLUMN3}</Text>
       </Item>
     );
   }

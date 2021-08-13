@@ -10,6 +10,7 @@ import * as RNLocalize from "react-native-localize";
 import * as UpdateDataUtil    from '../../../utils/UpdateDataUtil';
 import * as NavigationService from '../../../utils/NavigationService';
 import ToastUnit              from '../../../utils/ToastUnit';
+import TinyCircleButton       from '../../../components/TinyCircleButton';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 
 class MeetingInsertWithTagsPage extends React.Component {
@@ -160,7 +161,9 @@ class MeetingInsertWithTagsPage extends React.Component {
                     paddingRight: 10,
                     paddingTop: 5,
                     paddingBottom: 5, 
-                    borderRadius: 10
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: '#47ACF2'
                   }}
                   onPress={()=>{
                     Keyboard.dismiss();
@@ -173,9 +176,20 @@ class MeetingInsertWithTagsPage extends React.Component {
               </Right>
             </Header>
         }
-        <Label style={{marginLeft: 5, paddingTop: 20, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder }}>
-          {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd} ${this.props.lang.MeetingPage.attendees}`}
-        </Label>
+        <Item style={{justifyContent: 'space-between', paddingLeft: 5, paddingRight: 10, paddingTop: 20, paddingBottom: 5}}>
+          <Label style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder }}>
+            {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd} ${this.props.lang.MeetingPage.attendees}`}
+          </Label>
+          <TinyCircleButton
+            text    = {"排序"}
+            color   = {"#FF6D00"}
+            onPress = {()=>{
+              NavigationService.navigate("MeetingAttendeesReorder", {
+                attendees: this.state.attendees,
+              });
+            }}
+          />
+        </Item>
         <View style={{flex:0.3, backgroundColor: this.props.style.InputFieldBackground}}>
             <Content ref ={(c) => { this._content = c; }}>
               <Item style={{backgroundColor: this.props.style.InputFieldBackground, borderBottomWidth: 0}}>
@@ -193,8 +207,48 @@ class MeetingInsertWithTagsPage extends React.Component {
             </Content>
         </View>
 
-        <View style={{flex: 1, paddingTop: 20}}>
-          <Label style={{marginLeft: 5, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
+        {/*依職級選擇*/}
+        <Item 
+          style={{ 
+            backgroundColor: this.props.style.InputFieldBackground, 
+            height         : this.props.style.inputHeightBase,
+            paddingLeft    : 10,
+            paddingRight   : 5,
+            marginTop      : 30 
+          }}
+          onPress  = {()=>{
+            console.log(123);
+            // this.setState({ actionSheetType:"M" });
+            // setTimeout( this.showActionSheet, 50);
+            // Keyboard.dismiss();
+          }}
+        >
+            <Label style={{flex:1}}>{"依職級選擇"}</Label>
+            <Icon name='arrow-forward' />
+        </Item>
+
+        {/*依組織架構選擇*/}
+        <Item 
+          style={{ 
+            backgroundColor: this.props.style.InputFieldBackground, 
+            height         : this.props.style.inputHeightBase,
+            paddingLeft    : 10,
+            paddingRight   : 5,
+            borderBottomWidth: 0, 
+          }}
+          onPress  = {()=>{
+            console.log(123);
+            // this.setState({ actionSheetType:"M" });
+            // setTimeout( this.showActionSheet, 50);
+            // Keyboard.dismiss();
+          }}
+        >
+            <Label style={{flex:1}}>{"依組織架構選擇"}</Label>
+            <Icon name='arrow-forward' />
+        </Item>
+
+        <View style={{flex: 1, paddingTop: 30}}>
+          <Label style={{marginLeft: 5, paddingBottom: 5, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
             {`${this.props.state.Language.lang.CreateFormPage.QuickSelect} ${this.props.lang.MeetingPage.attendees}`}
           </Label>
           <FlatList
@@ -341,7 +395,7 @@ class MeetingInsertWithTagsPage extends React.Component {
           }
         }} 
       >
-        <Label>{item.item.name} </Label><Text note>{item.item.id}</Text>
+        <Label>{item.item.name} </Label><Text note>{item.item.depname}</Text>
         <Icon 
           name='calendar-outline'
           onPress={()=>{

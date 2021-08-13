@@ -39,6 +39,7 @@ export default (variables /*: * */ = variable) => {
     },
     backgroundColor: variable.containerBgColor,
     ExplainText:variables.ExplainText,
+    inputHeightBase:variables.inputHeightBase
   };
 
   return formPageTheme;
