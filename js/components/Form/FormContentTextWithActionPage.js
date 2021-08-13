@@ -181,7 +181,7 @@ class FormContentTextWithActionPage extends React.Component {
           NavigationService.goBack();
         }} 
       >
-        <Label>{item.item.COLUMN2}</Label><Text note>{item.item.COLUMN1}</Text>
+        <Label>{item.item.COLUMN2}</Label><Text note>{item.item.COLUMN3}</Text>
       </Item>
     );
   }

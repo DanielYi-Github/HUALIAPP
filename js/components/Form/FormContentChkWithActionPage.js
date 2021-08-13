@@ -268,7 +268,7 @@ class FormContentChkWithActionPage extends React.Component {
         onPress ={()=>{ this.checkSelectedArray(item.item); }} 
       >
         {checkIcon}
-        <Label>{item.item.COLUMN2}</Label><Text note>{item.item.COLUMN1}</Text>
+        <Label>{item.item.COLUMN2}</Label><Text note>{item.item.COLUMN3}</Text>
       </Item>
     );
   }

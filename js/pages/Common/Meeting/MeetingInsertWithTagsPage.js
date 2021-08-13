@@ -341,7 +341,7 @@ class MeetingInsertWithTagsPage extends React.Component {
           }
         }} 
       >
-        <Label>{item.item.name} </Label><Text note>{item.item.id}</Text>
+        <Label>{item.item.name} </Label><Text note>{item.item.depname}</Text>
         <Icon 
           name='calendar-outline'
           onPress={()=>{

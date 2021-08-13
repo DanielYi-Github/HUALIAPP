@@ -323,7 +323,7 @@ class MeetingSearchWithTagsPage extends React.Component {
           this.addTag(item.item);
         }} 
       >
-        <Label>{item.item.name}</Label><Text note>{item.item.id}</Text>
+        <Label>{item.item.name}</Label><Text note>{item.item.depname}</Text>
       </Item>
     );
   }
