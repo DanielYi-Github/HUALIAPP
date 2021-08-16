@@ -229,7 +229,6 @@ class MeetingInsertPage extends React.PureComponent  {
     if (this.state.isSearchedMeeting) {
       this.props.actions.getMeetingModeType();  //獲取參會方式的選項
     } else {
-
       Alert.alert(
         this.props.lang.MeetingPage.meetingAlreadyDone,
         "",
