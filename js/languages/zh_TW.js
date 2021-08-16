@@ -868,5 +868,8 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		good                       :"太棒了!",
 		yourTimezone               :"會議時間",
 		meetingTimezone            :"時間"
+	},
+	CompanyDocumentPage:{
+		CompanyDocument : "公司文件",
 	}
 }
