@@ -867,5 +867,8 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		good                       :"太好了!",
 		yourTimezone   :"会议时间",
 		meetingTimezone:"时间"
+	},
+	CompanyDocumentPage:{
+		CompanyDocument : "公司文件",
 	}
 }

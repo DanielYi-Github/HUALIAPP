@@ -389,7 +389,8 @@ export function initialApi( user, way=false ){
 			UpdateDataUtil.updateModule(user),		//module
   			UpdateDataUtil.updateRead(user),		//訊息讀取表       
 			UpdateDataUtil.setLoginInfo(user),
-			UpdateDataUtil.updateDailyOralEnglish(user) //每日英语
+			UpdateDataUtil.updateDailyOralEnglish(user), //每日英语
+			UpdateDataUtil.updateCompanyDocument(user) //公司文件
 		];
 
 	  	Promise.all(arr).then( async (data) => {
@@ -453,6 +454,11 @@ export function initialApi( user, way=false ){
   		}).catch(e=>{
   			console.log("getMeetingSOPSwitch Error", e);
   		})
+		UpdateDataUtil.updateCompanyDocumentToServer(user).then(data =>{ //同步公司文件资料(VISITCOUNT)
+			
+		}).catch(e=>{
+			console.log('updateCompanyDocumentToServer Error',e);
+		})
   		
 	}
 }
