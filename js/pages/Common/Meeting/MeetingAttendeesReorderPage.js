@@ -59,7 +59,7 @@ class MeetingAttendeesReorderPage extends React.Component {
           <SortableList
             style                 ={{flex:1}}
             contentContainerStyle ={{width: this.props.style.PageSize.width}}
-            data                  ={defaultvalueArray}
+            data                  ={this.state.attendees}
             renderRow             ={this.renderSortableRow} 
             onReleaseRow          ={(key,currentOrder)=>{ this.changeDefaultvalueArray(currentOrder);}}
           />
@@ -68,6 +68,7 @@ class MeetingAttendeesReorderPage extends React.Component {
     };
 
     renderSortableRow = ({key, index, data, disabled, active}) => {
+      // 中間的字會不見
       return <SortableRow 
             data={data} 
             active={active} 
@@ -77,18 +78,21 @@ class MeetingAttendeesReorderPage extends React.Component {
     }
 
     changeDefaultvalueArray = (currentOrder) => {
+      /*
       let array = [];
       for(let index of currentOrder){
         index = parseInt(index);
         array.push(this.props.data.defaultvalue[index]);
       }
       this.props.onPress(array, this.props.data);
+      */
     }
 
     onCheckBoxTap = (index, data) => {
-      let array = this.props.data.defaultvalue;
-      array[index].checked = !array[index].checked;
-      this.props.onPress(array, this.props.data);
+
+      // let array = this.props.data.defaultvalue;
+      // array[index].checked = !array[index].checked;
+      // this.props.onPress(array, this.props.data);
     }
 
     removeCheckItem = () => {
