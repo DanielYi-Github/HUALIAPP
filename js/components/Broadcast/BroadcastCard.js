@@ -6,7 +6,7 @@ import { Body, Card, CardItem, Icon, Title, View } from "native-base";
 import * as NavigationService from '../../utils/NavigationService';
 import Carousel from 'react-native-snap-carousel';
 import * as BroadcastAction from "../../redux/actions/BroadcastAction";
-import Common from '../../utils/Common';
+import * as CommonAction from "../../redux/actions/CommonAction";
 
 const window = Dimensions.get("window")
 class BroadcastCard extends Component {
@@ -14,12 +14,8 @@ class BroadcastCard extends Component {
         super(props)
     }
 
-    componentDidMount(){
-        this.props.actions.initBroadcastData()
-    }
-
     render() {
-        let data = this.props.state.Broadcast.data
+        let data = this.props.data
         if (data.length  == 0) {
             return null
         }
@@ -27,7 +23,7 @@ class BroadcastCard extends Component {
             <Card>
                 <CardItem>
                     <Carousel
-                        data={this.props.state.Broadcast.data}
+                        data={data}
                         renderItem={this.renderItem}
                         sliderWidth={window.width}
                         itemWidth={window.width}
@@ -41,12 +37,16 @@ class BroadcastCard extends Component {
     }
 
     goDetail = item => {
-        let id = item.CLASS5 ? item.CLASS5 : ""
-        let param = item.CLASS6
-        if (id == "" || param == "") {//没有屏幕名称或参数不跳转画面
+        let screenParam = item.CLASS5 ? item.CLASS5 : ""
+        if (screenParam == "") {//没有屏幕名称不跳转画面
             return
         }
-        NavigationService.navigate(id, JSON.parse(param));
+        screenParam = JSON.parse(screenParam)
+        let data = {
+            APPID:screenParam.screenname,
+            CONTENT1:JSON.stringify(screenParam.param)
+        }
+        this.props.actions.goDirectorPage(data);
     }
 
     renderItem = ({ item, index }) => {
@@ -91,7 +91,8 @@ export default connect(
     }),
     (dispatch) => ({
         actions: bindActionCreators({
-          ...BroadcastAction
+          ...BroadcastAction,
+          ...CommonAction
         }, dispatch)
       })
 )(BroadcastCard)
