@@ -22,6 +22,7 @@ import * as MyFormAction       from '../../redux/actions/MyFormAction';
 import * as HomeAction         from '../../redux/actions/HomeAction';
 import * as CommonAction       from '../../redux/actions/CommonAction';
 import * as ThemeAction        from '../../redux/actions/ThemeAction';
+import * as BroadcastAction from '../../redux/actions/BroadcastAction';
 
 class MinePage extends React.Component {
   constructor(props) {
@@ -245,6 +246,7 @@ class MinePage extends React.Component {
             this.props.actions.keywordSearchClean();   
             this.props.actions.loadBannerImages();     
             this.props.actions.loadFunctionType(this.state.language[buttonIndex].key);//thf_module重载
+            this.props.actions.initBroadcastData();//切换广播语系
           }
         }}
       />
@@ -330,6 +332,7 @@ export default connect(
       ...MyFormAction,
       ...CommonAction,
       ...ThemeAction,
+      ...BroadcastAction,
     }, dispatch)
   })
 )(MinePageStyle);

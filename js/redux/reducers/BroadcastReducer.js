@@ -1,8 +1,7 @@
 import * as types from "../actionTypes/BroadcastTypes";
 
 initialState = {
-    data: [],
-    isBirthday :false
+    data: []
 }
 
 export default function index(state = initialState, action = {}) {
@@ -11,11 +10,6 @@ export default function index(state = initialState, action = {}) {
             return {
                 ...state,
                 data: action.data
-            }
-        case types.SET_ISBIRTHDAY:
-            return {
-                ...state,
-                isBirthday: action.isBirthday
             }
         default:
             return state

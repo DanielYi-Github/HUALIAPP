@@ -203,8 +203,12 @@ export function checkDirectorPage(data, type = null){
 		console.log("checkDirectorPage", data);
 		if (data.ISREAD == "F") updateMessageReadState(OID, user, dispatch, getState);
 
-
-
+		this.goDirectorPage(data)
+	}
+}
+//跳转画面
+export function goDirectorPage(data){
+	return (dispatch, getState) => {
 		switch (data.APPID) {
 			case "CreateForm": 			// 派車單、台籍休假單... 
 			case "FormTypeList": 		// 表單簽核分類清單
@@ -214,6 +218,7 @@ export function checkDirectorPage(data, type = null){
 			case "BirthdayWeek": 		// 生日祝福
 			case "Operation": 			// APP操作說明
 			case "ViewFile":  			// 集團文件、任一文件
+			case "DailyOralEnglishDetail"://每日一句英语
 				NavigationService.navigate(data.APPID, JSON.parse(data.CONTENT1));
 				break;
 			case "Meeting":  	    // 會議訊息
@@ -235,6 +240,7 @@ export function checkDirectorPage(data, type = null){
 		}
 	}
 }
+
 
 async function updateMessageReadState(OID, user, dispatch, getState){
 	//該筆資料為UnMessage的第幾筆
