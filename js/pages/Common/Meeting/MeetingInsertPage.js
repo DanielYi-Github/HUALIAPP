@@ -138,7 +138,7 @@ class MeetingInsertPage extends React.PureComponent  {
 
       startTime = isModify && isChangeTime ? new Date(startTime).getTime()-28800000: startTime;
       endTime = isModify && isChangeTime  ? new Date(endTime).getTime()-28800000: endTime;
-      console.log(Platform.OS, time1.getHours() , time2.getHours(), isChangeTime);
+      // console.log(Platform.OS, time1.getHours() , time2.getHours(), isChangeTime);
 
 	    this.state = {
         isChangeTime    :isChangeTime, //記錄部分機型會將時間直接+8小時
@@ -228,7 +228,6 @@ class MeetingInsertPage extends React.PureComponent  {
     if (this.state.isSearchedMeeting) {
       this.props.actions.getMeetingModeType();  //獲取參會方式的選項
     } else {
-
       Alert.alert(
         this.props.lang.MeetingPage.meetingAlreadyDone,
         "",

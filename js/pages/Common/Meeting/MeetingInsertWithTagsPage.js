@@ -341,7 +341,7 @@ class MeetingInsertWithTagsPage extends React.Component {
           }
         }} 
       >
-        <Label>{item.item.name}</Label>
+        <Label>{item.item.name} </Label><Text note>{item.item.depname}</Text>
         <Icon 
           name='calendar-outline'
           onPress={()=>{
@@ -384,7 +384,7 @@ class MeetingInsertWithTagsPage extends React.Component {
       let isAdded = false;
 
       for(let value of attendees){
-        if(item.name == value.name) isAdded = true; 
+        if(item.id == value.id) isAdded = true; 
       }
 
       if (isAdded) {

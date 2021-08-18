@@ -36,12 +36,12 @@
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>localhost</key>
+			<key>app.huali-group.com:8080</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
 			</dict>
-			<key>app.huali-group.com:8080</key>
+			<key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
@@ -49,15 +49,15 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Let user can store coworker&apos;s contacted information in user&apos;s phone.</string>
+	<string>Let user can store coworker's contacted information in user's phone.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Let user can store coworker&apos;s contacted information in user&apos;s phone.</string>
+	<string>Let user can store coworker's contacted information in user's phone.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>User can use faceID to login the app.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>The React-Native Notification library, Jpush, needs user&apos;s device location to push notification message to user.</string>
+	<string>The React-Native Notification library, Jpush, needs user's device location to push notification message to user.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>The React-Native Notification library, Jpush, needs user&apos;s device location to push notification message to user.</string>
+	<string>The React-Native Notification library, Jpush, needs user's device location to push notification message to user.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Let user can upload potots to be their profile image.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
