@@ -5,7 +5,6 @@ import { connect }               from 'react-redux';
 import FormContentTextWithAction from '../../components/Form/FormContentTextWithAction';
 import FormContentCbo            from '../../components/Form/FormContentCbo';
 import FormContentDateTime       from '../../components/Form/FormContentDateTime';
-
 import HeaderForGeneral          from '../../components/HeaderForGeneral';
 import * as NavigationService    from '../../utils/NavigationService';
 import * as DeputyAction         from '../../redux/actions/DeputyAction';
@@ -18,8 +17,8 @@ class DeputyPage extends React.Component {
     super(props);
   }
 
-  async componentWillMount() {
-    await this.props.actions.iniDeputyData();
+  componentWillMount() {
+    this.props.actions.iniDeputyData();
   }
 
   // 将资料转成JS对象
@@ -30,8 +29,9 @@ class DeputyPage extends React.Component {
   render() {
     //過濾關鍵字所查詢的資料
     let lang = this.props.state.Language.lang.DeputyPage;
-    let Deputy=this.props.state.Deputy;
-    console.log(Deputy);
+    let Deputy = this.props.state.Deputy;
+    let ggg = this.deepClone(Deputy);
+    console.log('Deputy111',ggg);
     return (
       <Container>
         {/*標題列*/}
@@ -68,6 +68,7 @@ class DeputyPage extends React.Component {
                   </Left>
                   <Right>
                       <Input 
+                        paddingVertical = {0}
                         scrollEnabled = {false}
                         multiline 
                         value = {Deputy.msgState} 
@@ -263,18 +264,19 @@ class DeputyPage extends React.Component {
   // 启动/停止按钮action
   onPressSubmit = () => {
       let lang = this.props.state.Language.lang.DeputyPage;
-      let content;
+      console.log('lang',lang);
       let user = this.props.state.UserInfo.UserInfo;
+      let content;
 
       //處理畫面與api傳值不一致問題
       let deputyData = this.props.state.Deputy;
       console.log('deputyData', deputyData);
-      let changeStateFlag = true;
+      let changeStateFlag = true;     // 资料检核没问题注记
       if (deputyData.deputyRule) {
-        // console.log("多規則");
-        let defaultvalue = deputyData.deputyRules.defaultvalue;
-        //多規則代理不可為空
-        if (defaultvalue.length == 0) {
+      // 多規則代理
+        let RulesList = deputyData.deputyRules.defaultvalue;
+        if (RulesList.length == 0) {
+          // 多規則代理不可為空
           Alert.alert(
             lang.RulesNotNull,
             null, [{
@@ -288,56 +290,52 @@ class DeputyPage extends React.Component {
           )
           changeStateFlag = false;
         } else {
-          let tempRules = this.deepClone(deputyData.deputyRules.defaultvalue);
           let arrayRules = [];
-          //克服組件回傳key不為value問題
-          for (let i in tempRules) {
+          for (let i in RulesList) {
+            let ItemList = RulesList[i];
+            // 代理人工号
+            let RuleDeputyID = null;
+            for (let j in ItemList) {
+              if (ItemList[j].component.id == "txtRuleDeputyID") {
+                RuleDeputyID = ItemList[j].defaultvalue;
+              }
+            }
+            // 条件代号
+            let CondID = null;
+            for (let k in ItemList) {
+              if (ItemList[k].component.id == "txtCondID") {
+                CondID = ItemList[k].defaultvalue;
+              }
+            }
+            // 条件
+            let Cond = null;
+            for (let l in ItemList) {
+              if (ItemList[l].component.id == "txtCond") {
+                Cond = ItemList[l].defaultvalue;
+              }
+            }
 
-              //條件一 key&value
-              // let cond1key = tempRules[i][0].defaultvalue;
-              let cond1key = tempRules[i][1].defaultvalue;
-              let cond1value = this.getParamValue(cond1key);
-              if(!cond1value){
-                cond1key = tempRules[i][0].defaultvalue;
-                cond1value = tempRules[i][1].defaultvalue;
-              }
-              //關係 key&value
-              // let relationkey = tempRules[i][2].defaultvalue;
-              let relationkey = tempRules[i][3].defaultvalue;
-              let relationvalue = this.getParamValue(relationkey);
-              if(!relationvalue){
-                relationkey = tempRules[i][2].defaultvalue;
-                relationvalue = tempRules[i][3].defaultvalue;
-              }
-              //條件二 key&value
-              // let cond2key = tempRules[i][4].defaultvalue;
-              let cond2key = tempRules[i][5].defaultvalue;
-              let cond2value = tempRules[i][5].defaultvalue;
-
-              let deputyid = tempRules[i][6].defaultvalue;
-              //insert格式拼接
-              let rule = cond1key + " " + relationkey + " " + "\"" + cond2key + "\"";
-              let synopsis = cond1value + " " + relationvalue + " " + "\"" + cond2value + "\"";
-              let obj = {
-                deputyid: deputyid,
-                rule: rule,
-                synopsis: synopsis
-              }
-              arrayRules.push(obj);
-          // console.log("content",obj);
+            // 组合成每一笔对象
+            let obj = {
+              deputyid: RuleDeputyID,
+              rule: CondID,
+              synopsis: Cond
+            };
+            arrayRules.push(obj);
           }
           content = {
-            "deputyState": (!deputyData.deputyState).toString(),
-            "byDeputyRule": (deputyData.deputyRule).toString(),
-            "deputyID": deputyData.deputyID.defaultvalue,
-            "deputyRules": arrayRules,
-            "executeDuration": deputyData.executeDuration.toString(),
-            "startExecuteTime": deputyData.startExecuteTime.defaultvalue,
-            "endExecuteTime": deputyData.endExecuteTime.defaultvalue,
-            "mailMode": deputyData.informMailMode.toString(),
-            "informID": deputyData.informID.defaultvalue,
-            "disableMsg": deputyData.disableMsgPrompt.toString()
+            "deputyState": (!deputyData.deputyState).toString(),            // 代理启动状态
+            "byDeputyRule": (deputyData.deputyRule).toString(),             // 是否多规则代理
+            "deputyID": deputyData.deputyID.defaultvalue,                   // 代理人工号
+            "deputyRules": arrayRules,                                      // 多规则代理列表
+            "executeDuration": deputyData.executeDuration.toString(),       // 是否启动特定时间代理
+            "startExecuteTime": deputyData.startExecuteTime.defaultvalue,   // 代理起时
+            "endExecuteTime": deputyData.endExecuteTime.defaultvalue,       // 代理讫时
+            "mailMode": deputyData.informMailMode.toString(),               // 是否代理人完成通知
+            "informID": deputyData.informID.defaultvalue,                   // 通知对象工号
+            "disableMsg": deputyData.disableMsgPrompt.toString()            // 是否登录时不要提示代理人的状况
           }
+          console.log('content',this.deepClone(content));
         }
       } else {
         if (user.id == deputyData.deputyID.defaultvalue) {
@@ -371,17 +369,17 @@ class DeputyPage extends React.Component {
         } else {
           // console.log("單一規則");
           content = {
-            "deputyState": (!deputyData.deputyState).toString(),
-            "byDeputyRule": (deputyData.deputyRule).toString(),
-            "deputyID": deputyData.deputyID.defaultvalue,
-            "executeDuration": deputyData.executeDuration.toString(),
-            "startExecuteTime": deputyData.startExecuteTime.defaultvalue,
-            "endExecuteTime": deputyData.endExecuteTime.defaultvalue,
-            "mailMode": deputyData.informMailMode.toString(),
-            "informID": deputyData.informID.defaultvalue,
-            "disableMsg": deputyData.disableMsgPrompt.toString()
+            "deputyState": (!deputyData.deputyState).toString(),            // 代理启动状态
+            "byDeputyRule": (deputyData.deputyRule).toString(),             // 是否多规则代理
+            "deputyID": deputyData.deputyID.defaultvalue,                   // 代理人工号
+            "executeDuration": deputyData.executeDuration.toString(),       // 是否启动特定时间代理
+            "startExecuteTime": deputyData.startExecuteTime.defaultvalue,   // 代理起时
+            "endExecuteTime": deputyData.endExecuteTime.defaultvalue,       // 代理讫时
+            "mailMode": deputyData.informMailMode.toString(),               // 是否代理人完成通知
+            "informID": deputyData.informID.defaultvalue,                   // 通知对象工号
+            "disableMsg": deputyData.disableMsgPrompt.toString()            // 是否登录时不要提示代理人的状况
           }
-          // console.log("content",content);
+          console.log("content1",this.deepClone(content));
         }
       }
 
