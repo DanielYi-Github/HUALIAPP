@@ -87,7 +87,7 @@ class FormContentTar extends Component {
 		 			<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 				  	<Label >{this.state.labelname}</Label>
 				    <Input 
-						// multiline 
+						multiline 
 						scrollEnabled = {false}
 						value         ={value} 
 						editable      ={editable} 

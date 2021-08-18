@@ -247,7 +247,7 @@ class MeetingSearchWithTagsPage extends React.Component {
            isEnd:isEnd
           })
         }).catch((err) => {
-          ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
+          // ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
           this.setState({ 
             isShowSearch   :false,
             isSearch       :false,
@@ -257,8 +257,13 @@ class MeetingSearchWithTagsPage extends React.Component {
             tKeyword       :"",
             searchedData   :[],
             searchedCount  :0,
-            isEnd          :false
+            isEnd          :false,
+            isFooterRefreshing:false
           });
+          let message = this.props.lang.MeetingPage.searchError;
+          setTimeout(function(){ 
+            ToastUnit.show('error', message);
+          }, 300);
           console.log(err);
         })
       } else {
@@ -271,6 +276,25 @@ class MeetingSearchWithTagsPage extends React.Component {
             isFooterRefreshing:false,
             isEnd             :isEnd
           });
+        }).catch((err) => {
+          this.setState({ 
+            isShowSearch   :false,
+            isSearch       :false,
+            isChinesKeyword:false, 
+            keyword        :"",    
+            sKeyword       :"",    
+            tKeyword       :"",
+            searchedData   :[],
+            searchedCount  :0,
+            isEnd          :false,
+            isFooterRefreshing:false
+          });
+
+          let message = this.props.lang.MeetingPage.searchError;
+          setTimeout(function(){ 
+            ToastUnit.show('error', message);
+          }, 300);
+          console.log(err);
         });
       }
     }
@@ -299,7 +323,7 @@ class MeetingSearchWithTagsPage extends React.Component {
           this.addTag(item.item);
         }} 
       >
-        <Label>{item.item.name}</Label>
+        <Label>{item.item.name}</Label><Text note>{item.item.depname}</Text>
       </Item>
     );
   }
@@ -309,7 +333,7 @@ class MeetingSearchWithTagsPage extends React.Component {
       let isAdded = false;
 
       for(let value of attendees){
-        if(item.name == value.name) isAdded = true; 
+        if(item.id == value.id) isAdded = true; 
       }
 
       if (isAdded) {

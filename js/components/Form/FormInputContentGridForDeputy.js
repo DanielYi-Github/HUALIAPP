@@ -64,15 +64,29 @@ class FormInputContentGridForDeputy extends Component {
 		let required = (this.props.data.required == "Y") ? "*" : "  ";
 		let renderItem = null;
 		if (editable) {
+		// 多规则代理可编辑时
+			// 是否显示删除按钮
+			let del = false;	// 显示删除按钮注记
+			const arrEditCheckItemRecord = this.state.editCheckItemRecord;
+			for(let j in arrEditCheckItemRecord){
+				if(arrEditCheckItemRecord[j]){
+					del = true;
+					break;
+				}
+			}
 			renderItem = (
 				<View style={{width: '100%'}}>
-	            	<Item 
+					{/* 多规则代理title */}
+	            	<Item
 	            		fixedLabel 
 	            		style={{borderBottomWidth: 0, paddingTop: 15, paddingBottom: 15}} 
 	            		error={this.props.data.requiredAlbert}
 	            	>
+						{/* 必填星号 */}
 		 			  	<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
+						{/* 多规则代理 */}
 		                <Label>{this.state.labelname}</Label>
+						{/* 加号按钮 */}
 		                {
 		                	(this.state.data.enableCreateData != false) ? 
         		                <Icon 
@@ -80,17 +94,21 @@ class FormInputContentGridForDeputy extends Component {
         							type  ="MaterialIcons" 
         							style ={{fontSize:30, color: '#20b11d'}}
         		                	onPress={ async ()=>{
+										this.setState({
+											editCheckItem     : false,
+											editCheckItemIndex: -1,
+										});
         		                		let data = this.state.data;
         		                		// 直接開啟編輯葉面
-										this.showEditModal(data)
+										this.showEditModal(data, -1);
         		                	}}
         		                />
 		                	:
 		                		null
 		                }
-
+						{/* 删除按钮 */}
 		                {
-		                	(this.state.editCheckItemRecord.length == 0 || this.state.data.enableCreateData == false) ?
+							((!del) || this.state.data.enableCreateData == false) ?
 		                		null
 		                	:
         		                <Icon 
@@ -107,6 +125,7 @@ class FormInputContentGridForDeputy extends Component {
 		                }
 		            </Item>
 
+					{/* 多规则代理列表 */}
 		            {
 		            	( this.props.data.defaultvalue == null || this.props.data.defaultvalue.length == 0  ) ?
          					<Item fixedLabel error={this.props.data.requiredAlbert}/>
@@ -127,15 +146,17 @@ class FormInputContentGridForDeputy extends Component {
 	            </View>
 			);
 		} else {
-			let value = this.props.lang.Common.None;
+		// 多规则代理不可编辑时
 			let defaultvalue = ( this.props.data.defaultvalue == null ) ? [] : this.props.data.defaultvalue;
 			if ( defaultvalue.length == 0 ) {
+			// 列表资料为空时
+				let value = this.props.lang.Common.None;
 				renderItem =
 					<Item fixedLabel 
-					style={[
-						this.props.style.CreateFormPageFiledItemWidth,
-						this.props.style.fixCreateFormPageFiledItemWidth
-					]}
+						style={[
+							this.props.style.CreateFormPageFiledItemWidth,
+							this.props.style.fixCreateFormPageFiledItemWidth
+						]}
 					>
 			 			<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 					  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
@@ -146,8 +167,9 @@ class FormInputContentGridForDeputy extends Component {
 					    	editable={editable} 
 					    	style={{textAlign: 'right'}}
 					    />
-					  </Item>
+					</Item>
 			} else {
+			// 列表资料不为空时
 				renderItem =
 					<View style={{width: '100%'}}>
 		            	<Item fixedLabel style={{borderBottomWidth: 0, paddingTop: 15, paddingBottom: 15}}>
@@ -174,36 +196,50 @@ class FormInputContentGridForDeputy extends Component {
 	rendercheckItem = (item) => {
 		let index = item.index;
 		item = item.item;
-
 		let labels = [];
 		for (let i in item) {
-			labels.push(<FormInputContentGridLabel key={i} data={item[i]}/>);
+			let itemCom = (item[i].columntype == "deputytxt" || item[i].columntype == "txtwithaction") ?
+				<View style = {{width: '100%', flexDirection: 'row'}}>
+					<View style={{flex:2.8}}>
+						<Label>{`${item[i].component.name}`}</Label>
+					</View>
+					<Label>:</Label>
+					<View style={{flex:6.3}}>
+						<Label>{`${item[i].defaultvalue}`}</Label>
+					</View>
+				</View>
+			:
+				null
+			labels.push(itemCom);
 		}
 
 		if (this.props.editable) {
 			return (
 				<Body style={{flexDirection: 'row', paddingLeft: 5, paddingRight: 20, marginTop: 10, marginBottom: 10}}>
+					{/* CheckBox多选按钮 */}
 					<Left style={{flex:0, paddingRight: 30}}>
-						{
-							(this.state.data.enableDeleteData || typeof this.state.data.enableDeleteData == "undefined" ) ? 
-								<CheckBox 
-									checked={this.state.editCheckItemRecord[index]} 
-									color={this.state.editCheckItemRecord[index] ? "#EA4C88" : "#aaa" } 
-									onPress={(e)=>{
-										let array = this.state.editCheckItemRecord;
-										array[index] = !this.state.editCheckItemRecord[index]; 
-										this.setState({
-											editCheckItemRecord:array
-										});
-									}} 
-								/>
-							:
-								null
-						}
+					{
+						(this.state.data.enableDeleteData || typeof this.state.data.enableDeleteData == "undefined" ) ? 
+							<CheckBox 
+								checked={this.state.editCheckItemRecord[index]} 
+								color={this.state.editCheckItemRecord[index] ? "#EA4C88" : "#aaa" } 
+								onPress={(e)=>{
+									let array = this.state.editCheckItemRecord;
+									array[index] = !this.state.editCheckItemRecord[index]; 
+									this.setState({
+										editCheckItemRecord:array
+									});
+								}} 
+							/>
+						:
+							null
+					}
 					</Left>
+					{/* 文字 */}
 					<Body style={{alignItems: 'flex-start'}}>
 						{labels}
 					</Body>
+					{/* 编辑按钮 */}
 					<Right style={{flex:0}}>
 		                <Icon 
 							name  ="create" 
@@ -232,6 +268,7 @@ class FormInputContentGridForDeputy extends Component {
 		}
 	}
 
+	// 加号/编辑按钮点击事件
 	showEditModal = (data, editCheckItemIndex = -1) => {
 		NavigationService.navigate("FormInputContentGridPageForDeputy", {
 			propsData         : this.props.data,
@@ -245,8 +282,10 @@ class FormInputContentGridForDeputy extends Component {
 
 	confirmFormData = async (value) => {
 		if (this.state.editCheckItem) {
+			// 编辑时点击确认按钮
 			value.defaultvalue[this.state.editCheckItemIndex] = this.deepClone(value.listComponent);
 		} else {
+			// 新增时点击确认按钮
 			// 將自己的值新增到 this.state.data 的 defaultvalue 裡面
 			if (value.defaultvalue == null) {
 				value.defaultvalue = [];
@@ -264,7 +303,7 @@ class FormInputContentGridForDeputy extends Component {
 		// 將listComponent變成最原本的樣子
 		value.listComponent = this.deepClone(this.props.data.listComponent);
 		// 送值
-		await this.props.onPress(this.deepClone(value), this.props.data);
+		await this.props.onPress(this.deepClone(value));
 
 		this.modalWrapperClose();
 	}
@@ -280,7 +319,7 @@ class FormInputContentGridForDeputy extends Component {
 		});
 	}
 	
-
+	// 删除按钮点击事件
 	removeCheckItem = () => {
 		let data = this.state.data;
 		let value = this.deepClone(this.props.data);

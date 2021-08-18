@@ -159,7 +159,7 @@ class MeetingInsertChairpersonPage extends React.Component {
           })
         }).catch((err) => {
           console.log(err);
-          ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
+          // ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
           this.setState({ 
             isShowSearch   :false,
             isSearch       :false,
@@ -168,8 +168,14 @@ class MeetingInsertChairpersonPage extends React.Component {
             sKeyword       :"",    
             tKeyword       :"",
             searchedData   :[],
-            isEnd:false
+            isEnd:false,
+            isFooterRefreshing:false
           });
+          let message = this.props.lang.MeetingPage.searchError;
+          setTimeout(function(){ 
+            ToastUnit.show('error', message);
+          }, 300);
+          console.log(err);
         })
       } else {
         let actionObject = { condition:"" }; //查詢使用
@@ -182,6 +188,25 @@ class MeetingInsertChairpersonPage extends React.Component {
             isFooterRefreshing:false,
             isEnd             :isEnd
           });
+        }).catch((err) => {
+          this.setState({ 
+            isShowSearch   :false,
+            isSearch       :false,
+            isChinesKeyword:false, 
+            keyword        :"",    
+            sKeyword       :"",    
+            tKeyword       :"",
+            searchedData   :[],
+            searchedCount  :0,
+            isEnd          :false,
+            isFooterRefreshing:false
+          });
+
+          let message = this.props.lang.MeetingPage.searchError;
+          setTimeout(function(){ 
+            ToastUnit.show('error', message);
+          }, 300);
+          console.log(err);
         });
       }
     }
@@ -225,7 +250,7 @@ class MeetingInsertChairpersonPage extends React.Component {
           }
         }} 
       >
-        <Label>{item.item.name}</Label>
+        <Label>{item.item.name}</Label><Text note>{item.item.depname}</Text>
         <Icon 
           name='calendar-outline'
           onPress={()=>{

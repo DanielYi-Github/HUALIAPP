@@ -1,4 +1,4 @@
-import { Platform, NativeModules } from 'react-native';
+import { Platform, NativeModules, Alert } from 'react-native';
 import * as types          from '../actionTypes/CommonTypes';
 import * as MessageTypes   from '../actionTypes/MessageTypes';
 import * as SQLite         from '../../utils/SQLiteUtil';
@@ -222,10 +222,35 @@ export function goDirectorPage(data){
 				NavigationService.navigate(data.APPID, JSON.parse(data.CONTENT1));
 				break;
 			case "Meeting":  	    // 會議訊息
-				NavigationService.navigate("MeetingInsert", {
-			      meetingParam: { oid:data.CONTENT1	},
-			      fromPage:"MessageFuc"
-			    });
+				let isSearchedMeeting = false;
+				for(let meeting of getState().Meeting.meetingList){
+				  if (data.CONTENT1 == meeting.oid) {
+				    isSearchedMeeting = true;
+				    break;
+				  }
+				}
+
+				if (isSearchedMeeting) {
+					NavigationService.navigate("MeetingInsert", {
+				      meetingParam: { oid:data.CONTENT1	},
+				      fromPage:"MessageFuc"
+				    });
+				} else {
+					Alert.alert(
+					  getState().Language.lang.MeetingPage.meetingAlreadyDone,
+					  "",
+					  [
+					    {
+					      text: getState().Language.lang.Common.Close,   // 關閉 
+					      style: 'cancel',
+					      onPress: () => {
+					        // NavigationService.goBack();
+					      }, 
+					    }
+					  ],
+					)
+				}
+
 				break;
 			case "Notice": 				// 集團公告
 				let sql  = `select * from THF_NOTICE N where N.OID ='${data.CONTENT1}'`;
