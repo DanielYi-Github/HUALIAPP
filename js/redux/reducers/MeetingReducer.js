@@ -7,7 +7,8 @@ const initialState = {
   actionResultMsg       : "",
   meetingList           : [],
   person_meetingDateTime: [],
-  suggestMeetingDateTime: []
+  suggestMeetingDateTime: [],
+  attendees             : [] // 與會人員
 };
 
 export default function index(state = initialState, action = {}) {
@@ -79,6 +80,11 @@ export default function index(state = initialState, action = {}) {
         ...state,
         actionResult          : null,
         actionResultMsg       : "",
+      }
+    case types.MEETING_SET_ATTENDEES:
+      return{
+        ...state,
+        attendees:action.attendees
       }
     default:
       return state;

@@ -8,7 +8,8 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
-import { Content, Item, Label, Input, Form, Icon, Button, Text, Body, Card, CardItem, Title, CheckBox, Left, Right, connectStyle } from 'native-base';
+import { Content, Item, Label, Input, Form, Icon, Button, Text, Body, Card, CardItem, Title, Left, Right, connectStyle } from 'native-base';
+import CheckBox from '@react-native-community/checkbox';
 
 class SortableRow extends Component {
 
@@ -65,18 +66,20 @@ class SortableRow extends Component {
       <Animated.View style={[ styles.row, this._style, { backgroundColor:activeBackgroundColor  } ]}>
         <Body style={{flexDirection: 'row', paddingLeft: 20, paddingRight: 20}}>
           <Left style={{flexDirection: 'row', flex: 0}}>
-            <CheckBox 
-              checked={data.checked} 
-              color={data.checked ? "#EA4C88" : "#aaa" } 
-              onPress={(e)=>{ 
-                this.props.onCheckBoxTap(index, data); 
-              }} 
-            />
+            <CheckBox
+                value={data.checked}
+                onValueChange={(newValue) => {
+                  this.props.onCheckBoxTap(index, data); 
+                }}
+                boxType = {"square"}
+                onCheckColor = {"#00C853"}
+                onTintColor = {"#00C853"}
+              />
           </Left>
-          <Body style={{justifyContent: 'flex-start', alignItems: 'flex-start', paddingLeft: 20}}>
-            <Label>{`${index+1}.`}{data.COLUMN2}</Label>
+          <Body style={{justifyContent: 'space-between', paddingLeft: 20, flexDirection: 'row'}}>
+            <Label>{`${index+1}.`}{this.props.name}</Label><Text note>{this.props.departmentName}</Text>
           </Body>
-          <Right>
+          <Right style={{flex: 0}}>
             <Icon name={"reorder-two"}/>
           </Right>
         </Body>

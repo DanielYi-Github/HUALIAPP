@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, FlatList, RefreshControl, VirtualizedList, Platform, Alert, Keyboard, TouchableOpacity } from 'react-native';
-import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Icon, Title, Text, Card, CardItem, Label, connectStyle } from 'native-base';
+import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Icon, Title, Text, Card, CardItem, Label, Footer, connectStyle } from 'native-base';
 import { tify, sify} from 'chinese-conv'; 
 import { connect }   from 'react-redux';
 import TagInput      from 'react-native-tags-input';
@@ -13,47 +13,38 @@ import ToastUnit              from '../../../utils/ToastUnit';
 import TinyCircleButton       from '../../../components/TinyCircleButton';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 
-class MeetingInsertWithTagsPage extends React.Component {
+import {
+  NavigationContainer,
+  useRoute,
+  useNavigationState,
+} from '@react-navigation/native';
+
+class MeetingInsertWithTagsFurtherPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      sendValueBack : this.props.route.params.onPress,       // 將直傳回上一個物件,
-      text : {
-              COLUMN1: null, 
-              name   : null, 
-              COLUMN3: null, 
-              COLUMN4: null
-            },
-      startdate         :this.props.route.params.startdate,
-      enddate           :this.props.route.params.enddate,
-      isShowSearch      :false,       //是否顯示關鍵字搜尋的輸入匡
-      isSearch          :false,       //是反顯示關鍵字搜尋結果
-      isChinesKeyword   :false,       //用來判斷關鍵字是否為中文字
-      keyword           :"",          //一般搜尋
-      sKeyword          :"",          //簡體中文
-      tKeyword          :"",          //繁體中文
-      searchedData      :[],          //關鍵字搜尋出來的資料
-      searchedCount     :0,           //關鍵字搜尋出來的筆數
-      data              :[],          //搜尋出來的資料
-      isFooterRefreshing:false,
-      isEnd             :false,        //紀錄搜尋結果是否已經沒有更多資料
-      oid               :this.props.route.params.oid
+      selectBy          : this.props.route.params.selectBy,   //用哪一種模式下去選擇
+      isShowSearch      : false,       //是否顯示關鍵字搜尋的輸入匡
+      isChinesKeyword   : false,       //用來判斷關鍵字是否為中文字
+      keyword           : "",          //一般搜尋
+      sKeyword          : "",          //簡體中文
+      tKeyword          : "",          //繁體中文
+      isSearch          : false,       //是反顯示關鍵字搜尋結果
+      searchedData      : [],          //關鍵字搜尋的資料
+      searchedCount     : 0,           //關鍵字搜尋出來的筆數
+      data              : [],          //一般搜尋的資料
+      isFooterRefreshing: false,
+      isEnd             : false,        //紀錄搜尋結果是否已經沒有更多資料
     };
   }
 
   componentDidMount(){
-    this.loadMoreData();
-    this.props.actions.setAttendees(this.props.route.params.attendees); //將與會人員放入redux state中
+    // this.loadMoreData();
   }
 
   render() {
     // 紀錄是否是關鍵字搜尋結果的資料
     let contentList = this.state.isSearch ? this.state.searchedData : this.state.data;
-
-    //整理tags的資料格式
-    let tagsArray = [];
-    for(let value of this.props.state.Meeting.attendees) tagsArray.push(value.name);
-    let tags = { tag: '', tagsArray: tagsArray }
 
     return (
       <Container>
@@ -141,7 +132,9 @@ class MeetingInsertWithTagsPage extends React.Component {
           :
             <Header style={this.props.style.HeaderBackground}>
               <Left>
-                <Button transparent onPress={() =>NavigationService.goBack()}>
+                <Button transparent onPress={()=>{
+                  NavigationService.goBack();
+                }}>
                   <Icon name='arrow-back' style={{color:this.props.style.color}}/>
                 </Button>
               </Left>
@@ -154,116 +147,75 @@ class MeetingInsertWithTagsPage extends React.Component {
                 <Button transparent onPress={()=>{ this.setState({ isShowSearch:true }); }}>
                   <Icon name='search' style={{color:this.props.style.color}}/>
                 </Button>
-                <TouchableOpacity 
-                  style={{
-                    backgroundColor: '#47ACF2', 
-                    paddingLeft: 10, 
-                    paddingRight: 10,
-                    paddingTop: 5,
-                    paddingBottom: 5, 
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: '#47ACF2'
-                  }}
-                  onPress={()=>{
-                    Keyboard.dismiss();
-                    this.state.sendValueBack(this.props.state.Meeting.attendees);
-                    NavigationService.goBack();
-                  }}
-                >
-                  <Text style={{color: '#FFF'}}>{this.props.state.Language.lang.CreateFormPage.Done}</Text>
-                </TouchableOpacity>
               </Right>
             </Header>
         }
-        <Item style={{justifyContent: 'space-between', paddingLeft: 5, paddingRight: 10, paddingTop: 20, paddingBottom: 5}}>
-          <Label style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder }}>
-            {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd} ${this.props.lang.MeetingPage.attendees}`}
-          </Label>
-          {
-            this.props.state.Meeting.attendees.length > 1 ?
-              <TinyCircleButton
-                text    = {"排序"}
-                color   = {"#FF6D00"}
-                onPress = {()=>{
-                  NavigationService.navigate("MeetingAttendeesReorder");
-                }}
-              />
-            :
-              null
-          }
-        </Item>
 
-        <View style={{flex:0.3, backgroundColor: this.props.style.InputFieldBackground}}>
-            <Content ref ={(c) => { this._content = c; }}>
-              <Item style={{backgroundColor: this.props.style.InputFieldBackground, borderBottomWidth: 0}}>
-                <TagInput
-                  disabled            ={true}
-                  autoFocus           ={false}
-                  updateState         ={(state)=>{ this.props.actions.removeAttendee(state); }}
-                  tags                ={tags}
-                  inputContainerStyle ={{ height: 0 }}
-                  tagsViewStyle       ={{ margin:0 }}
-                  tagStyle            ={{backgroundColor:"#DDDDDD", borderWidth:0}}
-                  tagTextStyle        ={{color:"#666"}}
-                />
-              </Item> 
-            </Content>
-        </View>
+        {/*依不同公司選擇職級*/}
+        {
+          this.state.selectBy == "position" ?
+            <Item 
+              style={{ 
+                backgroundColor: this.props.style.InputFieldBackground, 
+                height         : this.props.style.inputHeightBase,
+                paddingLeft    : 10,
+                paddingRight   : 5,
+                marginTop      : 30 
+              }}
+              onPress  = {()=>{
+                  NavigationService.push("MeetingInsertWithTagsFurther", {
+                    selectBy           : "organize",
+                  });
+              }}
+            >
+                <Label style={{flex:1}}>{"依職級選擇"}</Label>
+                <Icon name='arrow-forward' />
+            </Item>
+          :
+            null
+        }
 
-        {/*依職級選擇*/}
-        <Item 
-          style={{ 
-            backgroundColor: this.props.style.InputFieldBackground, 
-            height         : this.props.style.inputHeightBase,
-            paddingLeft    : 10,
-            paddingRight   : 5,
-            marginTop      : 30 
-          }}
-          onPress  = {()=>{
-            NavigationService.navigate("MeetingInsertWithTagsFurther", {
-              selectBy           : "position"
-            });
-          }}
-        >
-            <Label style={{flex:1}}>{"依職級選擇"}</Label>
-            <Icon name='arrow-forward' />
-        </Item>
+        <FlatList
+          contentContainerStyle = {{flex: 1, paddingTop: this.state.selectBy == "position" ? 30: 0}}
+          keyExtractor          = {(item, index) => index.toString()}
+          data                  = {contentList}
+          extraData             = {this.state}
+          renderItem            = {this.renderTapItem}
+          ListFooterComponent   = {this.renderFooter}
+          ListEmptyComponent    = {this.renderEmptyComponent}
+          onEndReachedThreshold = {0.3}
+          onEndReached          = {this.state.isEnd ? null :this.loadMoreData}
+        />
 
-        {/*依組織架構選擇*/}
-        <Item 
-          style={{ 
-            backgroundColor: this.props.style.InputFieldBackground, 
-            height         : this.props.style.inputHeightBase,
-            paddingLeft    : 10,
-            paddingRight   : 5,
-            borderBottomWidth: 0, 
-          }}
-          onPress  = {()=>{
-            NavigationService.navigate("MeetingInsertWithTagsFurther", {
-              selectBy           : "organize"
-            });
-          }}
-        >
-            <Label style={{flex:1}}>{"依組織架構選擇"}</Label>
-            <Icon name='arrow-forward' />
-        </Item>
-
-        <View style={{flex: 1, paddingTop: 30}}>
-          <Label style={{marginLeft: 5, paddingBottom: 5, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
-            {`${this.props.state.Language.lang.CreateFormPage.QuickSelect} ${this.props.lang.MeetingPage.attendees}`}
-          </Label>
-          <FlatList
-            keyExtractor          ={(item, index) => index.toString()}
-            data                  = {contentList}
-            extraData             = {this.state}
-            renderItem            = {this.renderTapItem}
-            ListFooterComponent   = {this.renderFooter}
-            ListEmptyComponent    = {this.renderEmptyComponent}
-            onEndReachedThreshold = {0.3}
-            onEndReached          = {this.state.isEnd ? null :this.loadMoreData}
-          />
-        </View>
+        <Footer>
+          <Body>
+            <Text onPress={ this.showAttendeesReorderPage } style={{marginLeft: 15}}>{`已選擇${this.props.state.Meeting.attendees.length}人`}</Text>
+            <Icon onPress={ this.showAttendeesReorderPage } name={"chevron-up-outline"} />
+          </Body>
+          <Right>
+            <TouchableOpacity 
+              style={{
+                backgroundColor: '#47ACF2', 
+                borderColor    : '#47ACF2',
+                borderWidth    : 1,
+                borderRadius   : 10,
+                marginRight    : 15,
+                paddingLeft    : 10, 
+                paddingRight   : 10,
+                paddingTop     : 5,
+                paddingBottom  : 5, 
+              }}
+              onPress={()=>{
+                Keyboard.dismiss();                
+                NavigationService.navigate({
+                  key: this.props.MeetingInsertWithTagsPageRouterKey
+                });
+              }}
+            >
+              <Text style={{color: '#FFF'}}>{this.props.state.Language.lang.CreateFormPage.Done}</Text>
+            </TouchableOpacity>
+          </Right>
+        </Footer>
       </Container>
     );
   }
@@ -435,24 +387,6 @@ class MeetingInsertWithTagsPage extends React.Component {
     return searchMeetingResult;
   }
 
-  addTag = (item) => {      
-      let attendees = this.props.state.Meeting.attendees;
-      let isAdded = false;
-
-      for(let value of attendees){
-        if(item.id == value.id) isAdded = true; 
-      }
-
-      if (isAdded) {
-        ToastUnit.show('error', this.props.state.Language.lang.CreateFormPage.NoAreadyItem);
-      } else {
-          attendees.push(item);
-          this.props.actions.setAttendees(attendees);
-      }
-      
-      this._content.wrappedInstance.scrollToEnd({animated: true});
-  }
-
   renderFooter = () => {
     let footer = null
     if(this.state.isFooterRefreshing){
@@ -495,9 +429,27 @@ class MeetingInsertWithTagsPage extends React.Component {
     string = string.replace(/\s/g,"");
     return string;
   }
+
+  showAttendeesReorderPage = () => {
+    NavigationService.navigate("MeetingAttendeesReorder");
+  }
 }
 
-export let MeetingInsertWithTagsPageStyle = connectStyle( 'Page.FormPage', {} )(MeetingInsertWithTagsPage);
+// Wrap and export
+let MeetingInsertWithTagsFurtherPagefunction = (props) => {
+  const navigationState = useNavigationState(state => state);
+
+  let MeetingInsertWithTagsPageRouterKey = "";
+  for(let item of navigationState.routes){
+    if (item.name == "MeetingInsertWithTags") {
+      MeetingInsertWithTagsPageRouterKey = item.key;
+    }
+  }
+
+  return <MeetingInsertWithTagsFurtherPage {...props} MeetingInsertWithTagsPageRouterKey={MeetingInsertWithTagsPageRouterKey} />;
+}
+
+export let MeetingInsertWithTagsFurtherPageStyle = connectStyle( 'Page.FormPage', {} )(MeetingInsertWithTagsFurtherPagefunction);
 
 export default connect(
   (state) => ({
@@ -509,4 +461,4 @@ export default connect(
       ...MeetingAction
     }, dispatch)
   })
-)(MeetingInsertWithTagsPageStyle);
+)(MeetingInsertWithTagsFurtherPageStyle);

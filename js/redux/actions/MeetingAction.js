@@ -35,6 +35,42 @@ function loadModeType(meetingModeTypes){
 	}
 }
 
+export function setAttendees(attendees){
+	return async (dispatch, getState) => {
+		dispatch({
+			type     :MeetingTypes.MEETING_SET_ATTENDEES,
+			attendees   :attendees,
+		}); 
+	}
+}
+
+export function removeAttendee(state){
+	return async (dispatch, getState) => {
+
+		let data = getState().Meeting.attendees;
+		for(let [i, value] of data.entries()){
+		  let spliceIndex = 0;
+		  for(let item of state.tagsArray){
+		    if (value.name == item){
+		     spliceIndex = null;          
+		     break; 
+		    }
+		    spliceIndex = i;
+		  }
+
+		  if(spliceIndex != null){
+		   data.splice(spliceIndex,1);
+		   break; 
+		  }
+		}
+
+		dispatch({
+			type     :MeetingTypes.MEETING_SET_ATTENDEES,
+			attendees:data,
+		}); 
+	}
+}
+
 export function addMeeting(meetingParams){
 	return async (dispatch, getState) => {
 		dispatch(refreshing(true)); 	

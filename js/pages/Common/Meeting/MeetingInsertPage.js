@@ -397,7 +397,7 @@ class MeetingInsertPage extends React.PureComponent  {
                     style   ={{fontSize:30, color: '#20b11d'}}
                     onPress ={()=>{
                       NavigationService.navigate("MeetingInsertWithTags",{
-                        attendees: this.state.attendees,
+                        attendees: this.deepClone(this.state.attendees),
                         startdate: this.state.startdate,
                         enddate  : this.state.enddate,
                         onPress  : this.selectAttendees,
@@ -680,7 +680,7 @@ class MeetingInsertPage extends React.PureComponent  {
 
   selectAttendees = (attendees) => {
     this.setState({
-      attendees:[...this.state.attendees]
+      attendees:[...attendees]
     });
   }
 
@@ -1062,6 +1062,11 @@ class MeetingInsertPage extends React.PureComponent  {
     string = string.replace(/\n/g,"");
     string = string.replace(/\s/g,"");
     return string.length == 0 ? true : false;
+  }
+
+  // deep clone
+  deepClone(src) {
+    return JSON.parse(JSON.stringify(src));
   }
 
   componentWillUnmount(){

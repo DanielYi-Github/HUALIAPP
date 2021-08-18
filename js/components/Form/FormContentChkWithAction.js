@@ -131,10 +131,12 @@ class FormContentChkWithAction extends Component {
 
 	renderSortableRow = ({key, index, data, disabled, active}) => {
 	  return <SortableRow 
-	  			data={data} 
-	  			active={active} 
-	  			index={index}
-				onCheckBoxTap = {this.onCheckBoxTap}
+				data           ={data} 
+				active         ={active} 
+				index          ={index}
+				onCheckBoxTap  = {this.onCheckBoxTap}
+				name           ={data.COLUMN2}
+				departmentName ={data.COLUMN3}
 	  		/>
 	}
 

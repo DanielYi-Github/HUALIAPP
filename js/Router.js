@@ -105,11 +105,14 @@ import MeetingListPage              from './pages/Common/Meeting/MeetingListPage
 import MeetingInsertPage            from './pages/Common/Meeting/MeetingInsertPage';
 import MeetingInsertChairpersonPage from './pages/Common/Meeting/MeetingInsertChairpersonPage';
 import MeetingInsertWithTagsPage    from './pages/Common/Meeting/MeetingInsertWithTagsPage';
+import MeetingInsertWithTagsFurtherPage from './pages/Common/Meeting/MeetingInsertWithTagsFurtherPage';
 import MeetingTimeForPersonPage     from './pages/Common/Meeting/MeetingTimeForPersonPage';
 import MeetingAttendeesReorderPage  from './pages/Common/Meeting/MeetingAttendeesReorderPage';
 
 import DailyOralEnglishPage from "./pages/Common/DailyOralEnglish/DailyOralEnglishPage";
 import DailyOralEnglishDetailPage from "./pages/Common/DailyOralEnglish/DailyOralEnglishDetailPage";
+
+
 
 function ShowSplashPage(props){
   const isFocused = useIsFocused();
@@ -346,14 +349,15 @@ function MainStack(props){
 
       <AppStack.Screen name ="CreateWebView"  component={CreateWebViewPage} />
 
+      <AppStack.Screen name ="DailyOralEnglish" component={DailyOralEnglishPage}/>
+      <AppStack.Screen name ="DailyOralEnglishDetail" component={DailyOralEnglishDetailPage}/>
+
       <AppStack.Screen name ="MeetingList" component={MeetingListPage} />
       <AppStack.Screen name ="MeetingSearch" component={MeetingSearchPage} />
       <AppStack.Screen name ="MeetingSearchWithTags" component={MeetingSearchWithTagsPage} />
       <AppStack.Screen name ="MeetingInsert" component={MeetingInsertPage} />
       <AppStack.Screen name ="MeetingInsertWithTags" component={MeetingInsertWithTagsPage} />
-
-      <AppStack.Screen name ="DailyOralEnglish" component={DailyOralEnglishPage}/>
-      <AppStack.Screen name ="DailyOralEnglishDetail" component={DailyOralEnglishDetailPage}/>
+      <AppStack.Screen name ="MeetingInsertWithTagsFurther" component={MeetingInsertWithTagsFurtherPage} />
       
       <AppStack.Screen name ="MeetingInsertChairperson" component={MeetingInsertChairpersonPage} />
       <AppStack.Screen name ="MeetingTimeForPerson" component={MeetingTimeForPersonPage} />

@@ -1,12 +1,10 @@
 import React from 'react';
 import { View, FlatList, RefreshControl, VirtualizedList, Platform, Alert, Keyboard, TouchableOpacity } from 'react-native';
-import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Icon, Title, Text, Card, CardItem, Label, connectStyle } from 'native-base';
+import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Icon, Title, Text, Card, CardItem, Label, Footer, connectStyle } from 'native-base';
 import * as NavigationService from '../../../utils/NavigationService';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 import SortableRow         from '../../../components/Form/SortableRow';
 import SortableList from 'react-native-sortable-list';
-
-
 
 import { connect }   from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -14,13 +12,20 @@ import { bindActionCreators } from 'redux';
 class MeetingAttendeesReorderPage extends React.Component {
     constructor(props) {
       super(props);
-      this.state = {
-        attendees :this.props.route.params.attendees  //參與人
-      };
+      
+      let attendees = props.state.Meeting.attendees;
+      for(let person of attendees){
+        person.checked = false;
+      }
+      this.props.actions.setAttendees(attendees);
     }
 
     render() {
-      console.log(this.state.attendees);
+      let checkedAttendees = 0;
+      for(let person of this.props.state.Meeting.attendees){
+        if(person.checked) checkedAttendees++
+      }
+
       return (
         <Container>
           <Header style={this.props.style.HeaderBackground}>
@@ -47,7 +52,6 @@ class MeetingAttendeesReorderPage extends React.Component {
                   borderColor: '#47ACF2'
                 }}
                 onPress={()=>{
-                  // this.state.sendValueBack(this.state.attendees);
                   NavigationService.goBack();
                 }}
               >
@@ -59,50 +63,75 @@ class MeetingAttendeesReorderPage extends React.Component {
           <SortableList
             style                 ={{flex:1}}
             contentContainerStyle ={{width: this.props.style.PageSize.width}}
-            data                  ={this.state.attendees}
+            data                  ={this.props.state.Meeting.attendees}
             renderRow             ={this.renderSortableRow} 
             onReleaseRow          ={(key,currentOrder)=>{ this.changeDefaultvalueArray(currentOrder);}}
           />
+
+          <Footer>
+            <Body>
+              <Text style={{marginLeft: 15}}>{`已選擇${checkedAttendees}人`}</Text>
+            </Body>
+            <Right>
+              <TouchableOpacity 
+                style={{
+                  marginRight    : 15,
+                  paddingLeft    : 10, 
+                  paddingRight   : 10,
+                  paddingTop     : 5,
+                  paddingBottom  : 5, 
+                  borderRadius   : 10,
+                  borderWidth    : 1,
+                  backgroundColor: checkedAttendees == 0 ? "#757575": '#F44336', 
+                  borderColor    : checkedAttendees == 0 ? "#757575": '#F44336'
+                }}
+                onPress={()=>{
+                  this.removeCheckItem();
+                }}
+                disabled={checkedAttendees == 0 ? true: false}
+              >
+                <Text style={{color: '#FFF'}}>{"刪除"}</Text>
+              </TouchableOpacity>
+            </Right>
+          </Footer>
         </Container>
       )
     };
 
     renderSortableRow = ({key, index, data, disabled, active}) => {
-      // 中間的字會不見
       return <SortableRow 
-            data={data} 
-            active={active} 
-            index={index}
-            onCheckBoxTap = {this.onCheckBoxTap}
+            data           ={data} 
+            active         ={active} 
+            index          ={index}
+            onCheckBoxTap  ={this.onCheckBoxTap}
+            name           ={data.name}
+            departmentName ={data.depname}
           />
     }
 
     changeDefaultvalueArray = (currentOrder) => {
-      /*
       let array = [];
       for(let index of currentOrder){
         index = parseInt(index);
-        array.push(this.props.data.defaultvalue[index]);
+        array.push(this.props.state.Meeting.attendees[index]);
       }
-      this.props.onPress(array, this.props.data);
-      */
+      this.props.actions.setAttendees(array);
     }
 
     onCheckBoxTap = (index, data) => {
-
-      // let array = this.props.data.defaultvalue;
-      // array[index].checked = !array[index].checked;
-      // this.props.onPress(array, this.props.data);
+      let array = this.props.state.Meeting.attendees;
+      array[index].checked = !array[index].checked;
+      this.props.actions.setAttendees(array);
     }
 
     removeCheckItem = () => {
       let array = [];
-      for(let item of this.props.data.defaultvalue){
+      for(let item of this.props.state.Meeting.attendees){
         if (item.checked == false) {
           array.push(item);
         }
       }
-      this.props.onPress(array, this.props.data);
+      this.props.actions.setAttendees(array);
     }
 };
 
