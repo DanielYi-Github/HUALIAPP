@@ -54,7 +54,7 @@ class MinePage extends React.Component {
     }
 
     // 是否顯示代理人設定
-    let isShowBpmDeputySetting = false;
+    let isShowBpmDeputySetting = true;
     for(let FunctionData of this.props.state.Home.FunctionData){
       if (FunctionData.ID == "Sign") isShowBpmDeputySetting = true;
     }

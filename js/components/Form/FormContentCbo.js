@@ -8,9 +8,9 @@ class FormContentCbo extends Component {
 	constructor(props) {
 		super(props);
 		// 名稱、值、參數、能否編輯、強制編輯、欄位資料
-		this.state = {
-			labelname: props.data.component.name,
-		};
+		// this.state = {
+		// 	labelname: props.data.component.name,
+		// };
 	}
 
 	render() {
@@ -44,7 +44,7 @@ class FormContentCbo extends Component {
 	  					this.props.style.fixCreateFormPageFiledItemWidth
 	  				]}>
  			   		  <Label style={{flex: 0, color:"#FE1717"}}>{ required }</Label>
- 			   		  <Label style={{flex: 0 }}>{this.state.labelname}</Label>
+ 			   		  <Label style={{flex: 0 }}>{this.props.data.component.name}</Label>
  			   		  <Text 
  			   		  	style={{
  			   		  		flex: 1, 
@@ -72,7 +72,7 @@ class FormContentCbo extends Component {
   				  	]}
   				  >
  			   		<Label style={{flex: 0, color:"#FE1717"}}>{ required }</Label>
-  				  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
+  				  	<Label style={{flex: 0}}>{this.props.data.component.name}</Label>
   				    <Input 
   				    	// multiline 
   				    	scrollEnabled = {false}
@@ -98,7 +98,7 @@ class FormContentCbo extends Component {
 		return (
 		  <ActionSheet
 			ref               ={o => this.ActionSheet = o}
-			title             ={this.state.labelname}
+			title             ={this.props.data.component.name}
 			options           ={BUTTONS}
 			cancelButtonIndex ={CANCEL_INDEX}
 		    onPress={(buttonIndex) => { 

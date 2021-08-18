@@ -139,7 +139,7 @@ export default class FormInputContent extends Component {
 		  			/>
 		  		);
 				break;
-			case "tabForDeputy":	
+			case "tabForDeputy":
 				inputComponent = (
 					<FormInputContentGridForDeputy 
 						data     ={this.props.data} 

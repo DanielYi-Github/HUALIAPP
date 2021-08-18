@@ -11,35 +11,44 @@ export default class FormInputContentGridLabel extends Component {
 	}
 
 	render() {		
-		let value = this.props.data.defaultvalue;
+		// let value = this.props.data.defaultvalue;
+		let value = "";
 		switch(this.props.data.columntype) {
-			case "cbo":
-			case "cbotab":
-				for(let param of this.props.data.paramList){
-					if (param.paramcode == value) {
-						value = param.paramname;			
-					}
-				}
-				break;
-			case "rdotab":
-				value = value.toString();
-				for(let param of this.props.data.paramList){
-					if (param.paramcode == value) {
-						value = param.paramname;			
-					}
-				}
-				break;
+			// case "cbo":
+			// case "cbotab":	
+			// 	for(let param of this.props.data.paramList){
+			// 		if (param.paramcode == value) {
+			// 			value = param.paramname;			
+			// 		}
+			// 	}
+			// 	break;
+			// case "rdotab":
+			// 	value = value.toString();
+			// 	for(let param of this.props.data.paramList){
+			// 		if (param.paramcode == value) {
+			// 			value = param.paramname;			
+			// 		}
+			// 	}
+			// 	break;
 			case "hidetxt":
 				return null;			
 				break;
+			case "deputytxt":
+				value = this.props.data.defaultvalue;
+				break;
+			case "txtwithaction":
+				value = this.props.data.defaultvalue;
+				break;
 			default:
+				return null;
+				break;
 		    // code block
 		}
 
 		value = (value == null || value == "null" || value == "" || value == " " ) ? " " : value;
 		return(
 			<View style = {{width: '100%', flexDirection: 'row'}}>
-				<View style={{flex:3.7}}>
+				<View style={{flex:2.8}}>
 					<Label>{`${this.props.data.component.name}`}</Label>
 				</View>
 				<Label>:</Label>
