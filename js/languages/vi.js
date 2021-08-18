@@ -863,5 +863,8 @@ export default {
 		good                       :"Good!",
 		yourTimezone   :"Giờ họp địa phương của bạn",
 		meetingTimezone:"thời gian"
+	},
+	CompanyDocumentPage:{
+		CompanyDocument : "Tập tin công ty",
 	}
 }

@@ -863,5 +863,8 @@ export default {
 		good                       :"Good!",
 		yourTimezone   :"Your location time",
 		meetingTimezone:"Time"
+	},
+	CompanyDocumentPage:{
+		CompanyDocument : "Company Document",
 	}
 }

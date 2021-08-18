@@ -177,6 +177,31 @@ let UpgradeDBTableUtil = {
 			  });
 			}
 		  });
+		  //檢查有無表單
+		SQLite.checkTable("THF_COMPANY_DOC").then((data)=>{
+			if (!data) {
+				let createTable = `CREATE TABLE THF_COMPANY_DOC ( 
+					OID char ( 32 ) NOT NULL, 
+					CO varchar ( 2 ) NOT NULL, 
+					DOC_TYPE varchar ( 2 ) NOT NULL, 
+					SUBJECT varchar ( 255 ) NOT NULL, 
+					RELEASE_DAT numeric NOT NULL DEFAULT (datetime('now','+8 hour')),
+					AUTH varchar ( 2 ) NOT NULL, 
+					VISITCOUNT int NOT NULL, 
+					LOCALVISITCOUNT int DEFAULT 0, 
+					FILEID varchar ( 30 ) NOT NULL, 
+					FILEURL varchar ( 255 ) NOT NULL, 
+					FILESIZE float NOT NULL, 
+					STATUS char ( 1 ) NOT NULL DEFAULT 'Y', 
+					CRTDAT numeric NOT NULL DEFAULT (datetime('now','+8 hour')), 
+					TXDAT numeric DEFAULT (datetime('now','+8 hour')),
+					PRIMARY KEY(OID)  
+				  )`;
+				SQLite.createTable(createTable).then((e)=>{
+					console.log(e);
+				});
+			}
+		});
 	},
 }
 
