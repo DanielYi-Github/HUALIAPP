@@ -257,7 +257,7 @@ class CompanyDocumentPage extends Component {
                 oid,
                 fileid: item.FILEID
             },
-            file: item.FILEURL,
+            file,
             fileType: "pdf",
             pageTtile: item.SUBJECT,
             isDecode: true,
