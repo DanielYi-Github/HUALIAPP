@@ -477,6 +477,31 @@ class MeetingInsertPage extends React.PureComponent  {
             }
           </Item>
 
+          {/*例行性會議*/}
+          <Item 
+            style={{
+              backgroundColor: this.props.style.InputFieldBackground,
+              height         : this.props.style.inputHeightBase,
+              paddingLeft    : 10,
+              paddingRight   : 5,
+            }}
+            disabled = {!this.state.isEditable}
+            onPress  = {()=>{
+              this.setState({ actionSheetType:"M" });
+              setTimeout( this.showActionSheet, 50);
+              Keyboard.dismiss();
+            }}
+          >
+            <Icon name='clock-alert-outline' type="MaterialCommunityIcons" />
+            <Label style={{flex:1}}>{this.props.lang.MeetingPage.reminder}</Label>
+            {
+             this.state.isEditable ? <Text>{remindtimeLabel}</Text> : <Label>{remindtimeLabel}</Label>  
+            }
+            {
+              this.state.isEditable ? <Icon name='arrow-forward' /> : null
+            }
+          </Item>
+
           {/*顯示會議的按鈕*/}
           { this.renderMeetingActionButton() }
 

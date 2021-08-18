@@ -157,13 +157,13 @@ class MeetingInsertWithTagsPage extends React.Component {
                 <TouchableOpacity 
                   style={{
                     backgroundColor: '#47ACF2', 
-                    paddingLeft: 10, 
-                    paddingRight: 10,
-                    paddingTop: 5,
-                    paddingBottom: 5, 
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: '#47ACF2'
+                    paddingLeft    : 10, 
+                    paddingRight   : 10,
+                    paddingTop     : 5,
+                    paddingBottom  : 5, 
+                    borderRadius   : 10,
+                    borderWidth    : 1,
+                    borderColor    : '#47ACF2'
                   }}
                   onPress={()=>{
                     Keyboard.dismiss();
