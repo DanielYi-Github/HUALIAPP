@@ -70,7 +70,7 @@ class BroadcastCard extends Component {
                                 :
                                 null
                             }
-                            <Title style={{ fontSize: 15, color: 'gray',paddingLeft:5,alignSelf:'flex-end' }}>{item.TITLE}</Title>
+                            <Title style={{ fontSize: 15,paddingLeft:5,alignSelf:'flex-end' }}>{item.TITLE}</Title>
                         </Body>
                         <Body style={{ alignSelf: 'flex-start', paddingLeft: 5 }}>
                             <Title style={{ fontSize: 18, textAlign: 'left' }}>{item.CONTENT}</Title>
