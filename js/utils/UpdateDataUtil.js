@@ -4020,7 +4020,10 @@ export async function getWebViewUrlFromParamAbout(user,content){
 	return promise;
 }
 
-
+/**
+ * 差异更新每日一句英语资料
+ * @param {*} user 
+ */
 export async function updateDailyOralEnglish(user){
 	let start = new Date().getTime();
 	// 查询最大异动日期
@@ -4052,7 +4055,10 @@ export async function updateDailyOralEnglish(user){
 
 		if (maxTxdat === null) {//没有资料则批量插入
 			NetUtil.getRequestContent(params,url).then(data => {
-				if (data.code != '200') reject(data)//code错误则直接回报错误
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
 				let content = data.content
 				let excuteList = Common.tranBatchInsertSQL('THF_DAILY_ORAL_ENGLISH',content,dataFun,8,30)
 				SQLite.insertData_new(excuteList).then(()=>{
@@ -4063,9 +4069,11 @@ export async function updateDailyOralEnglish(user){
 			})
 		}else {//有资料则差异更新
 			NetUtil.getRequestContent(params,url).then(data => {
-				if (data.code != '200') reject(data)//code错误则直接回报错误
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
 				let content = data.content
-				console.log('updateDailyOralEnglish:',content);
 				let excuteList = Common.tranDiffUpdateSQL('THF_DAILY_ORAL_ENGLISH',content,dataFun,8,30)
 				const dExcuteList = excuteList['dExcuteList']
 				const iExcuteList = excuteList['iExcuteList']
@@ -4079,6 +4087,8 @@ export async function updateDailyOralEnglish(user){
 			})
 		}
 	})
+
+	return promise
 }
 /**
 共用模板
