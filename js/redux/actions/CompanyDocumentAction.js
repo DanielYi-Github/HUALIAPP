@@ -174,7 +174,7 @@ export function queryCompanyDocumentData(appOid, pageNum, pageSize, type, arrCon
         from(
             select *
             from THF_COMPANY_DOC 
-            where STATUS = 'Y' 
+            where STATUS = 'Y' and RELEASE_DAT <= datetime('now','localtime')
             ${typeWhere}
             ${conditionWhere}
             and OID in(
