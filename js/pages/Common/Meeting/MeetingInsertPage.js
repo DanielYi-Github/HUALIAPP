@@ -484,6 +484,8 @@ class MeetingInsertPage extends React.PureComponent  {
               height         : this.props.style.inputHeightBase,
               paddingLeft    : 10,
               paddingRight   : 5,
+              marginTop      : 20,
+
             }}
             disabled = {!this.state.isEditable}
             onPress  = {()=>{
@@ -492,8 +494,8 @@ class MeetingInsertPage extends React.PureComponent  {
               Keyboard.dismiss();
             }}
           >
-            <Icon name='clock-alert-outline' type="MaterialCommunityIcons" />
-            <Label style={{flex:1}}>{this.props.lang.MeetingPage.reminder}</Label>
+            <Icon name='reload-circle-outline' />
+            <Label style={{flex:1}}>{"例行性會議"}</Label>
             {
              this.state.isEditable ? <Text>{remindtimeLabel}</Text> : <Label>{remindtimeLabel}</Label>  
             }
