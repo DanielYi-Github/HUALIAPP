@@ -867,6 +867,12 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		avalableTime               :"此段時間各位都有空",
 		good                       :"太棒了!",
 		yourTimezone               :"會議時間",
-		meetingTimezone            :"時間"
+		meetingTimezone            :"時間",
+		never                      :"不重複",
+		everyday                   :"每天",
+		workday                    :"工作日(週一到週五)",
+		everyWeek                  :"每週",
+		everyMonth                 :"每月",
+		custom                     :"自定義",
 	}
 }

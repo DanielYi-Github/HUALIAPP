@@ -1,78 +1,18 @@
 import * as types from '../actionTypes/MeetingTypes';
 
 const initialState = {
-  isRefreshing          : false,
-  meetingModeTypes      : [],
-  actionResult          : null,
-  actionResultMsg       : "",
-  meetingList           : [],
-  person_meetingDateTime: [],
-  suggestMeetingDateTime: [],
-  attendees             : [], // 與會人員
-  reCircleMeetingOptions : [
-    {
-      label: "不重複",
-      value: "no"
-    },
-    {
-      label: "每天",
-      value: "everyday"
-    },
-    {
-      label: "工作日(星期一到五)",
-      value: "workingday"
-    },
-    {
-      label: "每週",
-      value: "everyweek"
-    },
-    {
-      label: "每月",
-      value: "everymonth"
-    },
-    {
-      label: "自定義",
-      value: "customize"
-    }
-  ],
-  reCircleMeetingEndDate:null,
-  reCircleMeetingCustomizeOptions:[
-    {
-      label:"週一",
-      value:"mon",
-      checked:false
-    },
-    {
-      label:"週二",
-      value:"tue",
-      checked:false
-    },
-    {
-      label:"週三",
-      value:"wed",
-      checked:false
-    },
-    {
-      label:"週四",
-      value:"thr",
-      checked:false
-    },
-    {
-      label:"週五",
-      value:"fri",
-      checked:false
-    },
-    {
-      label:"週六",
-      value:"sat",
-      checked:false
-    },
-    {
-      label:"週日",
-      value:"sun",
-      checked:false
-    }
-  ]
+  isRefreshing                  : false,
+  meetingModeTypes              : [],
+  actionResult                  : null,
+  actionResultMsg               : "",
+  meetingList                   : [],
+  person_meetingDateTime        : [],
+  suggestMeetingDateTime        : [],
+  attendees                     : [], // 與會人員
+  regularMeetingDefaultOptions  : "never",
+  regularMeetingOptions         : [],
+  regularMeetingEndDate         : null,
+  regularMeetingCustomizeOptions: []
 };
 
 export default function index(state = initialState, action = {}) {
@@ -149,6 +89,13 @@ export default function index(state = initialState, action = {}) {
       return{
         ...state,
         attendees:action.attendees
+      }
+    case types.MEETING_SETREGULARMEETINGOPTIONS:
+      return{
+        ...state,
+        regularMeetingDefaultOptions  : action.regularMeetingDefaultOptions,
+        regularMeetingOptions         : action.regularMeetingOptions,
+        regularMeetingCustomizeOptions: action.regularMeetingCustomizeOptions
       }
     default:
       return state;

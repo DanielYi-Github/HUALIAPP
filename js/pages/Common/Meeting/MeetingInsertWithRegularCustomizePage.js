@@ -17,7 +17,7 @@ import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 import ToastUnit              from '../../../utils/ToastUnit';
 import Common                 from '../../../utils/Common';
 
-class MeetingInsertPage extends React.PureComponent  {
+class MeetingInsertWithRegularCustomizePage extends React.PureComponent  {
 	constructor(props) {
 	    super(props);
 
@@ -226,8 +226,6 @@ class MeetingInsertPage extends React.PureComponent  {
   }
 
   componentDidMount(){
-    this.props.actions.setRegularMeetingOptionsDefaultValue();  //設定多語系值
-
     if (this.state.isSearchedMeeting) {
       this.props.actions.getMeetingModeType();  //獲取參會方式的選項
     } else {
@@ -261,15 +259,6 @@ class MeetingInsertPage extends React.PureComponent  {
     for(let remindtimeOption of this.state.remindtimeOptions){
       if (this.state.remindtime == remindtimeOption.value) {
         remindtimeLabel = remindtimeOption.label;
-      }
-    }
-
-    // 整理例行性會議資料
-    let regularMeetingLabel = "";
-    for(let regularMeetingOptions of this.props.state.Meeting.regularMeetingOptions){
-      console.log(regularMeetingOptions, this.props.state.Meeting.regularMeetingDefaultOptions);
-      if(  this.props.state.Meeting.regularMeetingDefaultOptions == regularMeetingOptions.value ){
-        regularMeetingLabel = regularMeetingOptions.label;
       }
     }
 
@@ -499,19 +488,15 @@ class MeetingInsertPage extends React.PureComponent  {
             }}
             disabled = {!this.state.isEditable}
             onPress  = {()=>{
+              this.setState({ actionSheetType:"M" });
+              setTimeout( this.showActionSheet, 50);
               Keyboard.dismiss();
-              NavigationService.navigate("MeetingInsertWithRegular", {
-                startdate: this.state.startdate,
-                enddate  : this.state.enddate,
-                onPress  : "",
-                // oid      : this.state.oid
-              });
             }}
           >
             <Icon name='reload-circle-outline' />
             <Label style={{flex:1}}>{"例行性會議"}</Label>
             {
-             this.state.isEditable ? <Text>{regularMeetingLabel}</Text> : <Label>{regularMeetingLabel}</Label>  
+             this.state.isEditable ? <Text>{remindtimeLabel}</Text> : <Label>{remindtimeLabel}</Label>  
             }
             {
               this.state.isEditable ? <Icon name='arrow-forward' /> : null
@@ -1115,7 +1100,7 @@ class MeetingInsertPage extends React.PureComponent  {
   }
 }
 
-let MeetingInsertPageStyle = connectStyle( 'Page.MeetingPage', {} )(MeetingInsertPage);
+let MeetingInsertWithRegularCustomizePageStyle = connectStyle( 'Page.MeetingPage', {} )(MeetingInsertWithRegularCustomizePage);
 export default connect(
   (state) => ({
     state: { ...state },
@@ -1126,4 +1111,4 @@ export default connect(
       ...MeetingAction
     }, dispatch)
   })
-)(MeetingInsertPageStyle);
+)(MeetingInsertWithRegularCustomizePageStyle);

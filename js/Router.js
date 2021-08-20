@@ -98,21 +98,22 @@ import KPICategoryPage         from './pages/Common/Report/KPI/KPICategoryPage';
 
 import CreateWebViewPage       from './pages/Common/CreateWebViewPage';
 
-import MeetingSearchPage            from './pages/Common/Meeting/MeetingSearchPage';
-import MeetingSearchWithTagsPage    from './pages/Common/Meeting/MeetingSearchWithTagsPage';
-import MeetingTimeForSearchPage     from './pages/Common/Meeting/MeetingTimeForSearchPage';
-import MeetingListPage              from './pages/Common/Meeting/MeetingListPage';
-import MeetingInsertPage            from './pages/Common/Meeting/MeetingInsertPage';
-import MeetingInsertChairpersonPage from './pages/Common/Meeting/MeetingInsertChairpersonPage';
-import MeetingInsertWithTagsPage    from './pages/Common/Meeting/MeetingInsertWithTagsPage';
-import MeetingInsertWithTagsFurtherPage from './pages/Common/Meeting/MeetingInsertWithTagsFurtherPage';
-import MeetingTimeForPersonPage     from './pages/Common/Meeting/MeetingTimeForPersonPage';
-import MeetingAttendeesReorderPage  from './pages/Common/Meeting/MeetingAttendeesReorderPage';
+import MeetingSearchPage                     from './pages/Common/Meeting/MeetingSearchPage';
+import MeetingSearchWithTagsPage             from './pages/Common/Meeting/MeetingSearchWithTagsPage';
+import MeetingTimeForSearchPage              from './pages/Common/Meeting/MeetingTimeForSearchPage';
+import MeetingListPage                       from './pages/Common/Meeting/MeetingListPage';
+import MeetingInsertPage                     from './pages/Common/Meeting/MeetingInsertPage';
+import MeetingInsertChairpersonPage          from './pages/Common/Meeting/MeetingInsertChairpersonPage';
+import MeetingInsertWithTagsPage             from './pages/Common/Meeting/MeetingInsertWithTagsPage';
+import MeetingInsertWithTagsFurtherPage      from './pages/Common/Meeting/MeetingInsertWithTagsFurtherPage';
+import MeetingInsertWithRegularPage          from './pages/Common/Meeting/MeetingInsertWithRegularPage';
+import MeetingInsertWithRegularCustomizePage from './pages/Common/Meeting/MeetingInsertWithRegularCustomizePage';
 
-import DailyOralEnglishPage from "./pages/Common/DailyOralEnglish/DailyOralEnglishPage";
+import MeetingTimeForPersonPage    from './pages/Common/Meeting/MeetingTimeForPersonPage';
+import MeetingAttendeesReorderPage from './pages/Common/Meeting/MeetingAttendeesReorderPage';
+
+import DailyOralEnglishPage       from "./pages/Common/DailyOralEnglish/DailyOralEnglishPage";
 import DailyOralEnglishDetailPage from "./pages/Common/DailyOralEnglish/DailyOralEnglishDetailPage";
-
-
 
 function ShowSplashPage(props){
   const isFocused = useIsFocused();
@@ -358,6 +359,8 @@ function MainStack(props){
       <AppStack.Screen name ="MeetingInsert" component={MeetingInsertPage} />
       <AppStack.Screen name ="MeetingInsertWithTags" component={MeetingInsertWithTagsPage} />
       <AppStack.Screen name ="MeetingInsertWithTagsFurther" component={MeetingInsertWithTagsFurtherPage} />
+      <AppStack.Screen name ="MeetingInsertWithRegular" component={MeetingInsertWithRegularPage} />
+      <AppStack.Screen name ="MeetingInsertWithRegularCustomize" component={MeetingInsertWithRegularCustomizePage} />
       
       <AppStack.Screen name ="MeetingInsertChairperson" component={MeetingInsertChairpersonPage} />
       <AppStack.Screen name ="MeetingTimeForPerson" component={MeetingTimeForPersonPage} />

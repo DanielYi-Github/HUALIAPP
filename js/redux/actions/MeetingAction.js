@@ -295,3 +295,79 @@ export function resetMeetingMessage(){
 		}); 	
 	}
 }
+
+export function setRegularMeetingOptionsDefaultValue(regularMeetingDefaultOptions = "never"){
+	return async (dispatch, getState) => {
+		let regularMeetingOptions = [
+			{
+				label: getState().Language.lang.MeetingPage.never,
+				value: "never"
+			},
+			{
+				label: getState().Language.lang.MeetingPage.everyday,
+				value: "everyday"
+			},
+			{
+				label: getState().Language.lang.MeetingPage.workday,
+				value: "workday"
+			},
+			{
+				label: getState().Language.lang.MeetingPage.everyWeek,
+				value: "everyWeek"
+			},
+			{
+				label: getState().Language.lang.MeetingPage.everyMonth,
+				value: "everyMonth"
+			},
+			{
+				label: getState().Language.lang.MeetingPage.custom,
+				value: "custom"
+			}
+		];
+
+		let regularMeetingCustomizeOptions = [
+			{
+				label:getState().Language.lang.Common.week.Monday,
+				value:"Monday",
+				checked:false
+			},
+			{
+				label:getState().Language.lang.Common.week.Tuesday,
+				value:"Tuesday",
+				checked:false
+			},
+			{
+				label:getState().Language.lang.Common.week.Wednesday,
+				value:"Wednesday",
+				checked:false
+			},
+			{
+				label:getState().Language.lang.Common.week.Thursday,
+				value:"Thursday",
+				checked:false
+			},
+			{
+				label:getState().Language.lang.Common.week.Friday,
+				value:"Friday",
+				checked:false
+			},
+			{
+				label:getState().Language.lang.Common.week.Saturday,
+				value:"Saturday",
+				checked:false
+			},
+			{
+				label:getState().Language.lang.Common.week.Sunday,
+				value:"Sunday",
+				checked:false
+			}
+		];
+		
+		dispatch({
+			type                          :MeetingTypes.MEETING_SETREGULARMEETINGOPTIONS,
+			regularMeetingDefaultOptions  :regularMeetingDefaultOptions,
+			regularMeetingOptions         :regularMeetingOptions,
+			regularMeetingCustomizeOptions:regularMeetingCustomizeOptions
+		}); 	
+	}
+}

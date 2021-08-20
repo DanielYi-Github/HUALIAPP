@@ -861,7 +861,13 @@ export default {
 		crossDayMeeting            :"Cuộc họp giữa các ngày",
 		avalableTime               :"Mọi người đều rảnh vào thời điểm này",
 		good                       :"Good!",
-		yourTimezone   :"Giờ họp địa phương của bạn",
-		meetingTimezone:"thời gian"
+		yourTimezone               :"Giờ họp địa phương của bạn",
+		meetingTimezone            :"thời gian",
+		never                      :"Không bao giờ",
+		everyday                   :"Hằng ngày",
+		workday                    :"Ngày làm việc",
+		everyWeek                  :"Mỗi tuần",
+		everyMonth                 :"Mỗi tháng",
+		custom                     :"Tập quán",
 	}
 }

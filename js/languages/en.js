@@ -860,8 +860,14 @@ export default {
 		haveaMeeting               :"have an appointment",
 		crossDayMeeting            :"Cross day meetin",
 		avalableTime               :"Avalable schedule",
-		good                       :"Good!",
-		yourTimezone   :"Your location time",
-		meetingTimezone:"Time"
+		good           			   :"Good!",
+		yourTimezone   			   :"Your location time",
+		meetingTimezone			   :"Time",
+		never      			   	   :"Never",
+		everyday       			   :"Everyday",
+		workday     			   :"Workday",
+		everyWeek      			   :"Every Week",
+		everyMonth     			   :"Every Month",
+		custom         			   :"Custom",
 	}
 }
