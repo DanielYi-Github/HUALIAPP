@@ -12,7 +12,11 @@ export default class CompanyDocumentCard extends Component {
 
         this.state = {
             explainIconName: this.props.explainIconName,//说明图标
+<<<<<<< HEAD
             explainText: this.props.explainText,//说明文字
+=======
+            // explainText: this.props.explainText,//说明文字
+>>>>>>> dev_companydocument
             showNum: 3,//显示数量
             maxDetailNum: this.props.maxDetailNum,//detail显示最多笔
             cardItemOnPress: this.props.cardItemOnPress,//cardItem点击事件
@@ -24,7 +28,11 @@ export default class CompanyDocumentCard extends Component {
             <Card>
                 <ExplainCardItem
                     iconName={this.state.explainIconName}
+<<<<<<< HEAD
                     text={this.state.explainText}
+=======
+                    text={this.props.explainText}
+>>>>>>> dev_companydocument
                 />
                 <FlatList
                     keyExtractor={item => item.id}
