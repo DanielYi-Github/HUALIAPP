@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
 import { TouchableOpacity, Dimensions } from 'react-native'
-import { Body, Card, CardItem, Icon, Title, View } from "native-base";
+import { Body, Card, CardItem, Icon, Title, View, Text } from "native-base";
 import * as NavigationService from '../../utils/NavigationService';
 import Carousel from 'react-native-snap-carousel';
 import * as BroadcastAction from "../../redux/actions/BroadcastAction";
@@ -72,8 +72,11 @@ class BroadcastCard extends Component {
                             }
                             <Title style={{ fontSize: 15,paddingLeft:5,alignSelf:'flex-end' }}>{item.TITLE}</Title>
                         </Body>
-                        <Body style={{ alignSelf: 'flex-start', paddingLeft: 5 }}>
-                            <Title style={{ fontSize: 18, textAlign: 'left' }}>{item.CONTENT}</Title>
+                        <Body style={{ alignSelf: 'flex-start', paddingLeft: 5, width: "85%" }}>
+                            <Text 
+                                numberOfLines={1}
+                                ellipsizeMode={"tail"}
+                                style={{ fontSize: 18, textAlign: 'left' }}>{item.CONTENT}</Text>
                         </Body>
                     </Body>
                 </TouchableOpacity>

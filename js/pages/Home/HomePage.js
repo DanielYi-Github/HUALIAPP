@@ -93,7 +93,6 @@ class HomePage extends React.Component {
     Platform.OS == 'android' ? props.actions.enableScreenShot(false) : null; //啟動禁止截圖的功能(android專屬)  
   }
 
-
   componentDidMount() {
     MessageRouter.getStoreNotificationMsg(this.props.state, this.props.actions); // 針對冷啟動取得跳頁訊息
     
@@ -310,7 +309,6 @@ class HomePage extends React.Component {
           {/*常用功能*/}
           <Card>
            <CardItem>
-             <Body style={{flexDirection: 'row', alignItems: "center"}}>
                <FlatList
                  keyExtractor = {(item, index) => index.toString()}
                  numColumns   = {4} 
@@ -318,7 +316,6 @@ class HomePage extends React.Component {
                  data         = {functionList}
                  scrollEnabled = {false}
                />
-             </Body>
            </CardItem>
           </Card>
 
