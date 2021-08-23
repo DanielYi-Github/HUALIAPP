@@ -26,6 +26,7 @@ import Survey     from './SurveyReducer';
 import Meeting    from './MeetingReducer';
 import DailyOralEnglish from "./DailyOralEnglishReducer";
 import Broadcast from "./BroadcastReducer";
+import CompanyDocument from "./CompanyDocumentReducer";
 
 const rootReducer = combineReducers({
 	AppInit,
@@ -51,7 +52,8 @@ const rootReducer = combineReducers({
 	Survey,
 	Meeting,
 	DailyOralEnglish,
-	Broadcast
+	Broadcast,
+	CompanyDocument
 });
 
 export default rootReducer;

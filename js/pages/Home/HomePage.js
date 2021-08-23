@@ -19,6 +19,7 @@ import * as DocumentAction from '../../redux/actions/DocumentAction';
 import * as BirthdayAction from '../../redux/actions/BirthdayAction';
 import * as ReportAction   from '../../redux/actions/ReportAction';
 import * as MeetingAction  from '../../redux/actions/MeetingAction';
+import * as BroadcastAction from '../../redux/actions/BroadcastAction';
 
 import ReactNativeParallaxHeader from '../../extendThirdModule/CustomRNParallax';
 import HomePageBanner            from '../../components/HomePageBanner';
@@ -88,9 +89,9 @@ class HomePage extends React.Component {
     props.actions.getMeetings();                           //撈取全部的會議訊息，並放置在redux的state中
     props.actions.loadWaterMarkViewConfig();               //撈取APP共用資料_浮水印顯示畫面控制
     props.actions.getIsAppNotificationEnable(user);        //檢查手機ＡＰＰ的通知是否開啟
+    props.actions.initBroadcastData();                     //捞取广播内容
     Platform.OS == 'android' ? props.actions.enableScreenShot(false) : null; //啟動禁止截圖的功能(android專屬)  
   }
-
 
   componentDidMount() {
     MessageRouter.getStoreNotificationMsg(this.props.state, this.props.actions); // 針對冷啟動取得跳頁訊息
@@ -308,7 +309,6 @@ class HomePage extends React.Component {
           {/*常用功能*/}
           <Card>
            <CardItem>
-             <Body style={{flexDirection: 'row', alignItems: "center"}}>
                <FlatList
                  keyExtractor = {(item, index) => index.toString()}
                  numColumns   = {4} 
@@ -316,12 +316,13 @@ class HomePage extends React.Component {
                  data         = {functionList}
                  scrollEnabled = {false}
                />
-             </Body>
            </CardItem>
           </Card>
 
           {/* 廣播 */}
-          <BroadcastCard/>
+          <BroadcastCard
+            data={this.props.state.Broadcast.data}
+          />
 
           {/*公告資訊*/}
           <Card>
@@ -618,7 +619,8 @@ export default connect(
       ...DocumentAction,
       ...BirthdayAction,
       ...ReportAction,
-      ...MeetingAction
+      ...MeetingAction,
+      ...BroadcastAction
     }, dispatch)
   })
 )(HomePageStyle);

@@ -4020,7 +4020,10 @@ export async function getWebViewUrlFromParamAbout(user,content){
 	return promise;
 }
 
-
+/**
+ * 差异更新每日一句英语资料
+ * @param {*} user 
+ */
 export async function updateDailyOralEnglish(user){
 	let start = new Date().getTime();
 	// 查询最大异动日期
@@ -4052,7 +4055,10 @@ export async function updateDailyOralEnglish(user){
 
 		if (maxTxdat === null) {//没有资料则批量插入
 			NetUtil.getRequestContent(params,url).then(data => {
-				if (data.code != '200') reject(data)//code错误则直接回报错误
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
 				let content = data.content
 				let excuteList = Common.tranBatchInsertSQL('THF_DAILY_ORAL_ENGLISH',content,dataFun,8,30)
 				SQLite.insertData_new(excuteList).then(()=>{
@@ -4063,9 +4069,11 @@ export async function updateDailyOralEnglish(user){
 			})
 		}else {//有资料则差异更新
 			NetUtil.getRequestContent(params,url).then(data => {
-				if (data.code != '200') reject(data)//code错误则直接回报错误
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
 				let content = data.content
-				console.log('updateDailyOralEnglish:',content);
 				let excuteList = Common.tranDiffUpdateSQL('THF_DAILY_ORAL_ENGLISH',content,dataFun,8,30)
 				const dExcuteList = excuteList['dExcuteList']
 				const iExcuteList = excuteList['iExcuteList']
@@ -4079,6 +4087,8 @@ export async function updateDailyOralEnglish(user){
 			})
 		}
 	})
+
+	return promise
 }
 /**
 共用模板
@@ -4298,4 +4308,127 @@ export async function getFreeDateTime(user, content){
 			})
 		});
 		return promise;
+}
+
+/**
+ * 差异更新公司文件资料
+ * @param {*} user 
+ */
+export async function updateCompanyDocument(user){
+	let start = new Date().getTime();
+	// 查询最大异动日期
+	let sql = "SELECT MAX(TXDAT) AS TXDAT FROM THF_COMPANY_DOC"
+	let data = await SQLite.selectData(sql,[])
+	let maxTxdat = data.item(0).TXDAT
+	let promise = new Promise((resolve,reject)=>{
+		//获取数据的API参数和URL
+		let enContent = Common.encrypt(maxTxdat ? maxTxdat : '')
+		let params = {
+			token:Common.encrypt(user.token),
+			userId:Common.encrypt(user.loginID),
+			content:enContent
+		}
+		let url = 'data/getCompanyDoc'
+		//资料格式转换方法
+		let dataFun = row => {
+			let array = []
+			array.push(row.oid)
+			array.push(row.co)
+			array.push(row.docType)
+			array.push(row.subject)
+			array.push(Common.dateFormat(row.releaseDat))
+			array.push(row.auth)
+			array.push(row.visitcount)
+			array.push(row.fileid)
+			array.push(row.fileurl ? row.fileurl : '')
+			array.push(row.filesize)
+			array.push(row.status)
+			array.push(Common.dateFormat(row.crtdat))
+			array.push(Common.dateFormat(row.txdat))
+			return array
+		}
+
+		if (maxTxdat === null) {//没有资料则批量插入
+			NetUtil.getRequestContent(params,url).then(data => {
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
+				let content = data.content
+				let column = "OID,CO,DOC_TYPE,SUBJECT,RELEASE_DAT,AUTH,VISITCOUNT,FILEID,FILEURL,FILESIZE,STATUS,CRTDAT,TXDAT"
+				let excuteList = Common.tranBatchInsertSQL('THF_COMPANY_DOC',content,dataFun,column,30)
+				SQLite.insertData_new(excuteList).then(()=>{
+					let end = new Date().getTime();
+					console.log("updateCompanyDocument_end:" + (end - start) / 1000);
+					resolve();
+				})
+			})
+		}else {//有资料则差异更新
+			NetUtil.getRequestContent(params,url).then(data => {
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
+				let content = data.content
+				let column = "OID,CO,DOC_TYPE,SUBJECT,RELEASE_DAT,AUTH,VISITCOUNT,FILEID,FILEURL,FILESIZE,STATUS,CRTDAT,TXDAT"
+				let excuteList = Common.tranDiffUpdateSQL('THF_COMPANY_DOC',content,dataFun,column,30)
+				const dExcuteList = excuteList['dExcuteList']
+				const iExcuteList = excuteList['iExcuteList']
+				Promise.all(dExcuteList.map(excute => SQLite.deleteData(excute[0], excute[1]))).then(()=>{
+					Promise.all(iExcuteList.map(excute => SQLite.insertData(excute[0], excute[1]))).then(()=>{
+						let end = new Date().getTime();
+						console.log("updateCompanyDocument:" + (end - start) / 1000);
+						resolve();
+					})
+				})
+			})
+		}
+	})
+
+	return promise
+}
+/**
+ * 同步公司文件访问数到Server
+ * @param {*} user 
+ */
+export async function updateCompanyDocumentToServer(user){
+	//查询需要同步的资料
+	let sql = ` select OID,LOCALVISITCOUNT from THF_COMPANY_DOC where LOCALVISITCOUNT > 0 `
+	let sData = await SQLite.selectData(sql,[]);
+	let promise = new Promise((resolve,reject) => {
+		let length  = sData.length
+		if (length > 0) {
+			let contents = []
+			for (let i = 0; i <length; i++) {
+				const oid = sData.item(i).OID
+				const visitcount = sData.item(i).LOCALVISITCOUNT
+				let content = {oid,visitcount}
+				contents.push(content)
+			}
+			let enContent = Common.encrypt(JSON.stringify(contents))
+			let params = {
+				token:Common.encrypt(user.token),
+				userId:Common.encrypt(user.loginID),
+				content:enContent
+			}
+			let url = 'companydoc/setCompanyDoc'
+			NetUtil.getRequestContent(params,url).then(data => {
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
+				//更新手机访问数
+				let sql1 = `update THF_COMPANY_DOC set VISITCOUNT = VISITCOUNT + LOCALVISITCOUNT, LOCALVISITCOUNT = 0 where LOCALVISITCOUNT > 0 `
+				SQLite.updateData(sql1,[]).then(result => {
+					resolve()
+				}).catch(err => {
+					reject(err)
+					return promise
+				})
+			})
+		} else {
+			resolve()
+		}
+	})
+	return promise
 }

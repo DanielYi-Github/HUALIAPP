@@ -19,7 +19,6 @@ const initialState = {
     //各參數對應action
     deputyActionValue: null,
     informActionValue: null,
-    rulesActionValue: null,
     rulesMemActionValue: null,
     deputyWay: null,
     isLoading: true,

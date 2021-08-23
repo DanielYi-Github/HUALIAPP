@@ -115,6 +115,9 @@ import MeetingAttendeesReorderPage from './pages/Common/Meeting/MeetingAttendees
 import DailyOralEnglishPage       from "./pages/Common/DailyOralEnglish/DailyOralEnglishPage";
 import DailyOralEnglishDetailPage from "./pages/Common/DailyOralEnglish/DailyOralEnglishDetailPage";
 
+import CompanyDocumentPage from "./pages/Common/CompanyDocument/CompanyDocumentPage";
+import CompanyDocumentDetailPage from "./pages/Common/CompanyDocument/CompanyDocumentDetailPage";
+
 function ShowSplashPage(props){
   const isFocused = useIsFocused();
   return <SplashPage {...props} isFocused={isFocused}/>
@@ -370,6 +373,10 @@ function MainStack(props){
           cardOverlayEnabled: true
         }}
       />
+      <AppStack.Screen name ="MeetingTimeForSearch" component={MeetingTimeForSearchPage} />
+
+      <AppStack.Screen name = "CompanyDocument" component = {CompanyDocumentPage} />
+      <AppStack.Screen name = "CompanyDocumentDetail" component = {CompanyDocumentDetailPage} />
     </AppStack.Navigator>
   )
 }

@@ -873,5 +873,8 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		everyWeek                  :"每周",
 		everyMonth                 :"每月",
 		custom                     :"自定义",
+	},
+	CompanyDocumentPage:{
+		CompanyDocument : "公司文件",
 	}
 }

@@ -874,5 +874,8 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		everyWeek                  :"每週",
 		everyMonth                 :"每月",
 		custom                     :"自定義",
+	},
+	CompanyDocumentPage:{
+		CompanyDocument : "公司文件",
 	}
 }
