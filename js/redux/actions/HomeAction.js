@@ -248,6 +248,9 @@ async function getWebViewUrl(user,WebViewID){
 					case "OutDoorSurvey": //春節出行情況
 						NavigationService.navigate("Survey", {SurveyOID: "B936DC6D18263433E050000A760072A0"});
 						break;
+					case "VietnamCo_Survey": //疫情調查
+						NavigationService.navigate("Survey", {SurveyOID: "CA6ED0659B59A28DE050000A760063E2"});
+						break;
 					case "Documents": //集團文件
 						NavigationService.navigate("DocumentCategories");
 						break;
