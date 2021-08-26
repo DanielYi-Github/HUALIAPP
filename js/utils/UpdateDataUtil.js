@@ -603,7 +603,8 @@ export async function updateContact(user) {
 							data[i].cellphone == null ? "" : data[i].cellphone,
 							data[i].mail == null ?  "" : data[i].mail,
 							data[i].skype == null ? "" : data[i].skype,
-							"",// data[i].picture,
+							"",
+							// data[i].picture,
 							data[i].status == null ? "" : data[i].status,
 							Common.dateFormat(data[i].crtdat), 
 							Common.dateFormat(data[i].txdat)
@@ -1901,7 +1902,6 @@ export async function updateVisitLogToServer(user){
 			};
 
 			let url = "data/setVisitLog";
-
 			NetUtil.getRequestContent(params, url).then((data)=>{
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入

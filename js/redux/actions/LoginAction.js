@@ -377,7 +377,6 @@ export function initialApi( user, way=false ){
   		
 
   		//首頁必須出現 統一執行
-  		
 		let arr = [
 			UpdateDataUtil.updateAPP(user),
   			UpdateDataUtil.updateNotice(user),		//公告資訊				

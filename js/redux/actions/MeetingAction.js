@@ -1,5 +1,6 @@
 import * as MeetingTypes   from '../actionTypes/MeetingTypes';
 import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
+import * as SQLite         from '../../utils/SQLiteUtil';
 import { Alert } from 'react-native';
 import * as RNLocalize from "react-native-localize";
 
@@ -369,5 +370,100 @@ export function setRegularMeetingOptionsDefaultValue(regularMeetingDefaultOption
 			regularMeetingOptions         :regularMeetingOptions,
 			regularMeetingCustomizeOptions:regularMeetingCustomizeOptions
 		}); 	
+	}
+}
+
+export function getCompanies(){
+	return async (dispatch, getState) => {
+		let sql = `select * from THF_MASTERDATA 
+				   where CLASS1='HRCO' and STATUS='Y' order by SORT;`
+		let companies = await SQLite.selectData( sql, []).then((result) => {
+			let items = [];
+			for (let i in result.raw()) {
+				items.push({
+					key  :result.raw()[i].SORT,
+					label:result.raw()[i].CONTENT,
+					value:result.raw()[i].CLASS3
+				})
+			}
+			return items;
+		}).catch((e)=>{
+			// LoggerUtil.addErrorLog("CommonAction loadCompanyData_HrCO", "APP Action", "ERROR", e);
+			return [];
+		});
+		dispatch(setCompanyList_MeetingCO(companies));
+	}
+}
+
+function setCompanyList_MeetingCO(companies){
+	return {
+		type: MeetingTypes.MEETING_SET_COMPANIES,
+		companies
+	}
+}
+
+export function getPositions(selectedCompany){
+	return async (dispatch, getState) => {
+		let sql = `select * from THF_MASTERDATA 
+				   where CLASS1='HRPosition' and STATUS='Y' 
+				   order by SORT;`
+		let companies = await SQLite.selectData( sql, []).then((result) => {
+			let items = [];
+			for (let i in result.raw()) {
+				items.push({
+					index:result.raw()[i].SORT,
+					label:result.raw()[i].CONTENT,
+					lavel:result.raw()[i].CLASS3,
+					value:[]
+				})
+			}
+			return items;
+		}).catch((err)=>{
+			console.log(err);
+			return [];
+		});
+
+		let user = getState().UserInfo.UserInfo;
+		let action = "org/hr/meeting/getPosition";
+        let actionObject = { co : selectedCompany }; //查詢使用
+
+        let positionsPeople = await UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
+        	let keys = Object.keys(result);
+        	if(keys.length == 0) return [];
+
+        	let keysArray = [];
+        	for(let key of keys){
+        		if (result[key].length != 0) {
+        			keysArray.push({
+        				key:key,
+        				value:result[key]
+        			});
+        		} 
+        	}
+			return keysArray;
+        }).catch((err) => {
+			console.log(err);
+			return [];
+        })
+        
+        let companyPositions = [];
+        for(let company of companies){
+        	for(let person of positionsPeople){
+        		if (company.lavel == person.key) {
+        			company.value = person.value;
+        			companyPositions.push(company);
+        		}
+        	}
+        }
+
+		dispatch(setAttendees_by_position(companyPositions, selectedCompany));
+	}
+}
+
+function setAttendees_by_position(companies, selectedCompany){
+	return{
+		type: MeetingTypes.MEETING_SET_ATTENDEES_BY_POSITION,
+		companies,
+		selectedCompany
 	}
 }

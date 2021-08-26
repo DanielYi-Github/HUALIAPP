@@ -105,7 +105,9 @@ import MeetingListPage                       from './pages/Common/Meeting/Meetin
 import MeetingInsertPage                     from './pages/Common/Meeting/MeetingInsertPage';
 import MeetingInsertChairpersonPage          from './pages/Common/Meeting/MeetingInsertChairpersonPage';
 import MeetingInsertWithTagsPage             from './pages/Common/Meeting/MeetingInsertWithTagsPage';
-import MeetingInsertWithTagsFurtherPage      from './pages/Common/Meeting/MeetingInsertWithTagsFurtherPage';
+import MeetingInsertWithTagsByPositionPage   from './pages/Common/Meeting/MeetingInsertWithTagsByPositionPage';
+import MeetingInsertWithTagsByOrganizePage   from './pages/Common/Meeting/MeetingInsertWithTagsByOrganizePage';
+import MeetingInsertWithTagsForSelectPage    from './pages/Common/Meeting/MeetingInsertWithTagsForSelectPage';
 import MeetingInsertWithRegularPage          from './pages/Common/Meeting/MeetingInsertWithRegularPage';
 import MeetingInsertWithRegularCustomizePage from './pages/Common/Meeting/MeetingInsertWithRegularCustomizePage';
 
@@ -356,13 +358,16 @@ function MainStack(props){
       <AppStack.Screen name ="DailyOralEnglish" component={DailyOralEnglishPage}/>
       <AppStack.Screen name ="DailyOralEnglishDetail" component={DailyOralEnglishDetailPage}/>
 
-      <AppStack.Screen name ="MeetingList" component={MeetingListPage} />
-      <AppStack.Screen name ="MeetingSearch" component={MeetingSearchPage} />
-      <AppStack.Screen name ="MeetingSearchWithTags" component={MeetingSearchWithTagsPage} />
-      <AppStack.Screen name ="MeetingInsert" component={MeetingInsertPage} />
-      <AppStack.Screen name ="MeetingInsertWithTags" component={MeetingInsertWithTagsPage} />
-      <AppStack.Screen name ="MeetingInsertWithTagsFurther" component={MeetingInsertWithTagsFurtherPage} />
-      <AppStack.Screen name ="MeetingInsertWithRegular" component={MeetingInsertWithRegularPage} />
+      <AppStack.Screen name ="MeetingList"                      component={MeetingListPage} />
+      <AppStack.Screen name ="MeetingSearch"                    component={MeetingSearchPage} />
+      <AppStack.Screen name ="MeetingSearchWithTags"            component={MeetingSearchWithTagsPage} />
+      <AppStack.Screen name ="MeetingInsert"                    component={MeetingInsertPage} />
+      <AppStack.Screen name ="MeetingInsertWithTags"            component={MeetingInsertWithTagsPage} />
+      <AppStack.Screen name ="MeetingInsertWithTagsByPosition"  component={MeetingInsertWithTagsByPositionPage} />
+      <AppStack.Screen name ="MeetingInsertWithTagsByOrganize"  component={MeetingInsertWithTagsByOrganizePage} />
+      <AppStack.Screen name ="MeetingInsertWithTagsForSelect"   component={MeetingInsertWithTagsForSelectPage} />
+
+      <AppStack.Screen name ="MeetingInsertWithRegular"         component={MeetingInsertWithRegularPage} />
       <AppStack.Screen name ="MeetingInsertWithRegularCustomize" component={MeetingInsertWithRegularCustomizePage} />
       
       <AppStack.Screen name ="MeetingInsertChairperson" component={MeetingInsertChairpersonPage} />

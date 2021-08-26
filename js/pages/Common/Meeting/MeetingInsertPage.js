@@ -267,7 +267,6 @@ class MeetingInsertPage extends React.PureComponent  {
     // 整理例行性會議資料
     let regularMeetingLabel = "";
     for(let regularMeetingOptions of this.props.state.Meeting.regularMeetingOptions){
-      console.log(regularMeetingOptions, this.props.state.Meeting.regularMeetingDefaultOptions);
       if(  this.props.state.Meeting.regularMeetingDefaultOptions == regularMeetingOptions.value ){
         regularMeetingLabel = regularMeetingOptions.label;
       }

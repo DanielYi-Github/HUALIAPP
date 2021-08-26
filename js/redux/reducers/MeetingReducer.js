@@ -12,7 +12,10 @@ const initialState = {
   regularMeetingDefaultOptions  : "never",
   regularMeetingOptions         : [],
   regularMeetingEndDate         : null,
-  regularMeetingCustomizeOptions: []
+  regularMeetingCustomizeOptions: [],
+  companies                     : [],
+  selectedCompany               : "",
+  attendees_by_position         : []
 };
 
 export default function index(state = initialState, action = {}) {
@@ -96,6 +99,17 @@ export default function index(state = initialState, action = {}) {
         regularMeetingDefaultOptions  : action.regularMeetingDefaultOptions,
         regularMeetingOptions         : action.regularMeetingOptions,
         regularMeetingCustomizeOptions: action.regularMeetingCustomizeOptions
+      }
+    case types.MEETING_SET_COMPANIES:
+      return {
+        ...state,
+        companies:action.companies
+      }
+    case types.MEETING_SET_ATTENDEES_BY_POSITION:
+      return {
+        ...state,
+        attendees_by_position:action.companies,
+        selectedCompany:action.selectedCompany
       }
     default:
       return state;
