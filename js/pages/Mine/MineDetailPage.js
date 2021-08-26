@@ -38,6 +38,11 @@ class MineDetailPage extends React.Component {
             showNoUserDataAlert:!isUser,
             CarAdministrator:data
           });
+        }).catch((e)=>{
+          this.setState({
+            showNoUserDataAlert:!isUser,
+            CarAdministrator: e
+          });
         });
       }
     });
