@@ -6,6 +6,7 @@ import { connect }   from 'react-redux';
 import TagInput      from 'react-native-tags-input';
 import { bindActionCreators } from 'redux';
 import * as RNLocalize from "react-native-localize";
+import CheckBox from '@react-native-community/checkbox';
 
 import * as MeetingAction      from '../../../redux/actions/MeetingAction';
 import * as UpdateDataUtil     from '../../../utils/UpdateDataUtil';
@@ -43,7 +44,13 @@ class MeetingInsertWithTagsPage extends React.Component {
   }
 
   componentDidMount(){
-    this.props.actions.setAttendees(this.props.route.params.attendees); //將與會人員放入redux state中
+    //將與會人員放入redux state中
+    this.props.actions.setAttendees(
+      this.props.route.params.attendees,
+      this.state.startdate,
+      this.state.enddate
+    );
+
     this.loadMoreData();
   }
 
@@ -201,7 +208,9 @@ class MeetingInsertWithTagsPage extends React.Component {
                 <TagInput
                   disabled            ={true}
                   autoFocus           ={false}
-                  updateState         ={(state)=>{ this.props.actions.removeAttendee(state); }}
+                  updateState         ={(state)=>{ 
+                    this.props.actions.removeAttendee(state); 
+                  }}
                   tags                ={tags}
                   inputContainerStyle ={{ height: 0 }}
                   tagsViewStyle       ={{ margin:0 }}
@@ -223,7 +232,7 @@ class MeetingInsertWithTagsPage extends React.Component {
           }}
           onPress  = {()=>{
             NavigationService.navigate("MeetingInsertWithTagsByPosition", {
-              selectBy           : "position"
+              selectBy : "position"
             });
           }}
         >
@@ -378,47 +387,40 @@ class MeetingInsertWithTagsPage extends React.Component {
   }
 
   renderTapItem = (item) => {
+    let checked = false;
+    for(let attendee of this.props.state.Meeting.attendees){
+      if (attendee.id == item.item.id) {
+        checked = true;
+      }
+    }
+
     return (
-      /*
       <MeetingItemForAttendees
-        itemOnPress = {}
-        calendarOnPress = {}
+        item            = {item.item}
+        checked         = {checked}
+        // itemOnPress     = {this.itemOnPress}
+        itemOnPress     = {this.props.actions.attendeeItemOnPress}
+        // calendarOnPress = {this.calendarOnPress}
+        calendarOnPress = {this.props.actions.attendeeItemCalendarOnPress}
       />
-      */
-      
-      <Item 
-        fixedLabel 
-        style   ={{paddingLeft: 15, backgroundColor: this.props.style.InputFieldBackground}} 
-        onPress ={ async ()=>{ 
-          let enableMeeting = await this.checkHaveMeetingTime(item.item.id, this.state.startdate, this.state.enddate);
-          if (enableMeeting) {
-            this.addTag(item.item);
-          } else {
-            Alert.alert(
-              this.props.lang.MeetingPage.alertMessage_duplicate, //"有重複"
-              `${this.props.lang.MeetingPage.alertMessage_period} ${item.item.name} ${this.props.lang.MeetingPage.alertMessage_meetingAlready}`,
-              [
-                { text: "OK", onPress: () => console.log("OK Pressed") }
-              ],
-              { cancelable: false }
-            );
-          }
-        }} 
-      >
-        <Label>{item.item.name} </Label><Text note>{item.item.depname}</Text>
-        <Icon 
-          name='calendar-outline'
-          onPress={()=>{
-            //顯示此人有哪些會議
-            NavigationService.navigate("MeetingTimeForPerson", {
-              person: item.item,
-            });
-          }}
-          style={{borderWidth: 0, padding: 10, paddingRight: 20}}
-        />
-      </Item>
-      
     );
+  }
+
+  itemOnPress = async (item) => {
+    let enableMeeting = await this.checkHaveMeetingTime(item.id, this.state.startdate, this.state.enddate);
+    if (enableMeeting) {
+      this.addTag(item);
+    } else {
+      Alert.alert(
+        this.props.lang.MeetingPage.alertMessage_duplicate, //"有重複"
+        `${this.props.lang.MeetingPage.alertMessage_period} ${item.name} ${this.props.lang.MeetingPage.alertMessage_meetingAlready}`,
+        [
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ],
+        { cancelable: false }
+      );
+      
+    }
   }
 
   checkHaveMeetingTime = async (id, startTime, endTime) => {
@@ -453,13 +455,34 @@ class MeetingInsertWithTagsPage extends React.Component {
     }
 
     if (isAdded) {
-      ToastUnit.show('error', this.props.state.Language.lang.CreateFormPage.NoAreadyItem);
+      this.removeTag(item);
+      // ToastUnit.show('error', this.props.state.Language.lang.CreateFormPage.NoAreadyItem);
     } else {
         attendees.push(item);
         this.props.actions.setAttendees(attendees);
     }
     
     this._content.wrappedInstance.scrollToEnd({animated: true});
+  }
+
+  calendarOnPress = (item) => {
+    //顯示此人有哪些會議
+    NavigationService.navigate("MeetingTimeForPerson", {
+      person: item,
+    });
+  }
+
+  removeTag = (item) => {
+    let attendees = this.props.state.Meeting.attendees;
+
+    let removeIndex = 0;
+    for(let i in attendees){
+      if(item.id == attendees[i].id) removeIndex = i;
+    }
+
+    attendees.splice(removeIndex, 1);
+
+    this.props.actions.setAttendees(attendees);
   }
 
   renderFooter = () => {

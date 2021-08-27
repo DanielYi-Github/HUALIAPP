@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
-import {Card, CardItem, Left, Body, Right, Icon, Text, Button, connectStyle, Thumbnail, Title, Label } from 'native-base';
+import {Card, CardItem, Left, Body, Right, Icon, Text, Button, connectStyle, Thumbnail, Title, Label, Item } from 'native-base';
+import CheckBox from '@react-native-community/checkbox';
+
 
 class MeetingItemForAttendees extends Component {
 	constructor(props) {
@@ -12,30 +14,23 @@ class MeetingItemForAttendees extends Component {
 			<Item 
 			  fixedLabel 
 			  style   ={{paddingLeft: 15, backgroundColor: this.props.style.InputFieldBackground}} 
-			  onPress ={ async ()=>{ 
-			    let enableMeeting = await this.checkHaveMeetingTime(item.item.id, this.state.startdate, this.state.enddate);
-			    if (enableMeeting) {
-			      this.addTag(item.item);
-			    } else {
-			      Alert.alert(
-			        this.props.lang.MeetingPage.alertMessage_duplicate, //"有重複"
-			        `${this.props.lang.MeetingPage.alertMessage_period} ${item.item.name} ${this.props.lang.MeetingPage.alertMessage_meetingAlready}`,
-			        [
-			          { text: "OK", onPress: () => console.log("OK Pressed") }
-			        ],
-			        { cancelable: false }
-			      );
-			    }
+			  onPress ={()=>{
+			  	this.props.itemOnPress(this.props.item);
 			  }} 
 			>
-			  <Label>{item.item.name} </Label><Text note>{item.item.depname}</Text>
+			  <CheckBox
+			      value={this.props.checked}
+			      onValueChange={(newValue) => {}}
+			      boxType = {"square"}
+			      onCheckColor = {"#00C853"}
+			      onTintColor = {"#00C853"}
+			      style={{ marginRight: 20 }}
+			    />
+			  <Label>{this.props.item.name} </Label><Text note>{this.props.item.depname}</Text>
 			  <Icon 
 			    name='calendar-outline'
 			    onPress={()=>{
-			      //顯示此人有哪些會議
-			      NavigationService.navigate("MeetingTimeForPerson", {
-			        person: item.item,
-			      });
+			      this.props.calendarOnPress(this.props.item);
 			    }}
 			    style={{borderWidth: 0, padding: 10, paddingRight: 20}}
 			  />

@@ -36,11 +36,14 @@ function loadModeType(meetingModeTypes){
 	}
 }
 
-export function setAttendees(attendees){
+export function setAttendees(oid, attendees, startdate, enddate){
 	return async (dispatch, getState) => {
 		dispatch({
 			type     :MeetingTypes.MEETING_SET_ATTENDEES,
-			attendees   :attendees,
+			oid      : oid,
+			attendees: attendees,
+			startdate: startdate,
+			enddate  : enddate
 		}); 
 	}
 }
@@ -465,5 +468,59 @@ function setAttendees_by_position(companies, selectedCompany){
 		type: MeetingTypes.MEETING_SET_ATTENDEES_BY_POSITION,
 		companies,
 		selectedCompany
+	}
+}
+
+export function attendeeItemOnPress(attendee){
+	return async (dispatch, getState) => {
+		
+		let enableMeeting = await checkHaveMeetingTime(
+			attendee.id, 
+			getState().Meeting.attendees_startDate, 
+			getState().Meeting.attendees_endDate,
+			getState().UserInfo.UserInfo
+		);
+		/*
+		if (enableMeeting) {
+		  this.addTag(attendee);
+		} else {
+		  Alert.alert(
+		    this.props.lang.MeetingPage.alertMessage_duplicate, //"有重複"
+		    `${this.props.lang.MeetingPage.alertMessage_period} ${item.name} ${this.props.lang.MeetingPage.alertMessage_meetingAlready}`,
+		    [
+		      { text: "OK", onPress: () => console.log("OK Pressed") }
+		    ],
+		    { cancelable: false }
+		  );
+		}
+		*/
+	}
+}
+
+async function checkHaveMeetingTime(id, startTime, endTime, user){
+    let meetingParams = {
+		startdate: startTime,
+		enddate  : endTime,
+		attendees:[ {id:id} ],
+		timezone : RNLocalize.getTimeZone(),
+		oid      : this.state.oid
+    }
+    let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
+      if (result.length == 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }).catch((errorResult)=>{
+      console.log("errorResult",errorResult.message);
+      return false;
+    });
+
+    return searchMeetingResult;
+}
+
+export function attendeeItemCalendarOnPress(attendee){
+	return async (dispatch, getState) => {
+
 	}
 }
