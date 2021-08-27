@@ -114,7 +114,7 @@ export default {
 		ForgetPasswordAlertHr : "Vui lòng liên hệ bộ phận Nhân sự để được giúp đỡ",
 		Tips : "Gợi ý",
 		ResetBiosMsg : "Đã phát hiện thay đổi tài khoản, hủy xác minh sinh trắc học",
-		FirstTips : "Chào mừng bản sử dụng APP HUALI. Mật khẩu mặc định cho lần đăng nhập đầu tiên là HL + ngày tháng sinh + bốn số cuối của CMND. Vị dụ tham khảo: HL01010000, nếu mật khẩu mặc định không hợp lệ, vui lòng liên hệ với bộ phận Nhân sự để được tư vấn.",
+		FirstTips : "Chào mừng sử dụng APP Huali, mật khẩu mặc định cho lần đăng nhập đầu tiên là HL + tháng sinh + ngày sinh + bốn số cuối của CMND. Mẫu tham khảo: HL01010000 Nếu bạn không thể đăng nhập bằng mật khẩu mặc định, vui lòng liên hệ với nhân sự nhà máy để được giải đáp.",
 		FirstCertTips : "Chào mừng bạn sử dụng ứng dụng HUALI. Bạn có thể tận hưởng dịch vụ tiện lợi hơn bằng cách bật xác thực sinh trắc học. ",
 	},
 	SmsCheckPage: {
