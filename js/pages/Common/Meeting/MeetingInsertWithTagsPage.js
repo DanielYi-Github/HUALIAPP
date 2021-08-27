@@ -46,6 +46,7 @@ class MeetingInsertWithTagsPage extends React.Component {
   componentDidMount(){
     //將與會人員放入redux state中
     this.props.actions.setAttendees(
+      this.state.oid,
       this.props.route.params.attendees,
       this.state.startdate,
       this.state.enddate

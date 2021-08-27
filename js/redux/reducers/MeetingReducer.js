@@ -8,6 +8,7 @@ const initialState = {
   meetingList                   : [],
   person_meetingDateTime        : [],
   suggestMeetingDateTime        : [],
+  meetingOid                    : "",
   attendees                     : [], // 與會人員
   attendees_startdate           : null,
   attendees_enddate             : null,
@@ -93,6 +94,7 @@ export default function index(state = initialState, action = {}) {
     case types.MEETING_SET_ATTENDEES:
       return{
         ...state,
+        meetingOid         :action.oid,
         attendees          :action.attendees,
         attendees_startDate:action.startdate,
         attendees_endDate  :action.enddate
