@@ -91,13 +91,18 @@ export default function index(state = initialState, action = {}) {
         actionResult          : null,
         actionResultMsg       : "",
       }
-    case types.MEETING_SET_ATTENDEES:
-      return{
+    case types.MEETING_SET_DEFAULT_MEETION_INFO:
+      return {
         ...state,
         meetingOid         :action.oid,
         attendees          :action.attendees,
         attendees_startDate:action.startdate,
         attendees_endDate  :action.enddate
+      }
+    case types.MEETING_SET_ATTENDEES:
+      return{
+        ...state,
+        attendees          :action.attendees,
       }
     case types.MEETING_SETREGULARMEETINGOPTIONS:
       return{

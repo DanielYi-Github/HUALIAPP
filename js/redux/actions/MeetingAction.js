@@ -1,6 +1,7 @@
-import * as MeetingTypes   from '../actionTypes/MeetingTypes';
-import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
-import * as SQLite         from '../../utils/SQLiteUtil';
+import * as MeetingTypes      from '../actionTypes/MeetingTypes';
+import * as UpdateDataUtil    from '../../utils/UpdateDataUtil';
+import * as SQLite            from '../../utils/SQLiteUtil';
+import * as NavigationService from '../../utils/NavigationService';
 import { Alert } from 'react-native';
 import * as RNLocalize from "react-native-localize";
 
@@ -36,14 +37,23 @@ function loadModeType(meetingModeTypes){
 	}
 }
 
-export function setAttendees(oid, attendees, startdate, enddate){
+export function setInitialMeetingInfoInRedux(attendees, oid, startdate, enddate){
 	return async (dispatch, getState) => {
 		dispatch({
-			type     :MeetingTypes.MEETING_SET_ATTENDEES,
+			type     :MeetingTypes.MEETING_SET_DEFAULT_MEETION_INFO,
 			oid      : oid,
 			attendees: attendees,
 			startdate: startdate,
 			enddate  : enddate
+		}); 
+	}
+}
+
+export function setAttendees(attendees){
+	return async (dispatch, getState) => {
+		dispatch({
+			type     :MeetingTypes.MEETING_SET_ATTENDEES,
+			attendees: attendees,
 		}); 
 	}
 }
@@ -475,14 +485,19 @@ export function attendeeItemOnPress(attendee){
 	return async (dispatch, getState) => {
 		
 		let enableMeeting = await checkHaveMeetingTime(
+			getState().Meeting.meetingOid,
 			attendee.id, 
 			getState().Meeting.attendees_startDate, 
 			getState().Meeting.attendees_endDate,
 			getState().UserInfo.UserInfo
 		);
-		/*
+
 		if (enableMeeting) {
-		  this.addTag(attendee);
+		  let attendees = addOrRemoveTag( attendee, getState);
+		  dispatch({
+		  	type     :MeetingTypes.MEETING_SET_ATTENDEES,
+		  	attendees: attendees,
+		  }); 
 		} else {
 		  Alert.alert(
 		    this.props.lang.MeetingPage.alertMessage_duplicate, //"有重複"
@@ -493,17 +508,17 @@ export function attendeeItemOnPress(attendee){
 		    { cancelable: false }
 		  );
 		}
-		*/
+		
 	}
 }
 
-async function checkHaveMeetingTime(id, startTime, endTime, user){
+async function checkHaveMeetingTime(meetingOid, id, startTime, endTime, user){
     let meetingParams = {
 		startdate: startTime,
 		enddate  : endTime,
-		attendees:[ {id:id} ],
+		attendees: [{id:id}],
 		timezone : RNLocalize.getTimeZone(),
-		oid      : this.state.oid
+		oid      : meetingOid
     }
     let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
       if (result.length == 0) {
@@ -519,8 +534,30 @@ async function checkHaveMeetingTime(id, startTime, endTime, user){
     return searchMeetingResult;
 }
 
+function addOrRemoveTag( item, getState ){
+	let attendees = getState().Meeting.attendees;
+	let isAdded = false;
+
+	for(let value of attendees){
+	  if(item.id == value.id) isAdded = true; 
+	}
+
+	if (isAdded) {
+	  let removeIndex = 0;
+	  for(let i in attendees){
+	    if(item.id == attendees[i].id) removeIndex = i;
+	  }
+	  attendees.splice(removeIndex, 1);
+	} else {
+	    attendees.push(item);
+	}
+	return attendees;
+}
+
 export function attendeeItemCalendarOnPress(attendee){
 	return async (dispatch, getState) => {
-
+		NavigationService.navigate("MeetingTimeForPerson", {
+		  person: attendee,
+		});
 	}
 }

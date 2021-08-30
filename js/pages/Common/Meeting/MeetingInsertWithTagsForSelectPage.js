@@ -14,6 +14,7 @@ import * as NavigationService from '../../../utils/NavigationService';
 import ToastUnit              from '../../../utils/ToastUnit';
 import TinyCircleButton       from '../../../components/TinyCircleButton';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
+import MeetingItemForAttendees from '../../../components/Meeting/MeetingItemForAttendees';
 
 class MeetingInsertWithTagsForSelectPage extends React.Component {
   constructor(props) {
@@ -223,6 +224,21 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
   }
 
   multiAttendees = (item) => {
+    let checked = false;
+    for(let attendee of this.props.state.Meeting.attendees){
+      if (attendee.id == item.id) {
+        checked = true;
+      }
+    }
+
+    return (
+      <MeetingItemForAttendees
+        item            = {item}
+        checked         = {checked}
+        itemOnPress     = {this.props.actions.attendeeItemOnPress}
+        calendarOnPress = {this.props.actions.attendeeItemCalendarOnPress}
+      />
+    );
       /*
       let enableMeeting = await this.checkHaveMeetingTime(item.item.id, this.state.startdate, this.state.enddate);
       if (enableMeeting) {

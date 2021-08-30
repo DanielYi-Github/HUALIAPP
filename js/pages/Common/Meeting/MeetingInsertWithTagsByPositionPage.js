@@ -20,7 +20,6 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectBy          : this.props.route.params.selectBy,   //用哪一種模式下去選擇
       isShowSearch      : false,       //是否顯示關鍵字搜尋的輸入匡
       isChinesKeyword   : false,       //用來判斷關鍵字是否為中文字
       keyword           : "",          //一般搜尋
@@ -37,10 +36,9 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
   }
 
   componentDidMount(){
-    // 獲取公司列表資料
-    this.props.actions.getCompanies();
-    // 獲取人員清單資料
-    this.props.actions.getPositions(this.state.defaultCompany);
+    this.props.actions.getCompanies();    // 獲取公司列表資料
+    this.props.actions.getPositions(this.state.defaultCompany);   // 獲取人員清單資料
+
     // this.loadMoreData();
   }
 
@@ -184,7 +182,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
         </Item>
 
         <FlatList
-          contentContainerStyle = {{flex: 1, paddingTop: this.state.selectBy == "position" ? 30: 0}}
+          contentContainerStyle = {{flex: 1, paddingTop: 30 }}
           keyExtractor          = {(item, index) => index.toString()}
           data                  = {this.props.state.Meeting.attendees_by_position}
           extraData             = {this.props.state.Meeting}
@@ -343,18 +341,23 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
   */
 
   renderTapItem = (item) => {
+    let selectedCount = 0;
+    for(let positionAttendee of item.item.value){
+      for(let propsAttendee of this.props.state.Meeting.attendees){
+        if( positionAttendee.id == propsAttendee.id ){
+          selectedCount++;
+          break;
+        }
+      }
+    }
+    let checked = selectedCount == item.item.value.length ? true: false;
+
     return (
       <Item 
         fixedLabel 
         style   ={{paddingLeft: 10, paddingRight: 5, backgroundColor: this.props.style.InputFieldBackground}} 
         onPress ={ async ()=>{ 
-          console.log(item.item);
-          NavigationService.navigate("MeetingInsertWithTagsForSelect", {
-            selectList    :item.item.value,
-            onItemPress   :this.props.actions.getPositions,
-            renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
-            showFooter    :true
-          });
+          
           /*
           let enableMeeting = await this.checkHaveMeetingTime(item.item.id, this.state.startdate, this.state.enddate);
           if (enableMeeting) {
@@ -373,7 +376,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
         }} 
       >
         <CheckBox
-            value={false}
+            value={checked}
             onValueChange={(newValue) => {
               // this.props.onCheckBoxTap(index, data); 
             }}
@@ -384,16 +387,25 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
           />
         <Label>{item.item.label} </Label><Text note>{item.item.depname}</Text>
         <Icon 
-          style={{borderWidth: 0, padding: 10, paddingRight: 10}}
+          style={{borderWidth: 1, padding: 10, paddingRight: 10}}
           name='arrow-forward'
-          /*
+          
           onPress={()=>{
             //顯示此人有哪些會議
+            /*
             NavigationService.navigate("MeetingTimeForPerson", {
               person: item.item,
             });
+            */
+
+            NavigationService.navigate("MeetingInsertWithTagsForSelect", {
+              selectList    :item.item.value,
+              onItemPress   :this.props.actions.getPositions,
+              renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
+              showFooter    :true
+            });
           }}
-          */
+          
         />
       </Item>
     );

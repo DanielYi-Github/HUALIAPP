@@ -45,13 +45,12 @@ class MeetingInsertWithTagsPage extends React.Component {
 
   componentDidMount(){
     //將與會人員放入redux state中
-    this.props.actions.setAttendees(
-      this.state.oid,
+    this.props.actions.setInitialMeetingInfoInRedux(
       this.props.route.params.attendees,
+      this.state.oid,
       this.state.startdate,
       this.state.enddate
     );
-
     this.loadMoreData();
   }
 
@@ -231,11 +230,7 @@ class MeetingInsertWithTagsPage extends React.Component {
             paddingRight   : 5,
             marginTop      : 30 
           }}
-          onPress  = {()=>{
-            NavigationService.navigate("MeetingInsertWithTagsByPosition", {
-              selectBy : "position"
-            });
-          }}
+          onPress  = {()=>{ NavigationService.navigate("MeetingInsertWithTagsByPosition"); }}
         >
             <Label style={{flex:1}}>{"依職級選擇"}</Label>
             <Icon name='arrow-forward' />
@@ -244,17 +239,13 @@ class MeetingInsertWithTagsPage extends React.Component {
         {/*依組織架構選擇*/}
         <Item 
           style={{ 
-            backgroundColor: this.props.style.InputFieldBackground, 
-            height         : this.props.style.inputHeightBase,
-            paddingLeft    : 10,
-            paddingRight   : 5,
+            backgroundColor  : this.props.style.InputFieldBackground, 
+            height           : this.props.style.inputHeightBase,
+            paddingLeft      : 10,
+            paddingRight     : 5,
             borderBottomWidth: 0, 
           }}
-          onPress  = {()=>{
-            NavigationService.navigate("MeetingInsertWithTagsByOrganize", {
-              selectBy           : "organize"
-            });
-          }}
+          onPress = {()=>{ NavigationService.navigate("MeetingInsertWithTagsByOrganize"); }}
         >
             <Label style={{flex:1}}>{"依組織架構選擇"}</Label>
             <Icon name='arrow-forward' />
@@ -399,91 +390,12 @@ class MeetingInsertWithTagsPage extends React.Component {
       <MeetingItemForAttendees
         item            = {item.item}
         checked         = {checked}
-        // itemOnPress     = {this.itemOnPress}
         itemOnPress     = {this.props.actions.attendeeItemOnPress}
-        // calendarOnPress = {this.calendarOnPress}
         calendarOnPress = {this.props.actions.attendeeItemCalendarOnPress}
+        // itemOnPress     = {this.itemOnPress}
+        // calendarOnPress = {this.calendarOnPress}
       />
     );
-  }
-
-  itemOnPress = async (item) => {
-    let enableMeeting = await this.checkHaveMeetingTime(item.id, this.state.startdate, this.state.enddate);
-    if (enableMeeting) {
-      this.addTag(item);
-    } else {
-      Alert.alert(
-        this.props.lang.MeetingPage.alertMessage_duplicate, //"有重複"
-        `${this.props.lang.MeetingPage.alertMessage_period} ${item.name} ${this.props.lang.MeetingPage.alertMessage_meetingAlready}`,
-        [
-          { text: "OK", onPress: () => console.log("OK Pressed") }
-        ],
-        { cancelable: false }
-      );
-      
-    }
-  }
-
-  checkHaveMeetingTime = async (id, startTime, endTime) => {
-    let user = this.props.state.UserInfo.UserInfo;
-    let meetingParams = {
-      startdate:startTime,
-      enddate  : endTime,
-      attendees:[ {id:id} ],
-      timezone :RNLocalize.getTimeZone(),
-      oid : this.state.oid
-    }
-    let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
-      if (result.length == 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }).catch((errorResult)=>{
-      console.log("errorResult",errorResult.message);
-      return false;
-    });
-
-    return searchMeetingResult;
-  }
-
-  addTag = (item) => {      
-    let attendees = this.props.state.Meeting.attendees;
-    let isAdded = false;
-
-    for(let value of attendees){
-      if(item.id == value.id) isAdded = true; 
-    }
-
-    if (isAdded) {
-      this.removeTag(item);
-      // ToastUnit.show('error', this.props.state.Language.lang.CreateFormPage.NoAreadyItem);
-    } else {
-        attendees.push(item);
-        this.props.actions.setAttendees(attendees);
-    }
-    
-    this._content.wrappedInstance.scrollToEnd({animated: true});
-  }
-
-  calendarOnPress = (item) => {
-    //顯示此人有哪些會議
-    NavigationService.navigate("MeetingTimeForPerson", {
-      person: item,
-    });
-  }
-
-  removeTag = (item) => {
-    let attendees = this.props.state.Meeting.attendees;
-
-    let removeIndex = 0;
-    for(let i in attendees){
-      if(item.id == attendees[i].id) removeIndex = i;
-    }
-
-    attendees.splice(removeIndex, 1);
-
-    this.props.actions.setAttendees(attendees);
   }
 
   renderFooter = () => {
@@ -528,6 +440,94 @@ class MeetingInsertWithTagsPage extends React.Component {
     string = string.replace(/\s/g,"");
     return string;
   }
+
+  /*
+  itemOnPress = async (item) => {
+    let enableMeeting = await this.checkHaveMeetingTime(item.id, this.state.startdate, this.state.enddate);
+    if (enableMeeting) {
+      this.addTag(item);
+    } else {
+      Alert.alert(
+        this.props.lang.MeetingPage.alertMessage_duplicate, //"有重複"
+        `${this.props.lang.MeetingPage.alertMessage_period} ${item.name} ${this.props.lang.MeetingPage.alertMessage_meetingAlready}`,
+        [
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ],
+        { cancelable: false }
+      );
+      
+    }
+  }
+  */
+
+  /*
+  checkHaveMeetingTime = async (id, startTime, endTime) => {
+    let user = this.props.state.UserInfo.UserInfo;
+    let meetingParams = {
+      startdate:startTime,
+      enddate  : endTime,
+      attendees:[ {id:id} ],
+      timezone :RNLocalize.getTimeZone(),
+      oid      : this.state.oid
+    }
+    let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
+      if (result.length == 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }).catch((errorResult)=>{
+      console.log("errorResult",errorResult.message);
+      return false;
+    });
+
+    return searchMeetingResult;
+  }
+  */
+
+  /*
+  addTag = (item) => {      
+    let attendees = this.props.state.Meeting.attendees;
+    let isAdded = false;
+
+    for(let value of attendees){
+      if(item.id == value.id) isAdded = true; 
+    }
+
+    if (isAdded) {
+      this.removeTag(item);
+      // ToastUnit.show('error', this.props.state.Language.lang.CreateFormPage.NoAreadyItem);
+    } else {
+        attendees.push(item);
+        this.props.actions.setAttendees(attendees);
+    }
+    
+    this._content.wrappedInstance.scrollToEnd({animated: true});
+  }
+  */
+  /*
+  calendarOnPress = (item) => {
+    //顯示此人有哪些會議
+    NavigationService.navigate("MeetingTimeForPerson", {
+      person: item,
+    });
+  }
+  */
+
+  /*
+  removeTag = (item) => {
+    let attendees = this.props.state.Meeting.attendees;
+
+    let removeIndex = 0;
+    for(let i in attendees){
+      if(item.id == attendees[i].id) removeIndex = i;
+    }
+
+    attendees.splice(removeIndex, 1);
+
+    this.props.actions.setAttendees(attendees);
+  }
+  */
 }
 
 export let MeetingInsertWithTagsPageStyle = connectStyle( 'Page.FormPage', {} )(MeetingInsertWithTagsPage);

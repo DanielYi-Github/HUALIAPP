@@ -84,11 +84,10 @@ class MeetingInsertPage extends React.PureComponent  {
             break;
           case 'MeetingSearch': // 參與人員搜尋那邊過來的
             startTime = new Date( meetingParam.startdate.replace(/-/g, "/") ).getTime();
-            endTime   = new Date( meetingParam.enddate.replace(/-/g, "/") ).getTime();
-
-            // now       = isChangeTime ? startTime-28800000 : startTime;
             startTime = isChangeTime ? startTime-28800000 : startTime;
+            endTime   = new Date( meetingParam.enddate.replace(/-/g, "/") ).getTime();
             endTime   = isChangeTime ? endTime-28800000 : endTime;
+            
             attendees = meetingParam.attendees;
             isEndDateChange = true;
             break;
@@ -132,13 +131,11 @@ class MeetingInsertPage extends React.PureComponent  {
             }
             break;
           default:
-            // console.log(`Sorry, we are out of ${expr}.`);
         }
       }
 
       startTime = isModify && isChangeTime ? new Date(startTime).getTime()-28800000: startTime;
       endTime = isModify && isChangeTime  ? new Date(endTime).getTime()-28800000: endTime;
-      // console.log(Platform.OS, time1.getHours() , time2.getHours(), isChangeTime);
 
 	    this.state = {
         isChangeTime    :isChangeTime, //記錄部分機型會將時間直接+8小時
