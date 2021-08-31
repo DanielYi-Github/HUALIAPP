@@ -19,12 +19,13 @@ class MeetingItemForAttendees extends Component {
 			  }} 
 			>
 			  <CheckBox
-			      value={this.props.checked}
-			      onValueChange={(newValue) => {}}
-			      boxType = {"square"}
-			      onCheckColor = {"#00C853"}
-			      onTintColor = {"#00C853"}
-			      style={{ marginRight: 20 }}
+					value         ={this.props.checked}
+					disabled      ={true}
+					onValueChange ={(newValue) => {}}
+					boxType       = {"square"}
+					onCheckColor  = {"#00C853"}
+					onTintColor   = {"#00C853"}
+					style         ={{ marginRight: 20 }}
 			    />
 			  <Label>{this.props.item.name} </Label><Text note>{this.props.item.depname}</Text>
 			  <Icon 

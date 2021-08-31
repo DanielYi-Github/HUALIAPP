@@ -357,7 +357,6 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
         fixedLabel 
         style   ={{paddingLeft: 10, paddingRight: 5, backgroundColor: this.props.style.InputFieldBackground}} 
         onPress ={ async ()=>{ 
-          
           /*
           let enableMeeting = await this.checkHaveMeetingTime(item.item.id, this.state.startdate, this.state.enddate);
           if (enableMeeting) {
@@ -378,26 +377,15 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
         <CheckBox
             value={checked}
             onValueChange={(newValue) => {
-              // this.props.onCheckBoxTap(index, data); 
+              this.props.actions.positionCheckboxOnPress(newValue, item.item.value);
             }}
             boxType = {"square"}
             onCheckColor = {"#00C853"}
             onTintColor = {"#00C853"}
             style={{ marginRight: 20 }}
           />
-        <Label>{item.item.label} </Label><Text note>{item.item.depname}</Text>
-        <Icon 
-          style={{borderWidth: 1, padding: 10, paddingRight: 10}}
-          name='arrow-forward'
-          
+        <Label 
           onPress={()=>{
-            //顯示此人有哪些會議
-            /*
-            NavigationService.navigate("MeetingTimeForPerson", {
-              person: item.item,
-            });
-            */
-
             NavigationService.navigate("MeetingInsertWithTagsForSelect", {
               selectList    :item.item.value,
               onItemPress   :this.props.actions.getPositions,
@@ -405,12 +393,30 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
               showFooter    :true
             });
           }}
-          
+        >{item.item.label} </Label><Text note>{item.item.depname}</Text>
+        <Icon 
+          style={{borderWidth: 0, padding: 10, paddingRight: 10}}
+          name='arrow-forward'
+          onPress={()=>{
+            NavigationService.navigate("MeetingInsertWithTagsForSelect", {
+              selectList    :item.item.value,
+              onItemPress   :this.props.actions.getPositions,
+              renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
+              showFooter    :true
+            });
+            //顯示此人有哪些會議
+            /*
+            NavigationService.navigate("MeetingTimeForPerson", {
+              person: item.item,
+            });
+            */
+          }}
         />
       </Item>
     );
   }
 
+  /*
   checkHaveMeetingTime = async (id, startTime, endTime) => {
     let user = this.props.state.UserInfo.UserInfo;
     let meetingParams = {
@@ -433,6 +439,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
 
     return searchMeetingResult;
   }
+  */
 
   renderEmptyComponent = () => {
     return (

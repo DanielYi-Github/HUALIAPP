@@ -380,6 +380,7 @@ class MeetingInsertWithTagsPage extends React.Component {
 
   renderTapItem = (item) => {
     let checked = false;
+    let availableChange = true;
     for(let attendee of this.props.state.Meeting.attendees){
       if (attendee.id == item.item.id) {
         checked = true;
@@ -390,10 +391,9 @@ class MeetingInsertWithTagsPage extends React.Component {
       <MeetingItemForAttendees
         item            = {item.item}
         checked         = {checked}
+        availableChange = {availableChange}
         itemOnPress     = {this.props.actions.attendeeItemOnPress}
         calendarOnPress = {this.props.actions.attendeeItemCalendarOnPress}
-        // itemOnPress     = {this.itemOnPress}
-        // calendarOnPress = {this.calendarOnPress}
       />
     );
   }

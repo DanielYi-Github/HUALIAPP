@@ -439,7 +439,8 @@ export function getPositions(selectedCompany){
 		let user = getState().UserInfo.UserInfo;
 		let action = "org/hr/meeting/getPosition";
         let actionObject = { co : selectedCompany }; //查詢使用
-
+        console.log(user, action, actionObject);
+        
         let positionsPeople = await UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
         	let keys = Object.keys(result);
         	if(keys.length == 0) return [];
@@ -499,9 +500,10 @@ export function attendeeItemOnPress(attendee){
 		  	attendees: attendees,
 		  }); 
 		} else {
+		  let lang = getState().Language.lang.MeetingPage;
 		  Alert.alert(
-		    this.props.lang.MeetingPage.alertMessage_duplicate, //"有重複"
-		    `${this.props.lang.MeetingPage.alertMessage_period} ${item.name} ${this.props.lang.MeetingPage.alertMessage_meetingAlready}`,
+		    lang.alertMessage_duplicate, //"有重複"
+		    `${lang.alertMessage_period} ${attendee.name} ${lang.alertMessage_meetingAlready}`,
 		    [
 		      { text: "OK", onPress: () => console.log("OK Pressed") }
 		    ],
@@ -552,6 +554,65 @@ function addOrRemoveTag( item, getState ){
 	    attendees.push(item);
 	}
 	return attendees;
+}
+
+export function positionCheckboxOnPress(checkValue, checkItemAttendees){
+	return async (dispatch, getState) => {
+		// 先檢查是要新增還是刪除
+		// 新增的話先搜尋有沒有在裡面了 然後檢查有無會議衝突
+		// 刪除的話搜尋相同id然後刪除
+		let attendees = getState().Meeting.attendees;
+		if (checkValue) {
+			let isAdded = false;
+			for(let checkItem of checkItemAttendees){
+				for(let i in attendees){
+					if(checkItem.id == attendees[i].id){
+						isAdded = true;
+						break;
+					}
+				}
+
+				if (!isAdded) {
+					let enableMeeting = await checkHaveMeetingTime(
+						getState().Meeting.meetingOid,
+						checkItem.id, 
+						getState().Meeting.attendees_startDate, 
+						getState().Meeting.attendees_endDate,
+						getState().UserInfo.UserInfo
+					);
+
+					if (enableMeeting) {
+						attendees.push(checkItem);
+					} else {
+		  				let lang = getState().Language.lang.MeetingPage;
+						Alert.alert(
+							lang.alertMessage_duplicate, //"有重複"
+							`${lang.alertMessage_period} ${checkItem.name} ${lang.alertMessage_meetingAlready}`,
+							[
+							  { text: "OK", onPress: () => console.log("OK Pressed") }
+							],
+							{ cancelable: false }
+						);
+					}
+				}
+			}
+
+		} else {
+			for(let checkItem of checkItemAttendees){
+				for(let i in attendees){
+					if(checkItem.id == attendees[i].id){
+						attendees.splice(i, 1);
+						break;
+					}
+				}
+			}
+		}
+
+		dispatch({
+			type     :MeetingTypes.MEETING_SET_ATTENDEES,
+			attendees: attendees,
+		}); 
+	}
 }
 
 export function attendeeItemCalendarOnPress(attendee){

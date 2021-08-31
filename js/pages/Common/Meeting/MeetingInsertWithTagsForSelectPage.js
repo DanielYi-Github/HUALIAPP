@@ -35,6 +35,7 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
       data              : [],          //一般搜尋的資料
       isFooterRefreshing: false,
       isEnd             : false,       //紀錄搜尋結果是否已經沒有更多資料
+      checkState        : false
     };
   }
 
@@ -42,6 +43,7 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
   }
 
   render() {
+    console.log("this.state.checkState", this.state.checkState);
     return (
       <Container>
         {/*標題列*/}
@@ -150,7 +152,7 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
         <FlatList
           keyExtractor          = {(item, index) => index.toString()}
           data                  = {this.state.selectList}
-          extraData             = {this.state}
+          extraData             = {this.state.checkState}
           renderItem            = {this.renderTapItem}
           ListEmptyComponent    = {this.renderEmptyComponent}
         />
@@ -224,6 +226,7 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
   }
 
   multiAttendees = (item) => {
+    console.log("item");
     let checked = false;
     for(let attendee of this.props.state.Meeting.attendees){
       if (attendee.id == item.id) {
@@ -231,10 +234,13 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
       }
     }
 
+    console.log("checked", checked);
+
     return (
       <MeetingItemForAttendees
         item            = {item}
         checked         = {checked}
+        // checkBoxOnValueChange = {(newValue)=>{ this.setState({checkState:newValue}); }}
         itemOnPress     = {this.props.actions.attendeeItemOnPress}
         calendarOnPress = {this.props.actions.attendeeItemCalendarOnPress}
       />

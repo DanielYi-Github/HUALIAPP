@@ -602,7 +602,6 @@ class MeetingInsertPage extends React.PureComponent  {
 
   showDateTimePicker = (editStartorEndDatetime) => {
     let startdate = new Date( this.state.startdate.replace(/-/g, "/") ).getTime();
-    console.log(this.state.startdate.replace(/-/g, "/"));
     let enddate = new Date( this.state.enddate.replace(/-/g, "/") ).getTime();
     // startdate = this.state.isChangeTime ? startdate-28800000: startdate;
     // enddate = this.state.isChangeTime ? enddate-28800000: enddate;
