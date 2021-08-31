@@ -179,16 +179,7 @@ class SurveyPage extends React.Component {
              onPress         ={this.changePosition}
           />
           */}
-          <Card>
-            <CardItem style={{flexDirection: 'column'}}>  
-              <Title style={{
-                color        :this.props.state.Theme.theme.variables.ExplainText.color, 
-                paddingTop   : 5, 
-                paddingBottom: 15
-              }}>{this.props.state.Language.lang.SurveyPage.SurveyExplain}</Title>        
-              <Label style={{alignSelf: 'flex-start'}}>{this.props.state.Survey.surveyExplain}</Label>
-            </CardItem>
-          </Card>
+          
 
           <Carousel
             ref            = {(c) => { this._carousel = c; }}
@@ -248,6 +239,16 @@ class SurveyPage extends React.Component {
 
     let page = (
         <KeyboardAwareScrollView>
+          <Card>
+            <CardItem style={{flexDirection: 'column'}}>  
+              <Title style={{
+                color        :this.props.state.Theme.theme.variables.ExplainText.color, 
+                paddingTop   : 5, 
+                paddingBottom: 15
+              }}>{this.props.state.Language.lang.SurveyPage.SurveyExplain}</Title>        
+              <Label style={{alignSelf: 'flex-start'}}>{this.props.state.Survey.surveyExplain}</Label>
+            </CardItem>
+          </Card>
           <Card>
             <CardItem style={{flexDirection: 'column'}}>     
               <Title style={{color:this.props.state.Theme.theme.variables.ExplainText.color, paddingTop: 5, paddingBottom: 5}}>
