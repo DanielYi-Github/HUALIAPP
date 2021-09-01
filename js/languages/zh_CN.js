@@ -247,7 +247,7 @@ export default {
 		password     : '变更密码',
 		email        : '绑定E-Mail',
 		advices      : '建议与反馈',
-		about        : '关于',
+		about        : '关于及操作手册',
 		logout       : '退出登录',
 		Biometrics   : '生物识别',
 		changeAccount: '切换账号',

@@ -248,7 +248,7 @@ export default {
 		password              : '變更密碼',
 		email                 : '綁定E-Mail',
 		advices               : '建議及反饋',
-		about                 : '關於',
+		about                 : '關於及操作手冊',
 		logout                : '登出',
 		Biometrics            : '生物識別',
 		changeAccount         : '切換帳號',

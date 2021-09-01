@@ -247,7 +247,7 @@ export default {
 		password: "Thay đổi mật mã",
 		email: "Email liên kết",
 		advices: "Kiến nghị và phản hồi",
-		about: "Liên quan đến",
+		about: "Liên quan đến & hướng dẫn",
 		logout: "Đăng xuất",
 		Biometrics: 'Tài khoản',
 		changeAccount: 'Chuyển tài khoản',

@@ -247,7 +247,7 @@ export default {
 		password              :'Change the password',
 		email                 :'Bound Email',
 		advices               :'Suggestions and feedback',
-		about                 :'About',
+		about                 :'About & Guidance',
 		logout                :'Logout',
 		Biometrics            :'Biometrics',
 		changeAccount         :'Change Account',

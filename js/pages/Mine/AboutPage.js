@@ -12,13 +12,37 @@ import * as UpdateDataUtil    from '../../utils/UpdateDataUtil';
 import ToastUnit              from '../../utils/ToastUnit';
 
 
+
 class AboutPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      version            : DeviceInfo.getVersion(), //目前的版本,
-      checking           : false,
+      version : DeviceInfo.getVersion(), //目前的版本,
+      checking: false,
+      SOPUrl  : ""
     };
+  }
+
+  componentDidMount(){
+    let sql = ` select ifnull(b.CLASS4,a.CLASS4) as CLASS4 
+                from THF_MASTERDATA a 
+                left join THF_MASTERDATA b on b.CLASS1 = 'AppSOP' and b.CLASS3 = '${this.props.state.Language.langStatus}' and b.STATUS = 'Y' and b.OID in ( 
+                  select DATA_OID 
+                  from THF_PERMISSION 
+                  where DATA_TYPE = 'masterdata' 
+                )
+                where a.CLASS1 = 'AppSOP' and a.CLASS3 = 'zh-CN' and a.STATUS = 'Y' and a.OID in ( 
+                  select DATA_OID 
+                  from THF_PERMISSION 
+                  where DATA_TYPE = 'masterdata'
+                );`;
+    SQLite.selectData( sql, []).then((result) => {    
+      this.setState({
+        SOPUrl:result.raw()[0].CLASS4
+      });
+    }).catch((e)=>{
+      // LoggerUtil.addErrorLog("CommonAction loadCompanyData_ContactCO", "APP Action", "ERROR", e);
+    });
   }
 
   //大版本檢查更新
@@ -135,7 +159,9 @@ class AboutPage extends React.Component {
               <Card>
                 <CardItem button onPress={()=>{ 
                   NavigationService.navigate("ViewFile",{
-                    url: "data/getSOP",
+                    // url: "data/getSOP",
+                    file: this.state.SOPUrl,
+                    fileType:'pdf',
                     content:{},
                     pageTtile:lang.MinePage.operationManual
                   }); 
