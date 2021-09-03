@@ -202,10 +202,11 @@ async function getWebViewUrl(user,WebViewID){
 		return null;
 	}); 
 	return webViewUrl;
-  }
+}
 
-  export function navigateFunctionPage(app = null, userID = null) {
+export function navigateFunctionPage(app = null, userID = null) {
 	return async (dispatch, getState) => {
+		userID = userID == null ? getState().UserInfo.UserInfo.id: userID;
 		let recordHitCount = true;
 		let appID = app.ID
 		let appType = app.TYPE
@@ -288,23 +289,25 @@ async function getWebViewUrl(user,WebViewID){
 				}
 		}
 
-		if (recordHitCount) {
+		/*
 			let iSQL = `insert into THF_APPVISITLOG(USERID,APPID) values('${userID}','${appID}')`;
 			SQLite.insertData(iSQL, []);
-		}
-
-		/*
-		let sSQL = `select * from THF_APPVISITLOG where APPID='${appID}'`;
-		SQLite.selectData(sSQL, []).then((result) => {
-			if (result.length > 0) {
-				let uSQL = `update THF_APPVISITLOG set VISITCOUNT=VISITCOUNT+1 where APPID='${appID}'`;
-				SQLite.updateData(uSQL, []);
-			} else {
-				let iSQL = `insert into THF_APPVISITLOG(USERID,APPID) values('${userID}','${appID}')`;
-				SQLite.insertData(iSQL, []);
-			}
-		});
 		*/
+
+		
+		if (recordHitCount) {
+			let sSQL = `select * from THF_APPVISITLOG where APPID='${appID}'`;
+			SQLite.selectData(sSQL, []).then((result) => {
+				if (result.length > 0) {
+					let uSQL = `update THF_APPVISITLOG set VISITCOUNT=VISITCOUNT+1 where APPID='${appID}'`;
+					SQLite.updateData(uSQL, []);
+				} else {
+					let iSQL = `insert into THF_APPVISITLOG(USERID,APPID) values('${userID}','${appID}')`;
+					SQLite.insertData(iSQL, []);
+				}
+			});
+		}
+		
 	}
 }
 

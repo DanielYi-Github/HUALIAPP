@@ -1882,6 +1882,7 @@ export async function updateVisitLogToServer(user){
 	let sql = "select * from THF_APPVISITLOG where VISITCOUNT>0";
 	let sData = await SQLite.selectData(sql, []);
 	let promise = new Promise((resolve, reject) => {
+		
 		if(sData.length>0){
 			let contents = [];
 			for(let i=0;i<sData.length;i++){
