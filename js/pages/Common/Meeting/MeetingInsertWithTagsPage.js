@@ -276,7 +276,7 @@ class MeetingInsertWithTagsPage extends React.Component {
     searchedData = (searchedData == null) ? this.state.searchedData : searchedData;
 
     let user = this.props.state.UserInfo.UserInfo;
-    let action = "org/hr/getMBMembers";
+    let action = "org/hr/meeting/getMBMembers";
 
     this.setState({ isFooterRefreshing: true });
     if (!this.state.isFooterRefreshing) {

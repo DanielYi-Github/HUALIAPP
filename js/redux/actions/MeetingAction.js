@@ -439,7 +439,7 @@ export function getPositions(selectedCompany){
 		let user = getState().UserInfo.UserInfo;
 		let action = "org/hr/meeting/getPosition";
         let actionObject = { co : selectedCompany }; //查詢使用
-        console.log(user, action, actionObject);
+        // console.log(user, action, actionObject);
         
         let positionsPeople = await UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
         	let keys = Object.keys(result);
@@ -563,8 +563,11 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 		// 刪除的話搜尋相同id然後刪除
 		let attendees = getState().Meeting.attendees;
 		if (checkValue) {
-			let isAdded = false;
+
+			
 			for(let checkItem of checkItemAttendees){
+				let isAdded = false;
+
 				for(let i in attendees){
 					if(checkItem.id == attendees[i].id){
 						isAdded = true;

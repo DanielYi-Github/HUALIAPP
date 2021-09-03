@@ -206,6 +206,7 @@ async function getWebViewUrl(user,WebViewID){
 
 export function navigateFunctionPage(app = null, userID = null) {
 	return async (dispatch, getState) => {
+		userID = userID == null ? getState().UserInfo.UserInfo.id: userID; 
 		let recordHitCount = true;
 		let appID = app.ID
 		let appType = app.TYPE

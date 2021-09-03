@@ -9,21 +9,17 @@ import * as RNLocalize from "react-native-localize";
 
 import * as UpdateDataUtil    from '../../../utils/UpdateDataUtil';
 import * as NavigationService from '../../../utils/NavigationService';
+import * as SQLite            from '../../../utils/SQLiteUtil';
 import ToastUnit              from '../../../utils/ToastUnit';
 import TinyCircleButton       from '../../../components/TinyCircleButton';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 
-import {
-  NavigationContainer,
-  useRoute,
-  useNavigationState,
-} from '@react-navigation/native';
+import { NavigationContainer, useRoute, useNavigationState } from '@react-navigation/native';
 
 class MeetingInsertWithTagsByOrganizePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectBy          : this.props.route.params.selectBy,   //用哪一種模式下去選擇
       isShowSearch      : false,       //是否顯示關鍵字搜尋的輸入匡
       isChinesKeyword   : false,       //用來判斷關鍵字是否為中文字
       keyword           : "",          //一般搜尋
@@ -39,7 +35,8 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
   }
 
   componentDidMount(){
-    this.loadMoreData();
+    this.props.actions.getCompanies();    // 獲取公司列表資料
+    // this.loadMoreData();
   }
 
   render() {
@@ -151,35 +148,13 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
             </Header>
         }
 
-        {/*依不同公司選擇職級*/}
-        <Item 
-          style={{ 
-            backgroundColor: this.props.style.InputFieldBackground, 
-            height         : this.props.style.inputHeightBase,
-            paddingLeft    : 10,
-            paddingRight   : 5,
-            marginTop      : 30 
-          }}
-          onPress  = {()=>{
-              NavigationService.push("MeetingInsertWithTagsFurther", {
-                selectBy           : "organize",
-              });
-          }}
-        >
-            <Label style={{flex:1}}>{"依職級選擇"}</Label>
-            <Icon name='arrow-forward' />
-        </Item>
-
         <FlatList
-          contentContainerStyle = {{flex: 1, paddingTop: this.state.selectBy == "Organize" ? 30: 0}}
           keyExtractor          = {(item, index) => index.toString()}
-          data                  = {contentList}
-          extraData             = {this.state}
+          data                  = {this.props.state.Meeting.companies}
+          extraData             = {this.props.state.Meeting}
           renderItem            = {this.renderTapItem}
           ListFooterComponent   = {this.renderFooter}
           ListEmptyComponent    = {this.renderEmptyComponent}
-          onEndReachedThreshold = {0.3}
-          onEndReached          = {this.state.isEnd ? null :this.loadMoreData}
         />
 
         <Footer>
@@ -216,27 +191,58 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
     );
   }
 
-  loadMoreData = (isSearching, searchedData = null) => {
-    console.log(this.state.selectBy);
+  renderTapItem = (item) => {
+    item = item.item;
+    return (
+      <Item 
+        fixedLabel 
+        style   ={{padding: 10, backgroundColor: this.props.style.InputFieldBackground }} 
+        onPress ={ async ()=>{ 
+          // 取得廠區
+          let factories = await this.getFactories(item.value);
+          // this.state.onItemPress(item.value);
+          // NavigationService.goBack();
+          
+          NavigationService.navigate("MeetingInsertWithTagsForSelect", {
+            selectList    :factories,
+            onItemPress   :this.props.actions.getPositions,
+            renderItemMode:"normal",  // normal一般, multiCheck多選, multiAttendees多選參與人
+            showFooter    :true
+          });
+        }} 
+      >
+        <Label>{item.label} </Label>
+      </Item>
+    );
+  }
 
+  getFactories = async (com) => {
+    let sql = `select * from THF_MASTERDATA 
+           where CLASS1='HRPZID' and CLASS3='${com}' and STATUS='Y' order by SORT;`
+    let factories = await SQLite.selectData( sql, []).then((result) => {
+      let items = [];
+      for (let i in result.raw()) {
+        items.push({
+          key  :result.raw()[i].SORT,
+          label:result.raw()[i].CONTENT,
+          value:result.raw()[i].CLASS3
+        })
+      }
+      return items;
+    }).catch((e)=>{
+      // LoggerUtil.addErrorLog("CommonAction loadCompanyData_HrCO", "APP Action", "ERROR", e);
+      return [];
+    });
+    return factories;
+  }
+
+  loadMoreData = (isSearching, searchedData = null) => {
     isSearching = (typeof isSearching == "object") ? false : isSearching;
     let isSearch = isSearching ? isSearching : this.state.isSearch;
     searchedData = (searchedData == null) ? this.state.searchedData : searchedData;
 
     let user = this.props.state.UserInfo.UserInfo;
     let action = "";
-
-    switch (this.state.selectBy) {
-      case "Organize": // 依職級選擇
-        action = "/org/hr/meeting/getOrganize";
-        break;
-      case "organize": // 依組織架構選擇
-        action = "/org/hr/meeting/getOrg";
-        break;
-      default:
-        break;
-    }
-
 
     this.setState({ isFooterRefreshing: true });
     if (!this.state.isFooterRefreshing) {
@@ -270,7 +276,6 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
            isEnd:isEnd
           })
         }).catch((err) => {
-          // ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
           this.setState({ 
             isShowSearch   :false,
             isSearch       :false,
@@ -336,42 +341,6 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
     }
 
     return isEnd;
-  }
-
-  renderTapItem = (item) => {
-    return (
-      <Item 
-        fixedLabel 
-        style   ={{paddingLeft: 15, backgroundColor: this.props.style.InputFieldBackground}} 
-        onPress ={ async ()=>{ 
-          let enableMeeting = await this.checkHaveMeetingTime(item.item.id, this.state.startdate, this.state.enddate);
-          if (enableMeeting) {
-            this.addTag(item.item);
-          } else {
-            Alert.alert(
-              this.props.lang.MeetingPage.alertMessage_duplicate, //"有重複"
-              `${this.props.lang.MeetingPage.alertMessage_period} ${item.item.name} ${this.props.lang.MeetingPage.alertMessage_meetingAlready}`,
-              [
-                { text: "OK", onPress: () => console.log("OK Pressed") }
-              ],
-              { cancelable: false }
-            );
-          }
-        }} 
-      >
-        <Label>{item.item.name} </Label><Text note>{item.item.depname}</Text>
-        <Icon 
-          name='calendar-outline'
-          onPress={()=>{
-            //顯示此人有哪些會議
-            NavigationService.navigate("MeetingTimeForPerson", {
-              person: item.item,
-            });
-          }}
-          style={{borderWidth: 0, padding: 10, paddingRight: 20}}
-        />
-      </Item>
-    );
   }
 
   checkHaveMeetingTime = async (id, startTime, endTime) => {

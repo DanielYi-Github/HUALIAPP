@@ -16,6 +16,7 @@ import TinyCircleButton       from '../../../components/TinyCircleButton';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 import MeetingItemForAttendees from '../../../components/Meeting/MeetingItemForAttendees';
 
+
 class MeetingInsertWithTagsForSelectPage extends React.Component {
   constructor(props) {
     super(props);
@@ -43,7 +44,6 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
   }
 
   render() {
-    console.log("this.state.checkState", this.state.checkState);
     return (
       <Container>
         {/*標題列*/}
@@ -226,21 +226,17 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
   }
 
   multiAttendees = (item) => {
-    console.log("item");
     let checked = false;
     for(let attendee of this.props.state.Meeting.attendees){
       if (attendee.id == item.id) {
         checked = true;
       }
     }
-
-    console.log("checked", checked);
-
+    
     return (
       <MeetingItemForAttendees
         item            = {item}
         checked         = {checked}
-        // checkBoxOnValueChange = {(newValue)=>{ this.setState({checkState:newValue}); }}
         itemOnPress     = {this.props.actions.attendeeItemOnPress}
         calendarOnPress = {this.props.actions.attendeeItemCalendarOnPress}
       />
@@ -402,6 +398,10 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
     return (
       null
     );
+  }
+
+  showAttendeesReorderPage = () => {
+    NavigationService.navigate("MeetingAttendeesReorder");
   }
 
   dedup(arr) {

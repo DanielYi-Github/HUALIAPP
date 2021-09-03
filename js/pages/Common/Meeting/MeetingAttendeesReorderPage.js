@@ -99,14 +99,16 @@ class MeetingAttendeesReorderPage extends React.Component {
     };
 
     renderSortableRow = ({key, index, data, disabled, active}) => {
-      return <SortableRow 
-            data           ={data} 
-            active         ={active} 
-            index          ={index}
-            onCheckBoxTap  ={this.onCheckBoxTap}
-            name           ={data.name}
-            departmentName ={data.depname}
-          />
+      return (
+        <SortableRow 
+          data           ={data} 
+          active         ={active} 
+          index          ={index}
+          onCheckBoxTap  ={this.onCheckBoxTap}
+          name           ={data.name}
+          departmentName ={data.depname}
+        />
+      )
     }
 
     changeDefaultvalueArray = (currentOrder) => {

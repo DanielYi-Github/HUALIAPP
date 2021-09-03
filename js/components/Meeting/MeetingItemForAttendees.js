@@ -18,7 +18,7 @@ class MeetingItemForAttendees extends Component {
 			  	this.props.itemOnPress(this.props.item);
 			  }} 
 			>
-			  <CheckBox
+				<CheckBox
 					value         ={this.props.checked}
 					disabled      ={true}
 					onValueChange ={(newValue) => {}}
@@ -26,15 +26,13 @@ class MeetingItemForAttendees extends Component {
 					onCheckColor  = {"#00C853"}
 					onTintColor   = {"#00C853"}
 					style         ={{ marginRight: 20 }}
-			    />
-			  <Label>{this.props.item.name} </Label><Text note>{this.props.item.depname}</Text>
-			  <Icon 
-			    name='calendar-outline'
-			    onPress={()=>{
-			      this.props.calendarOnPress(this.props.item);
-			    }}
-			    style={{borderWidth: 0, padding: 10, paddingRight: 20}}
-			  />
+				/>
+				<Label>{this.props.item.name} </Label><Text note>{this.props.item.depname}</Text>
+				<Icon 
+					name='calendar-outline'
+					onPress={()=>{ this.props.calendarOnPress(this.props.item); }}
+					style={{borderWidth: 0, padding: 10, paddingRight: 20}}
+				/>
 			</Item>
 		);
 	}

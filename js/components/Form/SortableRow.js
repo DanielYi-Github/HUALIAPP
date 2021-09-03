@@ -53,8 +53,8 @@ class SortableRow extends Component {
     if (this.props.active !== nextProps.active) {
       Animated.timing(this._active, {
         duration: 300,
-        easing: Easing.bounce,
-        toValue: Number(nextProps.active),
+        easing  : Easing.bounce,
+        toValue : Number(nextProps.active),
       }).start();
     }
   }
@@ -64,7 +64,7 @@ class SortableRow extends Component {
     let activeBackgroundColor = active ? "rgba(0,0,0,.3)": this.props.style.InputFieldBackground ; 
     return (
       <Animated.View style={[ styles.row, this._style, { backgroundColor:activeBackgroundColor  } ]}>
-        <Body style={{flexDirection: 'row', paddingLeft: 20, paddingRight: 20}}>
+        <Body style={{flexDirection: 'row'}}>
           <Left style={{flexDirection: 'row', flex: 0}}>
             <CheckBox
                 value={data.checked}
@@ -76,7 +76,7 @@ class SortableRow extends Component {
                 onTintColor = {"#00C853"}
               />
           </Left>
-          <Body style={{justifyContent: 'space-between', paddingLeft: 20, flexDirection: 'row'}}>
+          <Body style={{justifyContent: 'space-between', paddingLeft: 10, flexDirection: 'row'}}>
             <Label>{`${index+1}.`}{this.props.name}</Label><Text note>{this.props.departmentName}</Text>
           </Body>
           <Right style={{flex: 0}}>
@@ -91,9 +91,9 @@ class SortableRow extends Component {
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
     padding: 15,
+    // alignItems: 'center',
+    // justifyContent: 'center',
   }
 });
 

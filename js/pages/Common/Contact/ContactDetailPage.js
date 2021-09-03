@@ -126,7 +126,7 @@ class ContactDetailPage extends React.Component {
               isButton ={null}
               onPress  ={null}
             />
-
+            {/*
             <PersonItem
               title    ={"Skype"}
               value    ={user.SKYPE}
@@ -134,6 +134,7 @@ class ContactDetailPage extends React.Component {
               isButton ={null}
               onPress  ={null}
             />
+            */}
 
             <PersonItem
               title    ={page.Mail}

@@ -1884,6 +1884,7 @@ export async function updateVisitLogToServer(user){
 	let sData = await SQLite.selectData(sql, []);
 	let promise = new Promise((resolve, reject) => {
 		if(sData.length>0){
+			console.log(sData.raw());
 			let contents = [];
 			for(let i=0;i<sData.length;i++){
 				let content = {
@@ -2757,7 +2758,6 @@ export async function getCreateFormDetailFormat(user, url, content = {}){
 			"userId" :Common.encrypt(user.loginID),
 			"content":Common.encrypt(content)
 		}
-		console.log("params", params);
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入

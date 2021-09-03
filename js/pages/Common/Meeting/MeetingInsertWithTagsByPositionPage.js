@@ -169,12 +169,12 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
             marginTop      : 30 
           }}
           onPress  = {()=>{
-              NavigationService.navigate("MeetingInsertWithTagsForSelect", {
-                selectList    :this.props.state.Meeting.companies,
-                onItemPress   :this.props.actions.getPositions,
-                renderItemMode:"normal",  // normal一般, multiCheck多選, multiAttendees多選參與人
-                showFooter    :false
-              });
+            NavigationService.navigate("MeetingInsertWithTagsForSelect", {
+              selectList    :this.props.state.Meeting.companies,
+              onItemPress   :this.props.actions.getPositions,
+              renderItemMode:"normal",  // normal一般, multiCheck多選, multiAttendees多選參與人
+              showFooter    :false
+            });
           }}
         >
             <Label style={{flex:1}}>{companyName}</Label>
@@ -342,21 +342,27 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
 
   renderTapItem = (item) => {
     let selectedCount = 0;
+    let included = false;
     for(let positionAttendee of item.item.value){
       for(let propsAttendee of this.props.state.Meeting.attendees){
         if( positionAttendee.id == propsAttendee.id ){
+          included = true;
           selectedCount++;
           break;
         }
       }
     }
     let checked = selectedCount == item.item.value.length ? true: false;
+    let checkBoxColor = checked == included ? "#00C853": "#9E9E9E";
+
+    console.log("checked", checked, included, checkBoxColor);
 
     return (
       <Item 
         fixedLabel 
         style   ={{paddingLeft: 10, paddingRight: 5, backgroundColor: this.props.style.InputFieldBackground}} 
         onPress ={ async ()=>{ 
+          this.props.actions.positionCheckboxOnPress(!(checked || included), item.item.value);
           /*
           let enableMeeting = await this.checkHaveMeetingTime(item.item.id, this.state.startdate, this.state.enddate);
           if (enableMeeting) {
@@ -375,16 +381,16 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
         }} 
       >
         <CheckBox
-            value={checked}
-            onValueChange={(newValue) => {
-              this.props.actions.positionCheckboxOnPress(newValue, item.item.value);
-            }}
-            boxType = {"square"}
-            onCheckColor = {"#00C853"}
-            onTintColor = {"#00C853"}
-            style={{ marginRight: 20 }}
+            disabled={ true }
+            onValueChange={(newValue) => {}}
+            value        ={checked || included}
+            boxType      ={"square"}
+            onCheckColor ={checkBoxColor}
+            onTintColor  ={checkBoxColor}
+            style        ={{ marginRight: 20 }}
           />
         <Label 
+          /*
           onPress={()=>{
             NavigationService.navigate("MeetingInsertWithTagsForSelect", {
               selectList    :item.item.value,
@@ -393,10 +399,11 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
               showFooter    :true
             });
           }}
+          */
         >{item.item.label} </Label><Text note>{item.item.depname}</Text>
         <Icon 
-          style={{borderWidth: 0, padding: 10, paddingRight: 10}}
-          name='arrow-forward'
+          style ={{borderWidth: 0, padding: 10, paddingRight: 10}}
+          name  ='arrow-forward'
           onPress={()=>{
             NavigationService.navigate("MeetingInsertWithTagsForSelect", {
               selectList    :item.item.value,
