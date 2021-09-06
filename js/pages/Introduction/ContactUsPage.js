@@ -44,6 +44,7 @@ class ContactUsPage extends React.Component {
                   placeholderTextColor  = {this.props.style.inputWithoutCardBg.inputColorPlaceholder}
                   onChangeText          = {(text)=>{ this.setState({ name:text }); }}
                   style                 = {{color:this.props.style.inputWithoutCardBg.inputColor}}
+                  value={this.state.name}
                 />
               </Item>
               <Body style={{flexDirection: 'row', alignSelf: 'flex-start', paddingTop: 20}}>
@@ -57,6 +58,7 @@ class ContactUsPage extends React.Component {
                   textContentType       = {"emailAddress"}
                   onChangeText          = {(text)=>{ this.setState({ mail:text }); }}
                   style                 = {{color:this.props.style.inputWithoutCardBg.inputColor}}
+                  value={this.state.mail}
                 />
               </Item>
               <Item style= {{marginLeft: 0}}>
@@ -66,6 +68,7 @@ class ContactUsPage extends React.Component {
                   textContentType       = {"telephoneNumber"}
                   onChangeText          = {(text)=>{ this.setState({ phone:text }); }}
                   style                 = {{color:this.props.style.inputWithoutCardBg.inputColor}}
+                  value={this.state.phone}
                 />
               </Item>
 
@@ -81,6 +84,7 @@ class ContactUsPage extends React.Component {
                   onChangeText = {(text)=>{ this.setState({ context:text }); }}
                   multiline    = {true}
                   style        = {{color:this.props.style.inputWithoutCardBg.inputColor}}
+                  value={this.state.context}
                 />
               </Item>
             </Form>
@@ -108,19 +112,24 @@ class ContactUsPage extends React.Component {
       ToastUnit.show('error', this.props.Language.WrongNameMsg);
     }else if(!this.state.mail || this.state.mail.replace(/[\r\n]/g,"").replace(/^[\s　]+|[\s　]+$/g, "").length == 0){
       ToastUnit.show('error', this.props.Language.WrongMailMsg);
-    }
-    else{
+    }else if(!this.state.context || this.state.context.replace(/[\r\n]/g,"").replace(/^[\s　]+|[\s　]+$/g, "").length == 0){
+      ToastUnit.show('error', this.props.Language.NoEmpty);
+    }else{
       UpdateDataUtil.setFeedBackByPublic(
         this.state.name, 
         this.state.context,
         `${this.state.mail},${this.state.phone}`
       ).then((result)=>{
-        ToastUnit.show('error', this.props.Language.sucessMsg1);
+        ToastUnit.show('info', this.props.Language.sucessMsg1);
+        this.setState({
+          name   :'',
+          phone  :'',
+          mail   :'',
+          context:'',
+        });
       }).catch((e)=>{
         ToastUnit.show('error', this.props.Language.ErrorMsg);
       })
-
-      
     }
   }
 }

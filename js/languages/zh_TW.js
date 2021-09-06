@@ -532,6 +532,7 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		WrongNameMsg : "請填謝您的名字",
 		WrongMailMsg : "請填寫您的郵箱",
 		sucessMsg1   : "感謝你的留言，我們會盡快與你聯繫。",
+		NoEmpty      : "內容不能空白",
 		ErrorMsg     : "很抱歉，伺服器營運中，請稍後再試",
 		Submit       : "提交"
 	},

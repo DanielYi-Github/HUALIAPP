@@ -530,9 +530,10 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		WriteQuestion: "求职问题或相关疑问皆可填写，我们会由专人与你联系。",
 		WrongNameMsg : "请填谢您的名字",
 		WrongMailMsg : "请填写您的邮箱",
+		NoEmpty      : "內容不能空白",
 		sucessMsg1   : "请填写您的邮箱感谢你的留言，我们会尽快与你联系。",
 		ErrorMsg     : "很抱歉，服务器营运中，请稍后再试",
-		Submit       : "提交"
+		Submit       : "提交",
 	},
 	RecruitDetailPage: {
 		RecruitInfo: "招聘信息"

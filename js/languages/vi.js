@@ -526,6 +526,7 @@ export default {
 		WriteQuestion :"Các vấn đề về xin việc hoặc các vấn đề liên quan có thể điền vào, Nhân viên có chuyên môn của chúng tôi sẽ liên hệ với bạn",
 		WrongNameMsg  :"Vui lòng điền đầy đủ tên của bạn",
 		WrongMailMsg  :"Vui lòng điền Email của bạn",
+		NoEmpty       :"Không thể điền vào chỗ trống",
 		sucessMsg1    :"Cảm ơn bạn đã gửi tin nhắn, chúng tôi sẽ liên hệ với bạn sớm nhất có thể",
 		ErrorMsg      :"Xin lỗi, máy chủ đang hoạt động, vui lòng thử lại sau",
 		Submit        :"Gửi đi",

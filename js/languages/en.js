@@ -526,6 +526,7 @@ export default {
 		WriteQuestion: "Job hunting questions or related questions can be filled in, and we will contact you by a special person.",
 		WrongNameMsg : "Fill in your name,Please",
 		WrongMailMsg : "Fill in your Mail,Please",
+		NoEmpty      : "The content could't be empty.",
 		sucessMsg1   : "Thank you for your message. We will contact you as soon as possible.",
 		ErrorMsg     : "Sorry, the server is in operation. Please try again later.",
 		Submit       : 'Submit'
