@@ -17,6 +17,7 @@ class ContactUsPage extends React.Component {
       phone:'',
       mail:'',
       context:'',
+      isSubmitting:false
     }
   }
 
@@ -93,9 +94,10 @@ class ContactUsPage extends React.Component {
                 width:"100%", 
                 marginTop:35,
               }} 
+              disabled = {this.state.isSubmitting}
               onPress = {this.confirm.bind(this)} >
               {
-                (this.props.Submit.isSubmitting) ?
+                (this.state.isSubmitting) ?
                   <Spinner color='white'/>
                 :
                   <Text>{this.props.Language.Submit}</Text>
@@ -115,6 +117,9 @@ class ContactUsPage extends React.Component {
     }else if(!this.state.context || this.state.context.replace(/[\r\n]/g,"").replace(/^[\s　]+|[\s　]+$/g, "").length == 0){
       ToastUnit.show('error', this.props.Language.NoEmpty);
     }else{
+      this.setState({
+        isSubmitting:true
+      });
       UpdateDataUtil.setFeedBackByPublic(
         this.state.name, 
         this.state.context,
@@ -126,9 +131,13 @@ class ContactUsPage extends React.Component {
           phone  :'',
           mail   :'',
           context:'',
+          isSubmitting:false
         });
       }).catch((e)=>{
         ToastUnit.show('error', this.props.Language.ErrorMsg);
+        this.setState({
+          isSubmitting:false
+        });
       })
     }
   }
