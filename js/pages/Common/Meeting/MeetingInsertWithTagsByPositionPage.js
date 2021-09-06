@@ -343,6 +343,8 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
   renderTapItem = (item) => {
     let selectedCount = 0;
     let included = false;
+
+    // 確認有沒有已經包含在裡面，用來顯示不同的勾勾顏色
     for(let positionAttendee of item.item.value){
       for(let propsAttendee of this.props.state.Meeting.attendees){
         if( positionAttendee.id == propsAttendee.id ){

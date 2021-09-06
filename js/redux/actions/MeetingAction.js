@@ -92,6 +92,7 @@ export function addMeeting(meetingParams){
 		let addMeetingResult = await UpdateDataUtil.addMeeting(user, meetingParams).then((result)=>{
 			return result;
 		}).catch((e)=>{
+			console.log("e", e);
 			let resultMsg = { success:false, msg:e.message};
 			return resultMsg;
 		});
@@ -487,7 +488,7 @@ export function attendeeItemOnPress(attendee){
 		
 		let enableMeeting = await checkHaveMeetingTime(
 			getState().Meeting.meetingOid,
-			attendee.id, 
+			[{id:attendee.id}], 
 			getState().Meeting.attendees_startDate, 
 			getState().Meeting.attendees_endDate,
 			getState().UserInfo.UserInfo
@@ -516,11 +517,11 @@ export function attendeeItemOnPress(attendee){
 
 async function checkHaveMeetingTime(meetingOid, id, startTime, endTime, user){
     let meetingParams = {
-		startdate: startTime,
-		enddate  : endTime,
-		attendees: [{id:id}],
-		timezone : RNLocalize.getTimeZone(),
-		oid      : meetingOid
+		startdate   : startTime,
+		enddate     : endTime,
+		attendees   : id,
+		timezone    : RNLocalize.getTimeZone(),
+		oid         : meetingOid
     }
     let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
       if (result.length == 0) {
@@ -561,11 +562,49 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 		// 先檢查是要新增還是刪除
 		// 新增的話先搜尋有沒有在裡面了 然後檢查有無會議衝突
 		// 刪除的話搜尋相同id然後刪除
-		let attendees = getState().Meeting.attendees;
+		let attendees = getState().Meeting.attendees; //已經存在的
 		if (checkValue) {
 
-			
+			// 檢查有哪些人沒有在裡面
+			let unInside = [];
 			for(let checkItem of checkItemAttendees){
+				for(let attendee of attendees){
+					if(checkItem.id == attendee.id){
+						break;
+					}
+				}
+				unInside.push(checkItem);
+			}
+
+			let enableMeeting = await checkHaveMeetingTime(
+				getState().Meeting.meetingOid,
+				unInside, 
+				getState().Meeting.attendees_startDate, 
+				getState().Meeting.attendees_endDate,
+				getState().UserInfo.UserInfo
+			);
+
+			console.log("enableMeeting", enableMeeting);
+
+			/*
+			if (enableMeeting) {
+				attendees.push(checkItem);
+			} else {
+  				let lang = getState().Language.lang.MeetingPage;
+				Alert.alert(
+					lang.alertMessage_duplicate, //"有重複"
+					`${lang.alertMessage_period} ${checkItem.name} ${lang.alertMessage_meetingAlready}`,
+					[
+					  { text: "OK", onPress: () => console.log("OK Pressed") }
+					],
+					{ cancelable: false }
+				);
+			}
+			*/
+
+
+			/*
+			for(let checkItem of checkItemAttendees){ //職級裡面的
 				let isAdded = false;
 
 				for(let i in attendees){
@@ -599,6 +638,7 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 					}
 				}
 			}
+			*/
 
 		} else {
 			for(let checkItem of checkItemAttendees){
