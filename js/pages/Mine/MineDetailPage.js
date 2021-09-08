@@ -166,7 +166,7 @@ class MineDetailPage extends React.Component {
                 <Text style={{fontWeight: 'bold', color:"#FF5252"}}>
                   {page.NoUserDataAlertTitle}
                 </Text>
-                  <Text style={{marginTop: 5,color:"#757575"}}>
+                  <Text style={{marginTop: 5, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
                     {page.NoUserDataAlertContent}
 
                     <Text style={{color:"#47ACF2", fontWeight: 'bold'}} onPress={this.goCarAdministrator}>

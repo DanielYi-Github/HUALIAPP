@@ -189,7 +189,7 @@ class IntroductionPage extends React.Component {
   renderGroupIntroduction = (key) => {
     return (
       <View key={key}>
-        <Title style={{paddingTop:30, alignSelf: 'center'}}>
+        <Title style={{paddingTop:30, alignSelf: 'center', color:this.props.style.dynamicTitleColor}}>
           {this.props.state.Language.lang.InitialPage.GroupIntroduction}
         </Title>
         <Card>
@@ -231,7 +231,9 @@ class IntroductionPage extends React.Component {
     let initialPage = this.props.state.Language.lang.InitialPage;
     return(
       <View key={key}>
-        <Title style={{paddingTop:30, alignSelf: 'center'}}>{this.props.state.Language.lang.InitialPage.ServiceItems}</Title>
+        <Title style={{paddingTop:30, alignSelf: 'center', color:this.props.style.dynamicTitleColor}}>
+        {this.props.state.Language.lang.InitialPage.ServiceItems}
+        </Title>
         <Card>
           <CardItem style={{height:this.props.style.InitialPageServiceImage.height}}>
             <Image
@@ -255,7 +257,9 @@ class IntroductionPage extends React.Component {
   renderManagementIdea = (key) => {
     return(
       <View key={key}>
-        <Title style={{paddingTop:30, alignSelf: 'center'}}>{this.props.state.Language.lang.InitialPage.ManagementIdea}</Title>
+        <Title style={{paddingTop:30, alignSelf: 'center', color:this.props.style.dynamicTitleColor}}>
+        {this.props.state.Language.lang.InitialPage.ManagementIdea}
+        </Title>
         <Card>
           <CardItem>
             <Body>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, FlatList, RefreshControl, VirtualizedList, Platform, Alert, Keyboard } from 'react-native';
-import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Icon, Title, Text, Card, CardItem } from 'native-base';
+import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Icon, Title, Text, Card, CardItem, connectStyle } from 'native-base';
 import { tify, sify} from 'chinese-conv'; 
 import { connect }   from 'react-redux';
 import ActionSheet   from 'react-native-actionsheet';
@@ -201,21 +201,21 @@ class ContactPage extends React.Component {
 
           <View style={{ justifyContent: 'flex-start', alignItems: 'flex-start', width:'90%'}}>
             <View style={{flexDirection: 'row', alignItems: 'flex-start', paddingTop: 10, paddingBottom: 5}}>
-              <Icon name='bulb' style={{fontSize:24}}/>
-              <Title style={{paddingLeft: 8 }}>{lang.SearchTipsTitle}</Title>
+              <Icon name='bulb' style={{color:this.props.style.dynamicTitleColor ,fontSize:24}}/>
+              <Title style={{color:this.props.style.dynamicTitleColor ,paddingLeft: 8 }}>{lang.SearchTipsTitle}</Title>
             </View>
 
             <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-              <Text>1.</Text>
-              <Text>{lang.SearchTipsText1}「{this.state.selectedCompany}」{lang.SearchTipsText2}</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>1.</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{lang.SearchTipsText1}「{this.state.selectedCompany}」{lang.SearchTipsText2}</Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-              <Text>2.</Text>
-              <Text>{lang.SearchTipsText3}</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>2.</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{lang.SearchTipsText3}</Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-              <Text>3.</Text>
-              <Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>3.</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
                 {lang.SearchTipsText4}「<Text style={{color:"#47ACF2"}} onPress={this.goContactAdministrator}>{lang.SearchTipsText5}</Text>」{lang.SearchTipsText6}
                 <Text style={{color:"#47ACF2"}} onPress={this.goContactAdministrator}>{lang.SearchTipsText7}</Text>
               </Text>
@@ -259,8 +259,11 @@ class ContactPage extends React.Component {
   }
 }
 
+let ContactPageStyle = connectStyle( 'Page.ContactDetailPage', {} )(ContactPage);
+
 export default connect(
   (state) => ({
     state: {...state}
   })
-)(ContactPage);
+)(ContactPageStyle);
+
