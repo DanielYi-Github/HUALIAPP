@@ -285,24 +285,30 @@ async function getWebViewUrl(user,WebViewID){
 				}
 		}
 
+		// if (recordHitCount) {
+		// 	console.log('userID',userID);
+		// 	console.log('appID',appID);
+		// 	let iSQL = `insert into THF_APPVISITLOG(USERID,APPID) values('${userID}','${appID}')`;
+		// 	SQLite.insertData(iSQL, []);
+		// }
+		// 记录点击次数THF_APPVISITLOG
 		if (recordHitCount) {
-			let iSQL = `insert into THF_APPVISITLOG(USERID,APPID) values('${userID}','${appID}')`;
+			SetAppVisitLog(appID, userID);
+		}
+	}
+}
+
+export function SetAppVisitLog(appID, userID){
+	let sSQL = `select * from THF_APPVISITLOG where APPID='${appID}' and USERID='${userID}'`;
+	SQLite.selectData(sSQL, []).then((result) => {
+		if (result.length > 0) {
+			let uSQL = `update THF_APPVISITLOG set VISITCOUNT=VISITCOUNT+1,VISITDATE=datetime('now'),TXDAT=datetime('now') where APPID='${appID}' and USERID='${userID}'`;
+			SQLite.updateData(uSQL, []);
+		} else {
+			let iSQL = `insert into THF_APPVISITLOG(USERID,APPID,VISITCOUNT) values('${userID}','${appID}',1)`;
 			SQLite.insertData(iSQL, []);
 		}
-
-		/*
-		let sSQL = `select * from THF_APPVISITLOG where APPID='${appID}'`;
-		SQLite.selectData(sSQL, []).then((result) => {
-			if (result.length > 0) {
-				let uSQL = `update THF_APPVISITLOG set VISITCOUNT=VISITCOUNT+1 where APPID='${appID}'`;
-				SQLite.updateData(uSQL, []);
-			} else {
-				let iSQL = `insert into THF_APPVISITLOG(USERID,APPID) values('${userID}','${appID}')`;
-				SQLite.insertData(iSQL, []);
-			}
-		});
-		*/
-	}
+	});	
 }
 
 export function LockNoticeListState(NoticeListState){

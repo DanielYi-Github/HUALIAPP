@@ -637,12 +637,15 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		msg2:"送了你一个礼物"
 	},
 	DeputyPage:{
+		Condition:"条件",
 		Condition1:"条件1",
 		Relation:"关联性",
 		Condition2:"条件2",
+		Agent:"代理人",
 		DeputyWay:"代理方式",
 		DeputyStartTime:"代理起时",
 		DeputyEndTime:"代理迄时",
+		Notifier:"通知对象",
 		Running:"代理模式已启动，如需编辑请先停用",
 		NoRunning:"代理模式已停用",
 		Rules:"依规则代理",
