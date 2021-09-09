@@ -160,6 +160,7 @@ export default {
     color:"#FFF",
     // marginTop:Basic.HeaderBackground,
   },
+  bannerLogoViewFontColor:"#FFF",
   //IconColor
   IconColor:"#E0E0E0",
   //LabelColor

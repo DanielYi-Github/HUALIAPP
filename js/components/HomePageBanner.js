@@ -30,7 +30,7 @@ class Banner extends Component{
 			return (
 			  <View style={this.props.style.HomePageBannerView}>
 			      <View style={this.props.style.HomePageBannerLogoView}>
-			        <Title style={{color:'#FFF',fontSize: 28 }}>{this.props.title}</Title>
+			        <Title style={{color:this.props.style.bannerLogoViewFontColor, fontSize: 28 }}>{this.props.title}</Title>
 			      </View>
 			  </View>
 			);

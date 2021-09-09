@@ -27,7 +27,7 @@ export default (variables /*: * */ = variable) => {
 		alignSelf: 'center' , 
 		backgroundColor: 'rgba(255, 255, 255, 0)',
 		borderWidth    : 5,
-		borderColor    : '#FFF'
+		borderColor    : variables.bannerLogoViewFontColor
 	},
 	ExplainText        :variables.ExplainText,
 	tabBarUnderlineStyle:{
@@ -56,7 +56,9 @@ export default (variables /*: * */ = variable) => {
   		height:variables.PageSize.height/10
   	},
   	PageSize:variables.PageSize,
-  	HomePageBannerBackgroundColor:variables.HomePageBannerBackgroundColor
+  	HomePageBannerBackgroundColor:variables.HomePageBannerBackgroundColor,
+  	color : variables.HeaderForGeneral.color,
+  	bannerLogoViewFontColor:variables.bannerLogoViewFontColor
   };
 
   return homePageTheme;

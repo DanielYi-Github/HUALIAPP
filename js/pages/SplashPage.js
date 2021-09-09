@@ -20,6 +20,8 @@ import * as HomeAction      from '../redux/actions/HomeAction';
 import * as MessageAction   from '../redux/actions/MessageAction';
 import * as MeetingAction   from '../redux/actions/MeetingAction';
 import MessageRouter   from '../utils/MessageRouter';
+import MainPageBackground  from '../components/MainPageBackground';
+
 
 
 
@@ -56,6 +58,7 @@ class SplashPage extends React.Component {
   render() {
     return (
       <Container style={{ alignItems: 'center',  justifyContent: 'center' }}>
+        <MainPageBackground/>
         <Image style={{ width:250, height:250 }} source ={require("../image/login/icon-noback.png")} />
           {
             this.props.state.AppInit.showUpdateProgress ?

@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Container, connectStyle} from 'native-base';
 import Flake from './Animation/Flake';
+import Lantern from './Animation/Lantern';
 const { width, height } = Dimensions.get('window');
 
 
@@ -35,9 +36,9 @@ class MainPageBackground extends React.Component {
           style={{ flex: 1, resizeMode: "cover" }}
           source={this.props.style.MainPageBackground.source}
         >
-          {/*
+          {
             [...Array(10)].map((_, index) => 
-              <Flake
+              <Lantern
                 x={Math.random() * width}               // x-coordinate
                 y={Math.random() * height}              // y-coordinate
                 radius={Math.random() * 4 + 1}          // radius
@@ -45,7 +46,7 @@ class MainPageBackground extends React.Component {
                 key={index}
               />
             )
-          */}
+          }
         </ImageBackground>
       );
     }
