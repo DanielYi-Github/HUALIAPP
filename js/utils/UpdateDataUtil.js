@@ -4433,3 +4433,30 @@ export async function updateCompanyDocumentToServer(user){
 	})
 	return promise
 }
+
+/* 獲取代理人功能AppID
+* @param user資料
+*/
+export async function getDeputyAppID(user){
+	let promise = new Promise((resolve, reject) => {
+		let url = "data/getParams";
+		let content = {
+			paramtype: 'DeputyAppID',
+		}
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+		};
+
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+			resolve(data);
+		})
+	});
+	return promise;
+}

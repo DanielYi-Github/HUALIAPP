@@ -639,12 +639,15 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		msg2:"送了你一個禮物"
 	},
 	DeputyPage:{
+		Condition:"條件",
 		Condition1:"條件1",
 		Relation:"關聯性",
 		Condition2:"條件2",
+		Agent:"代理人",
 		DeputyWay:"代理方式",
 		DeputyStartTime:"代理起時",
 		DeputyEndTime:"代理迄時",
+		Notifier:"通知對象",
 		Running:"代理模式已啟動，如需編輯請先停用",
 		NoRunning:"代理模式已停用",
 		Rules:"依規則代理",
