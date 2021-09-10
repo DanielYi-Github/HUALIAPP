@@ -204,7 +204,7 @@ async function getWebViewUrl(user,WebViewID){
 	return webViewUrl;
   }
 
-  export function navigateFunctionPage(app = null, userID = null) {
+export function navigateFunctionPage(app = null, userID = null) {
 	return async (dispatch, getState) => {
 		let recordHitCount = true;
 		let appID = app.ID
@@ -247,6 +247,9 @@ async function getWebViewUrl(user,WebViewID){
 						break;
 					case "OutDoorSurvey": //春節出行情況
 						NavigationService.navigate("Survey", {SurveyOID: "B936DC6D18263433E050000A760072A0"});
+						break;
+					case "VietnamCo_Survey": //隔离调查
+						NavigationService.navigate("Survey", {SurveyOID: "CA6ED0659B59A28DE050000A760063E2"});
 						break;
 					case "Documents": //集團文件
 						NavigationService.navigate("DocumentCategories");
