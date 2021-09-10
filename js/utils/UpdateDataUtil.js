@@ -558,7 +558,8 @@ export async function updateContact(user) {
 				"content":Common.encrypt(JSON.stringify(content))
 			};
 
-			let url = "data/getContactData";
+			// let url = "data/getContactData";
+			let url = "data/getContact";
 
 			NetUtil.getRequestContent(params, url).then((data)=>{
 				if (data.code != 200) {
@@ -628,7 +629,7 @@ export async function updateContact(user) {
 				SQLite.insertData_new(execute).then(()=>{
 					let end = new Date().getTime();
 					console.log("updateContact_end:"+ (end - start) / 1000);
-					updateContactPic(user, ltxdat, content);				//獲取通訊錄圖片資料
+					// updateContactPic(user, ltxdat, content);				//獲取通訊錄圖片資料
 					resolve();
 				});			
 			})
@@ -726,7 +727,7 @@ export async function updateContact(user) {
 						let end = new Date().getTime();
 						console.log("updateContact:"+ (end - start) / 1000);
 						
-						updateContactPic(user, ltxdat, content);				//獲取通訊錄圖片資料
+						// updateContactPic(user, ltxdat, content);				//獲取通訊錄圖片資料
 						resolve();
 					})
 				})

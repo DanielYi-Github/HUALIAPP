@@ -24,6 +24,7 @@ export function loadCompanyData_ContactCO(){
 			}
 		}
 
+		/*
 		let sql = `select * from THF_MASTERDATA 
 				   where CLASS1='ContactCO' and STATUS='Y' and OID in 
 				   ( 
@@ -32,6 +33,17 @@ export function loadCompanyData_ContactCO(){
 				   	where DATA_TYPE='masterdata' and FUNC_OID='${appOid}'
 				   ) 
 				   order by SORT;`
+		*/
+		
+		let sql = `select * from THF_MASTERDATA 
+				   where CLASS1='HRCO' and STATUS='Y' and OID in 
+				   ( 
+				   	select DATA_OID 
+				   	from THF_PERMISSION 
+				   	where DATA_TYPE='masterdata' and FUNC_OID='${appOid}'
+				   ) 
+				   order by SORT;`
+
 		SQLite.selectData( sql, []).then((result) => {		
 			//如果沒有找到資料，不顯示任何資料
 			for(let i in result.raw()){
