@@ -146,7 +146,7 @@ export default function submit(state = initialState, action = {}) {
         condition1Param: action.paramObj.condition1Param,
         deputyWayParam: action.paramObj.deputyWayParam,
         deputyRuleComParam: action.paramObj.deputyRuleComParam,
-        mixParam:action.paramObj.mixParam
+        mixParam: action.paramObj.mixParam
       };
 
     case types.DEPUTYBASIC:

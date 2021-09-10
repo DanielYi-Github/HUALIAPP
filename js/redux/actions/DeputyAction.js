@@ -10,7 +10,6 @@ import * as NavigationService  from '../../utils/NavigationService';
 export function iniDeputyData(){
 	return async (dispatch) => {
 		dispatch(isLoading(true));
-		console.log("this",this);
 		await this.paramInit();				// 捞取代理人下拉参数档资料
 		await this.cboParamInit();			// 捞取流程分类及流程名称
 		await this.loadBPMDeputySetting();	// 捞取代理人API资料
@@ -43,9 +42,13 @@ export function basicInit(data) {
 		let deputyRulesData = deepClone(basicClone.deputyRules);
 		let lang = getState().Language.lang.DeputyPage;
 		let deputyState = getState().Deputy;
+
       	if(basicClone){
 			let rulesMemActionValue = null;
+			// deputyRules.component.name改为多语系
+			basicClone.deputyRules.component.name = lang.Rules;
 
+			// 获取多规则代理列表行数
 			let itemCount = 0;	// 列表的数量
 			let RulesListComponent = deputyRulesData.listComponent;
 			for(let i in RulesListComponent){
@@ -87,6 +90,8 @@ export function basicInit(data) {
 						// 将defaultvalue数组改为对应的值
 						obj.defaultvalue = obj.defaultvalue[i];
 						obj.isedit = "N";
+						// component.name改为多语系
+						obj.component.name = lang.Condition;
 					}
 
 					// 条件1
@@ -195,12 +200,13 @@ export function basicInit(data) {
 							rulesMemActionValue = rulesMemObj.rulesMemActionValue;
 						}
 						obj.isedit = "Y";
+						// component.name改为多语系
+						obj.component.name = lang.Agent;
 					}
 					itemObjList.push(obj);
 				}
 				defaultvalueList.push(itemObjList);
 			}
-			console.log('defaultvalueList',defaultvalueList);
 
 			// listComponent组成
 			let listComponentValue = [];
@@ -227,6 +233,8 @@ export function basicInit(data) {
 					}
 					obj.columntype = "deputytxt";
 					obj.isedit = "N";
+					// component.name改为多语系
+					obj.component.name = lang.Condition;
 				}
 
 				// 条件1
@@ -318,518 +326,24 @@ export function basicInit(data) {
 						rulesMemActionValue = rulesMemObj.rulesMemActionValue;
 					}
 					obj.isedit = "Y";
+					// component.name改为多语系
+					obj.component.name = lang.Agent;
 				}
 				// defaultvalue值为空
 				obj.defaultvalue = null;
 				listComponentValue.push(obj);
 			}
-			console.log('listComponentValue',listComponentValue);
 			basicClone.deputyRules.listComponent = listComponentValue;
 			basicClone.deputyRules.defaultvalue = defaultvalueList;
-
-            // //拼接card呈現方式
-            // let listComponent = basicClone.deputyRules.listComponent;
-            // //確認組件數
-            // let comList = listComponent.length;
-			// console.log('comList',comList);
-            // let count = 0;
-            // if (comList > 0) {
-            // 	for(let i in listComponent){
-            // 		if(listComponent[i].component.id=="txtRuleDeputyID"){
-			// 			//組件數存在-確認資料筆數
-			// 			if (listComponent[i].defaultvalue) {
-			// 				count = listComponent[i].defaultvalue.length;
-			// 				break;
-			// 			}
-            // 		}
-            // 	}
-            // }
-            // //是否有初始化資料
-			// if(count > 0) {
-			// 	//遍歷組件並分別取出顯示筆數
-			// 	//分3組3段
-			// 	let arrayRule = new Array(count);
-			// 	let ruleList1 = [];
-          	// 	for (var i = 0; i < count; i++) {
-	        //         let ruleList2 = [];
-	        //         for (var j = 0; j < comList; j++) {
-			// 			arrayRule[i] = deepClone(listComponent);
-			// 			arrayRule[i][j].defaultvalue = arrayRule[i][j].defaultvalue[i];
-			// 			ruleList2[j] = arrayRule[i][j];
-	        //         }
-	        //         ruleList1[i] = ruleList2;
-            //   	}
-			// 	let tempList;
-			// 	let tempList2;
-			// 	//分3組5段
-			// 	for(let i in ruleList1) {
-			// 		let arryCondition1 = ["","",""];
-			// 		let arryCondition2 = ["","",""];
-			// 		//分割 條件1-關係-條件2
-			// 		for(let j in ruleList1[i]){
-			// 			if(ruleList1[i][j].component.id=="txtCondID"){
-			// 				arryCondition1 = ruleList1[i][j].defaultvalue.replace(/\"/g, "").split(" ");
-			// 			}
-			// 			if(ruleList1[i][j].component.id=="txtCond"){
-			// 				arryCondition2 = ruleList1[i][j].defaultvalue.replace(/\"/g, "").split(" ");
-			// 			}
-			// 		}
-
-			// 		//key ["$AF$PRJ", "==", "一般;資訊;人資"]
-			// 		let cond1Key=arryCondition1[0];
-			// 		let relationKey=arryCondition1[1];
-			// 		let cond2Key=arryCondition1[2];
-			// 		//value ["專案名稱", "等於", "一般;資訊;人資"]
-			// 		let cond1Value=arryCondition2[0];
-			// 		let relationValue=arryCondition2[1];
-			// 		let cond2Value=arryCondition2[2];
-
-			// 		//判斷是否為多選
-			// 		let strs1 = cond2Key.split(";"); //字符分割 
-			// 		let strs2 = cond2Value.split(";"); //字符分割 
-			// 		//初始化com組件類型-管制多規則不可編輯問題
-			// 		let columntype1 = "cbo";
-			// 		let columntype2 = "cbo";
-			// 		let columntype3 = "cbo";
-			// 		let isCboEdit = "Y";
-			// 		let cond2ParamList = [];
-			// 		//若存在多規則-則設置為文本框並不可編輯
-			// 		if (strs1.length > 2) {
-			// 			columntype1 = "txt";
-			// 			columntype2 = "txt";
-			// 			columntype3 = "txt";
-			// 			isCboEdit = "N";
-			// 		} else if (strs1.length == 1) {
-			// 			//若只存在一個規則則判斷規則
-			// 			if (cond1Key != "$AF$KEYWORD") {
-			// 				//規則不為文字框則進行參數list賦值
-			// 				cond2ParamList = await this.getInitCondicton2Param(cond1Key);
-			// 			} else {
-			// 				columntype1 = "cbo";
-			// 				columntype2 = "cbo";
-			// 				columntype3 = "txt";
-			// 			}
-			// 		}
-
-	        //         // defaultvalue拼接初始化
-	        //         tempList = [
-	        //           {//條件1-隱藏
-	        //             action: null,
-	        //             actionColumn: null,
-	        //             columnaction: null,
-	        //             columntype: "hidetxt",
-	        //             component: {
-	        //               name: lang.Condition1,
-	        //               id: "txtCond1"
-	        //             },
-	        //             defaultvalue: cond1Key,
-	        //             isedit: "N",
-	        //             listComponent: null,
-	        //             paramList: [],
-	        //             required: "Y"
-	        //           }, 
-	        //           {//條件1
-	        //             action: null,
-	        //             actionColumn: null,
-	        //             columnaction: null,
-	        //             columntype: columntype1,
-	        //             component: {
-	        //               name: lang.Condition1,
-	        //               id: "txtCond1"
-	        //             },
-	        //             defaultvalue: cond1Value,
-	        //             isedit: isCboEdit,
-	        //             listComponent: null,
-	        //             paramList: deputyState.condition1Param,
-	        //             required: "Y"
-	        //           }, 
-	        //           {//關聯性-隱藏
-	        //             action: null,
-	        //             actionColumn: null,
-	        //             columntype: "hidetxt",
-	        //             component: {
-	        //               name: lang.Relation,
-	        //               id: "relation"
-	        //             },
-	        //             defaultvalue: relationKey,
-	        //             isedit: "N",
-	        //             listComponent: null,
-	        //             paramList: [],
-	        //             required: "Y"
-	        //           }, 
-	        //           {//關聯性
-	        //             action: null,
-	        //             actionColumn: null,
-	        //             columntype: columntype2,
-	        //             component: {
-	        //               name: lang.Relation,
-	        //               id: "relation"
-	        //             },
-	        //             defaultvalue: relationValue,
-	        //             isedit: isCboEdit,
-	        //             listComponent: null,
-	        //             paramList: deputyState.relationParam,
-	        //             required: "Y"
-	        //           }, 
-	        //           {//條件二-隱藏
-	        //             action: null,
-	        //             actionColumn: null,
-	        //             columnaction: null,
-	        //             columntype: "hidetxt",
-	        //             component: {
-	        //               name: lang.Condition2,
-	        //               id: "txtCond2"
-	        //             },
-	        //             defaultvalue: cond2Key,
-	        //             isedit: "N",
-	        //             listComponent: null,
-	        //             paramList: [],
-	        //             required: "Y"
-	        //           }, 
-	        //           {//條件二
-	        //             action: null,
-	        //             actionColumn: null,
-	        //             columnaction: null,
-	        //             columntype: columntype3,
-	        //             component: {
-	        //               name: lang.Condition2,
-	        //               id: "txtCond2"
-	        //             },
-	        //             defaultvalue: cond2Value,
-	        //             isedit: isCboEdit,
-	        //             listComponent: null,
-	        //             paramList: cond2ParamList,
-	        //             required: "Y"
-	        //           }
-			// 		];
-
-		    // 		// componetList拼接初始化
-	        //         tempList2 = [
-	        //           {//條件1-隱藏
-	        //             action: null,
-	        //             actionColumn: null,
-	        //             columnaction: null,
-	        //             columntype: "hidetxt",
-	        //             component: {
-	        //               name: lang.Condition1,
-	        //               id: "txtCond1"
-	        //             },
-	        //             defaultvalue: cond1Key,
-	        //             isedit: "N",
-	        //             listComponent: null,
-	        //             paramList: [],
-	        //             required: "Y"
-	        //           }, 
-	        //           {//條件1
-	        //             action: null,
-	        //             actionColumn: null,
-	        //             columnaction: null,
-	        //             columntype: "cbo",
-	        //             component: {
-	        //               name: lang.Condition1,
-	        //               id: "txtCond1"
-	        //             },
-	        //             defaultvalue: cond1Value,
-	        //             isedit: "Y",
-	        //             listComponent: null,
-	        //             paramList: deputyState.condition1Param,
-	        //             required: "Y"
-	        //           }, 
-	        //           {//關聯性-隱藏
-	        //             action: null,
-	        //             actionColumn: null,
-	        //             columntype: "hidetxt",
-	        //             component: {
-	        //               name: lang.Relation,
-	        //               id: "relation"
-	        //             },
-	        //             defaultvalue: relationKey,
-	        //             isedit: "N",
-	        //             listComponent: null,
-	        //             paramList: [],
-	        //             required: "Y"
-	        //           }, 
-	        //           {//關聯性
-	        //             action: null,
-	        //             actionColumn: null,
-	        //             columntype: "cbo",
-	        //             component: {
-	        //               name: lang.Relation,
-	        //               id: "relation"
-	        //             },
-	        //             defaultvalue: relationValue,
-	        //             isedit: "Y",
-	        //             listComponent: null,
-	        //             paramList: deputyState.relationParam,
-	        //             required: "Y"
-	        //           }, 
-	        //           {//條件二-隱藏
-	        //             action: null,
-	        //             actionColumn: null,
-	        //             columnaction: null,
-	        //             columntype: "hidetxt",
-	        //             component: {
-	        //               name: lang.Condition2,
-	        //               id: "txtCond2"
-	        //             },
-	        //             defaultvalue: cond2Key,
-	        //             isedit: "N",
-	        //             listComponent: null,
-	        //             paramList: [],
-	        //             required: "Y"
-	        //           }, 
-	        //           {//條件二
-	        //             action: null,
-	        //             actionColumn: null,
-	        //             columnaction: null,
-	        //             columntype: "cbo",
-	        //             component: {
-	        //               name: lang.Condition2,
-	        //               id: "txtCond2"
-	        //             },
-	        //             defaultvalue: cond2Value,
-	        //             isedit: "Y",
-	        //             listComponent: null,
-	        //             paramList: [],
-	        //             required: "Y"
-	        //           }
-			// 		];
-
-	        //         let tempRuleList1 = deepClone(ruleList1)
-	        //         let newRuleList1 =[];
-		    //     	// 多規則代理人跳頁人員選單
-		    //     	let rulesMemObj = null;
-		    // 		for(let j in tempRuleList1[i]){
-		    // 			if(tempRuleList1[i][j].component.id=="txtRuleDeputyID"){
-		    // 				//代理人開窗開放
-		    // 				tempRuleList1[i][j].isedit = "Y";
-		    // 				newRuleList1.push(tempRuleList1[i][j]);
-		    // 			}
-	    	// 			if(tempRuleList1[i][j].component.id=="txtRuleDeputyName"){
-	    	// 				//撈取多規則開窗
-			// 				console.log('getState().UserInfo.UserInfo',getState().UserInfo.UserInfo);
-			// 				console.log('tempRuleList1[i][j]',tempRuleList1[i][j]);
-			// 				rulesMemObj = await getRulesMemActionValue(getState().UserInfo.UserInfo,tempRuleList1[i][j]);
-			// 	        	console.log('rulesMemObj', rulesMemObj);
-			// 				if(rulesMemObj){
-			// 	        		tempRuleList1[i][j]=rulesMemObj.rulesMem;
-			// 	        		rulesMemActionValue=rulesMemObj.rulesMemActionValue;
-			// 	        	}
-		    // 				//代理人開窗開放
-			// 	        	tempRuleList1[i][j].isedit = "Y";
-		    // 				newRuleList1.push(tempRuleList1[i][j]);
-	    	// 			}
-		    // 		}
-		    // 		tempRuleList1[i]=newRuleList1;
-	        //         //拼接成 代理人工號-代理人-條件
-	        //         ruleList1[i] = [...tempList, ...tempRuleList1[i]];
-			// 		//設定com組件呈現方式
-			// 		for (let i = 0; i < comList; i++) {
-			// 			basicClone.deputyRules.listComponent[i].defaultvalue = null;
-			// 		}
-			// 		//組件格式拼接成 條件1-關係-條件2-代理人工號-代理人
-			// 		console.log('basicClone.deputyRules.listComponent',deepClone(basicClone.deputyRules.listComponent));
-		    //     	if(basicClone.deputyRules.listComponent.length>0){
-		    //     		for(let i in basicClone.deputyRules.listComponent){
-        	// 				if(basicClone.deputyRules.listComponent[i].component.id=="txtRuleDeputyID"){
-			// 					tempList2.push(basicClone.deputyRules.listComponent[i]);
-		    //     			}
-		    //     			if(basicClone.deputyRules.listComponent[i].component.id=="txtRuleDeputyName"){
-			// 		        	if(rulesMemObj){
-			// 		        		basicClone.deputyRules.listComponent[i]=rulesMemObj.rulesMem;
-			// 		        	}
-			// 					tempList2.push(basicClone.deputyRules.listComponent[i]);
-		    //     			}
-		    //     		}
-		    //     	}
-			// 		let conTempList = deepClone(tempList2);
-			// 		for (let i in conTempList) {
-			// 			//修改各段默認值為空且可編輯
-			// 			conTempList[i].defaultvalue = null;
-			// 			conTempList[i].isedit = "Y";
-			// 		}
-
-			// 		//替換data資料為temp資料
-			// 		basicClone.deputyRules.listComponent = conTempList;
-			// 		basicClone.deputyRules.defaultvalue = ruleList1;
-			// 	}
-
-			// 	let tj = {
-			// 		action: null,
-			// 		actionColumn: null,
-			// 		columnaction: null,
-			// 		columntype: "deputytxt",
-			// 		component: {name: "条件", id: "txtCondAll"},
-			// 		defaultvalue: null,
-			// 		isedit: true,
-			// 		listComponent: null,
-			// 		paramList: [],
-			// 		required: "Y"
-			// 	};
-			// 	basicClone.deputyRules.listComponent.splice(0, 0, tj);
-
-			// 	let condList = [];
-			// 	let arrListComponent = deputyRulesData.listComponent;
-			// 	for(let i in arrListComponent){
-			// 		if(arrListComponent[i].component.id == 'txtCond'){
-			// 			condList = arrListComponent[i].defaultvalue;
-			// 		}
-			// 	}
-			// 	let arrDefaultvaluet = basicClone.deputyRules.defaultvalue;
-			// 	for(let i in arrDefaultvaluet){
-			// 		let tj1 = {
-			// 			action: null,
-			// 			actionColumn: null,
-			// 			columnaction: null,
-			// 			columntype: "deputytxt",
-			// 			component: {name: "条件", id: "txtCondAll"},
-			// 			defaultvalue: condList[i],
-			// 			isedit: true,
-			// 			listComponent: null,
-			// 			paramList: [],
-			// 			required: "Y"
-			// 		};
-			// 		arrDefaultvaluet[i].splice(0, 0, tj1);
-			// 	}
-
-			// } else {
-			// 	//沒有則初始化組件
-			// 	let tempList3 =
-			// 		[{
-			// 			action: null,
-			// 			actionColumn: null,
-			// 			columnaction: null,
-			// 			columntype: "hidetxt",
-			// 			component: {
-			// 			name: lang.Condition1,
-			// 			id: "txtCond1"
-			// 			},
-			// 			defaultvalue: null,
-			// 			isedit: "N",
-			// 			listComponent: null,
-			// 			paramList: [],
-			// 			required: "Y"
-			// 		}, {
-			// 			action: null,
-			// 			actionColumn: null,
-			// 			columnaction: null,
-			// 			columntype: "cbo",
-			// 			component: {
-			// 			name: lang.Condition1,
-			// 			id: "txtCond1"
-			// 			},
-			// 			defaultvalue: null,
-			// 			isedit: "Y",
-			// 			listComponent: null,
-			// 			paramList: deputyState.condition1Param,
-			// 			required: "Y"
-			// 		}, {
-			// 			action: null,
-			// 			actionColumn: null,
-			// 			columntype: "hidetxt",
-			// 			component: {
-			// 			name: lang.Relation,
-			// 			id: "relation"
-			// 			},
-			// 			defaultvalue: null,
-			// 			isedit: "N",
-			// 			listComponent: null,
-			// 			paramList: [],
-			// 			required: "Y"
-			// 		}, {
-			// 			action: null,
-			// 			actionColumn: null,
-			// 			columntype: "cbo",
-			// 			component: {
-			// 			name: lang.Relation,
-			// 			id: "relation"
-			// 			},
-			// 			defaultvalue: null,
-			// 			isedit: "Y",
-			// 			listComponent: null,
-			// 			paramList: deputyState.relationParam,
-			// 			required: "Y"
-			// 		}, {
-			// 			action: null,
-			// 			actionColumn: null,
-			// 			columnaction: null,
-			// 			columntype: "hidetxt",
-			// 			component: {
-			// 			name: lang.Condition2,
-			// 			id: "txtCond2"
-			// 			},
-			// 			defaultvalue: null,
-			// 			isedit: "N",
-			// 			listComponent: null,
-			// 			paramList: [],
-			// 			required: "Y"
-			// 		}, {
-			// 			action: null,
-			// 			actionColumn: null,
-			// 			columnaction: null,
-			// 			columntype: "cbo",
-			// 			component: {
-			// 			name: lang.Condition2,
-			// 			id: "txtCond2"
-			// 			},
-			// 			defaultvalue: null,
-			// 			isedit: "Y",
-			// 			listComponent: null,
-			// 			paramList: [],
-			// 			required: "Y"
-			// 	}];
-	        // 	// 多規則代理人跳頁-人員選單初始化
-	        // 	if(basicClone.deputyRules.listComponent.length>0){
-			// 		for(let i in basicClone.deputyRules.listComponent){
-			// 			if(basicClone.deputyRules.listComponent[i].component.id=="txtRuleDeputyID"){
-			// 				//設定com組件呈現方式
-			// 				//組件格式拼接成 條件1-關係-條件2-代理人工號
-			// 				tempList3.push(basicClone.deputyRules.listComponent[i]);
-			// 			}
-			// 			if(basicClone.deputyRules.listComponent[i].component.id=="txtRuleDeputyName"){
-			// 				let rulesMemObj=await getRulesMemActionValue(getState().UserInfo.UserInfo,basicClone.deputyRules.listComponent[1]);
-			// 		    	if(rulesMemObj){
-			// 		    		basicClone.deputyRules.listComponent[i]=rulesMemObj.rulesMem;
-			// 		    		rulesMemActionValue=rulesMemObj.rulesMemActionValue;
-			// 		    	}
-			// 				//組件格式拼接成 條件1-關係-條件2-代理人工號-代理人
-			// 		    	tempList3.push(basicClone.deputyRules.listComponent[i]);
-			// 			}
-			// 		}
-	        // 	}
-			// 	let conTempList = deepClone(tempList3);
-			// 	for (let i in conTempList) {
-			// 		//修改各段默認值為空且可編輯
-			// 		conTempList[i].defaultvalue = null;
-			// 		conTempList[i].isedit = "Y";
-			// 	}
-			// 	//替換data資料為temp資料
-			// 	basicClone.deputyRules.listComponent = conTempList;
-			// 	basicClone.deputyRules.defaultvalue = [];
-        	// }
-
-        	//時間戳轉換為API格式
-	        // if (basicClone.startExecuteTime == -1) {
-	        //   basicClone.startExecuteTime = (new Date()).getTime();
-	        // }
-			// console.log('basicClone.startExecuteTime', basicClone.startExecuteTime);
-	        // let startExecuteTime = Common.dateFormatNoSecond(basicClone.startExecuteTime, "/");
-			// console.log('startExecuteTime',startExecuteTime);
-	        // if (basicClone.endExecuteTime == -1) {
-	        //   basicClone.endExecuteTime = (new Date()).getTime() + 24 * 60 * 60 * 1000 - 1;
-	        // }
-	        // let endExecuteTime = Common.dateFormatNoSecond(basicClone.endExecuteTime, "/");
 	        
-			//根據啟用狀態決定是否可編輯
-	        if (basicClone.state != null) {
-	          basicClone.deputyName.isedit = basicClone.state ? "N" : "Y";
-	          basicClone.informName.isedit = basicClone.state ? "N" : "Y";
-	        }
+			// 根據啟用狀態決定是否可編輯
+			basicClone.deputyName.isedit = basicClone.state ? "N" : "Y";
+			basicClone.informName.isedit = basicClone.state ? "N" : "Y";
 	        if (basicClone.deputyRule) {
 	          basicClone.deputyRules.isedit = basicClone.state ? "N" : "Y";
 	        }
 
-			// iseditList
+			// 多规则代理列表是否可编辑list
 			let arrListComponent = deputyRulesData.listComponent;
 			let iseditList = [];
 			for(let i in arrListComponent){
@@ -841,35 +355,55 @@ export function basicInit(data) {
 			basicClone.deputyRules["iseditList"] = iseditList;
 
 			// 多规则代理组件类型
-	        basicClone.deputyRules.columntype="tabForDeputy";
+	        basicClone.deputyRules.columntype = "tabForDeputy";
 
-            //組件初始化
+            /** 組件初始化 */
+			// 代理方式
 			let deputyWayObj = updateDeputyWayData(lang, basicClone.deputyRule, basicClone.state, deputyState.deputyWayParam);
+			
+			// 代理起时（如果代理人时间为空时API返回值是1970/01/01 07:59）
 			let startExecuteTime = basicClone.startExecuteTime;
-			console.log('startExecuteTime',startExecuteTime);
+			let startTime = basicClone.startExecuteTime;
+	        if (startTime != null) {
+				if (startTime == "1970/01/01 07:59"){
+					let nowTime = (new Date()).getTime();
+					startExecuteTime = Common.dateFormatNoSecond(nowTime, "/");
+				}
+			}
 			let startExecuteTimeObj = updateStartExecuteTime(lang, startExecuteTime, basicClone.state);
-			console.log('startExecuteTimeObj',startExecuteTimeObj);
+			
+			// 代理讫时（如果代理人时间为空时API返回值是1970/01/01 07:59）
 			let endExecuteTime = basicClone.endExecuteTime;
-			console.log('endExecuteTime',endExecuteTime);
-		    let endExecuteTimeObj = updateEndExecuteTime(lang, endExecuteTime, basicClone.state);
-        	console.log('endExecuteTimeObj',endExecuteTimeObj);
-			//單一人員代理選單初始化
-            let deputyNameObj=await getDeputyActionValue(getState().UserInfo.UserInfo,basicClone.deputyName);
-        	let deputyActionValue=null;
+			let endTime = basicClone.endExecuteTime;
+	        if (endTime != null) {
+				if (endTime == "1970/01/01 07:59"){
+					let nowTime1 = (new Date()).getTime() + 24 * 60 * 60 * 1000 - 1;	// 现在时间+1天
+					endExecuteTime = Common.dateFormatNoSecond(nowTime1, "/");
+				}
+			}
+			let endExecuteTimeObj = updateEndExecuteTime(lang, endExecuteTime, basicClone.state);
+
+			// 單一人員代理選單初始化
+            let deputyNameObj = await getDeputyActionValue(getState().UserInfo.UserInfo, basicClone.deputyName);
+        	let deputyActionValue = null;
+			// component.name改为多语系
+			deputyNameObj.deputyName.component.name = lang.Rule;
         	if(deputyNameObj){
-        		basicClone.deputyName=deputyNameObj.deputyName;
-        		deputyActionValue=deputyNameObj.deputyActionValue;
+        		basicClone.deputyName = deputyNameObj.deputyName;
+        		deputyActionValue = deputyNameObj.deputyActionValue;
         	}
         	
-			//通知人員選單初始化
-            let informNameObj=await getInformActionValue(getState().UserInfo.UserInfo,basicClone.informName);
-        	let informActionValue=null;
+			// 通知對象選單初始化
+            let informNameObj = await getInformActionValue(getState().UserInfo.UserInfo, basicClone.informName);
+        	let informActionValue = null;
+			// component.name改为多语系
+			informNameObj.informName.component.name = lang.Notifier;
         	if(informNameObj){
-        		basicClone.informName=informNameObj.informName;
-        		informActionValue=informNameObj.informActionValue;
+        		basicClone.informName = informNameObj.informName;
+        		informActionValue = informNameObj.informActionValue;
         	}
 			
-		    let iniOtherObj={
+		    let iniOtherObj = {
 		    	deputyWay:deputyWayObj,
 		    	startExecuteTime:startExecuteTimeObj,
 		    	endExecuteTime:endExecuteTimeObj,
@@ -877,14 +411,10 @@ export function basicInit(data) {
 		    	informActionValue:informActionValue,
 		    	rulesMemActionValue:rulesMemActionValue
 		    }
-
-			console.log('basicClone', basicClone);
-			console.log('iniOtherObj', iniOtherObj);
-  			dispatch(setTransferBasic(basicClone));
+			dispatch(setTransferBasic(basicClone));
   			dispatch(setOrtherInit(iniOtherObj));
 		}
   	}
-
 }
 
 export function setBPMDeputy(content, msg){
@@ -1099,7 +629,7 @@ export function switchExecuteDuration(){
 
 export function updateDeputyWay(value){
 	return async (dispatch, getState) => {
-		let deputyWayObj=updateDeputyWayData(getState().Language.lang.DeputyPage, value, getState().Deputy.deputyState, getState().Deputy.deputyWayParam);
+		let deputyWayObj = updateDeputyWayData(getState().Language.lang.DeputyPage, value, getState().Deputy.deputyState, getState().Deputy.deputyWayParam);
   		dispatch(setDeputyWay(deputyWayObj,value));  
 	}
 
@@ -1164,22 +694,24 @@ export function getInitCondicton2Param(rule) {
 
 export function paramInit(){
 	return async (dispatch, getState) => {
+		let lang = getState().Language.langStatus;
 	    let relationParam = [];		// 关联性
 	    let condition1Param = [];	// 多规则条件
 	    let deputyWayParam = [];	// 代理方式
       	let data = [];
 	    let deputyRuleComParam = true;	// 是否成功捞取代理下拉资料
-		let sql=`
-			select * 
-			from THF_MASTERDATA 
-			where CLASS1 in ('DeputyRules','DeputyRelation','DeputyWay') and STATUS='Y'
-		    order by CLASS1,SORT;`
+		let sql = 
+			`select a.OID,a.CLASS1,a.CLASS2,a.CLASS3,a.CLASS4,a.CLASS5,coalesce(b.LANGCONTENT,a.CONTENT) as CONTENT 
+			from THF_MASTERDATA a
+			left join (select LANGCONTENT,LANGID from THF_LANGUAGE where LANGTYPE='`+lang+`') b on a.LEN=b.LANGID
+			where a.CLASS1 in ('DeputyRules','DeputyRelation','DeputyWay') and a.STATUS='Y' order by CLASS1,SORT`;
+			
 		//初始化執行
 		await SQLite.selectData(sql, []).then((result) => {
 			console.log('getSQLData', result.raw());
 			//如果沒有找到資料，不顯示任何資料
 		    for (let i in result.raw()) {
-		      data.push(result.raw()[i]);
+		      data.push(result.raw()[i]); 
 		    }
 		}).catch((e)=>{
 			deputyRuleComParam = false;
@@ -1214,7 +746,7 @@ export function paramInit(){
 			})
 		}
 
-	    let mixParam = mixParamInit(condition1Param, relationParam);
+	    let mixParam = mixParamInit(condition1Param, relationParam);	// 关联性\多规则条件{key:,value:}
 	    let paramObj = {
 	    	relationParam: relationParam,
 	    	condition1Param: condition1Param,
@@ -1305,9 +837,6 @@ export function errorTip(){
 		  }, 200);
 	}
 }
-
-
-
 
 function setMapInit(MapCategoryParam,MapParam){
 	return {
