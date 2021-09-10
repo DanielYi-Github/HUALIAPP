@@ -24,6 +24,8 @@ class MainPageBackground extends React.Component {
     } else {
       if (typeof this.props.height !== "undefined") {
         heightObject.height = 0;
+      }else{
+        heightObject.height = 0;
       }
     }
 
