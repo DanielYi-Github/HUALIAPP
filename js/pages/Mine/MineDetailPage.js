@@ -142,6 +142,7 @@ class MineDetailPage extends React.Component {
               onPress  ={this.goEdit.bind( this,'telphone', page.Extension, user.telphone, "phone-pad" )}
             />
 
+            {/*
             <PersonItem
               title    ={"Skype"}
               value    ={user.skype}
@@ -149,6 +150,7 @@ class MineDetailPage extends React.Component {
               isButton ={true}
               onPress  ={this.goEdit.bind( this,'skype', "Skype", user.skype, "default" )}
             />
+            */}
 
             <PersonItem
               title    ={page.Mail}
@@ -169,9 +171,11 @@ class MineDetailPage extends React.Component {
                   <Text style={{marginTop: 5, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
                     {page.NoUserDataAlertContent}
 
+                  {/*
                     <Text style={{color:"#47ACF2", fontWeight: 'bold'}} onPress={this.goCarAdministrator}>
                       {" "+page.NoUserDataContactCarAdministrator}
                     </Text>
+                    */}
                   </Text>
 
               </Body>
