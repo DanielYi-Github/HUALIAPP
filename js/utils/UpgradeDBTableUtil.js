@@ -202,6 +202,45 @@ let UpgradeDBTableUtil = {
 				});
 			}
 		});
+		//檢查有無表(APP文件表)
+		SQLite.checkTable("THF_APP_FILE").then((data) => {
+			if (!data) {
+				let createTable = `CREATE TABLE THF_APP_FILE ( 
+					ID varchar ( 50 ) NOT NULL, 
+					NAME varchar ( 50 ) NOT NULL, 
+					OPENTIME numeric NOT NULL DEFAULT (datetime('now','+8 hour')),
+					MODIFIEDTIME numeric DEFAULT (datetime('now','+8 hour')),
+					PRIMARY KEY(ID)  
+				  )`;
+				SQLite.createTable(createTable).then((e) => {
+					console.log(e);
+				});
+			}
+		});
+		//檢查有無表(集团文件)
+		SQLite.checkTable("THF_GROUPFILE").then((data)=>{
+			if (!data) {
+				let createTable = `CREATE TABLE THF_GROUPFILE ( 
+					OID char ( 32 ) NOT NULL, 
+					TID int NOT NULL, 
+					DID int NOT NULL, 
+					DETAIL varchar ( 2000 ), 
+					DOCNAME varchar ( 100 ), 
+					DOCTYPE varchar ( 10 ), 
+					DOCSIZE int , 
+					DMODIFIED numeric,
+					VISITCOUNT int NOT NULL, 
+					LOCALVISITCOUNT int DEFAULT 0, 
+					STATUS char ( 1 ) NOT NULL DEFAULT 'Y', 
+					CRTDAT numeric NOT NULL DEFAULT (datetime('now','+8 hour')), 
+					TXDAT numeric DEFAULT (datetime('now','+8 hour')),
+					PRIMARY KEY(OID)  
+				  )`;
+				SQLite.createTable(createTable).then((e)=>{
+					console.log(e);
+				});
+			}
+		});
 	},
 }
 

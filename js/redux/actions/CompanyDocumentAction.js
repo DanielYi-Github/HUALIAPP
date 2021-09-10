@@ -170,7 +170,7 @@ export function queryCompanyDocumentData(appOid, pageNum, pageSize, type, arrCon
             conditionWhere = ` and (${arrCondition.join('or')}) `
         }
     }
-    let sql = `select OID, CO, DOC_TYPE, SUBJECT, date(RELEASE_DAT) as RELEASE_DAT, AUTH, VISITCOUNT+LOCALVISITCOUNT as VISITCOUNT, LOCALVISITCOUNT, FILEID, FILEURL, printf('%.2f',FILESIZE/1000/1000)||' MB' as FILESIZE, STATUS, CRTDAT, TXDAT 
+    let sql = `select OID, CO, DOC_TYPE, SUBJECT, date(RELEASE_DAT) as RELEASE_DAT, AUTH, VISITCOUNT+LOCALVISITCOUNT as VISITCOUNT, LOCALVISITCOUNT, FILEID, printf('%.2f',FILESIZE/1000/1000)||' MB' as FILESIZE, STATUS, CRTDAT, TXDAT 
         from(
             select *
             from THF_COMPANY_DOC 
@@ -224,30 +224,9 @@ export function increaseVisitCount(oid) {
         dispatch(addCompanyDocumentVisitCount(oid))
 
         //修改DB访问数
-        let sql = `select LOCALVISITCOUNT from THF_COMPANY_DOC where OID = '${oid}' `
-        SQLiteUtil.selectData(sql, []).then(result => {
-            let raw = result.raw()
-            if (raw.length > 0) {
-                let localVisitCount = raw[0].LOCALVISITCOUNT + 1
-                let sql1 = `update THF_COMPANY_DOC set LOCALVISITCOUNT=? where OID=? `
-                let values = [localVisitCount,oid]
-                SQLiteUtil.updateData(sql1, values).catch(e => {
-                    console.log('increaseVisitCount Error',e);
-                })
-            }
-        })
-    }
-}
-//更新DB和redux的fileUrl
-export function updateCompanyDocumentFileUrl(oid, fileUrl) {
-    return async (dispatch, getState) => {
-        //修改redux state fileUrl
-        dispatch(setCompanyDocumentFileUrlData(oid, fileUrl))
-        //修改DB fileUrl
-        let sql = `update THF_COMPANY_DOC set FILEURL=? where OID=? `
-        let values = [fileUrl, oid]
-        SQLiteUtil.updateData(sql, values).catch(e => {
-            console.log('updateCompanyDocumentFileUrl Error',e);
+        let sql = `update THF_COMPANY_DOC set LOCALVISITCOUNT=LOCALVISITCOUNT + 1 where OID='${oid}' `
+        SQLiteUtil.updateData(sql).catch(e => {
+            console.log('increaseVisitCount Error', e);
         })
     }
 }

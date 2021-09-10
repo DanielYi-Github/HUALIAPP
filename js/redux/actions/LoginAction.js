@@ -14,6 +14,7 @@ import * as SQLite            from '../../utils/SQLiteUtil';
 import * as UpdateDataUtil    from '../../utils/UpdateDataUtil';
 import * as NavigationService from '../../utils/NavigationService';
 import * as LoggerUtil        from '../../utils/LoggerUtil';
+import * as FileUtil from "../../utils/FileUtil";
 
 /***** 查看用哪一種登入方式登入 tab 還是 single *****/
 export function loadLoginMode() {
@@ -390,7 +391,8 @@ export function initialApi( user, way=false ){
   			UpdateDataUtil.updateRead(user),		//訊息讀取表       
 			UpdateDataUtil.setLoginInfo(user),
 			UpdateDataUtil.updateDailyOralEnglish(user), //每日英语
-			UpdateDataUtil.updateCompanyDocument(user) //公司文件
+			UpdateDataUtil.updateCompanyDocument(user), //公司文件
+			UpdateDataUtil.updateGroupFile(user) //集团文件
 		];
 
 	  	Promise.all(arr).then( async (data) => {
@@ -459,7 +461,10 @@ export function initialApi( user, way=false ){
 		}).catch(e=>{
 			console.log('updateCompanyDocumentToServer Error',e);
 		})
-  		
+		//同步集团文件资料(VISITCOUNT)
+		UpdateDataUtil.updateGroupFileToServer(user).catch(e=>console.log('updateGroupFileToServer Error',e))
+		//定期清理缓存文件
+		FileUtil.clearFileForRegular()
 	}
 }
 

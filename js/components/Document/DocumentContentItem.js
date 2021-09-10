@@ -47,13 +47,13 @@ export default class DocumentContentItem extends React.PureComponent  {
 						</Button>
 					</Left>
 				    <Body style={{paddingLeft:10}}>
-						<Text >{selectedInfo.detail}</Text>
+						<Text >{selectedInfo.DETAIL}</Text>
 				    	<Body style={{flexDirection: 'row', alignSelf: 'flex-start'}}>
 							<Left>
-								<Text note>{Common.dateFormatNoTime(selectedInfo.dmodified)}</Text>
+								<Text note>{Common.dateFormatNoTime(selectedInfo.DMODIFIED)}</Text>
 							</Left>
 							<Right>
-								<Text style={{paddingRight:10}} note>{this.props.lang.DocumentCategoriesPage.Clicks} {selectedInfo.hits}</Text>	
+								<Text style={{paddingRight:10}} note>{this.props.lang.DocumentCategoriesPage.Clicks} {selectedInfo.VISITCOUNT}</Text>	
 							</Right>				      					  
 				    	</Body>
 				    </Body>
