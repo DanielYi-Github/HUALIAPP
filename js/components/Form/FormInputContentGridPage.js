@@ -191,8 +191,8 @@ class FormInputContentGridPage extends Component {
 			)
 		} else {
 			this.state.confirmOnPress( this.deepClone(tempData), this.state.editCheckItemIndex);
-			NavigationService.goBack();
 			// this.pageClose();
+			NavigationService.goBack();
 		}
 	}
 
@@ -208,8 +208,6 @@ class FormInputContentGridPage extends Component {
 			data: value,
 			editCheckItemIndex: -1,
 		});
-
-		// NavigationService.goBack();
 	}
 
 	// deep clone

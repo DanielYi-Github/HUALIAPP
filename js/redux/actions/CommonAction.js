@@ -24,6 +24,7 @@ export function loadCompanyData_ContactCO(){
 			}
 		}
 
+		/*
 		let sql = `select * from THF_MASTERDATA 
 				   where CLASS1='ContactCO' and STATUS='Y' and OID in 
 				   ( 
@@ -32,13 +33,28 @@ export function loadCompanyData_ContactCO(){
 				   	where DATA_TYPE='masterdata' and FUNC_OID='${appOid}'
 				   ) 
 				   order by SORT;`
+		*/
+		
+		let sql = `select * from THF_MASTERDATA 
+				   where CLASS1='HRCO' and STATUS='Y'`
+
 		SQLite.selectData( sql, []).then((result) => {		
 			//如果沒有找到資料，不顯示任何資料
+			/*
 			for(let i in result.raw()){
 		    	data.push(result.raw()[i].CONTENT);
 
 				if (!defaultCO && result.raw()[i].CLASS3 == co) {
 					defaultCO = result.raw()[i].CONTENT
+				}
+			}
+			*/
+		
+			for(let i in result.raw()){
+		    	data.push(result.raw()[i]);
+
+				if (!defaultCO && result.raw()[i].CLASS3 == co) {
+					defaultCO = result.raw()[i]
 				}
 			}
 			dispatch( setCompanyList_ContactCO( data, defaultCO) ); 

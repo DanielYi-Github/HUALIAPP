@@ -32,7 +32,11 @@ class MineDetailPage extends React.Component {
       // 是否有資料
       let isUser = result.length ? true : false;
       if (!isUser) {
-        /*
+        this.setState({
+          showNoUserDataAlert:!isUser,
+          // CarAdministrator: 
+        });
+          /*
         UpdateDataUtil.getCarAdministrator(user, this.props.state.Common.Companies_Contact.defaultCO).then((data)=>{
           // 是否顯示通訊錄資訊
           this.setState({
@@ -45,7 +49,7 @@ class MineDetailPage extends React.Component {
             CarAdministrator: e
           });
         });
-        */
+          */
       }
     });
   }
@@ -128,6 +132,7 @@ class MineDetailPage extends React.Component {
               onPress  ={null}
             />
 
+            {/*
             <PersonItem
               title    ={page.CellPhone}
               value    ={user.cellphone}
@@ -135,6 +140,7 @@ class MineDetailPage extends React.Component {
               isButton ={true}
               onPress  ={this.goEdit.bind( this,'cellphone', page.CellPhone, user.cellphone, "phone-pad" )}
             />
+            */}
 
             <PersonItem
               title    ={page.Extension}
@@ -164,7 +170,7 @@ class MineDetailPage extends React.Component {
 
           </Card>
 
-          {/*
+          {
             this.state.showNoUserDataAlert ?
               <Body style={{width:"90%", marginTop: "5%", marginBottom: "7%"}}>
                 <Text style={{fontWeight: 'bold', color:"#FF5252"}}>
@@ -173,15 +179,17 @@ class MineDetailPage extends React.Component {
                   <Text style={{marginTop: 5, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
                     {page.NoUserDataAlertContent}
 
+                    {/*
                     <Text style={{color:"#47ACF2", fontWeight: 'bold'}} onPress={this.goCarAdministrator}>
                       {" "+page.NoUserDataContactCarAdministrator}
                     </Text>
+                    */}
                   </Text>
 
               </Body>
             :
               null
-          */}
+          }
         </Content>
       </Container>
     );

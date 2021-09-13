@@ -545,28 +545,20 @@ export async function updateContact(user) {
 	let promise = new Promise( async (resolve, reject) => {
 		if (ltxdat === null) {
 			let start = new Date().getTime();
-
-			let content = {
-				empid      : user.id,
-				companyList: [],
-				maxDat     : ltxdat
-			}
-
 			let params = {
 				"token"  :Common.encrypt(user.token),
 				"userId" :Common.encrypt(user.loginID),
-				"content":Common.encrypt(JSON.stringify(content))
+				"content": Common.encrypt(ltxdat ? ltxdat: '')
 			};
-
-			let url = "data/getContactData";
+			let url = "data/getContact";
 
 			NetUtil.getRequestContent(params, url).then((data)=>{
+				// console.log("data", data);
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
 				}
 				data = data.content;
-
 				/* 修改後版本 */
 				let max = 50;
 				let lInsert = `INSERT INTO THF_CONTACT (OID,AD,EMPID,NAME,SEX,CO,DEPID,DEPNAME,JOBTITLE,TELPHONE,CELLPHONE,MAIL,SKYPE,PICTURE,STATUS,CRTDAT,TXDAT) VALUES `;
@@ -575,62 +567,51 @@ export async function updateContact(user) {
 				let index = 0;
 				for (let i in data) {	
 					i = parseInt(i);
+					index++;
+					let cellphone = cellphone ? data[i].cellphone.replace(/\'/g,"") : "";	
+					iArray = iArray.concat([
+						data[i].oid, 
+						data[i].ad        == null ? "" : data[i].ad, 
+						data[i].empid     == null ? "" : data[i].empid, 
+						data[i].name      == null ? "" : data[i].name, 
+						data[i].sex       == null ? "" : data[i].sex, 
+						data[i].co        == null ? "" : data[i].co,
+						data[i].depid     == null ? "" : data[i].depid,
+						data[i].depname   == null ? "" : data[i].depname,
+						data[i].jobtitle  == null ? "" : data[i].jobtitle,
+						data[i].telphone  == null ? "" : data[i].telphone,
+						data[i].cellphone == null ? "" : data[i].cellphone,
+						data[i].mail      == null ? "" : data[i].mail,
+						data[i].skype     == null ? "" : data[i].skype,
+						data[i].picture   == null ? "" : data[i].picture,
+						data[i].status    == null ? "" : data[i].status,
+						Common.dateFormat(data[i].crtdat), 
+						Common.dateFormat(data[i].txdat)
+					]);
 
-					if (
-						/*找出錯誤的資料，然後剔除他*/
-						// data[i].oid == "34343EC9D52B1165E050A8C0631E763D" || 
-						// data[i].oid == "34343EC9D7B51165E050A8C0631E763D" ||
-						// data[i].oid == "6E3CE6750A9C394CE050A8C0631E42D0" ||
-						// data[i].oid == "6D9BF7A208D46137E050A8C0631E6934"
-						false
-					) {
-						/*錯誤資料不做任何處理*/
-					} else {
-						index++;
-
-						let cellphone = cellphone ? data[i].cellphone.replace(/\'/g,"") : "";	
-						iArray = iArray.concat([
-							data[i].oid, 
-							data[i].ad        == null ? "" : data[i].ad, 
-							data[i].empid     == null ? "" : data[i].empid, 
-							data[i].name      == null ? "" : data[i].name, 
-							data[i].sex       == null ? "" : data[i].sex, 
-							data[i].co        == null ? "" : data[i].co,
-							data[i].depid     == null ? "" : data[i].depid,
-							data[i].depname   == null ? "" : data[i].depname,
-							data[i].jobtitle  == null ? "" : data[i].jobtitle,
-							data[i].telphone  == null ? "" : data[i].telphone,
-							data[i].cellphone == null ? "" : data[i].cellphone,
-							data[i].mail      == null ?  "" : data[i].mail,
-							data[i].skype     == null ? "" : data[i].skype,
-							"",// data[i].picture,
-							data[i].status    == null ? "" : data[i].status,
-							Common.dateFormat(data[i].crtdat), 
-							Common.dateFormat(data[i].txdat)
-						]);
-
-						
-						if( (index)%max == 0){
-							//達到分批數量，要重置資料
-							lInsert+= "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
-							execute.push([lInsert, iArray]);
-							lInsert = "INSERT INTO THF_CONTACT (OID,AD,EMPID,NAME,SEX,CO,DEPID,DEPNAME,JOBTITLE,TELPHONE,CELLPHONE,MAIL,SKYPE,PICTURE,STATUS,CRTDAT,TXDAT) VALUES ";
-							iArray = [];
-						}else if( i == data.length-1 ){
-							lInsert+= "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
-							execute.push([lInsert, iArray]);
-						}else{
-							lInsert+= "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ),";
-						}
+					
+					if( (index)%max == 0){
+						//達到分批數量，要重置資料
+						lInsert+= "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+						execute.push([lInsert, iArray]);
+						lInsert = "INSERT INTO THF_CONTACT (OID,AD,EMPID,NAME,SEX,CO,DEPID,DEPNAME,JOBTITLE,TELPHONE,CELLPHONE,MAIL,SKYPE,PICTURE,STATUS,CRTDAT,TXDAT) VALUES ";
+						iArray = [];
+					}else if( i == data.length-1 ){
+						lInsert+= "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+						execute.push([lInsert, iArray]);
+					}else{
+						lInsert+= "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ),";
 					}
 				}
 				
 				SQLite.insertData_new(execute).then(()=>{
 					let end = new Date().getTime();
 					console.log("updateContact_end:"+ (end - start) / 1000);
-					updateContactPic(user, ltxdat, content);				//獲取通訊錄圖片資料
+					// updateContactPic(user, ltxdat, content);				//獲取通訊錄圖片資料
 					resolve();
 				});			
+
+				
 			})
 			
 		} else {
@@ -641,22 +622,14 @@ export async function updateContact(user) {
 				if (co.CO) {companyList.push(co.CO); }
 			}
 
-			let content = {
-				empid      : user.id,
-				companyList: companyList,
-				maxDat     : ltxdat
-			}
-
 			let params = {
 				"token"  :Common.encrypt(user.token),
 				"userId" :Common.encrypt(user.loginID),
-				"content":Common.encrypt(JSON.stringify(content))
+				"content": Common.encrypt(ltxdat ? ltxdat: '')
 			};
-
-			let url = "data/getContactData";
+			let url = "data/getContact";
 
 			NetUtil.getRequestContent(params, url).then((data)=>{
-				// console.log(data);
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
@@ -693,8 +666,7 @@ export async function updateContact(user) {
 						data[i].cellphone,
 						data[i].mail,
 						data[i].skype,
-						// data[i].picture,
-						"",
+						data[i].picture,
 						data[i].status,
 						nCrtDat, 
 						nTxDat
@@ -726,7 +698,7 @@ export async function updateContact(user) {
 						let end = new Date().getTime();
 						console.log("updateContact:"+ (end - start) / 1000);
 						
-						updateContactPic(user, ltxdat, content);				//獲取通訊錄圖片資料
+						// updateContactPic(user, ltxdat, content);				//獲取通訊錄圖片資料
 						resolve();
 					})
 				})
@@ -735,7 +707,7 @@ export async function updateContact(user) {
 	});
 	return promise;
 }
-
+/*
 export function updateContactPic(user, ltxdat, content) {
 	let params = {
 		"token"  :Common.encrypt(user.token),
@@ -760,6 +732,7 @@ export function updateContactPic(user, ltxdat, content) {
 			
 	})
 }
+*/
 
 export async function updateMasterData(user) {
 	var start = new Date().getTime();
@@ -1545,16 +1518,19 @@ export async function updateContactToServer(user){
 	let lSQL = "SELECT * FROM THF_CONTACT WHERE EMPID=? and STATUS='Y'";
 	let lData = await SQLite.selectData(lSQL, [user.id]);
 	let promise = new Promise((resolve, reject) => {
+	// console.log("lData", lData);
 		if(lData.length>0){
+			// console.log(user);
 			let content = {
 				empid    : user.id,
-				cellphone: lData.item(0).CELLPHONE,
-				telphone : lData.item(0).TELPHONE,
-				mail     : lData.item(0).MAIL,
+				cellphone: user.cellphone ? user.cellphone : lData.item(0).CELLPHONE,
+				telphone : user.telphone ? user.telphone :lData.item(0).TELPHONE,
+				mail     : user.email ? user.email: lData.item(0).MAIL,
 				skype    : lData.item(0).SKYPE,
 				picture  : lData.item(0).PICTURE,
 				depname	 : lData.item(0).DEPNAME,
-				jobtitle : lData.item(0).JOBTITLE
+				jobtitle : lData.item(0).JOBTITLE,
+				co       : user.co
 			}
 
 			let params = {
@@ -1566,6 +1542,7 @@ export async function updateContactToServer(user){
 			let url = "org/setContact";
 
 			NetUtil.getRequestContent(params, url).then((data)=>{
+				// console.log("data", data);
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
