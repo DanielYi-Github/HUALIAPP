@@ -121,6 +121,7 @@ class ContactDetailPage extends React.Component {
               onPress  ={null}
             />
 
+            {/* 暫時不顯示
             <PersonItem
               title    ={page.CellPhone}
               value    ={user.CELLPHONE}
@@ -128,6 +129,7 @@ class ContactDetailPage extends React.Component {
               isButton ={null}
               onPress  ={null}
             />
+            */}
 
             <PersonItem
               title    ={page.Extension}
@@ -156,11 +158,12 @@ class ContactDetailPage extends React.Component {
             />
           </Card>
         </Content>
+      {/*
         <ActionButton  buttonColor="#5067FF" >
-          {/*撥號按鍵*/}
+          ?//撥號按鍵
           {callPhoneButton}
           
-          {/*添加聯絡人按鍵*/}
+          //添加聯絡人按鍵
           <ActionButton.Item 
             buttonColor='#DD5144' 
             title={page.AddContact} 
@@ -169,8 +172,8 @@ class ContactDetailPage extends React.Component {
             <Icon name="person-add" style={{fontSize: 20,height: 22,color: 'white'}} />
           </ActionButton.Item>
 
-          {/*資料錯誤回報按鍵*/}
-          {/* 暫時不顯示
+          //資料錯誤回報按鍵
+          //暫時不顯示
           <ActionButton.Item 
             buttonColor='#757575' 
             title={page.wrongInfo} 
@@ -178,8 +181,9 @@ class ContactDetailPage extends React.Component {
           >
             <Icon name="warning" style={{fontSize: 20,height: 22,color: 'white'}} />
           </ActionButton.Item>
-          */}
+          
         </ActionButton>
+        */}
       </Container>
     );
 

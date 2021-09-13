@@ -132,6 +132,7 @@ class MineDetailPage extends React.Component {
               onPress  ={null}
             />
 
+            {/*
             <PersonItem
               title    ={page.CellPhone}
               value    ={user.cellphone}
@@ -139,6 +140,7 @@ class MineDetailPage extends React.Component {
               isButton ={true}
               onPress  ={this.goEdit.bind( this,'cellphone', page.CellPhone, user.cellphone, "phone-pad" )}
             />
+            */}
 
             <PersonItem
               title    ={page.Extension}
