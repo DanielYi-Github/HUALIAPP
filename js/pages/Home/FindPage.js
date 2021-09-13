@@ -141,7 +141,7 @@ class FindPage extends React.Component {
 
     return (
       <Container>
-        <MainPageBackground />
+        <MainPageBackground height={200}/>
         {
           (Platform.OS === "ios") ?
             <View>

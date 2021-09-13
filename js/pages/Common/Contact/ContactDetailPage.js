@@ -127,6 +127,7 @@ class ContactDetailPage extends React.Component {
               onPress  ={null}
             />
 
+          {/*
             <PersonItem
               title    ={"Skype"}
               value    ={user.SKYPE}
@@ -134,6 +135,7 @@ class ContactDetailPage extends React.Component {
               isButton ={null}
               onPress  ={null}
             />
+            */}
 
             <PersonItem
               title    ={page.Mail}
@@ -158,6 +160,7 @@ class ContactDetailPage extends React.Component {
           </ActionButton.Item>
 
           {/*資料錯誤回報按鍵*/}
+          {/*
           <ActionButton.Item 
             buttonColor='#757575' 
             title={page.wrongInfo} 
@@ -165,6 +168,7 @@ class ContactDetailPage extends React.Component {
           >
             <Icon name="warning" style={{fontSize: 20,height: 22,color: 'white'}} />
           </ActionButton.Item>
+          */}
         </ActionButton>
 
       </Container>

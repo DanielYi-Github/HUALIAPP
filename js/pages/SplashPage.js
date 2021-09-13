@@ -58,7 +58,7 @@ class SplashPage extends React.Component {
   render() {
     return (
       <Container style={{ alignItems: 'center',  justifyContent: 'center' }}>
-        <MainPageBackground />
+        <MainPageBackground height={0}/>
         <Image style={{ width:250, height:250 }} source ={require("../image/login/icon-noback.png")} />
           {
             this.props.state.AppInit.showUpdateProgress ?

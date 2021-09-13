@@ -213,6 +213,7 @@ class ContactPage extends React.Component {
               <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>2.</Text>
               <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{lang.SearchTipsText3}</Text>
             </View>
+            {/*
             <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
               <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>3.</Text>
               <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
@@ -220,6 +221,7 @@ class ContactPage extends React.Component {
                 <Text style={{color:"#47ACF2"}} onPress={this.goContactAdministrator}>{lang.SearchTipsText7}</Text>
               </Text>
             </View>
+            */}
           </View>
         </View>
       )
