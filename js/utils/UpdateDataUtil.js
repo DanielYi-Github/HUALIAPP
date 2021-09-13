@@ -553,6 +553,7 @@ export async function updateContact(user) {
 			let url = "data/getContact";
 
 			NetUtil.getRequestContent(params, url).then((data)=>{
+				// console.log("data", data);
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
@@ -1517,12 +1518,14 @@ export async function updateContactToServer(user){
 	let lSQL = "SELECT * FROM THF_CONTACT WHERE EMPID=? and STATUS='Y'";
 	let lData = await SQLite.selectData(lSQL, [user.id]);
 	let promise = new Promise((resolve, reject) => {
+	// console.log("lData", lData);
 		if(lData.length>0){
+			// console.log(user);
 			let content = {
 				empid    : user.id,
-				cellphone: lData.item(0).CELLPHONE,
-				telphone : lData.item(0).TELPHONE,
-				mail     : lData.item(0).MAIL,
+				cellphone: user.cellphone ? user.cellphone : lData.item(0).CELLPHONE,
+				telphone : user.telphone ? user.telphone :lData.item(0).TELPHONE,
+				mail     : user.email ? user.email: lData.item(0).MAIL,
 				skype    : lData.item(0).SKYPE,
 				picture  : lData.item(0).PICTURE,
 				depname	 : lData.item(0).DEPNAME,
@@ -1539,6 +1542,7 @@ export async function updateContactToServer(user){
 			let url = "org/setContact";
 
 			NetUtil.getRequestContent(params, url).then((data)=>{
+				// console.log("data", data);
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;

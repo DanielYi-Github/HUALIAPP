@@ -106,7 +106,7 @@ class FormInputContentGridPageForDeputy extends Component {
 				<HeaderForGeneral
 				  isLeftButtonIconShow  = {true}
 				  leftButtonIcon        = {{name:"arrow-back"}}
-				  leftButtonOnPress     = {this.pageClose} 
+				  leftButtonOnPress     = {NavigationService.goBack} 
 				  isRightButtonIconShow = {false}
 				  rightButtonIcon       = {null}
 				  rightButtonOnPress    = {null} 
@@ -326,9 +326,14 @@ class FormInputContentGridPageForDeputy extends Component {
 
 				// 回调函数
 				this.state.confirmOnPress(tempData);
-				this.pageClose();
+				// this.pageClose();
+				NavigationService.goBack();
 			}
 		}
+	}
+
+	componentWillUnmount(){
+		this.pageClose();
 	}
 
 	pageClose = () => {
@@ -339,8 +344,6 @@ class FormInputContentGridPageForDeputy extends Component {
 			data: value,
 			editCheckItemIndex: -1,
 		});
-
-		NavigationService.goBack();
 	}
 
 	getParamValue(key){

@@ -219,6 +219,15 @@ class ContactPage extends React.Component {
   }
 
   renderFooter = () => {
+    let companyList = this.props.state.Common.Companies_Contact.companyList
+    let companyName = "";
+    for(let company of companyList){
+      if(company.CLASS3 == this.state.selectedCompany){
+        companyName = company.CONTENT;
+        break;
+      }
+    }
+
     let lang = this.props.state.Language.lang.ContactPage;
     if (this.state.showFooter) {
       return (
@@ -233,12 +242,13 @@ class ContactPage extends React.Component {
 
             <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
               <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>1.</Text>
-              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{lang.SearchTipsText1}「{this.state.selectedCompany}」{lang.SearchTipsText2}</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{lang.SearchTipsText1}「{companyName}」{lang.SearchTipsText2}</Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
               <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>2.</Text>
               <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{lang.SearchTipsText3}</Text>
             </View>
+          {/*
             <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
               <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>3.</Text>
               <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
@@ -246,6 +256,7 @@ class ContactPage extends React.Component {
                 <Text style={{color:"#47ACF2"}} onPress={this.goContactAdministrator}>{lang.SearchTipsText7}</Text>
               </Text>
             </View>
+            */}
           </View>
         </View>
       )

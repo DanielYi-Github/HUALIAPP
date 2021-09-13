@@ -45,7 +45,7 @@ class DeputyPage extends React.Component {
     let lang = this.props.state.Language.lang.DeputyPage;
     let Deputy = this.props.state.Deputy;
     let ggg = this.deepClone(Deputy);
-    console.log('Deputy111',ggg);
+    // console.log('Deputy.deputyRules',Deputy.deputyRules);
     return (
       <Container>
         {/*標題列*/}

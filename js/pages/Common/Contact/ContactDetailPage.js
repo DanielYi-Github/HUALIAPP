@@ -34,6 +34,16 @@ class ContactDetailPage extends React.Component {
       }
     }
 
+    let companyList = props.state.Common.Companies_Contact.companyList
+    let companyName = "";
+    for(let company of companyList){
+      if(company.CLASS3 == item.CO){
+        companyName = company.CONTENT;
+        break;
+      }
+    }
+    item.CO = companyName;
+
     this.state = {
       fabActive:false,
       PICTURE:item.PICTURE
