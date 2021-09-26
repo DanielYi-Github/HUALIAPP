@@ -437,11 +437,12 @@ export function getPositions(selectedCompany){
 			return [];
 		});
 
+
 		let user = getState().UserInfo.UserInfo;
 		let action = "org/hr/meeting/getPosition";
         let actionObject = { co : selectedCompany }; //查詢使用
-        // console.log(user, action, actionObject);
         
+        // 取得該公司裡面的廠區
         let positionsPeople = await UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
         	let keys = Object.keys(result);
         	if(keys.length == 0) return [];
@@ -470,7 +471,6 @@ export function getPositions(selectedCompany){
         		}
         	}
         }
-
 		dispatch(setAttendees_by_position(companyPositions, selectedCompany));
 	}
 }
@@ -481,6 +481,35 @@ function setAttendees_by_position(companies, selectedCompany){
 		companies,
 		selectedCompany
 	}
+}
+
+export function getOrg(value){
+	return async (dispatch, getState) => {
+
+		let user = getState().UserInfo.UserInfo;
+		let action = "org/hr/meeting/getOrg";
+        let actionObject = { 
+			co  : value.companyValue,
+			pzid: value.factoryValue
+        }; //查詢使用
+        
+        // 取得該公司裡面的廠區
+        let organization = await UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
+			return result;
+        }).catch((err) => {
+			console.log(err);
+			return null;
+        })
+
+		dispatch(setOrganization_tree(organization));
+	}
+}
+
+function setOrganization_tree(organization){
+	return{
+		type: MeetingTypes.MEETING_SET_ORGANIZATION,
+		organization
+	} 
 }
 
 export function attendeeItemOnPress(attendee){
@@ -494,7 +523,7 @@ export function attendeeItemOnPress(attendee){
 			getState().UserInfo.UserInfo
 		);
 
-		if (enableMeeting) {
+		if (enableMeeting.length == 0) {
 		  let attendees = addOrRemoveTag( attendee, getState);
 		  dispatch({
 		  	type     :MeetingTypes.MEETING_SET_ATTENDEES,
@@ -524,14 +553,10 @@ async function checkHaveMeetingTime(meetingOid, id, startTime, endTime, user){
 		oid         : meetingOid
     }
     let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
-      if (result.length == 0) {
-        return true;
-      } else {
-        return false;
-      }
+    	return result;
     }).catch((errorResult)=>{
-      console.log("errorResult",errorResult.message);
-      return false;
+      	console.log("errorResult",errorResult.message);
+      	return [];
     });
 
     return searchMeetingResult;
@@ -557,6 +582,106 @@ function addOrRemoveTag( item, getState ){
 	return attendees;
 }
 
+export function organizeCheckboxOnPress(checkItemAttendees){
+	return async (dispatch, getState) => {
+		// 將所有要新增的人員暫存起來
+		// 先檢查是要新增還是刪除
+		// 新增的話先搜尋有沒有在redux裡面了 然後檢查有無會議衝突
+		// 刪除的話搜尋相同id然後刪除
+
+		let allOrgAttendees = await getAllOrgAttendees(checkItemAttendees);
+		let reduxAttendees = getState().Meeting.attendees; //已經存在的
+
+		// checkValue檢查看看有沒有全部人包含在裡面
+		let included = false;  // 有沒有包含
+		let checkValue = false; // 有沒有全部包含
+		let selectedCount = 0;
+		
+		// 確認有沒有已經包含在裡面，用來顯示不同的勾勾顏色
+		for(let positionAttendee of allOrgAttendees){
+		  for(let propsAttendee of reduxAttendees){
+		    if( positionAttendee.id == propsAttendee.id ){
+		      included = true;
+		      selectedCount++;
+		      break;
+		    }
+		  }
+		}
+		checkValue = selectedCount == allOrgAttendees.length ? true: false;
+
+		if (!included) {
+			// 檢查有哪些人沒有在裡面
+			let unInside = [];
+			for(let checkItem of allOrgAttendees){
+				for(let attendee of reduxAttendees){
+					if(checkItem.id == attendee.id){
+						break;
+					}
+				}
+				unInside.push(checkItem);
+			}
+
+			// 將所有的集體送出檢查時間有無異常
+			let enableMeeting = await checkHaveMeetingTime(
+				getState().Meeting.meetingOid,
+				unInside, 
+				getState().Meeting.attendees_startDate, 
+				getState().Meeting.attendees_endDate,
+				getState().UserInfo.UserInfo
+			);
+
+			if (enableMeeting.length == 0) {
+				reduxAttendees = [...reduxAttendees, ...allOrgAttendees];
+			} else {
+				let unAbles = "";
+				for(let i in enableMeeting){
+					unAbles = i==0 ? unAbles+enableMeeting[i].name : unAbles+", "+enableMeeting[i].name
+				}
+				
+  				let lang = getState().Language.lang.MeetingPage;
+				Alert.alert(
+					lang.alertMessage_duplicate, //"有重複"
+					`${lang.alertMessage_period} ${unAbles} ${lang.alertMessage_meetingAlready}`,
+					[
+					  { text: "OK", onPress: () => console.log("OK Pressed") }
+					],
+					{ cancelable: false }
+				);
+			}
+
+		} else {
+			for(let checkItem of allOrgAttendees){
+				for(let i in reduxAttendees){
+					if(checkItem.id == reduxAttendees[i].id){
+						reduxAttendees.splice(i, 1);
+						break;
+					}
+				}
+			}
+		}
+
+		dispatch({
+			type     :MeetingTypes.MEETING_SET_ATTENDEES,
+			attendees: reduxAttendees,
+		}); 
+	}
+}
+
+function getAllOrgAttendees(checkItemAttendees){
+	let tempAttendees = [];
+	if( checkItemAttendees.members !== null ){
+		tempAttendees = tempAttendees.concat(checkItemAttendees.members)
+	}
+
+	if ( checkItemAttendees.subDep !== null ) {
+		for(let subDep of checkItemAttendees.subDep){
+			tempAttendees = tempAttendees.concat(getAllOrgAttendees(subDep));
+		}
+	}
+
+	return tempAttendees;
+}
+
 export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 	return async (dispatch, getState) => {
 		// 先檢查是要新增還是刪除
@@ -576,6 +701,7 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 				unInside.push(checkItem);
 			}
 
+			// 將所有的集體送出檢查時間有無異常
 			let enableMeeting = await checkHaveMeetingTime(
 				getState().Meeting.meetingOid,
 				unInside, 
@@ -584,61 +710,24 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 				getState().UserInfo.UserInfo
 			);
 
-			console.log("enableMeeting", enableMeeting);
-
-			/*
-			if (enableMeeting) {
-				attendees.push(checkItem);
+			if (enableMeeting.length == 0) {
+				attendees = [...attendees, ...checkItemAttendees];
 			} else {
+				let unAbles = "";
+				for(let i in enableMeeting){
+					unAbles = i==0 ? unAbles+enableMeeting[i].name : unAbles+", "+enableMeeting[i].name
+				}
+				
   				let lang = getState().Language.lang.MeetingPage;
 				Alert.alert(
 					lang.alertMessage_duplicate, //"有重複"
-					`${lang.alertMessage_period} ${checkItem.name} ${lang.alertMessage_meetingAlready}`,
+					`${lang.alertMessage_period} ${unAbles} ${lang.alertMessage_meetingAlready}`,
 					[
 					  { text: "OK", onPress: () => console.log("OK Pressed") }
 					],
 					{ cancelable: false }
 				);
 			}
-			*/
-
-
-			/*
-			for(let checkItem of checkItemAttendees){ //職級裡面的
-				let isAdded = false;
-
-				for(let i in attendees){
-					if(checkItem.id == attendees[i].id){
-						isAdded = true;
-						break;
-					}
-				}
-
-				if (!isAdded) {
-					let enableMeeting = await checkHaveMeetingTime(
-						getState().Meeting.meetingOid,
-						checkItem.id, 
-						getState().Meeting.attendees_startDate, 
-						getState().Meeting.attendees_endDate,
-						getState().UserInfo.UserInfo
-					);
-
-					if (enableMeeting) {
-						attendees.push(checkItem);
-					} else {
-		  				let lang = getState().Language.lang.MeetingPage;
-						Alert.alert(
-							lang.alertMessage_duplicate, //"有重複"
-							`${lang.alertMessage_period} ${checkItem.name} ${lang.alertMessage_meetingAlready}`,
-							[
-							  { text: "OK", onPress: () => console.log("OK Pressed") }
-							],
-							{ cancelable: false }
-						);
-					}
-				}
-			}
-			*/
 
 		} else {
 			for(let checkItem of checkItemAttendees){

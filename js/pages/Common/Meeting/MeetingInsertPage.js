@@ -1062,6 +1062,9 @@ class MeetingInsertPage extends React.PureComponent  {
           chairperson    :this.state.chairperson,
           attendees      :this.state.attendees,
           timezone       :RNLocalize.getTimeZone(),
+          repeatType     :"NR",
+          repeatEndDate  :"",
+          weekDays       :[]
       }
 
       if (this.state.isModify) {

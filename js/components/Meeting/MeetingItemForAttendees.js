@@ -13,7 +13,7 @@ class MeetingItemForAttendees extends Component {
 		return (
 			<Item 
 			  fixedLabel 
-			  style   ={{paddingLeft: 15, backgroundColor: this.props.style.InputFieldBackground}} 
+			  style   ={{paddingLeft: 10, backgroundColor: this.props.style.InputFieldBackground}} 
 			  onPress ={()=>{
 			  	this.props.itemOnPress(this.props.item);
 			  }} 

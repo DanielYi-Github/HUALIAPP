@@ -193,6 +193,7 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
 
   renderTapItem = (item) => {
     item = item.item;
+    // 必須檢查member裡面有沒有資料，有的話要顯示主管身份
     return (
       <Item 
         fixedLabel 
@@ -200,15 +201,16 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
         onPress ={ async ()=>{ 
           // 取得廠區
           let factories = await this.getFactories(item.value);
-          // this.state.onItemPress(item.value);
-          // NavigationService.goBack();
-          
           NavigationService.navigate("MeetingInsertWithTagsForSelect", {
             selectList    :factories,
-            onItemPress   :this.props.actions.getPositions,
+            onItemPress   : async (value)=>{
+              await this.props.actions.getOrg(value); // 取得組織架構資料
+              this.navigateNextOrg();
+            },
             renderItemMode:"normal",  // normal一般, multiCheck多選, multiAttendees多選參與人
             showFooter    :true
           });
+          
         }} 
       >
         <Label>{item.label} </Label>
@@ -225,7 +227,8 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
         items.push({
           key  :result.raw()[i].SORT,
           label:result.raw()[i].CONTENT,
-          value:result.raw()[i].CLASS3
+          companyValue:result.raw()[i].CLASS3,
+          factoryValue:result.raw()[i].CLASS4
         })
       }
       return items;
@@ -234,6 +237,36 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
       return [];
     });
     return factories;
+  }
+
+  navigateNextOrg = (org = this.props.state.Meeting.organization_tree) => {
+    NavigationService.push("MeetingInsertWithTagsForSelect", {
+      orgManager    :org.members == null ? false : org.members,
+      selectList    :org.subDep,
+      onItemPress   :(value)=>{
+        // this.props.actions.positionCheckboxOnPress(!(checked || included), item.item.value);
+        // 目前的reudx選項有沒有包含在這裡面
+        // 這邊決定要不要顯示勾勾選項
+
+        this.props.actions.organizeCheckboxOnPress( value );
+        // this.props.actions.getOrg(value); // 取得組織架構資料
+        // this.navigateNextOrg();
+      },
+      onItemNextIconPress:(value)=>{
+        if(value.subDep == null){
+          NavigationService.push("MeetingInsertWithTagsForSelect", {
+            selectList    :value.members,
+            onItemPress   :this.props.actions.getPositions,
+            renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
+            showFooter    :true
+          });
+        }else{
+          this.navigateNextOrg(value);
+        }
+      },
+      renderItemMode:"multiCheck",  // normal一般, multiCheck多選, multiAttendees多選參與人
+      showFooter    :true
+    });
   }
 
   loadMoreData = (isSearching, searchedData = null) => {

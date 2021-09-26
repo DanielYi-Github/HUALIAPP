@@ -184,8 +184,12 @@ class MeetingInsertWithTagsPage extends React.Component {
               </Right>
             </Header>
         }
-        <Item style={{justifyContent: 'space-between', paddingLeft: 5, paddingRight: 10, paddingTop: 20, paddingBottom: 5}}>
-          <Label style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder }}>
+        <Item style={{ justifyContent: 'space-between', paddingLeft: 5, paddingRight: 10, paddingTop: 20, paddingBottom: 5}}>
+          <Label style={{
+            color:this.props.style.inputWithoutCardBg.inputColorPlaceholder,
+            paddingTop     : 5,
+            paddingBottom  : 5
+          }}>
             {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd} ${this.props.lang.MeetingPage.attendees}`}
           </Label>
           {
@@ -202,20 +206,18 @@ class MeetingInsertWithTagsPage extends React.Component {
           }
         </Item>
 
-        <View style={{flex:0.3, backgroundColor: this.props.style.InputFieldBackground}}>
+        <View style={{ flex:0.3, backgroundColor: this.props.style.InputFieldBackground}}>
             <Content ref ={(c) => { this._content = c; }}>
-              <Item style={{backgroundColor: this.props.style.InputFieldBackground, borderBottomWidth: 0}}>
+              <Item style={{ backgroundColor: this.props.style.InputFieldBackground, borderBottomWidth: 0}}>
                 <TagInput
-                  disabled            ={true}
-                  autoFocus           ={false}
-                  updateState         ={(state)=>{ 
-                    this.props.actions.removeAttendee(state); 
-                  }}
-                  tags                ={tags}
-                  inputContainerStyle ={{ height: 0 }}
+                  disabled            ={ true }
+                  autoFocus           ={ false }
+                  updateState         ={(state)=>{ this.props.actions.removeAttendee(state); }}
+                  tags                ={ tags }
+                  inputContainerStyle ={{ height:0 }}
                   tagsViewStyle       ={{ margin:0 }}
-                  tagStyle            ={{backgroundColor:"#DDDDDD", borderWidth:0}}
-                  tagTextStyle        ={{color:"#666"}}
+                  tagStyle            ={{ backgroundColor:"#DDDDDD", borderWidth:0 }}
+                  tagTextStyle        ={{ color:"#666" }}
                 />
               </Item> 
             </Content>

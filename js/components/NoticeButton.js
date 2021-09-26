@@ -7,7 +7,6 @@ export default class NoticeButton extends PureComponent{
 	}
 
 	render(){
-
 		let cardItem = (
 			<CardItem button onPress={this.props.onPress}>
 				<Body>

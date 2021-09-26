@@ -18,7 +18,8 @@ const initialState = {
   regularMeetingCustomizeOptions: [],
   companies                     : [],
   selectedCompany               : "",
-  attendees_by_position         : []
+  attendees_by_position         : [],
+  organization_tree             : null
 };
 
 export default function index(state = initialState, action = {}) {
@@ -121,6 +122,11 @@ export default function index(state = initialState, action = {}) {
         ...state,
         attendees_by_position:action.companies,
         selectedCompany:action.selectedCompany
+      }
+    case types.MEETING_SET_ORGANIZATION:
+      return {
+        ...state,
+        organization_tree:action.organization,
       }
     default:
       return state;

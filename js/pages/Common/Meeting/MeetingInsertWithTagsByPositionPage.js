@@ -171,7 +171,10 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
           onPress  = {()=>{
             NavigationService.navigate("MeetingInsertWithTagsForSelect", {
               selectList    :this.props.state.Meeting.companies,
-              onItemPress   :this.props.actions.getPositions,
+              onItemPress   :(item)=>{
+                this.props.actions.getPositions(item.value);
+                NavigationService.goBack();
+              },
               renderItemMode:"normal",  // normal一般, multiCheck多選, multiAttendees多選參與人
               showFooter    :false
             });
@@ -357,29 +360,12 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
     let checked = selectedCount == item.item.value.length ? true: false;
     let checkBoxColor = checked == included ? "#00C853": "#9E9E9E";
 
-    console.log("checked", checked, included, checkBoxColor);
-
     return (
       <Item 
         fixedLabel 
         style   ={{paddingLeft: 10, paddingRight: 5, backgroundColor: this.props.style.InputFieldBackground}} 
         onPress ={ async ()=>{ 
           this.props.actions.positionCheckboxOnPress(!(checked || included), item.item.value);
-          /*
-          let enableMeeting = await this.checkHaveMeetingTime(item.item.id, this.state.startdate, this.state.enddate);
-          if (enableMeeting) {
-            this.addTag(item.item);
-          } else {
-            Alert.alert(
-              this.props.lang.MeetingPage.alertMessage_duplicate, //"有重複"
-              `${this.props.lang.MeetingPage.alertMessage_period} ${item.item.name} ${this.props.lang.MeetingPage.alertMessage_meetingAlready}`,
-              [
-                { text: "OK", onPress: () => console.log("OK Pressed") }
-              ],
-              { cancelable: false }
-            );
-          }
-          */
         }} 
       >
         <CheckBox
@@ -392,16 +378,6 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
             style        ={{ marginRight: 20 }}
           />
         <Label 
-          /*
-          onPress={()=>{
-            NavigationService.navigate("MeetingInsertWithTagsForSelect", {
-              selectList    :item.item.value,
-              onItemPress   :this.props.actions.getPositions,
-              renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
-              showFooter    :true
-            });
-          }}
-          */
         >{item.item.label} </Label><Text note>{item.item.depname}</Text>
         <Icon 
           style ={{borderWidth: 0, padding: 10, paddingRight: 10}}
@@ -413,42 +389,11 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
               renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
               showFooter    :true
             });
-            //顯示此人有哪些會議
-            /*
-            NavigationService.navigate("MeetingTimeForPerson", {
-              person: item.item,
-            });
-            */
           }}
         />
       </Item>
     );
   }
-
-  /*
-  checkHaveMeetingTime = async (id, startTime, endTime) => {
-    let user = this.props.state.UserInfo.UserInfo;
-    let meetingParams = {
-      startdate:startTime,
-      enddate  : endTime,
-      attendees:[ {id:id} ],
-      timezone :RNLocalize.getTimeZone(),
-      oid      : this.state.oid
-    }
-    let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
-      if (result.length == 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }).catch((errorResult)=>{
-      console.log("errorResult",errorResult.message);
-      return false;
-    });
-
-    return searchMeetingResult;
-  }
-  */
 
   renderEmptyComponent = () => {
     return (

@@ -15,32 +15,31 @@ import ToastUnit              from '../../../utils/ToastUnit';
 import TinyCircleButton       from '../../../components/TinyCircleButton';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 import MeetingItemForAttendees from '../../../components/Meeting/MeetingItemForAttendees';
-
+import MeetingItemForOrgnize   from '../../../components/Meeting/MeetingItemForOrgnize';
 
 class MeetingInsertWithTagsForSelectPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectList        : this.props.route.params.selectList,   //用哪一種模式下去選擇
-      onItemPress       : this.props.route.params.onItemPress,
-      renderItemMode    : this.props.route.params.renderItemMode,
-      showFooter        : this.props.route.params.showFooter,
-      isShowSearch      : false,       //是否顯示關鍵字搜尋的輸入匡
-      isChinesKeyword   : false,       //用來判斷關鍵字是否為中文字
-      keyword           : "",          //一般搜尋
-      sKeyword          : "",          //簡體中文
-      tKeyword          : "",          //繁體中文
-      isSearch          : false,       //是反顯示關鍵字搜尋結果
-      searchedData      : [],          //關鍵字搜尋的資料
-      searchedCount     : 0,           //關鍵字搜尋出來的筆數
-      data              : [],          //一般搜尋的資料
-      isFooterRefreshing: false,
-      isEnd             : false,       //紀錄搜尋結果是否已經沒有更多資料
-      checkState        : false
+      orgManager         : this.props.route.params.orgManager,   
+      selectList         : this.props.route.params.selectList,   //用哪一種模式下去選擇
+      onItemPress        : this.props.route.params.onItemPress,
+      renderItemMode     : this.props.route.params.renderItemMode,
+      onItemNextIconPress: this.props.route.params.onItemNextIconPress,
+      showFooter         : this.props.route.params.showFooter,
+      isShowSearch       : false,       //是否顯示關鍵字搜尋的輸入匡
+      isChinesKeyword    : false,       //用來判斷關鍵字是否為中文字
+      keyword            : "",          //一般搜尋
+      sKeyword           : "",          //簡體中文
+      tKeyword           : "",          //繁體中文
+      isSearch           : false,       //是反顯示關鍵字搜尋結果
+      searchedData       : [],          //關鍵字搜尋的資料
+      searchedCount      : 0,           //關鍵字搜尋出來的筆數
+      data               : [],          //一般搜尋的資料
+      isFooterRefreshing : false,
+      isEnd              : false,       //紀錄搜尋結果是否已經沒有更多資料
+      checkState         : false
     };
-  }
-
-  componentDidMount(){
   }
 
   render() {
@@ -153,6 +152,7 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
           keyExtractor          = {(item, index) => index.toString()}
           data                  = {this.state.selectList}
           extraData             = {this.state.checkState}
+          ListHeaderComponent   = {this.state.orgManager ? this.renderHeaderComponent: null}
           renderItem            = {this.renderTapItem}
           ListEmptyComponent    = {this.renderEmptyComponent}
         />
@@ -196,6 +196,16 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
     );
   }
 
+  renderHeaderComponent = () => {
+    return (
+      <View style={{marginTop:15, marginBottom: 30}}>
+        <Text note style={{marginLeft: 10}}>部門主管</Text>
+        {this.multiAttendees(this.state.orgManager[0])}
+      </View>
+    );
+    // return this.multiAttendees(this.state.orgManager[0]);
+  }
+
   renderTapItem = (item) => {
     switch(this.state.renderItemMode) {
       case "normal": // 一般
@@ -216,14 +226,59 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
         fixedLabel 
         style   ={{padding: 10, backgroundColor: this.props.style.InputFieldBackground }} 
         onPress ={ async ()=>{ 
-          this.state.onItemPress(item.value);
-          NavigationService.goBack();
+          this.state.onItemPress(item);
         }} 
       >
         <Label>{item.label} </Label>
       </Item>
     );
   }
+
+  multiCheck = (item) => {
+    let allOrgAttendees = this.getAllOrgAttendees(item);
+    let selectedCount = 0;
+    let included = false;
+    
+    // 確認有沒有已經包含在裡面，用來顯示不同的勾勾顏色
+    for(let positionAttendee of allOrgAttendees){
+      for(let propsAttendee of this.props.state.Meeting.attendees){
+        if( positionAttendee.id == propsAttendee.id ){
+          included = true;
+          selectedCount++;
+          break;
+        }
+      }
+    }
+    let checked = selectedCount == allOrgAttendees.length ? true: false;
+    let checkBoxColor = checked == included ? "#00C853": "#9E9E9E";
+    
+    return (
+      <MeetingItemForOrgnize
+        item            = {item}
+        checked         = {checked}
+        included        = {included}
+        checkBoxColor   = {checkBoxColor}
+        itemOnPress     = {this.state.onItemPress}
+        onItemNextIconPress = {this.state.onItemNextIconPress}
+      />
+    );
+  }
+
+  getAllOrgAttendees = (checkItemAttendees) => {
+    let tempAttendees = [];
+    if( checkItemAttendees.members !== null ){
+      tempAttendees = tempAttendees.concat(checkItemAttendees.members)
+    }
+
+    if ( checkItemAttendees.subDep !== null ) {
+      for(let subDep of checkItemAttendees.subDep){
+        tempAttendees = tempAttendees.concat(this.getAllOrgAttendees(subDep));
+      }
+    }
+
+    return tempAttendees;
+  }
+
 
   multiAttendees = (item) => {
     let checked = false;
@@ -241,21 +296,6 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
         calendarOnPress = {this.props.actions.attendeeItemCalendarOnPress}
       />
     );
-      /*
-      let enableMeeting = await this.checkHaveMeetingTime(item.item.id, this.state.startdate, this.state.enddate);
-      if (enableMeeting) {
-        this.addTag(item.item);
-      } else {
-        Alert.alert(
-          this.props.lang.MeetingPage.alertMessage_duplicate, //"有重複"
-          `${this.props.lang.MeetingPage.alertMessage_period} ${item.item.name} ${this.props.lang.MeetingPage.alertMessage_meetingAlready}`,
-          [
-            { text: "OK", onPress: () => console.log("OK Pressed") }
-          ],
-          { cancelable: false }
-        );
-      }
-      */
   }
   
   loadMoreData = (isSearching, searchedData = null) => {
