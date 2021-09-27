@@ -13,8 +13,10 @@ import * as SQLite            from '../../../utils/SQLiteUtil';
 import ToastUnit              from '../../../utils/ToastUnit';
 import TinyCircleButton       from '../../../components/TinyCircleButton';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
-
 import { NavigationContainer, useRoute, useNavigationState } from '@react-navigation/native';
+
+import SearchInput, { createFilter } from 'react-native-search-filter'; 
+const KEYS_TO_FILTERS = ['name'];
 
 class MeetingInsertWithTagsByOrganizePage extends React.Component {
   constructor(props) {
@@ -26,22 +28,27 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
       sKeyword          : "",          //簡體中文
       tKeyword          : "",          //繁體中文
       isSearch          : false,       //是反顯示關鍵字搜尋結果
-      searchedData      : [],          //關鍵字搜尋的資料
-      searchedCount     : 0,           //關鍵字搜尋出來的筆數
-      data              : [],          //一般搜尋的資料
       isFooterRefreshing: false,
-      isEnd             : false,       //紀錄搜尋結果是否已經沒有更多資料
     };
   }
 
   componentDidMount(){
     this.props.actions.getCompanies();    // 獲取公司列表資料
-    // this.loadMoreData();
   }
 
   render() {
-    // 紀錄是否是關鍵字搜尋結果的資料
-    let contentList = this.state.isSearch ? this.state.searchedData : this.state.data;
+    //過濾關鍵字所查詢的資料
+    let filteredData;
+    if (this.state.isChinesKeyword) {
+      filteredData = this.props.state.Meeting.companies.filter(createFilter(this.state.tKeyword, KEYS_TO_FILTERS));
+      let data = this.props.state.Meeting.companies.filter(createFilter(this.state.sKeyword, KEYS_TO_FILTERS));
+      
+      for (var i = 0; i < data.length; i++) {
+        filteredData.push(data[i]);
+      }
+    } else {
+      filteredData = this.props.state.Meeting.companies.filter(createFilter(this.state.keyword, KEYS_TO_FILTERS));
+    }
 
     return (
       <Container>
@@ -74,20 +81,6 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
                       }); 
                     }
                   }}
-                  onSubmitEditing = {()=>{
-                    Keyboard.dismiss();
-                    // 搜尋的值不能為空白
-                    let key = this.state.isChinesKeyword ? this.state.sKeyword.length : this.state.keyword.length;
-                    if ( key!==0 ) {
-                      this.setState({
-                        isSearch     :true,
-                        searchedData :[],          
-                        searchedCount:0,
-                        isEnd        :false           
-                      });
-                      this.loadMoreData(true, [])
-                    }    
-                  }}
                 />
               </Item>
               <Right style={{flex:0, flexDirection: 'row'}}>
@@ -99,31 +92,10 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
                     keyword        :"",    
                     sKeyword       :"",    
                     tKeyword       :"",
-                    searchedData   :[],
-                    searchedCount  :0,
-                    isEnd:false
                   });
                 }}>
                   <Icon name="close" style={{color:this.props.style.color}}/>
-                </Button>      
-                <Button transparent onPress={()=>{
-                  Keyboard.dismiss();
-                  // 搜尋的值不能為空白
-                  let key = this.state.isChinesKeyword ? this.state.sKeyword.length : this.state.keyword.length;
-                  if ( key!==0 ) {
-                    this.setState({
-                      isSearch     :true,
-                      searchedData :[],          
-                      searchedCount:0,
-                      isEnd        :false           
-                    });
-                    this.loadMoreData(true, [])
-                  }
-                }}>
-                  <Title style={{color:this.props.style.color}}>
-                      {this.props.state.Language.lang.Common.Search}
-                  </Title>
-                </Button>
+                </Button>     
               </Right>
             </Header>
           :
@@ -137,7 +109,8 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
               </Left>
               <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>
                   <Title style={{color:this.props.style.color}} onPress={()=>{ this.setState({ isShowSearch:true });}}>
-                    {this.props.lang.MeetingPage.attendeesInvite}
+                    {/*this.props.lang.MeetingPage.attendeesInvite*/}
+                    請選擇公司
                   </Title>
               </Body>
               <Right style={{alignItems: 'center'}}>
@@ -150,7 +123,7 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
 
         <FlatList
           keyExtractor          = {(item, index) => index.toString()}
-          data                  = {this.props.state.Meeting.companies}
+          data                  = {filteredData}
           extraData             = {this.props.state.Meeting}
           renderItem            = {this.renderTapItem}
           ListFooterComponent   = {this.renderFooter}
@@ -193,7 +166,6 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
 
   renderTapItem = (item) => {
     item = item.item;
-    // 必須檢查member裡面有沒有資料，有的話要顯示主管身份
     return (
       <Item 
         fixedLabel 
@@ -208,25 +180,27 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
               this.navigateNextOrg();
             },
             renderItemMode:"normal",  // normal一般, multiCheck多選, multiAttendees多選參與人
-            showFooter    :true
+            showFooter    :true,
+            title         :"請選擇廠區"
           });
           
         }} 
       >
-        <Label>{item.label} </Label>
+        <Label>{item.name} </Label>
       </Item>
     );
   }
 
   getFactories = async (com) => {
     let sql = `select * from THF_MASTERDATA 
-           where CLASS1='HRPZID' and CLASS3='${com}' and STATUS='Y' order by SORT;`
+               where CLASS1='HRPZID' and CLASS3='${com}' and STATUS='Y' 
+               order by SORT;`
     let factories = await SQLite.selectData( sql, []).then((result) => {
       let items = [];
       for (let i in result.raw()) {
         items.push({
           key  :result.raw()[i].SORT,
-          label:result.raw()[i].CONTENT,
+          name:result.raw()[i].CONTENT,
           companyValue:result.raw()[i].CLASS3,
           factoryValue:result.raw()[i].CLASS4
         })
@@ -244,13 +218,7 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
       orgManager    :org.members == null ? false : org.members,
       selectList    :org.subDep,
       onItemPress   :(value)=>{
-        // this.props.actions.positionCheckboxOnPress(!(checked || included), item.item.value);
-        // 目前的reudx選項有沒有包含在這裡面
-        // 這邊決定要不要顯示勾勾選項
-
         this.props.actions.organizeCheckboxOnPress( value );
-        // this.props.actions.getOrg(value); // 取得組織架構資料
-        // this.navigateNextOrg();
       },
       onItemNextIconPress:(value)=>{
         if(value.subDep == null){
@@ -258,162 +226,26 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
             selectList    :value.members,
             onItemPress   :this.props.actions.getPositions,
             renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
-            showFooter    :true
+            showFooter    :true,
+            title         : this.props.lang.MeetingPage.attendeesInvite
           });
         }else{
           this.navigateNextOrg(value);
         }
       },
       renderItemMode:"multiCheck",  // normal一般, multiCheck多選, multiAttendees多選參與人
-      showFooter    :true
+      showFooter    :true,
+      title         : this.props.lang.MeetingPage.attendeesInvite
     });
-  }
-
-  loadMoreData = (isSearching, searchedData = null) => {
-    isSearching = (typeof isSearching == "object") ? false : isSearching;
-    let isSearch = isSearching ? isSearching : this.state.isSearch;
-    searchedData = (searchedData == null) ? this.state.searchedData : searchedData;
-
-    let user = this.props.state.UserInfo.UserInfo;
-    let action = "";
-
-    this.setState({ isFooterRefreshing: true });
-    if (!this.state.isFooterRefreshing) {
-      // 是不是關鍵字搜尋
-      if (isSearch) {
-        let count = (searchedData.length == 0) ? searchedData.length : searchedData.length+20
-        let searchList = [];
-
-        if (this.state.isChinesKeyword) {
-          let sKeyword = this.removeSpace(this.state.sKeyword); 
-          let tKeyword = this.removeSpace(this.state.tKeyword);
-          searchList = [
-            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:sKeyword}),
-            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:tKeyword})
-          ];
-        } else {
-          let keyword = this.removeSpace(this.state.keyword); 
-          let lowKeyword = keyword.toLowerCase(); 
-          searchList = [
-            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:keyword}),
-            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:lowKeyword}),
-          ];
-        }
-
-        Promise.all(searchList).then((result) => {
-          let temparray = this.state.isChinesKeyword ? [...result[0], ...result[1]]: [...result[0], ...result[1]];
-          let isEnd = this.dealIsDataEnd(searchedData, temparray);
-          this.setState({
-           searchedData: isEnd? searchedData: this.dedup([...searchedData, ...temparray]),
-           isFooterRefreshing:false,
-           isEnd:isEnd
-          })
-        }).catch((err) => {
-          this.setState({ 
-            isShowSearch   :false,
-            isSearch       :false,
-            isChinesKeyword:false, 
-            keyword        :"",    
-            sKeyword       :"",    
-            tKeyword       :"",
-            searchedData   :[],
-            searchedCount  :0,
-            isEnd          :false,
-            isFooterRefreshing:false
-          });
-
-          let message = this.props.lang.MeetingPage.searchError;
-          setTimeout(function(){ 
-            ToastUnit.show('error', message);
-          }, 300);
-          console.log(err);
-        })
-      } else {
-        let actionObject = { condition:"" }; //查詢使用
-        actionObject.count = this.state.data.length;
-        UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
-          let isEnd = this.dealIsDataEnd(this.state.data, result);
-          this.setState({
-            data              :isEnd ? this.state.data: this.state.data.concat(result) ,
-            isFooterRefreshing:false,
-            isEnd             :isEnd
-          });
-        }).catch((err) => {
-          this.setState({ 
-            isShowSearch   :false,
-            isSearch       :false,
-            isChinesKeyword:false, 
-            keyword        :"",    
-            sKeyword       :"",    
-            tKeyword       :"",
-            searchedData   :[],
-            searchedCount  :0,
-            isEnd          :false,
-            isFooterRefreshing:false
-          });
-
-          let message = this.props.lang.MeetingPage.searchError;
-          setTimeout(function(){ 
-            ToastUnit.show('error', message);
-          }, 300);
-          console.log(err);
-        })
-      }
-    }
-  }
-
-  dealIsDataEnd = (stateData, resultData) => {
-    let isEnd = false;
-    if (
-      resultData.length == 0 ||
-      ( stateData.length != 0 && stateData[stateData.length-1].id == resultData[resultData.length-1].id )
-    ) {
-      isEnd = true;
-    } else {
-      isEnd = false;
-    }
-
-    return isEnd;
-  }
-
-  checkHaveMeetingTime = async (id, startTime, endTime) => {
-    let user = this.props.state.UserInfo.UserInfo;
-    let meetingParams = {
-      startdate:startTime,
-      enddate  : endTime,
-      attendees:[ {id:id} ],
-      timezone :RNLocalize.getTimeZone(),
-      oid : this.state.oid
-    }
-    let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
-      if (result.length == 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }).catch((errorResult)=>{
-      console.log("errorResult",errorResult.message);
-      return false;
-    });
-
-    return searchMeetingResult;
   }
 
   renderFooter = () => {
     let footer = null
-    if(this.state.isFooterRefreshing){
-      footer = (
-        <Item style={{padding: 15, justifyContent: 'center', backgroundColor: this.props.style.InputFieldBackground}}>
-          <Label>{this.props.state.Language.lang.ListFooter.Loading}</Label>
-        </Item>
-      );
-    }else{
-      footer = (
-        <Item style={{padding: 15, justifyContent: 'center', backgroundColor: this.props.style.InputFieldBackground}}>
-            <Label>{this.props.state.Language.lang.ListFooter.NoMore}</Label>
-        </Item>
-      )  
-    }
+    footer = (
+      <Item style={{padding: 15, justifyContent: 'center', backgroundColor: this.props.style.InputFieldBackground}}>
+          <Label>{this.props.state.Language.lang.ListFooter.NoMore}</Label>
+      </Item>
+    )
 
     return footer;
   }
@@ -433,13 +265,6 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
 
       return (match ? false : hashTable[key] = true);
     });
-  }
-
-  removeSpace(string){
-    string = string.replace(/\r\n/g,"");
-    string = string.replace(/\n/g,"");
-    string = string.replace(/\s/g,"");
-    return string;
   }
 
   showAttendeesReorderPage = () => {

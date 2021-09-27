@@ -396,7 +396,7 @@ export function getCompanies(){
 			for (let i in result.raw()) {
 				items.push({
 					key  :result.raw()[i].SORT,
-					label:result.raw()[i].CONTENT,
+					name :result.raw()[i].CONTENT,
 					value:result.raw()[i].CLASS3
 				})
 			}

@@ -47,7 +47,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
     let companyName = "";
     for(let company of this.props.state.Meeting.companies){
       if( company.value == this.props.state.Meeting.selectedCompany ){
-        companyName = company.label
+        companyName = company.name
       }
     }
 
@@ -146,15 +146,17 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
                   <Icon name='arrow-back' style={{color:this.props.style.color}}/>
                 </Button>
               </Left>
-              <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>
-                  <Title style={{color:this.props.style.color}} onPress={()=>{ this.setState({ isShowSearch:true });}}>
+              <Body /*onPress={()=>{ this.setState({ isShowSearch:true });}}*/>
+                  <Title style={{color:this.props.style.color}} /*onPress={()=>{ this.setState({ isShowSearch:true });}}*/>
                     {this.props.lang.MeetingPage.attendeesInvite}
                   </Title>
               </Body>
               <Right style={{alignItems: 'center'}}>
+                {/*
                 <Button transparent onPress={()=>{ this.setState({ isShowSearch:true }); }}>
                   <Icon name='search' style={{color:this.props.style.color}}/>
                 </Button>
+                */}
               </Right>
             </Header>
         }
@@ -176,7 +178,8 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
                 NavigationService.goBack();
               },
               renderItemMode:"normal",  // normal一般, multiCheck多選, multiAttendees多選參與人
-              showFooter    :false
+              showFooter    :false,
+              title: "請選擇公司"
             });
           }}
         >
@@ -387,7 +390,8 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
               selectList    :item.item.value,
               onItemPress   :this.props.actions.getPositions,
               renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
-              showFooter    :true
+              showFooter    :true,
+              title         : this.props.lang.MeetingPage.attendeesInvite
             });
           }}
         />
