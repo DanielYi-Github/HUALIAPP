@@ -36,6 +36,7 @@ class MeetingInsertPage extends React.PureComponent  {
       let endTime           = new Date().getTime();
       startTime             = startTime + (600000-(startTime%600000));
       endTime               = endTime + (600000-(endTime%600000));
+      // endTime               = endTime + (600000-(endTime%600000)) + 3600000;
       let initiator         = { id : props.state.UserInfo.UserInfo.id };  //發起人
       let chairperson       = { id : props.state.UserInfo.UserInfo.id };  //主席
       let chairpersonLabel  = props.state.UserInfo.UserInfo.name;
@@ -603,8 +604,6 @@ class MeetingInsertPage extends React.PureComponent  {
   showDateTimePicker = (editStartorEndDatetime) => {
     let startdate = new Date( this.state.startdate.replace(/-/g, "/") ).getTime();
     let enddate = new Date( this.state.enddate.replace(/-/g, "/") ).getTime();
-    // startdate = this.state.isChangeTime ? startdate-28800000: startdate;
-    // enddate = this.state.isChangeTime ? enddate-28800000: enddate;
 
       if (this.state.isEndDateChange) {
       } else {
@@ -650,7 +649,7 @@ class MeetingInsertPage extends React.PureComponent  {
   }
 
   setTime = (time) => {
-    console.log(DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"));
+    // console.log(DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"));
     if (time.type == "set") {
       if (this.state.editStartorEndDatetime) {
         //start
@@ -674,6 +673,7 @@ class MeetingInsertPage extends React.PureComponent  {
   }
   
   setDatetime = () => {
+    console.log("this.state.editStartorEndDatetime", this.state.editStartorEndDatetime);
     if (this.state.editStartorEndDatetime) {
       //start
       let editDatetimeValue = this.state.editDatetimeValue-1000 >= this.state.now ? this.state.editDatetimeValue : this.state.now;
@@ -1066,7 +1066,7 @@ class MeetingInsertPage extends React.PureComponent  {
           repeatEndDate  :"",
           weekDays       :[]
       }
-
+      
       if (this.state.isModify) {
         // 修改會議
         meetingParams.oid = this.state.oid;

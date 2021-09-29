@@ -81,6 +81,7 @@ export async function loginByAD(user){
 				user.membereMail= data.member.email; 	// 取郵相SID所使用的email
 				user.depID      = data.member.depid;
 				user.depName    = data.member.depname;
+				user.dutname    = data.member.dutname;
 				user.co         = data.member.coid;
 				user.plantID    = data.member.plantid;
 				user.plantName  = data.member.plantname;
@@ -92,7 +93,7 @@ export async function loginByAD(user){
                 // user.picture = data.picture ? { uri: `data:image/png;base64,${data.picture}`} : user.picture;
 				user.pictureUrl = data.picture;
 				user.birthday   = data.member.brndat ? data.member.brndat : user.birthday;
-				user.certTips = data.userConfig.certTips;
+				user.certTips   = data.userConfig.certTips;
 
 				DeviceStorageUtil.set('User', user); //存在客戶端
 				params = {
@@ -193,9 +194,69 @@ export async function loginByEmpid(user, lang) {
  * @param String loginID
  * @return Promise
  */
+export async function loginByImei(biosInfo,lang){
+	let promise = new Promise((resolve, reject) => {
+		let version  = Device.getVersion();
+		let url = "login/certid";
+		
+		let params = {
+			"token": "",
+			"userId": Common.encrypt(biosInfo.biosUser.userID),
+			"content": {
+				"appversion": version,
+				"platform": Platform.OS,
+				"certid": Common.encrypt(biosInfo.biosUser.iemi)
+			},
+			"lang": lang
+		};
+		
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code == 200){
+
+				var user         = new User();
+				let tempData     = data.content;
+				// 判斷是否登入成功
+				user.birthday    = tempData.member.brndat;
+				user.co          = tempData.member.coid;
+				user.depID       = tempData.member.depid;
+				user.depName     = tempData.member.depname;
+				user.dutname     = tempData.member.dutname;
+				user.dutsort     = tempData.member.dutsort;
+				user.email       = tempData.member.email;
+				user.id          = tempData.member.id;
+				user.name        = tempData.member.name;
+				user.plantID     = tempData.member.plantid;
+				user.plantName   = tempData.member.plantname;
+				user.sex         = tempData.member.sex;
+				user.token       = tempData.token;
+				//對於工號登錄的情景下，必須將對應的工號替換loginID
+				user.loginID     = biosInfo.biosUser.userID;
+				user.skype       = tempData.skype;
+				user.telphone    = tempData.telphone;
+				user.cellphone   = tempData.cellphone;
+				user.lang        = tempData.lang;
+				user.pictureUrl  = tempData.picture;
+				user.isPush      = tempData.userConfig.push;
+				user.membereMail = tempData.member.email;
+				
+				resolve(user)
+			} else {
+				reject(data.message);
+			}
+		});
+		
+	});
+	return promise;
+}
+
+/**
+ * 利用token取得MB人員資料
+ * @param String loginID
+ * @return Promise
+ */
 export async function getMBUserInfoByToken(user){
 	let promise = new Promise((resolve, reject) => {
-		let url = "org/getUserByToken";
+		let url = "login/token";
 		let version  = Device.getVersion();
 		let content = {
 			"appversion":version,
@@ -211,7 +272,28 @@ export async function getMBUserInfoByToken(user){
 
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code == 200) {
-				resolve(data.content)
+
+				data = data.content;
+				user.name       = data.member.name;
+				user.email      = data.email;
+				user.membereMail= data.member.email; 	// 取郵相SID所使用的email
+				user.depID      = data.member.depid;
+				user.depName    = data.member.depname;
+				user.dutname    = data.member.dutname;
+				user.co         = data.member.coid;
+				user.plantID    = data.member.plantid;
+				user.plantName  = data.member.plantname;
+				user.sex        = data.member.sex;
+				user.isPush     = data.userConfig.push;
+				user.cellphone  = data.cellphone;
+				user.telphone   = data.telphone;
+				user.skype      = data.skype;
+                // user.picture = data.picture ? { uri: `data:image/png;base64,${data.picture}`} : user.picture;
+				user.pictureUrl = data.picture;
+				user.birthday   = data.member.brndat ? data.member.brndat : user.birthday;
+				// user.certTips   = data.userConfig.certTips;
+				DeviceStorageUtil.set('User', user); //存在客戶端
+				resolve(user)
 			}else{
 				reject(data.message);
 			}
@@ -3443,67 +3525,6 @@ export function setBiosUserIemi(user,iemi,remore=false){
 			}
  			resolve(data);
 		});
-	});
-	return promise;
-}
-
-/**
- * 利用token取得MB人員資料
- * @param String loginID
- * @return Promise
- */
-
-export async function getMBUserInfoByImei(biosInfo,lang){
-	let promise = new Promise((resolve, reject) => {
-		let version  = Device.getVersion();
-		let url = "login/certid";
-		
-		let params = {
-			"token": "",
-			"userId": Common.encrypt(biosInfo.biosUser.userID),
-			"content": {
-				"appversion": version,
-				"platform": Platform.OS,
-				"certid": Common.encrypt(biosInfo.biosUser.iemi)
-			},
-			"lang": lang
-		};
-		
-		NetUtil.getRequestContent(params, url).then((data)=>{
-			if (data.code == 200){
-
-				var user         = new User();
-				let tempData     = data.content;
-				// 判斷是否登入成功
-				user.birthday    = tempData.member.brndat;
-				user.co          = tempData.member.coid;
-				user.depID       = tempData.member.depid;
-				user.depName     = tempData.member.depname;
-				user.dutname     = tempData.member.dutname;
-				user.dutsort     = tempData.member.dutsort;
-				user.email       = tempData.member.email;
-				user.id          = tempData.member.id;
-				user.name        = tempData.member.name;
-				user.plantID     = tempData.member.plantid;
-				user.plantName   = tempData.member.plantname;
-				user.sex         = tempData.member.sex;
-				user.token       = tempData.token;
-				//對於工號登錄的情景下，必須將對應的工號替換loginID
-				user.loginID     = biosInfo.biosUser.userID;
-				user.skype       = tempData.skype;
-				user.telphone    = tempData.telphone;
-				user.cellphone   = tempData.cellphone;
-				user.lang        = tempData.lang;
-				user.pictureUrl  = tempData.picture;
-				user.isPush      = tempData.userConfig.push;
-				user.membereMail = tempData.member.email;
-				
-				resolve(user)
-			} else {
-				reject(data.message);
-			}
-		});
-		
 	});
 	return promise;
 }

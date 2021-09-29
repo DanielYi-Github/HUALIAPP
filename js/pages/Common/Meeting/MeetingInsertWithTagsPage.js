@@ -184,7 +184,7 @@ class MeetingInsertWithTagsPage extends React.Component {
               </Right>
             </Header>
         }
-        <Item style={{ justifyContent: 'space-between', paddingLeft: 5, paddingRight: 10, paddingTop: 20, paddingBottom: 5}}>
+        <Item style={{ justifyContent: 'space-between', paddingLeft: 10, paddingRight: 10, paddingTop: 20}}>
           <Label style={{
             color:this.props.style.inputWithoutCardBg.inputColorPlaceholder,
             paddingTop     : 5,
@@ -253,8 +253,8 @@ class MeetingInsertWithTagsPage extends React.Component {
             <Icon name='arrow-forward' />
         </Item>
 
-        <View style={{flex: 1, paddingTop: 30}}>
-          <Label style={{marginLeft: 5, paddingBottom: 5, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
+        <View style={{flex: 1, paddingTop: 20}}>
+          <Label style={{paddingLeft: 10, paddingBottom: 5, paddingTop     : 5,color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
             {`${this.props.state.Language.lang.CreateFormPage.QuickSelect} ${this.props.lang.MeetingPage.attendees}`}
           </Label>
           <FlatList

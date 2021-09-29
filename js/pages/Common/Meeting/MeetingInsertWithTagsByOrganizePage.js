@@ -110,7 +110,7 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
               <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>
                   <Title style={{color:this.props.style.color}} onPress={()=>{ this.setState({ isShowSearch:true });}}>
                     {/*this.props.lang.MeetingPage.attendeesInvite*/}
-                    請選擇公司
+                    依組織架構選擇
                   </Title>
               </Body>
               <Right style={{alignItems: 'center'}}>

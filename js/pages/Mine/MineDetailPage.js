@@ -50,6 +50,7 @@ class MineDetailPage extends React.Component {
 
   render() {
     let user = this.props.state.UserInfo.UserInfo;
+    console.log(user);
     let page = this.props.state.Language.lang.MineDetailPage;
 
     let renderScene = (route, navigator) => {
@@ -114,7 +115,7 @@ class MineDetailPage extends React.Component {
         {/*
 
           */}
-          <H3 style={{marginTop: 10, marginBottom: 5, color:this.props.style.dynamicTitleColor}}>{user.name}</H3>
+          <H3 style={{marginTop: 10, marginBottom: 5, color:this.props.style.dynamicTitleColor}}>{user.name}{` ${user.dutname ? user.dutname: ''}`}</H3>
           <Text style={{marginBottom: 10, color:this.props.style.dynamicTitleColor}}>{user.plantName}  {user.depName}</Text>
 
           <Card>

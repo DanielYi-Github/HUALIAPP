@@ -314,6 +314,7 @@ export function loginByToken(user) {
 		//開始顯示載入資料畫面
 		dispatch(login_doing());
 		UpdateDataUtil.getMBUserInfoByToken(user).then((result) => {
+			user = result;
 			this.initialApi(user,"token");
 	  		DeviceStorageUtil.get('update').then((data) => {
 	  		  data = data ? JSON.parse(data) : data;	
@@ -332,10 +333,10 @@ export function loginByToken(user) {
 
 export function loginByImei(biosInfo,langStatus) {
 	return dispatch => {
-		console.log("loginByImei");
+		// console.log("loginByImei");
 		//開始顯示載入資料畫面
 		dispatch(login_doing());
-		UpdateDataUtil.getMBUserInfoByImei(biosInfo,langStatus).then((user) => {
+		UpdateDataUtil.loginByImei(biosInfo,langStatus).then((user) => {
 			if (user) {
 				this.initialApi(user,"imei");
 
@@ -360,7 +361,6 @@ export function initialApi( user, way=false ){
 	return (dispatch, getState) => {
 
 		//運行時間最久，最先執行
-		
 		LoggerUtil.uploadLocalDBErrorLog(user); 	// 將資料庫的log上傳至server
   		UpdateDataUtil.updateContact(user); //通訊錄	
   		UpdateDataUtil.updateMSG(user); 	//手機消息-執行最久

@@ -38,7 +38,6 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
   componentDidMount(){
     this.props.actions.getCompanies();    // 獲取公司列表資料
     this.props.actions.getPositions(this.state.defaultCompany);   // 獲取人員清單資料
-
     // this.loadMoreData();
   }
 
@@ -148,7 +147,8 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
               </Left>
               <Body /*onPress={()=>{ this.setState({ isShowSearch:true });}}*/>
                   <Title style={{color:this.props.style.color}} /*onPress={()=>{ this.setState({ isShowSearch:true });}}*/>
-                    {this.props.lang.MeetingPage.attendeesInvite}
+                    {/*{this.props.lang.MeetingPage.attendeesInvite}*/}
+                    {"依職級選擇"}
                   </Title>
               </Body>
               <Right style={{alignItems: 'center'}}>
@@ -162,33 +162,51 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
         }
 
         {/*依不同公司選擇職級*/}
-        <Item 
-          style={{ 
-            backgroundColor: this.props.style.InputFieldBackground, 
-            height         : this.props.style.inputHeightBase,
-            paddingLeft    : 10,
-            paddingRight   : 5,
-            marginTop      : 30 
-          }}
-          onPress  = {()=>{
-            NavigationService.navigate("MeetingInsertWithTagsForSelect", {
-              selectList    :this.props.state.Meeting.companies,
-              onItemPress   :(item)=>{
-                this.props.actions.getPositions(item.value);
-                NavigationService.goBack();
-              },
-              renderItemMode:"normal",  // normal一般, multiCheck多選, multiAttendees多選參與人
-              showFooter    :false,
-              title: "請選擇公司"
-            });
-          }}
-        >
-            <Label style={{flex:1}}>{companyName}</Label>
-            <Icon name='arrow-forward' />
-        </Item>
+        <View>
+          <Label style={{
+            paddingTop   : 25,
+            paddingBottom: 5, 
+            paddingLeft  : 10, 
+            color        : this.props.style.inputWithoutCardBg.inputColorPlaceholder}}
+          >
+              {"請選擇公司"}
+          </Label>
+          <Item 
+            style={{ 
+              backgroundColor: this.props.style.InputFieldBackground, 
+              height         : this.props.style.inputHeightBase,
+              paddingLeft    : 10,
+              paddingRight   : 5,
+            }}
+            onPress  = {()=>{
+              NavigationService.navigate("MeetingInsertWithTagsForSelect", {
+                selectList    :this.props.state.Meeting.companies,
+                onItemPress   :(item)=>{
+                  this.props.actions.getPositions(item.value);
+                  NavigationService.goBack();
+                },
+                renderItemMode:"normal",  // normal一般, multiCheck多選, multiAttendees多選參與人
+                showFooter    :false,
+                title: "請選擇公司"
+              });
+            }}
+          >
+              <Label style={{flex:1}}>{companyName}</Label>
+              <Icon name='arrow-forward' />
+          </Item>
+        </View>
 
+        
+        <Label style={{
+          paddingTop   : 30,
+          paddingBottom: 5, 
+          paddingLeft  : 10, 
+          color        : this.props.style.inputWithoutCardBg.inputColorPlaceholder}}
+        >
+            {"請選擇職級"}
+        </Label>
         <FlatList
-          contentContainerStyle = {{flex: 1, paddingTop: 30 }}
+          contentContainerStyle = {{flex: 1}}
           keyExtractor          = {(item, index) => index.toString()}
           data                  = {this.props.state.Meeting.attendees_by_position}
           extraData             = {this.props.state.Meeting}
@@ -372,18 +390,18 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
         }} 
       >
         <CheckBox
-            disabled={ true }
-            onValueChange={(newValue) => {}}
-            value        ={checked || included}
-            boxType      ={"square"}
-            onCheckColor ={checkBoxColor}
-            onTintColor  ={checkBoxColor}
-            style        ={{ marginRight: 20 }}
+            disabled      ={ true }
+            onValueChange ={(newValue) => {}}
+            value         ={checked || included}
+            boxType       ={"square"}
+            onCheckColor  ={checkBoxColor}
+            onTintColor   ={checkBoxColor}
+            style         ={{ marginRight: 20 }}
           />
-        <Label 
-        >{item.item.label} </Label><Text note>{item.item.depname}</Text>
+        <Label>{item.item.label} </Label><Text note>{item.item.depname}</Text>
+
         <Icon 
-          style ={{borderWidth: 0, padding: 10, paddingRight: 10}}
+          style ={{padding: 10, paddingRight: 10, paddingLeft: '40%'}}
           name  ='arrow-forward'
           onPress={()=>{
             NavigationService.navigate("MeetingInsertWithTagsForSelect", {
@@ -391,7 +409,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
               onItemPress   :this.props.actions.getPositions,
               renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
               showFooter    :true,
-              title         : this.props.lang.MeetingPage.attendeesInvite
+              title         :this.props.lang.MeetingPage.attendeesInvite
             });
           }}
         />

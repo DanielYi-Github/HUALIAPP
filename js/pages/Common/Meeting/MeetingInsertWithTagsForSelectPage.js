@@ -175,9 +175,25 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
 
   renderHeaderComponent = () => {
     return (
-      <View style={{marginTop:15, marginBottom: 30}}>
-        <Text note style={{marginLeft: 10}}>部門主管</Text>
+      <View>
+        <Label style={{
+          paddingTop   : 25,
+          paddingBottom: 5, 
+          paddingLeft  : 10, 
+          color        : this.props.style.inputWithoutCardBg.inputColorPlaceholder}}
+        >
+            {"部門主管"}
+        </Label>
         {this.multiAttendees(this.state.orgManager[0])}
+
+        <Label style={{
+          paddingTop   : 25,
+          paddingBottom: 5, 
+          paddingLeft  : 10, 
+          color        : this.props.style.inputWithoutCardBg.inputColorPlaceholder}}
+        >
+            {"管轄組織"}
+        </Label>
       </View>
     );
   }

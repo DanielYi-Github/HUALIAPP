@@ -34,7 +34,7 @@ class MeetingItemForOrgnize extends Component {
 		      />
 		    <Label>{item.name} </Label>
 		    <Icon 
-		      style ={{borderWidth: 0, padding: 10, paddingRight: 10}}
+		      style ={{borderWidth: 0, padding: 10, paddingRight: 10, paddingLeft: '40%'}}
 		      name  ='arrow-forward'
 		      onPress={()=>this.props.onItemNextIconPress(item)}
 		    />
