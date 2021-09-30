@@ -17,7 +17,6 @@ class TinyCircleButton extends Component {
 				paddingRight   : 9,
 				paddingTop     : 5,
 				paddingBottom  : 5, 
-				marginBottom   : 5,
 				borderRadius   : 10,
 				borderColor    : this.props.color,
 				borderWidth    : 2

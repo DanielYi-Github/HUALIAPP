@@ -164,14 +164,14 @@ class MeetingInsertWithTagsPage extends React.Component {
                 </Button>
                 <TouchableOpacity 
                   style={{
-                    backgroundColor: '#47ACF2', 
+                    backgroundColor: '#60C970', 
+                    borderColor    : '#60C970',
                     paddingLeft    : 10, 
                     paddingRight   : 10,
                     paddingTop     : 5,
                     paddingBottom  : 5, 
                     borderRadius   : 10,
-                    borderWidth    : 1,
-                    borderColor    : '#47ACF2'
+                    borderWidth    : 0,
                   }}
                   onPress={()=>{
                     Keyboard.dismiss();
@@ -184,10 +184,14 @@ class MeetingInsertWithTagsPage extends React.Component {
               </Right>
             </Header>
         }
-        <Item style={{ justifyContent: 'space-between', paddingLeft: 10, paddingRight: 10, paddingTop: 20}}>
-          <Label style={{
-            color:this.props.style.inputWithoutCardBg.inputColorPlaceholder,
-          }}>
+        <Item style={{ 
+          justifyContent: 'space-between', 
+          paddingLeft   : 10, 
+          paddingRight  : 10, 
+          paddingTop    : 20, 
+          paddingBottom : 5, 
+        }}>
+          <Label style={{ color:this.props.style.inputWithoutCardBg.inputColorPlaceholder }}>
             {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd} ${this.props.lang.MeetingPage.attendees}`}
           </Label>
           {

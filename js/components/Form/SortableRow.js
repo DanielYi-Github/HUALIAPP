@@ -72,8 +72,8 @@ class SortableRow extends Component {
                   this.props.onCheckBoxTap(index, data); 
                 }}
                 boxType = {"square"}
-                onCheckColor = {"#00C853"}
-                onTintColor = {"#00C853"}
+                onCheckColor = {"#E25241"}
+                onTintColor = {"#E25241"}
               />
           </Left>
           <Body style={{justifyContent: 'space-between', paddingLeft: 10, flexDirection: 'row'}}>
