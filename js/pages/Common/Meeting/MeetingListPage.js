@@ -69,7 +69,6 @@ class MeetingListPage extends React.PureComponent  {
   }
 
 	render() {
-    console.log("meetingList", this.props.state.Meeting.meetingList);
     let userId = this.props.state.UserInfo.UserInfo.id;
     let meetingList = this.props.state.Meeting.meetingList;
     let keySearched = [];

@@ -87,7 +87,7 @@ export function removeAttendee(state){
 
 export function addMeeting(meetingParams){
 	return async (dispatch, getState) => {
-		dispatch(refreshing(true)); 	
+		dispatch( refreshing(true) ); 	
 		let user = getState().UserInfo.UserInfo;
 		let addMeetingResult = await UpdateDataUtil.addMeeting(user, meetingParams).then((result)=>{
 			return result;
@@ -103,9 +103,7 @@ export function addMeeting(meetingParams){
 			resultMsg:addMeetingResult.success ? null: addMeetingResult.msg
 		}); 
 
-		if (addMeetingResult.success) {
-			this.getMeetings();
-		}
+		if (addMeetingResult.success) this.getMeetings();
 	}
 }
 
@@ -157,13 +155,11 @@ export function getMeetings(condition = ""){
 			// condition:condition, //查詢使用
 		}
 		let meetingsResult = await UpdateDataUtil.getMeetings(user, content).then((result)=>{
-			// console.log("getMeetings", result);
 			return result;
 		}).catch((e)=>{
 			console.log("e", e);
 			return [];
 		});
-		// meetingsResult = [ ...getState().Meeting.meetingList, ...meetingsResult];
 
 		dispatch({
 			type: MeetingTypes.GET_MEETINGS,

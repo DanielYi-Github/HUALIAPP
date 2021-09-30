@@ -4149,7 +4149,6 @@ export async function getMeetingModeType(user){
 * @param user資料
 */
 export async function addMeeting(user, content){
-
 	let promise = new Promise((resolve, reject) => {
 		let url = "meeting/add";
 		let params = {
@@ -4239,6 +4238,7 @@ export async function getMeetings(user, content){
 				"content": Common.encrypt(JSON.stringify(content)),
 				// "lang"   : Common.encrypt(user.lang)
 			};
+
 			NetUtil.getRequestContent(params, url).then((data)=>{
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
