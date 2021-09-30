@@ -164,8 +164,8 @@ class MeetingInsertWithTagsPage extends React.Component {
                 </Button>
                 <TouchableOpacity 
                   style={{
-                    backgroundColor: '#60C970', 
-                    borderColor    : '#60C970',
+                    backgroundColor: '#55AE3B', 
+                    borderColor    : '#55AE3B',
                     paddingLeft    : 10, 
                     paddingRight   : 10,
                     paddingTop     : 5,
