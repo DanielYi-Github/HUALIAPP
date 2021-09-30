@@ -16,8 +16,9 @@ import * as NavigationService from '../../../utils/NavigationService';
 import ToastUnit              from '../../../utils/ToastUnit';
 import TinyCircleButton       from '../../../components/TinyCircleButton';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
-import MeetingItemForAttendees from '../../../components/Meeting/MeetingItemForAttendees';
-import MeetingItemForOrgnize   from '../../../components/Meeting/MeetingItemForOrgnize';
+import MeetingItemForAttendees      from '../../../components/Meeting/MeetingItemForAttendees';
+import MeetingItemForOrgnize        from '../../../components/Meeting/MeetingItemForOrgnize';
+import MeetingSelectAttendeesFooter from '../../../components/Meeting/MeetingSelectAttendeesFooter';
 
 class MeetingInsertWithTagsForSelectPage extends React.Component {
   constructor(props) {
@@ -136,35 +137,12 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
 
         {
           this.state.showFooter ? 
-            <Footer>
-              <Body>
-                <Text onPress={ this.showAttendeesReorderPage } style={{marginLeft: 15}}>{`已選擇${this.props.state.Meeting.attendees.length}人`}</Text>
-                <Icon onPress={ this.showAttendeesReorderPage } name={"chevron-up-outline"} />
-              </Body>
-              <Right>
-                <TouchableOpacity 
-                  style={{
-                    backgroundColor: '#47ACF2', 
-                    borderColor    : '#47ACF2',
-                    borderWidth    : 1,
-                    borderRadius   : 10,
-                    marginRight    : 15,
-                    paddingLeft    : 10, 
-                    paddingRight   : 10,
-                    paddingTop     : 5,
-                    paddingBottom  : 5, 
-                  }}
-                  onPress={()=>{
-                    Keyboard.dismiss();                
-                    NavigationService.navigate({
-                      key: this.props.MeetingInsertWithTagsPageRouterKey
-                    });
-                  }}
-                >
-                  <Text style={{color: '#FFF'}}>{this.props.state.Language.lang.CreateFormPage.Done}</Text>
-                </TouchableOpacity>
-              </Right>
-            </Footer>
+            <MeetingSelectAttendeesFooter
+              lang         = {this.props.state.Language.lang}
+              selectNumber = {this.props.state.Meeting.attendees.length}
+              onPress      = { () => NavigationService.navigate("MeetingAttendeesReorder")}
+              MeetingInsertWithTagsPageRouterKey  = {this.props.MeetingInsertWithTagsPageRouterKey}
+            />
           :
             null
         }
@@ -182,7 +160,7 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
           paddingLeft  : 10, 
           color        : this.props.style.inputWithoutCardBg.inputColorPlaceholder}}
         >
-            {"部門主管"}
+          {this.props.state.Language.lang.MeetingPage.departmentHead}
         </Label>
         {this.multiAttendees(this.state.orgManager[0])}
 
@@ -192,7 +170,7 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
           paddingLeft  : 10, 
           color        : this.props.style.inputWithoutCardBg.inputColorPlaceholder}}
         >
-            {"管轄組織"}
+          {this.props.state.Language.lang.MeetingPage.departmentOfCharged}
         </Label>
       </View>
     );
@@ -271,7 +249,6 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
     return tempAttendees;
   }
 
-
   multiAttendees = (item) => {
     let checked = false;
     for(let attendee of this.props.state.Meeting.attendees){
@@ -297,10 +274,6 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
           </Item>
         );
     return footer;
-  }
-
-  showAttendeesReorderPage = () => {
-    NavigationService.navigate("MeetingAttendeesReorder");
   }
 
   dedup(arr) {

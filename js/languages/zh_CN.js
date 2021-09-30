@@ -827,6 +827,7 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		meetingPlaceInfo           :"会议室资讯",
 		meetingPlaceLink           :"会议连结",
 		meetingPlaceNO             :"入会号",
+		isShowPhysicalmeetingPlace :"是否添加实体会议室",
 		meetingPlace               :"会议室地点",
 		meetingSubjectRequire      :"会议主题必须填写",
 		alertMessage_equal         :"会议结束时间不能\"等于\"开始时间",
@@ -873,6 +874,15 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		everyWeek                  :"每周",
 		everyMonth                 :"每月",
 		custom                     :"自定义",
+		Sort     				   :"排序",
+		invitedByPosition 		   :"依职级选择",
+		invitedByOrganization 	   :"依组织架构选择",
+		selectPosition 			   :"请选择职级",
+		departmentHead 		   	   :"部门主管",
+		departmentOfCharged 	   :"管辖组织",
+		selected 				   :"已选择",
+		person 					   :"人",
+		selectedAttendeeReorder    :"已选与会人员排序"
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "公司文件",

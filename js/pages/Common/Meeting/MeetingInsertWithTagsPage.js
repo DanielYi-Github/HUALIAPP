@@ -187,15 +187,13 @@ class MeetingInsertWithTagsPage extends React.Component {
         <Item style={{ justifyContent: 'space-between', paddingLeft: 10, paddingRight: 10, paddingTop: 20}}>
           <Label style={{
             color:this.props.style.inputWithoutCardBg.inputColorPlaceholder,
-            paddingTop     : 5,
-            paddingBottom  : 5
           }}>
             {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd} ${this.props.lang.MeetingPage.attendees}`}
           </Label>
           {
             this.props.state.Meeting.attendees.length > 1 ?
               <TinyCircleButton
-                text    = {"排序"}
+                text    = {this.props.lang.MeetingPage.Sort} //排序
                 color   = {"#FF6D00"}
                 onPress = {()=>{
                   NavigationService.navigate("MeetingAttendeesReorder");
@@ -234,7 +232,7 @@ class MeetingInsertWithTagsPage extends React.Component {
           }}
           onPress  = {()=>{ NavigationService.navigate("MeetingInsertWithTagsByPosition"); }}
         >
-            <Label style={{flex:1}}>{"依職級選擇"}</Label>
+            <Label style={{flex:1}}>{this.props.lang.MeetingPage.invitedByPosition}</Label>
             <Icon name='arrow-forward' />
         </Item>
 
@@ -249,7 +247,7 @@ class MeetingInsertWithTagsPage extends React.Component {
           }}
           onPress = {()=>{ NavigationService.navigate("MeetingInsertWithTagsByOrganize"); }}
         >
-            <Label style={{flex:1}}>{"依組織架構選擇"}</Label>
+            <Label style={{flex:1}}>{this.props.lang.MeetingPage.invitedByOrganization}</Label>
             <Icon name='arrow-forward' />
         </Item>
 

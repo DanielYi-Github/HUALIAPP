@@ -828,6 +828,7 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		meetingPlaceInfo           :"會議室資訊",
 		meetingPlaceLink           :"會議連結",
 		meetingPlaceNO             :"入會號",
+		isShowPhysicalmeetingPlace :"是否添加實體會議室",
 		meetingPlace               :"會議室地點",
 		meetingSubjectRequire      :"會議主題必須填寫",
 		alertMessage_equal         :"會議結束時間不能\"等於\"開始時間",
@@ -874,6 +875,15 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		everyWeek                  :"每週",
 		everyMonth                 :"每月",
 		custom                     :"自定義",
+		Sort				       :"排序",
+		invitedByPosition 		   :"依職級選擇",
+		invitedByOrganization 	   :"依組織架構選擇",
+		selectPosition 			   :"請選擇職級",
+		departmentHead 		   	   :"部門主管",
+		departmentOfCharged 	   :"管轄組織",
+		selected 				   :"已選擇",
+		person 					   :"人",
+		selectedAttendeeReorder    :"已選與會人員排序"
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "公司文件",

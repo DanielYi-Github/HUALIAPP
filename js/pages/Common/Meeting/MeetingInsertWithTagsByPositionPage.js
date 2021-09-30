@@ -13,6 +13,7 @@ import * as NavigationService from '../../../utils/NavigationService';
 import ToastUnit              from '../../../utils/ToastUnit';
 import TinyCircleButton       from '../../../components/TinyCircleButton';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
+import MeetingSelectAttendeesFooter from '../../../components/Meeting/MeetingSelectAttendeesFooter';
 
 import { NavigationContainer, useRoute, useNavigationState } from '@react-navigation/native';
 
@@ -38,7 +39,6 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
   componentDidMount(){
     this.props.actions.getCompanies();    // 獲取公司列表資料
     this.props.actions.getPositions(this.state.defaultCompany);   // 獲取人員清單資料
-    // this.loadMoreData();
   }
 
   render() {
@@ -147,8 +147,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
               </Left>
               <Body /*onPress={()=>{ this.setState({ isShowSearch:true });}}*/>
                   <Title style={{color:this.props.style.color}} /*onPress={()=>{ this.setState({ isShowSearch:true });}}*/>
-                    {/*{this.props.lang.MeetingPage.attendeesInvite}*/}
-                    {"依職級選擇"}
+                    {this.props.lang.MeetingPage.invitedByPosition}
                   </Title>
               </Body>
               <Right style={{alignItems: 'center'}}>
@@ -169,7 +168,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
             paddingLeft  : 10, 
             color        : this.props.style.inputWithoutCardBg.inputColorPlaceholder}}
           >
-              {"請選擇公司"}
+            {this.props.lang.ContactPage.SelestCompany}
           </Label>
           <Item 
             style={{ 
@@ -187,7 +186,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
                 },
                 renderItemMode:"normal",  // normal一般, multiCheck多選, multiAttendees多選參與人
                 showFooter    :false,
-                title: "請選擇公司"
+                title: this.props.lang.ContactPage.SelestCompany
               });
             }}
           >
@@ -195,7 +194,6 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
               <Icon name='arrow-forward' />
           </Item>
         </View>
-
         
         <Label style={{
           paddingTop   : 30,
@@ -203,7 +201,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
           paddingLeft  : 10, 
           color        : this.props.style.inputWithoutCardBg.inputColorPlaceholder}}
         >
-            {"請選擇職級"}
+          {this.props.lang.MeetingPage.selectPosition}
         </Label>
         <FlatList
           contentContainerStyle = {{flex: 1}}
@@ -214,155 +212,15 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
           ListEmptyComponent    = {this.renderEmptyComponent}
         />
 
-        <Footer>
-          <Body>
-            <Text onPress={ this.showAttendeesReorderPage } style={{marginLeft: 15}}>{`已選擇${this.props.state.Meeting.attendees.length}人`}</Text>
-            <Icon onPress={ this.showAttendeesReorderPage } name={"chevron-up-outline"} />
-          </Body>
-          <Right>
-            <TouchableOpacity 
-              style={{
-                backgroundColor: '#47ACF2', 
-                borderColor    : '#47ACF2',
-                borderWidth    : 1,
-                borderRadius   : 10,
-                marginRight    : 15,
-                paddingLeft    : 10, 
-                paddingRight   : 10,
-                paddingTop     : 5,
-                paddingBottom  : 5, 
-              }}
-              onPress={()=>{
-                Keyboard.dismiss();                
-                NavigationService.navigate({
-                  key: this.props.MeetingInsertWithTagsPageRouterKey
-                });
-              }}
-            >
-              <Text style={{color: '#FFF'}}>{this.props.state.Language.lang.CreateFormPage.Done}</Text>
-            </TouchableOpacity>
-          </Right>
-        </Footer>
+        <MeetingSelectAttendeesFooter
+          lang         = {this.props.state.Language.lang}
+          selectNumber = {this.props.state.Meeting.attendees.length}
+          onPress      = {()=>NavigationService.navigate("MeetingAttendeesReorder")}
+          MeetingInsertWithTagsPageRouterKey = {this.props.MeetingInsertWithTagsPageRouterKey}
+        />
       </Container>
     );
   }
-
-  /*
-  loadMoreData = (isSearching, searchedData = null) => {
-    isSearching = (typeof isSearching == "object") ? false : isSearching;
-    let isSearch = isSearching ? isSearching : this.state.isSearch;
-    searchedData = (searchedData == null) ? this.state.searchedData : searchedData;
-
-    let user = this.props.state.UserInfo.UserInfo;
-    let action = "org/hr/meeting/getPosition";
-
-
-    this.setState({ isFooterRefreshing: true });
-    if (!this.state.isFooterRefreshing) {
-      // 是不是關鍵字搜尋
-      if (isSearch) {
-        let count = (searchedData.length == 0) ? searchedData.length : searchedData.length+20
-        let searchList = [];
-
-        if (this.state.isChinesKeyword) {
-          let sKeyword = this.removeSpace(this.state.sKeyword); 
-          let tKeyword = this.removeSpace(this.state.tKeyword);
-          searchList = [
-            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:sKeyword}),
-            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:tKeyword})
-          ];
-        } else {
-          let keyword = this.removeSpace(this.state.keyword); 
-          let lowKeyword = keyword.toLowerCase(); 
-          searchList = [
-            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:keyword}),
-            UpdateDataUtil.getCreateFormDetailFormat(user, action, { count:count, condition:lowKeyword}),
-          ];
-        }
-
-        Promise.all(searchList).then((result) => {
-          let temparray = this.state.isChinesKeyword ? [...result[0], ...result[1]]: [...result[0], ...result[1]];
-          let isEnd = this.dealIsDataEnd(searchedData, temparray);
-          this.setState({
-           searchedData: isEnd? searchedData: this.dedup([...searchedData, ...temparray]),
-           isFooterRefreshing:false,
-           isEnd:isEnd
-          })
-        }).catch((err) => {
-          // ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
-          this.setState({ 
-            isShowSearch   :false,
-            isSearch       :false,
-            isChinesKeyword:false, 
-            keyword        :"",    
-            sKeyword       :"",    
-            tKeyword       :"",
-            searchedData   :[],
-            searchedCount  :0,
-            isEnd          :false,
-            isFooterRefreshing:false
-          });
-
-          let message = this.props.lang.MeetingPage.searchError;
-          setTimeout(function(){ 
-            ToastUnit.show('error', message);
-          }, 300);
-          console.log(err);
-        })
-      } else {
-        console.log(this.state.defaultCompany);
-        let actionObject = { co : this.state.defaultCompany }; //查詢使用
-        // actionObject.count = this.state.data.length;
-        UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
-          console.log("1234",result)
-
-          let isEnd = this.dealIsDataEnd(this.state.data, result);
-          this.setState({
-            data              :isEnd ? this.state.data: this.state.data.concat(result) ,
-            isFooterRefreshing:false,
-            isEnd             :isEnd
-          });
-          
-        }).catch((err) => {
-          console.log(err);
-          this.setState({ 
-            isShowSearch   :false,
-            isSearch       :false,
-            isChinesKeyword:false, 
-            keyword        :"",    
-            sKeyword       :"",    
-            tKeyword       :"",
-            searchedData   :[],
-            searchedCount  :0,
-            isEnd          :false,
-            isFooterRefreshing:false
-          });
-
-          let message = this.props.lang.MeetingPage.searchError;
-          setTimeout(function(){ 
-            ToastUnit.show('error', message);
-          }, 300);
-        })
-      }
-    }
-  }
-  */
-
-  /*
-  dealIsDataEnd = (stateData, resultData) => {
-    let isEnd = false;
-    if (
-      resultData.length == 0 ||
-      ( stateData.length != 0 && stateData[stateData.length-1].id == resultData[resultData.length-1].id )
-    ) {
-      isEnd = true;
-    } else {
-      isEnd = false;
-    }
-
-    return isEnd;
-  }
-  */
 
   renderTapItem = (item) => {
     let selectedCount = 0;

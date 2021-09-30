@@ -821,6 +821,7 @@ export default {
 		meetingPlaceInfo           :"Meeting Room-Information",
 		meetingPlaceLink           :"Meeting Room-Link",
 		meetingPlaceNO             :"Meeting Room-Number",
+		isShowPhysicalmeetingPlace :"Does add a physical meeting room ?",
 		meetingPlace               :"Location",
 		meetingSubjectRequire      :"Subject must be required",
 		alertMessage_equal         :"End time can not be equal start time",
@@ -869,6 +870,15 @@ export default {
 		everyWeek      			   :"Every Week",
 		everyMonth     			   :"Every Month",
 		custom         			   :"Custom",
+		Sort				   	   :"Sort",
+		invitedByPosition 		   :"Inviting by position",
+		invitedByOrganization 	   :"Inviting by organization",
+		selectPosition 			   :"Please select position",
+		departmentHead 		   	   :"Department head",
+		departmentOfCharged 	   :"Department of charged",
+		selected 				   :"Selected",
+		person 					   :"attendee",
+		selectedAttendeeReorder    :"Arrangment"
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "Company Document",

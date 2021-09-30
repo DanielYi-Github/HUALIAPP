@@ -21,6 +21,7 @@ class MeetingAttendeesReorderPage extends React.Component {
     }
 
     render() {
+      console.log(this.props.state.Language.lang.Common.Cancel);
       let checkedAttendees = 0;
       for(let person of this.props.state.Meeting.attendees){
         if(person.checked) checkedAttendees++
@@ -31,12 +32,12 @@ class MeetingAttendeesReorderPage extends React.Component {
           <Header style={this.props.style.HeaderBackground}>
             <Left>
               <Button transparent onPress={() =>NavigationService.goBack()}>
-                <Label style={{marginLeft: 5}}>{"取消"}</Label>
+                <Label style={{marginLeft: 5}}>{this.props.state.Language.lang.Common.Cancel}</Label>
               </Button>
             </Left>
             <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>
                 <Title style={{color:this.props.style.color}} onPress={()=>{ this.setState({ isShowSearch:true });}}>
-                  {"已選與會人員排序"}
+                  {this.props.state.Language.lang.MeetingPage.selectedAttendeeReorder}{/*已選與會人員排序*/}
                 </Title>
             </Body>
             <Right style={{alignItems: 'center'}}>
@@ -70,7 +71,7 @@ class MeetingAttendeesReorderPage extends React.Component {
 
           <Footer>
             <Body>
-              <Text style={{marginLeft: 15}}>{`已選擇${checkedAttendees}人`}</Text>
+              <Text style={{marginLeft: 15}}>{`${this.props.state.Language.lang.MeetingPage.selected} ${checkedAttendees} ${this.props.state.Language.lang.MeetingPage.person}`}</Text>
             </Body>
             <Right>
               <TouchableOpacity 
@@ -90,7 +91,7 @@ class MeetingAttendeesReorderPage extends React.Component {
                 }}
                 disabled={checkedAttendees == 0 ? true: false}
               >
-                <Text style={{color: '#FFF'}}>{"刪除"}</Text>
+                <Text style={{color: '#FFF'}}>{this.props.state.Language.lang.PublishSubmitPage.Delete}</Text>
               </TouchableOpacity>
             </Right>
           </Footer>

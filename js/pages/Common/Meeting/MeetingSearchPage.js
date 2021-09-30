@@ -27,7 +27,7 @@ class MeetingSearchPage extends React.PureComponent  {
     let startTime = new Date( Moment( new Date() ).tz(RNLocalize.getTimeZone()).format() ).getTime();
     let endTime   = new Date( Moment( new Date() ).tz(RNLocalize.getTimeZone()).format() ).getTime();
     startTime     = startTime + (600000-(startTime%600000));
-    endTime       = endTime + (600000-(endTime%600000));
+    endTime       = endTime + (600000-(endTime%600000)) + 3600000;
 
     this.state = {
       isChangeTime          : isChangeTime, //記錄部分機型會將時間直接+8小時
@@ -323,7 +323,7 @@ class MeetingSearchPage extends React.PureComponent  {
 
     if (this.state.isEndDateChange) {
     } else {
-      enddate = startdate;
+      // enddate = startdate;
     }
 
     if (Platform.OS == "ios") {
@@ -387,13 +387,16 @@ class MeetingSearchPage extends React.PureComponent  {
   }
   
   setDatetime = () => {   
-    if (this.state.editStartorEndDatetime) {
+    if (this.state.editStartorEndDatetime) {      
       //start
+      // 編輯開始時間要自動幫結束時間增加一小時
+      let enddate = this.state.editDatetimeValue.getTime()+3600000;
       this.setState({
         startdate      :DateFormat( this.state.editDatetimeValue, "yyyy-mm-dd HH:MM:ss"),
+        enddate        :DateFormat( new Date(enddate), "yyyy-mm-dd HH:MM:ss"),
         showDateTimePicker    : false, // for ios
-        showNavigationMessage : false
       });
+      
     } else {
       //end
       this.setState({

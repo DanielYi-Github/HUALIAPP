@@ -822,6 +822,7 @@ export default {
 		meetingPlaceInfo           :"Thông tin phòng họp",
 		meetingPlaceLink           :"Liên kết phòng họp",
 		meetingPlaceNO             :"Số vào phòng",
+		isShowPhysicalmeetingPlace :"Có thêm phòng họp thực tế hay không",
 		meetingPlace               :"Địa điểm phòng họp",
 		meetingSubjectRequire      :"Bắt buộc điền chủ để cuộc họp",
 		alertMessage_equal         :"Thời gian kết thúc cuộc họp không được \"bằng\" thời gian bắt đầu cuộc họp",
@@ -870,6 +871,15 @@ export default {
 		everyWeek                  :"Mỗi tuần",
 		everyMonth                 :"Mỗi tháng",
 		custom                     :"Tập quán",
+		Sort 					   :"Loại",
+		invitedByPosition 		   :"Mời theo chức vụ",
+		invitedByOrganization 	   :"Mời theo tổ chức",
+		selectPosition 			   :"Chọn vị trí",
+		departmentHead 		   	   :"trưởng khoa",
+		departmentOfCharged 	   :"phụ trách bộ phận",
+		selected 				   :"Đã chọn",
+		person 					   :"người",
+		selectedAttendeeReorder    :"sắp xếp"
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "Tập tin công ty",

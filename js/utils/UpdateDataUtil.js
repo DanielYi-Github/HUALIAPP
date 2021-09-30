@@ -1966,7 +1966,7 @@ export async function updateVisitLogToServer(user){
 	let sData = await SQLite.selectData(sql, []);
 	let promise = new Promise((resolve, reject) => {
 		if(sData.length>0){
-			console.log(sData.raw());
+			// console.log(sData.raw());
 			let contents = [];
 			for(let i=0;i<sData.length;i++){
 				let content = {

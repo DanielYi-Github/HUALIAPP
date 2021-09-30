@@ -12,6 +12,7 @@ import * as NavigationService from '../../../utils/NavigationService';
 import * as SQLite            from '../../../utils/SQLiteUtil';
 import ToastUnit              from '../../../utils/ToastUnit';
 import TinyCircleButton       from '../../../components/TinyCircleButton';
+import MeetingSelectAttendeesFooter from '../../../components/Meeting/MeetingSelectAttendeesFooter';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 import { NavigationContainer, useRoute, useNavigationState } from '@react-navigation/native';
 
@@ -109,8 +110,7 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
               </Left>
               <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>
                   <Title style={{color:this.props.style.color}} onPress={()=>{ this.setState({ isShowSearch:true });}}>
-                    {/*this.props.lang.MeetingPage.attendeesInvite*/}
-                    依組織架構選擇
+                    {this.props.lang.MeetingPage.invitedByOrganization}
                   </Title>
               </Body>
               <Right style={{alignItems: 'center'}}>
@@ -130,36 +130,12 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
           ListEmptyComponent    = {this.renderEmptyComponent}
         />
 
-        <Footer>
-          <Body>
-            <Text onPress={ this.showAttendeesReorderPage } style={{marginLeft: 15}}>{`已選擇${this.props.state.Meeting.attendees.length}人`}</Text>
-            <Icon onPress={ this.showAttendeesReorderPage } name={"chevron-up-outline"} />
-          </Body>
-          <Right>
-            <TouchableOpacity 
-              style={{
-                backgroundColor: '#47ACF2', 
-                borderColor    : '#47ACF2',
-                borderWidth    : 1,
-                borderRadius   : 10,
-                marginRight    : 15,
-                paddingLeft    : 10, 
-                paddingRight   : 10,
-                paddingTop     : 5,
-                paddingBottom  : 5, 
-              }}
-              onPress={()=>{
-                Keyboard.dismiss();                
-                NavigationService.navigate({
-                  key: this.props.MeetingInsertWithTagsPageRouterKey
-                });
-              }}
-            >
-              <Text style={{color: '#FFF'}}>{this.props.state.Language.lang.CreateFormPage.Done}</Text>
-            </TouchableOpacity>
-          </Right>
-        </Footer>
-        
+        <MeetingSelectAttendeesFooter
+          lang         = {this.props.state.Language.lang}
+          selectNumber = {this.props.state.Meeting.attendees.length}
+          onPress      = {()=> NavigationService.navigate("MeetingAttendeesReorder")}
+          MeetingInsertWithTagsPageRouterKey = {this.props.MeetingInsertWithTagsPageRouterKey}
+        />
       </Container>
     );
   }
@@ -181,9 +157,8 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
             },
             renderItemMode:"normal",  // normal一般, multiCheck多選, multiAttendees多選參與人
             showFooter    :true,
-            title         :"請選擇廠區"
+            title         :this.props.state.Language.lang.PublishSubmitSelectPage.SelectFactory
           });
-          
         }} 
       >
         <Label>{item.name} </Label>
@@ -266,10 +241,6 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
       return (match ? false : hashTable[key] = true);
     });
   }
-
-  showAttendeesReorderPage = () => {
-    NavigationService.navigate("MeetingAttendeesReorder");
-  }
 }
 
 // Wrap and export
@@ -283,10 +254,10 @@ let MeetingInsertWithTagsFurtherPagefunction = (props) => {
     }
   }
 
-  return <MeetingInsertWithTagsFurtherPage {...props} MeetingInsertWithTagsPageRouterKey={MeetingInsertWithTagsPageRouterKey} />;
+  return <MeetingInsertWithTagsByOrganizePage {...props} MeetingInsertWithTagsPageRouterKey={MeetingInsertWithTagsPageRouterKey} />;
 }
 
-export let MeetingInsertWithTagsByOrganizePageStyle = connectStyle( 'Page.FormPage', {} )(MeetingInsertWithTagsByOrganizePage);
+export let MeetingInsertWithTagsByOrganizePageStyle = connectStyle( 'Page.FormPage', {} )(MeetingInsertWithTagsFurtherPagefunction);
 
 export default connect(
   (state) => ({
