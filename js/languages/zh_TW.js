@@ -887,7 +887,8 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		departmentOfCharged 	   :"管轄組織",
 		selected 				   :"已選擇",
 		person 					   :"人",
-		selectedAttendeeReorder    :"已選與會人員排序"
+		selectedAttendeeReorder    :"已選與會人員排序",
+		noneNextOrg				   :"此廠區底下目前無可選單位"
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "公司文件",

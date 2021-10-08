@@ -886,7 +886,8 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		departmentOfCharged 	   :"管辖组织",
 		selected 				   :"已选择",
 		person 					   :"人",
-		selectedAttendeeReorder    :"已选与会人员排序"
+		selectedAttendeeReorder    :"已选与会人员排序",
+		noneNextOrg				   :"此厂区底下目前无可选单位"
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "公司文件",

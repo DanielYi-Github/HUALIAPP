@@ -883,7 +883,8 @@ export default {
 		departmentOfCharged 	   :"phụ trách bộ phận",
 		selected 				   :"Đã chọn",
 		person 					   :"người",
-		selectedAttendeeReorder    :"sắp xếp"
+		selectedAttendeeReorder    :"sắp xếp",
+		noneNextOrg				   :"Không có Sở!"
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "Tập tin công ty",

@@ -189,29 +189,41 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
   }
 
   navigateNextOrg = (org = this.props.state.Meeting.organization_tree) => {
-    NavigationService.push("MeetingInsertWithTagsForSelect", {
-      orgManager    :org.members == null ? false : org.members,
-      selectList    :org.subDep,
-      onItemPress   :(value)=>{
-        this.props.actions.organizeCheckboxOnPress( value );
-      },
-      onItemNextIconPress:(value)=>{
-        if(value.subDep == null){
-          NavigationService.push("MeetingInsertWithTagsForSelect", {
-            selectList    :value.members,
-            onItemPress   :this.props.actions.getPositions,
-            renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
-            showFooter    :true,
-            title         : this.props.lang.MeetingPage.attendeesInvite
-          });
-        }else{
-          this.navigateNextOrg(value);
-        }
-      },
-      renderItemMode:"multiCheck",  // normal一般, multiCheck多選, multiAttendees多選參與人
-      showFooter    :true,
-      title         : this.props.lang.MeetingPage.attendeesInvite
-    });
+    if(org){
+      NavigationService.push("MeetingInsertWithTagsForSelect", {
+        orgManager    :org.members == null ? false : org.members,
+        selectList    :org.subDep,
+        onItemPress   :(value)=>{
+          this.props.actions.organizeCheckboxOnPress( value );
+        },
+        onItemNextIconPress:(value)=>{
+          if(value.subDep == null){
+            NavigationService.push("MeetingInsertWithTagsForSelect", {
+              selectList    :value.members,
+              onItemPress   :this.props.actions.getPositions,
+              renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
+              showFooter    :true,
+              title         : this.props.lang.MeetingPage.attendeesInvite
+            });
+          }else{
+            this.navigateNextOrg(value);
+          }
+        },
+        renderItemMode:"multiCheck",  // normal一般, multiCheck多選, multiAttendees多選參與人
+        showFooter    :true,
+        title         : this.props.lang.MeetingPage.attendeesInvite
+      });
+    }else{
+      // 表示org為null, 沒有東西顯示
+      Alert.alert(
+        this.props.state.Language.lang.Common.Alert,
+        this.props.state.Language.lang.MeetingPage.noneNextOrg,
+        [
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
   renderFooter = () => {

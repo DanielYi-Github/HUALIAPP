@@ -882,7 +882,8 @@ export default {
 		departmentOfCharged 	   :"Department of charged",
 		selected 				   :"Selected",
 		person 					   :"attendee",
-		selectedAttendeeReorder    :"Arrangment"
+		selectedAttendeeReorder    :"Arrangment",
+		noneNextOrg				   :"No Department!"
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "Company Document",
