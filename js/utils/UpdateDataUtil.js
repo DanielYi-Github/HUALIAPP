@@ -543,6 +543,7 @@ export async function updateContact(user) {
 	let lData = await SQLite.selectData(lSQL, []);
 	let ltxdat = lData.item(0).TXDAT; //更新時間
 	let promise = new Promise( async (resolve, reject) => {
+		// console.log("updateContact", ltxdat);
 		if (ltxdat === null) {
 			let start = new Date().getTime();
 			let params = {
@@ -553,7 +554,7 @@ export async function updateContact(user) {
 			let url = "data/getContact";
 
 			NetUtil.getRequestContent(params, url).then((data)=>{
-				// console.log("data", data);
+				// console.log("getRequestContent", data);
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
@@ -1859,7 +1860,6 @@ export async function updateVisitLogToServer(user){
 	let sql = "select * from THF_APPVISITLOG where VISITCOUNT>0";
 	let sData = await SQLite.selectData(sql, []);
 	let promise = new Promise((resolve, reject) => {
-		// console.log("sData", sData.length);
 
 		if(sData.length>0){
 			let contents = [];
@@ -1873,7 +1873,6 @@ export async function updateVisitLogToServer(user){
 				contents.push(content);
 			}
 
-			// console.log("contents", contents);
 			let params = {
 				"token"  :Common.encrypt(user.token),
 				"userId" :Common.encrypt(user.loginID),
@@ -1889,7 +1888,8 @@ export async function updateVisitLogToServer(user){
 				}
 				data = data.content;
 
-				let uSQL = "update THF_APPVISITLOG set VISITCOUNT=0 where VISITCOUNT>0";
+				// let uSQL = "update THF_APPVISITLOG set VISITCOUNT=0 where VISITCOUNT>0";
+				let uSQL = "DELETE FROM THF_APPVISITLOG";
 				SQLite.updateData(uSQL,[]).then((data)=>{
 					resolve();
 				}).catch((err)=>{

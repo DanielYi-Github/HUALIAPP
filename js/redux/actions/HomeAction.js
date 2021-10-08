@@ -261,7 +261,7 @@ export function navigateFunctionPage(app = null, userID = null) {
 						NavigationService.navigate("BirthdayWeek");
 						break;
 					case "Mail":
-						navigateMailFunction(getState(), dispatch);				
+						recordHitCount = await navigateMailFunction(getState(), dispatch);				
 						break;
 					case "Salary": //薪資查詢
 						/*
@@ -400,6 +400,7 @@ async function navigateMailFunction(state, dispatch){
 	if (mail_isNull) { //郵箱為空
 		//郵件伺服器連線出現問題，請稍後再試!
 		toastShow(state.Language.lang.MailPage.mailError);	 
+		return false;
 	} else {
 		let isEmailDomainRight = true;
 		let domain = user.membereMail.split("@");
@@ -445,15 +446,22 @@ async function navigateMailFunction(state, dispatch){
 						state.Language.lang.Common.LeaveAppAlert, 
 						[{
 							text: state.Language.lang.Common.Cancel,
-							onPress: () => { console.log('Cancel Pressed') },
+							onPress: () => { 
+								console.log('Cancel Pressed');
+							},
 							style: 'cancel'
 						},{
 							text: state.Language.lang.Common.Comfirm,
-							onPress: () => { openMailURL(url); }
+							onPress: () => { 
+								openMailURL(url); 
+							}
 						}],
 						{ cancelable: false }
 					)
-				} else { openMailURL(url); }
+				} else { 
+					openMailURL(url);
+				}
+				return true;
 			}
 		} else {
 			// 不是公司油箱
@@ -464,6 +472,7 @@ async function navigateMailFunction(state, dispatch){
 			     {text: 'OK', onPress: () => console.log('Cancel Pressed')},
 			   ],
 			);
+			return false;
 		}
 	}
 }
