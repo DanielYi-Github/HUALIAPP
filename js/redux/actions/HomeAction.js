@@ -296,7 +296,7 @@ export function navigateFunctionPage(app = null, userID = null) {
 		// }
 		// 记录点击次数THF_APPVISITLOG
 		if (recordHitCount) {
-			SetAppVisitLog(appID, userID);
+			SetAppVisitLog(appID, getState().UserInfo.UserInfo.id);
 		}
 	}
 }

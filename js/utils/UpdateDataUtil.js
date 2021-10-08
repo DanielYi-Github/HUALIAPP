@@ -1859,7 +1859,8 @@ export async function updateVisitLogToServer(user){
 	let sql = "select * from THF_APPVISITLOG where VISITCOUNT>0";
 	let sData = await SQLite.selectData(sql, []);
 	let promise = new Promise((resolve, reject) => {
-		
+		// console.log("sData", sData.length);
+
 		if(sData.length>0){
 			let contents = [];
 			for(let i=0;i<sData.length;i++){
@@ -1872,6 +1873,7 @@ export async function updateVisitLogToServer(user){
 				contents.push(content);
 			}
 
+			// console.log("contents", contents);
 			let params = {
 				"token"  :Common.encrypt(user.token),
 				"userId" :Common.encrypt(user.loginID),
@@ -1894,6 +1896,7 @@ export async function updateVisitLogToServer(user){
 					reject(err);
 				})
 			})
+			
 		}else{
 			resolve();
 		}
