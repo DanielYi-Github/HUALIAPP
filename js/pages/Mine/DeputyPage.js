@@ -1,23 +1,37 @@
 import React from 'react';
 import { Spinner, Container,  Left, Content,  Right, Item, Input, Button,  Text, ListItem, List,  Switch, connectStyle } from 'native-base';
-import { Alert, Modal, View }     from 'react-native';
+import { Alert, Modal, View }    from 'react-native';
 import { connect }               from 'react-redux';
+import { bindActionCreators }    from 'redux';
+import FormInputContent          from '../../components/Form/FormInputContent';
 import FormContentTextWithAction from '../../components/Form/FormContentTextWithAction';
 import FormContentCbo            from '../../components/Form/FormContentCbo';
 import FormContentDateTime       from '../../components/Form/FormContentDateTime';
 import HeaderForGeneral          from '../../components/HeaderForGeneral';
 import * as NavigationService    from '../../utils/NavigationService';
 import * as DeputyAction         from '../../redux/actions/DeputyAction';
-import { bindActionCreators }    from 'redux';
-import FormInputContent          from '../../components/Form/FormInputContent';
-
+import * as HomeAction           from '../../redux/actions/HomeAction';
+import * as UpdateDataUtil       from '../../utils/UpdateDataUtil';
 
 class DeputyPage extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      AppID: null
+    }
   }
 
   componentWillMount() {
+    // 捞取代理人功能AppID
+    let user = this.props.state.UserInfo.UserInfo;
+    UpdateDataUtil.getDeputyAppID(user).then(async (data) => {
+      if(data.length > 0) {
+        this.setState({
+          AppID: data[0].paramcode
+        });
+      }
+    });
+    // 初始化捞取代理人资料存到redux
     this.props.actions.iniDeputyData();
   }
 
@@ -31,7 +45,7 @@ class DeputyPage extends React.Component {
     let lang = this.props.state.Language.lang.DeputyPage;
     let Deputy = this.props.state.Deputy;
     let ggg = this.deepClone(Deputy);
-    console.log('Deputy111',ggg);
+    // console.log('Deputy.deputyRules',Deputy.deputyRules);
     return (
       <Container>
         {/*標題列*/}
@@ -52,29 +66,26 @@ class DeputyPage extends React.Component {
               {/* 代理状态 */}
               <Item  
                 last 
-                style={[
-                  // Styles.HeaderBackground,
-                  // this.props.style.fixCreateFormPageFiledItemWidth,
-                  { marginTop: 15,
+                style={{ 
+                    marginTop: 15,
                     marginBottom: 15, 
                     paddingLeft: 15, 
                     paddingRight: 15, 
                     backgroundColor: this.props.style.inputBackgroundColor
-                  }
-                ]} 
+                }} 
               >
                   <Left>
-                    <Text style = {{fontSize: 18}}>{lang.Status}</Text>
-                  </Left>
-                  <Right>
-                      <Input 
+                    <Input 
                         paddingVertical = {0}
                         scrollEnabled = {false}
                         multiline 
-                        value = {Deputy.msgState} 
+                        value = {lang.Status} 
                         editable = {false} 
                         style = {{textAlign: 'left'}}
                       />
+                  </Left>
+                  <Right>
+                      <Text style={{fontSize: 18}}>{Deputy.msgState}</Text>
                   </Right>
               </Item>
               
@@ -95,9 +106,9 @@ class DeputyPage extends React.Component {
               {
                 (Deputy.deputyRule) ?
                   // 依规则代理
-                  <ListItem last /*style={[Styles.HeaderBackground]}*/>
+                  <ListItem last>
                   {
-                    (Deputy.deputyRuleComParam) ?
+                    (Deputy.deputyRuleComParam && !this.props.state.Deputy.isLoading) ?
                       <FormInputContent 
                         data     ={Deputy.deputyRules} 
                         onPress  ={this.onPressDeputyRules}
@@ -187,7 +198,7 @@ class DeputyPage extends React.Component {
               }
 
               {/* 代理人完成通知 */}
-              <ListItem last style={[/*Styles.HeaderBackground,*/{marginTop:15,height:50}]}>
+              <ListItem last style={{marginTop:15}}>
                 <Left>
                   <Text style={{fontSize: 18}}>{lang.DeputySuccesMsg}</Text>
                 </Left>
@@ -220,7 +231,7 @@ class DeputyPage extends React.Component {
               }
 
               {/* 登录时不要提示代理人的状况 */}
-              <ListItem last style={[/*Styles.HeaderBackground,*/{marginTop:15,marginBottom:15,height:50}]}>
+              <ListItem last style={{marginTop:15,marginBottom:15}}>
                 <Left style={{flex:1}}>
                     <Text style={{fontSize: 18}}>{lang.LoginNotShowDeputyMemStatus}</Text>
                 </Left>
@@ -264,7 +275,6 @@ class DeputyPage extends React.Component {
   // 启动/停止按钮action
   onPressSubmit = () => {
       let lang = this.props.state.Language.lang.DeputyPage;
-      console.log('lang',lang);
       let user = this.props.state.UserInfo.UserInfo;
       let content;
 
@@ -402,9 +412,14 @@ class DeputyPage extends React.Component {
       }
 
       if (changeStateFlag) {
-          //判斷定時時間問題
+          // 判斷定時時間問題
           let msg = this.getFinalTip(lang, deputyData);
           this.props.actions.setBPMDeputy(content, msg);
+
+          // 记录点击次数
+          let appID = this.state.AppID;
+          let userID = user.id;
+          HomeAction.SetAppVisitLog(appID, userID);
       }
   }
 
@@ -413,7 +428,6 @@ class DeputyPage extends React.Component {
       let tampStart = new Date(deputyData.startExecuteTime.defaultvalue).getTime();
       let tampEnd = new Date(deputyData.endExecuteTime.defaultvalue).getTime();
       let tampNow = (new Date()).getTime();
-      console.log('tampStart', tampStart);
 
       //判斷定時時間問題
       let timerFlag = false;
@@ -468,8 +482,8 @@ class DeputyPage extends React.Component {
     if (valueAble) {
       this.props.actions.onPressStartExecuteTime(value);
     } else {
+      //"起始時間需小於結束時間",
       let msg = this.props.state.Language.lang.DeputyPage.StartTimeNotMoreEnd;
-      //"起始時間需大於結束時間",
       Alert.alert(
         msg,
         null, [{
@@ -537,7 +551,6 @@ class DeputyPage extends React.Component {
     deputid.defaultvalue = value.COLUMN1;
     let deputname = this.deepClone(this.props.state.Deputy.deputyName);
     deputname.defaultvalue = value.COLUMN2;
-
     this.props.actions.updateDeputyMember(deputid,deputname);
   }
 
@@ -547,7 +560,6 @@ class DeputyPage extends React.Component {
     informid.defaultvalue = value.COLUMN1;
     let informname = this.deepClone(this.props.state.Deputy.informName);
     informname.defaultvalue = value.COLUMN2;
-    
     this.props.actions.updateMsgMember(informid,informname);
   }
 
@@ -585,8 +597,3 @@ export default connect(
     }, dispatch)
   })
 )(DeputyPageStyle);
-
-// {
-//   addTodo : text => dispatch(addTodo('text'));
-//   removeTodo : id => dispatch(removeTodo('id'));
-// }

@@ -46,7 +46,7 @@ export function getFormFormat(formID){
 		FormUnit.language = getState().Language.lang.FormUnit;
 		
 		UpdateDataUtil.getBPMCreateForm(user, content).then( async (data)=>{
-			console.log("getBPMCreateForm", data);
+			// console.log("getBPMCreateForm", data);
 			let stepsTitle       = [];
 			let apList           = [];
 			let apListIndex      = -1;

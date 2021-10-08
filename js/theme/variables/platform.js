@@ -161,6 +161,7 @@ export default {
     color:"#FFF",
     // height:Basic.HeaderHeight,
   },
+  bannerLogoViewFontColor:"#FFF",
   //IconColor
   IconColor:"#000",
   //LabelColor

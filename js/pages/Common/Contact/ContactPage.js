@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, FlatList, RefreshControl, VirtualizedList, Platform, Alert, Keyboard } from 'react-native';
-import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Icon, Title, Text, Card, CardItem } from 'native-base';
+import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Icon, Title, Text, Card, CardItem, connectStyle } from 'native-base';
 import { tify, sify} from 'chinese-conv'; 
 import { connect }   from 'react-redux';
 import ActionSheet   from 'react-native-actionsheet';
@@ -23,16 +23,22 @@ class ContactPage extends React.Component {
     super(props);
 
     let Companies_Contact = this.props.state.Common.Companies_Contact;
+    /*
     if (Companies_Contact.companyList.length != 0) {
       Companies_Contact.defaultCO = Companies_Contact.defaultCO ? Companies_Contact.defaultCO : Companies_Contact.companyList[0];
     }
+    */
+   let selectedCompany = null;
+   if (Companies_Contact.companyList.length != 0) {
+     selectedCompany = Companies_Contact.defaultCO ? Companies_Contact.defaultCO.CLASS3 : Companies_Contact.companyList[0].CLASS3;
+   }
 
     this.state = {
       isChinesKeyword:false,       //用來判斷關鍵字是否為中文字
       keyword        :"",          //一般搜尋
       sKeyword       :"",          //簡體中文
       tKeyword       :"",          //繁體中文
-      selectedCompany:Companies_Contact.defaultCO,
+      selectedCompany:selectedCompany,
       ContactData    :[],
       isShowSearch   :false,
       isLoading      :false,
@@ -46,14 +52,13 @@ class ContactPage extends React.Component {
 
   loadContactData = async (defaultCO) => {
     let data = [];
-
     this.setState({
       ContactData: data,
       isLoading  : true,
       showFooter : false
     });
     // 當今天找不到預設資料，不顯示任何通訊錄資料
-    await SQLite.selectData(`select * from THF_CONTACT where status='Y' and co=? order by DEPNAME, EMPID`, [defaultCO]).then((result) => {
+    await SQLite.selectData(`select * from THF_CONTACT where status='Y' and CO=? order by DEPNAME, EMPID`, [defaultCO]).then((result) => {
       this.setState({
         ContactData: result.raw(),
         isLoading  : false,
@@ -146,8 +151,12 @@ class ContactPage extends React.Component {
   }
 
   renderActionSheet = () => {
-    let BUTTONS = [...this.props.state.Common.Companies_Contact.companyList, this.props.state.Language.lang.Common.Cancel];
-    let CANCEL_INDEX = this.props.state.Common.Companies_Contact.companyList.length;
+    let companyList = this.props.state.Common.Companies_Contact.companyList
+    let BUTTONS = [];
+    for(let company of companyList) BUTTONS.push(company.CONTENT);
+    BUTTONS.push(this.props.state.Language.lang.Common.Cancel);
+    let CANCEL_INDEX = companyList.length;
+
     return (
       <ActionSheet
         ref={o => this.ActionSheet = o}
@@ -156,8 +165,17 @@ class ContactPage extends React.Component {
         cancelButtonIndex={CANCEL_INDEX}
         onPress={(buttonIndex) => { 
           if (buttonIndex != CANCEL_INDEX) {
-            this.setState({ selectedCompany: BUTTONS[buttonIndex] });
-            this.loadContactData(BUTTONS[buttonIndex]); 
+
+            let selectedCompany = "";
+            for(let company of companyList){
+              if(company.CONTENT == BUTTONS[buttonIndex]){
+                selectedCompany = company;
+                break;
+              }
+            }
+
+            this.setState({ selectedCompany: selectedCompany.CLASS3 });
+            this.loadContactData(selectedCompany.CLASS3); 
           }
         }}  
       />
@@ -165,11 +183,19 @@ class ContactPage extends React.Component {
   }
 
   renderHeader = () => {
+    let companyList = this.props.state.Common.Companies_Contact.companyList
+    let companyName = "";
+    for(let company of companyList){
+      if(company.CLASS3 == this.state.selectedCompany){
+        companyName = company.CONTENT;
+        break;
+      }
+    }
     return(
       <FunctionPageBanner
         explain         ={this.props.state.Language.lang.ContactPage.FunctionInfo}   //無須保存手機信箱，公司同事再多，也能輕鬆找到。
-        isShowButton    ={(this.props.state.Common.Companies_Contact.companyList.length >= 1 ) ? true : false }
-        buttonText      ={this.state.selectedCompany}
+        isShowButton    ={(companyList.length >= 1 ) ? true : false }
+        buttonText      ={companyName}
         imageBackground ={require("../../../image/functionImage/contact.png")}
         onPress         ={() => this.ActionSheet.show()}
       />
@@ -193,6 +219,15 @@ class ContactPage extends React.Component {
   }
 
   renderFooter = () => {
+    let companyList = this.props.state.Common.Companies_Contact.companyList
+    let companyName = "";
+    for(let company of companyList){
+      if(company.CLASS3 == this.state.selectedCompany){
+        companyName = company.CONTENT;
+        break;
+      }
+    }
+
     let lang = this.props.state.Language.lang.ContactPage;
     if (this.state.showFooter) {
       return (
@@ -201,25 +236,27 @@ class ContactPage extends React.Component {
 
           <View style={{ justifyContent: 'flex-start', alignItems: 'flex-start', width:'90%'}}>
             <View style={{flexDirection: 'row', alignItems: 'flex-start', paddingTop: 10, paddingBottom: 5}}>
-              <Icon name='bulb' style={{fontSize:24}}/>
-              <Title style={{paddingLeft: 8 }}>{lang.SearchTipsTitle}</Title>
+              <Icon name='bulb' style={{color:this.props.style.dynamicTitleColor ,fontSize:24}}/>
+              <Title style={{color:this.props.style.dynamicTitleColor ,paddingLeft: 8 }}>{lang.SearchTipsTitle}</Title>
             </View>
 
             <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-              <Text>1.</Text>
-              <Text>{lang.SearchTipsText1}「{this.state.selectedCompany}」{lang.SearchTipsText2}</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>1.</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{lang.SearchTipsText1}「{companyName}」{lang.SearchTipsText2}</Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-              <Text>2.</Text>
-              <Text>{lang.SearchTipsText3}</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>2.</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{lang.SearchTipsText3}</Text>
             </View>
+          {/*
             <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-              <Text>3.</Text>
-              <Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>3.</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
                 {lang.SearchTipsText4}「<Text style={{color:"#47ACF2"}} onPress={this.goContactAdministrator}>{lang.SearchTipsText5}</Text>」{lang.SearchTipsText6}
                 <Text style={{color:"#47ACF2"}} onPress={this.goContactAdministrator}>{lang.SearchTipsText7}</Text>
               </Text>
             </View>
+            */}
           </View>
         </View>
       )
@@ -259,8 +296,11 @@ class ContactPage extends React.Component {
   }
 }
 
+let ContactPageStyle = connectStyle( 'Page.ContactDetailPage', {} )(ContactPage);
+
 export default connect(
   (state) => ({
     state: {...state}
   })
-)(ContactPage);
+)(ContactPageStyle);
+

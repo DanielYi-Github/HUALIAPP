@@ -10,46 +10,37 @@ import FormUnit                  from '../../utils/FormUnit';
 class FormInputContentGridForDeputy extends Component {
 	constructor(props) {
 		super(props);
-		// // FormInputGrid類不將editable移至render裡，因為有其他function要用到this.state.editable
-		// let editable = props.editable;
-		// if (editable == null) {
-		// 	if (typeof props.data.isedit != "undefined") {
-		// 		editable = (props.data.isedit == "Y") ? true : false;
-		// 	} else {
-		// 		editable = false;
-		// 	}
-		// }
+		let data = this.deepClone(props.data);
+		let arrEditCheckItemRecord = [];
+		for(let i=0 ; i<data.defaultvalue.length ; i++){
+			arrEditCheckItemRecord.push(false);
+		}
 
 		// 名稱、值、參數、能否編輯、強制編輯、欄位資料	
 		this.state = {
-			labelname: props.data.component.name,
-			// editable: editable,
-			data: this.deepClone(props.data), // 深層複製,
-			// showEditModal: false,
+			data: data,
 			editCheckItem: false,
 			editCheckItemIndex: -1,
-			editCheckItemRecord: [], // 用來記錄被checkBox勾選的項目值是true/false 例如[true, false, false],
+			editCheckItemRecord: arrEditCheckItemRecord, // 用來記錄被checkBox勾選的項目值是true/false 例如[true, false, false],
 		};
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-		nextProps.data.defaultvalue = (nextProps.data.defaultvalue == null) ? [] : nextProps.data.defaultvalue; 
-		nextState.data.defaultvalue = (nextState.data.defaultvalue == null) ? [] : nextState.data.defaultvalue;
-		
-		if (nextProps.data.defaultvalue.length !== nextState.data.defaultvalue.length) {
-
-			let editCheckItemRecord = [];
-			for(let i = 0; i<nextProps.data.defaultvalue.length; i++){
-				editCheckItemRecord.push(false);
-			}
-
-			this.setState({
-				data:this.deepClone(nextProps.data),
-				editCheckItemRecord:editCheckItemRecord
-			});
-		}
-		return true;
-	}
+	// shouldComponentUpdate(nextProps, nextState) {
+	// 	nextProps.data.defaultvalue = (nextProps.data.defaultvalue == null) ? [] : nextProps.data.defaultvalue; 
+	// 	nextState.data.defaultvalue = (nextState.data.defaultvalue == null) ? [] : nextState.data.defaultvalue;		
+	// 	// 新增资料
+	// 	if (nextProps.data.defaultvalue.length !== nextState.data.defaultvalue.length) {
+	// 		let arrEditCheckItemRecord = [];
+	// 		for(let i = 0; i<nextProps.data.defaultvalue.length; i++){
+	// 			arrEditCheckItemRecord.push(false);
+	// 		}
+	// 		this.setState({
+	// 			data:this.deepClone(nextProps.data),
+	// 			editCheckItemRecord:arrEditCheckItemRecord
+	// 		});
+	// 	}
+	// 	return true;
+	// }
 
 	render() {
 		let editable = this.props.editable;
@@ -85,7 +76,7 @@ class FormInputContentGridForDeputy extends Component {
 						{/* 必填星号 */}
 		 			  	<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 						{/* 多规则代理 */}
-		                <Label>{this.state.labelname}</Label>
+		                <Label>{this.props.data.component.name}</Label>
 						{/* 加号按钮 */}
 		                {
 		                	(this.state.data.enableCreateData != false) ? 
@@ -159,7 +150,7 @@ class FormInputContentGridForDeputy extends Component {
 						]}
 					>
 			 			<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
-					  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
+					  	<Label style={{flex: 0}}>{this.props.data.component.name}</Label>
 					    <Input 
   				    		scrollEnabled = {false}
 					    	multiline 
@@ -174,7 +165,7 @@ class FormInputContentGridForDeputy extends Component {
 					<View style={{width: '100%'}}>
 		            	<Item fixedLabel style={{borderBottomWidth: 0, paddingTop: 15, paddingBottom: 15}}>
 			 			  	<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
-			                <Label>{this.state.labelname}</Label>
+			                <Label>{this.props.data.component.name}</Label>
 			            </Item>
 	            		<View style={{borderRadius: 10, borderWidth:0.6, borderColor:"#D9D5DC", width: '98%'}}>
 	            			<FlatList
@@ -305,7 +296,13 @@ class FormInputContentGridForDeputy extends Component {
 		// 送值
 		await this.props.onPress(this.deepClone(value));
 
-		this.modalWrapperClose();
+		// this.modalWrapperClose();
+
+		this.setState({
+			data: value,
+			editCheckItem: false,
+			editCheckItemIndex: -1,
+		});
 	}
 	
 	modalWrapperClose = () => {

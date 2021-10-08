@@ -248,7 +248,7 @@ export default {
 		password              : '變更密碼',
 		email                 : '綁定E-Mail',
 		advices               : '建議及反饋',
-		about                 : '關於',
+		about                 : '關於及操作手冊',
 		logout                : '登出',
 		Biometrics            : '生物識別',
 		changeAccount         : '切換帳號',
@@ -532,6 +532,7 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		WrongNameMsg : "請填謝您的名字",
 		WrongMailMsg : "請填寫您的郵箱",
 		sucessMsg1   : "感謝你的留言，我們會盡快與你聯繫。",
+		NoEmpty      : "內容不能空白",
 		ErrorMsg     : "很抱歉，伺服器營運中，請稍後再試",
 		Submit       : "提交"
 	},
@@ -638,12 +639,15 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		msg2:"送了你一個禮物"
 	},
 	DeputyPage:{
+		Condition:"條件",
 		Condition1:"條件1",
 		Relation:"關聯性",
 		Condition2:"條件2",
+		Agent:"代理人",
 		DeputyWay:"代理方式",
 		DeputyStartTime:"代理起時",
 		DeputyEndTime:"代理迄時",
+		Notifier:"通知對象",
 		Running:"代理模式已啟動，如需編輯請先停用",
 		NoRunning:"代理模式已停用",
 		Rules:"依規則代理",

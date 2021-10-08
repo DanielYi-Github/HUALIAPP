@@ -7,6 +7,7 @@ export default (variables /*: * */ = variable) => {
 		BigProfileImageBorder:variables.BigProfileImageBorder,
 		EditBigProfileImage  :variables.EditBigProfileImage,
   		dynamicTitleColor    :variables.dynamicTitleColor,
+    	inputWithoutCardBg:variables.inputWithoutCardBackground,
   };
 
   return contactDetailPageTheme;

@@ -340,7 +340,7 @@ class FormPage extends React.Component {
       content:content,
       labelname:labelname+this.props.Language.Content
     }
-    // console.log(FormAllowAdd);
+    console.log(FormAllowAdd);
     return (
       <FormContent 
         key    ={0} 

@@ -1,10 +1,10 @@
 // @flow
 /**
 * 顏色定義
-  background                :"#27336B" 
-  header                    :"#378D0E"
+  background                :"#121D4D" 
+  header                    :"#EACB86"
   card                      :"#FFFFFF" 
-  cardIcon                  :"#4BA928"
+  cardIcon                  :"#FFFFFF"
   cardBorderColor           :"#ccc" 
   border                    :"#e6e6e6" 
   separator                 :"#e6e6e6" 
@@ -46,15 +46,14 @@ export default {
   platform,
 
   // Card
-  cardDefaultBg: "#FFFFFF",
+  cardDefaultBg: "rgba(255,255,255,1)",
   cardBorderColor: "#ccc",
   cardBorderRadius: 10,
   cardItemPadding: platform === "ios" ? 10 : 12,
-  cardDefaultTextColor: "#000", // card背景底下的文字顏色
+  cardDefaultTextColor: "#000", // card背景底下的文字顏色 
 
   //Container
-  // containerBgColor: "#F5F6FA",
-  containerBgColor: "rgba(0,0,0,0)",
+  containerBgColor: "#121D4D",
 
   // Footer
   footerHeight: 55,
@@ -63,15 +62,15 @@ export default {
 
   // Header
   toolbarBtnColor: platform === "ios" ? "#007aff" : "#fff",
-  toolbarDefaultBg: "#4BA928",  // 會變
+  toolbarDefaultBg: "#EACB86",
   toolbarHeight: platform === "ios" ? 64 : 56,
   toolbarSearchIconSize: platform === "ios" ? 20 : 23,
-  toolbarInputColor: "#fff",  // 會變
+  toolbarInputColor: platform === "ios" ? "#CECDD2" : "#fff",
   searchBarHeight: platform === "ios" ? 30 : 40,
   searchBarInputHeight: platform === "ios" ? 30 : 50,
   toolbarBtnTextColor: platform === "ios" ? "#007aff" : "#fff",
   toolbarDefaultBorder: platform === "ios" ? "#a7a6ab" : "#3F51B5",
-  iosStatusbar: platform === "ios" ? "light-content" : "light-content",
+  iosStatusbar: platform === "ios" ? "dark-content" : "light-content",
   iosSearchBarBackgroundColor:"#FFF", // ios Findpage上方輸入框背景顏色
   get statusBarColor() {
     return color(this.toolbarDefaultBg)
@@ -99,12 +98,12 @@ export default {
 
   // Input Without card background
   inputWithoutCardBackground:{
-    inputColor:"#000",
-    inputColorPlaceholder:"#575757"
+    inputColor:"#FFF",
+    inputColorPlaceholder:"#DDD"
   },
-
+  
   // List
-  listBg: "rgba(0,0,0,0)",     // 會變
+  listBg: "#FFF",
   listBorderColor: "#c9c9c9",
   listDividerBg: "#f4f4f4",
   listBtnUnderlayColor: "#DDD",
@@ -117,7 +116,7 @@ export default {
   inverseSpinnerColor: "#1A191B",
 
   // Text
-  textColor: "#000",  // 變
+  textColor: "#000",
   inverseTextColor: "#fff", // 唯一不變的顏色 部分主見的按鈕顏色或文字內容
   noteFontSize: 14,
   get defaultTextColor() {
@@ -129,17 +128,16 @@ export default {
   titleFontfamily : platform === "ios" ? "System" : "Roboto_medium",
   titleFontSize   : platform === "ios" ? 17 : 19,
   subTitleFontSize: platform === "ios" ? 11 : 14,
-  subtitleColor   : "#8e8e93",  // 變
-  titleFontColor  : "#000",  // 變
+  subtitleColor   : "#8e8e93",
+  titleFontColor  : "#000",
   //遇到特別背景時需要顯示的字體顏色 例如 發現畫面的搜尋結果 個人資訊的稱號 通訊錄內容的稱號
   dynamicTitleColor: "#FFF", 
-
 
   // Other
   borderRadiusBase: platform === "ios" ? 5 : 2,
   borderWidth: 1 / PixelRatio.getPixelSizeForLayoutSize(1),
   contentPadding: 10,
-  dropdownLinkColor: "#414142", // 輸入框裡面的icon顏色
+  dropdownLinkColor: "#414142",
   inputLineHeight: 24,
   deviceWidth,
   deviceHeight,
@@ -153,13 +151,13 @@ export default {
   },
   //HeaderForGeneral
   HeaderForGeneral:{
-    color:"#FFF",
+    color:"#121D4D",
   },
   //HeaderForTransparent
   HeaderForTransparent:{
     color:"#FFF",
   },
-  bannerLogoViewFontColor:"#FFF",
+  bannerLogoViewFontColor:"#121D4D",
   //IconColor
   IconColor:"#000",
   //LabelColor
@@ -167,30 +165,33 @@ export default {
   //CustomBottomNavigation
   CustomBottomNavigation:{
     iconIsImage          :true,
-    icon_Home_active     :require("./chrismaxNewYear/Home-1.png"),
-    icon_Home_inactive   :require("./chrismaxNewYear/Home.png"),
-    icon_Find_active     :require("./chrismaxNewYear/Find-1.png"),
-    icon_Find_inactive   :require("./chrismaxNewYear/Find.png"),
-    icon_Message_active  :require("./chrismaxNewYear/Message-1.png"),
-    icon_Message_inactive:require("./chrismaxNewYear/Message.png"),
-    icon_Mine_active     :require("./chrismaxNewYear/Mine-1.png"),
-    icon_Mine_inactive   :require("./chrismaxNewYear/Mine.png"),
+    icon_Home_active     :require("./moonFestival2021/Home-1.png"),
+    icon_Home_inactive   :require("./moonFestival2021/Home.png"),
+    icon_Find_active     :require("./moonFestival2021/Find-1.png"),
+    icon_Find_inactive   :require("./moonFestival2021/Find.png"),
+    icon_Message_active  :require("./moonFestival2021/Message-1.png"),
+    icon_Message_inactive:require("./moonFestival2021/Message.png"),
+    icon_Mine_active     :require("./moonFestival2021/Mine-1.png"),
+    icon_Mine_inactive   :require("./moonFestival2021/Mine.png"),
 
-    activeIconColor   :'#FFFFFF',
-    inactiveIconColor :'rgba(255, 255, 255, .7)',
-    activeLabelColor  :"#FFFFFF",
-    inactiveLabelColor:"rgba(255, 255, 255, .7)",
-    barColor          :"#F73525",
-    pressColor        : 'rgba(253, 186, 28, 1)',
-    barColor_Home     : "#F73525",
-    pressColor_Home   : "#F73525",
-    barColor_Find     : "#7375A8",
-    pressColor_Find   : "#7375A8",
-    barColor_Message  : "#4BA928",
-    pressColor_Message: "#4BA928",
-    barColor_Mine     : "rgba(253, 186, 28, 1)",
-    pressColor_Mine   : "rgba(253, 186, 28, 1)",
-    // ToolbarStyle      :Basic.ToolbarStyle
+    activeIconColor      :'#47ACF2',
+    inactiveIconColor    :'#A1A1A1',
+
+    activeLabelColor     :"rgba(234, 203, 134, 1)",
+    inactiveLabelColor   :"#E65100",
+
+    // rgba(234, 203, 134, )
+    barColor             :"rgba(18, 29, 77, 0.4)",
+    barColor_Home        :"rgba(18, 29, 77, 0.4)",
+    barColor_Find        :"rgba(18, 29, 77, 0.4)",
+    barColor_Message     :"rgba(18, 29, 77, 0.4)",
+    barColor_Mine        :"rgba(18, 29, 77, 0.4)",
+    pressColor           :'rgba(71, 172, 242, 0.16)',
+    pressColor_Home      :"rgba(255, 223, 0, 0.8)",
+    pressColor_Find      :"rgba(255, 223, 0, 0.8)",
+    pressColor_Message   :"rgba(255, 223, 0, 0.8)",
+    pressColor_Mine      :"rgba(255, 223, 0, 0.8)",
+    // ToolbarStyle         :Basic.ToolbarStyle
   },
   // 458 38
   LoginPageIcon:{
@@ -204,25 +205,22 @@ export default {
   },
   //HomePageBannerTitle
   HomePageBannerTitle:56,
-  HomePageBannerBackgroundColor:"#4BA928",
+  HomePageBannerBackgroundColor:"#EACB86",
 
   ExplainText:{
-    color:"#F73525"
+    color:"#e52d2f",
   },
   ExplainIcon:{
     iconIsImage:true,
-    icon1      :require("./chrismaxNewYear/1.png"),
-    icon2      :require("./chrismaxNewYear/2.png"),
-    icon3      :require("./chrismaxNewYear/3.png"),
-    icon4      :require("./chrismaxNewYear/4.png"),
-    icon5      :require("./chrismaxNewYear/5.png"),
-    icon6      :require("./chrismaxNewYear/6.png"),
-    icon7      :require("./chrismaxNewYear/7.png"),
-    icon8      :require("./chrismaxNewYear/8.png"),
-    icon9      :require("./chrismaxNewYear/10.png"),
-    icon9      :require("./chrismaxNewYear/11.png"),
-    icon9      :require("./chrismaxNewYear/12.png"),
-    icon9      :require("./chrismaxNewYear/13.png"),
+    icon1      :require("./moonFestival2021/1.png"),
+    icon2      :require("./moonFestival2021/2.png"),
+    icon3      :require("./moonFestival2021/3.png"),
+    icon4      :require("./moonFestival2021/4.png"),
+    icon5      :require("./moonFestival2021/5.png"),
+    icon6      :require("./moonFestival2021/6.png"),
+    icon7      :require("./moonFestival2021/7.png"),
+    icon8      :require("./moonFestival2021/8.png"),
+    icon9      :require("./moonFestival2021/9.png")
   },
   Separator:{
     height: 1, 
@@ -237,9 +235,9 @@ export default {
     // height: platform === "ios"? 150: 125,
     height: deviceHeight,
     width : "100%",
-    backgroundColor:"#DB4743", 
+    backgroundColor:"#121D4D",
     position: 'absolute',
-    source: require("./chrismaxNewYear/christmas.jpg")
+    source:require('./moonFestival2021/background.png')
   },
   SearchBarBg:"#FFF",
   // 消息畫面右上角的下拉選單
@@ -266,8 +264,8 @@ export default {
   },
   // 生日祝福的Tab顏色
   TabIsActiveColorForBirthday:{
-    active:"#FFF",
-    inactive:"#F5F6FA"
+    active:"#000",
+    inactive:"#A1A1A1"
   },
   // 每一個Item
   ItemHeight:{
@@ -281,7 +279,7 @@ export default {
   EditBigProfileImage:{
     height         : 55, 
     width          : 55, 
-    backgroundColor: "#FDBA1C", 
+    backgroundColor: "#FFEB3B", 
     alignSelf      : 'flex-end', 
     alignItems     : 'center', 
     justifyContent : 'center',
@@ -305,7 +303,7 @@ export default {
   // 一條橫槓的顏色 ex:發現畫面搜尋結果下面那一條
   DashBackgroundColor:"#757575",
 
-  // 基本上不太會動的移到最後面
+  // 大部分用不到的顏色
   //Accordion
   headerStyle: "#edebed",
   iconStyle: "#000",
@@ -458,14 +456,16 @@ export default {
   segmentBorderColorMain: platform === "ios" ? "#a7a6ab" : "#3F51B5",
 
   // Tab
-  tabDefaultBg: platform === "ios" ? "#F8F8F8" : "#3F51B5",
+  // tabDefaultBg: platform === "ios" ? "#F8F8F8" : "#3F51B5",
+  tabDefaultBg: "rgba(0,0,0,0)",
   topTabBarTextColor: platform === "ios" ? "#6b6b6b" : "#b3c7f9",
   topTabBarActiveTextColor: platform === "ios" ? "#007aff" : "#fff",
   topTabBarBorderColor: platform === "ios" ? "#a7a6ab" : "#fff",
   topTabBarActiveBorderColor: platform === "ios" ? "#007aff" : "#fff",
 
   // Tabs
-  tabBgColor: "#F8F8F8",
+  // tabBgColor: "#F8F8F8",
+  tabBgColor: "rgba(0,0,0,0)",
   tabFontSize: 15,
 
   //iPhoneX SafeArea

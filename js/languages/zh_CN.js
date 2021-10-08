@@ -247,7 +247,7 @@ export default {
 		password     : '变更密码',
 		email        : '绑定E-Mail',
 		advices      : '建议与反馈',
-		about        : '关于',
+		about        : '关于及操作手册',
 		logout       : '退出登录',
 		Biometrics   : '生物识别',
 		changeAccount: '切换账号',
@@ -530,9 +530,10 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		WriteQuestion: "求职问题或相关疑问皆可填写，我们会由专人与你联系。",
 		WrongNameMsg : "请填谢您的名字",
 		WrongMailMsg : "请填写您的邮箱",
+		NoEmpty      : "內容不能空白",
 		sucessMsg1   : "请填写您的邮箱感谢你的留言，我们会尽快与你联系。",
 		ErrorMsg     : "很抱歉，服务器营运中，请稍后再试",
-		Submit       : "提交"
+		Submit       : "提交",
 	},
 	RecruitDetailPage: {
 		RecruitInfo: "招聘信息"
@@ -637,12 +638,15 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		msg2:"送了你一个礼物"
 	},
 	DeputyPage:{
+		Condition:"条件",
 		Condition1:"条件1",
 		Relation:"关联性",
 		Condition2:"条件2",
+		Agent:"代理人",
 		DeputyWay:"代理方式",
 		DeputyStartTime:"代理起时",
 		DeputyEndTime:"代理迄时",
+		Notifier:"通知对象",
 		Running:"代理模式已启动，如需编辑请先停用",
 		NoRunning:"代理模式已停用",
 		Rules:"依规则代理",
