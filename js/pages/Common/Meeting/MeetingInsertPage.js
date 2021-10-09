@@ -35,7 +35,6 @@ class MeetingInsertPage extends React.PureComponent  {
       let startTime         = new Date().getTime();
       let endTime           = new Date().getTime();
       startTime             = startTime + (600000-(startTime%600000));
-      // endTime               = endTime + (600000-(endTime%600000));
       endTime               = endTime + (600000-(endTime%600000)) + 3600000;
       let initiator         = { id : props.state.UserInfo.UserInfo.id };  //發起人
       let chairperson       = { id : props.state.UserInfo.UserInfo.id };  //主席
@@ -637,7 +636,6 @@ class MeetingInsertPage extends React.PureComponent  {
   setDate = (date) => {
     if (date.type == "set") {
       this.setState({
-        // editDatetimeValue:this.state.isChangeTime ? date.nativeEvent.timestamp-28800000: date.nativeEvent.timestamp ,
         editDatetimeValue:date.nativeEvent.timestamp,
         showDatePicker   :false,
         showTimePicker   :true,
@@ -650,14 +648,24 @@ class MeetingInsertPage extends React.PureComponent  {
   }
 
   setTime = (time) => {
-    // console.log(DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"));
     if (time.type == "set") {
       if (this.state.editStartorEndDatetime) {
+
         //start
-        this.setState({
-          startdate      :DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"),
-          showTimePicker    : false,
-        });
+        if (this.state.isModify) {
+          this.setState({
+            startdate      :DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"),
+            showTimePicker    : false,
+          });
+        } else {
+          // 編輯開始時間要自動幫結束時間增加一小時
+          let enddate = time.nativeEvent.timestamp+3600000;
+          this.setState({
+            startdate      :DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"),
+            enddate        :DateFormat( new Date(enddate), "yyyy-mm-dd HH:MM:ss"),
+            showTimePicker    : false,
+          });
+        }
       } else {
         //end
         this.setState({
@@ -665,7 +673,6 @@ class MeetingInsertPage extends React.PureComponent  {
           showTimePicker    : false, 
         });
       }
-
     }else{
       this.setState({
         showTimePicker:false
