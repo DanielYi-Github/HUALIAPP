@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import {Card, CardItem, Left, Body, Right, Icon, Text, Button, connectStyle, Thumbnail, Title, Label, Item } from 'native-base';
 import CheckBox from '@react-native-community/checkbox';
 
@@ -24,12 +24,15 @@ class MeetingItemForOrgnize extends Component {
 		    }} 
 		  >
 		    <CheckBox
-		        disabled={ true }
-		        onValueChange={(newValue) => {}}
+				disabled      ={ Platform.OS == "android" ? false : true }
+		        onValueChange={(newValue) => {
+					if (Platform.OS == "android") this.props.itemOnPress(item);
+		        }}
 		        value        ={checked || included}
 		        boxType      ={"square"}
 		        onCheckColor ={checkBoxColor}
 		        onTintColor  ={checkBoxColor}
+          		tintColors    ={{true: checkBoxColor, false: '#aaaaaa'}}
 		        style        ={{ marginRight: 20 }}
 		      />
 		    <Label>{item.name} </Label>

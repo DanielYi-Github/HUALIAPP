@@ -60,7 +60,7 @@ class SortableRow extends Component {
   }
 
   render() {
-   const {data, active, index} = this.props;
+    const {data, active, index} = this.props;
     let activeBackgroundColor = active ? "rgba(0,0,0,.3)": this.props.style.InputFieldBackground ; 
     return (
       <Animated.View style={[ styles.row, this._style, { backgroundColor:activeBackgroundColor  } ]}>
@@ -71,9 +71,10 @@ class SortableRow extends Component {
                 onValueChange={(newValue) => {
                   this.props.onCheckBoxTap(index, data); 
                 }}
-                boxType = {"square"}
+                boxType      = {"square"}
                 onCheckColor = {"#E25241"}
-                onTintColor = {"#E25241"}
+                onTintColor  = {"#E25241"}
+                tintColors   = {{true: "#E25241", false: '#aaaaaa'}}
               />
           </Left>
           <Body style={{justifyContent: 'space-between', paddingLeft: 10, flexDirection: 'row'}}>
@@ -92,8 +93,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     padding: 15,
-    // alignItems: 'center',
-    // justifyContent: 'center',
   }
 });
 

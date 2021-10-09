@@ -21,7 +21,6 @@ class MeetingAttendeesReorderPage extends React.Component {
     }
 
     render() {
-      console.log(this.props.state.Language.lang.Common.Cancel);
       let checkedAttendees = 0;
       for(let person of this.props.state.Meeting.attendees){
         if(person.checked) checkedAttendees++

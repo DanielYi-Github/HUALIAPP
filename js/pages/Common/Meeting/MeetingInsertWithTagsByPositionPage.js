@@ -14,6 +14,7 @@ import ToastUnit              from '../../../utils/ToastUnit';
 import TinyCircleButton       from '../../../components/TinyCircleButton';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 import MeetingSelectAttendeesFooter from '../../../components/Meeting/MeetingSelectAttendeesFooter';
+import MeetingItemForAttendees from '../../../components/Meeting/MeetingItemForAttendees';
 
 import { NavigationContainer, useRoute, useNavigationState } from '@react-navigation/native';
 
@@ -248,14 +249,19 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
         }} 
       >
         <CheckBox
-            disabled      ={ true }
-            onValueChange ={(newValue) => {}}
-            value         ={checked || included}
-            boxType       ={"square"}
-            onCheckColor  ={checkBoxColor}
-            onTintColor   ={checkBoxColor}
-            style         ={{ marginRight: 20 }}
-          />
+          disabled      ={ Platform.OS == "android" ? false : true }
+          onValueChange ={(newValue) => {
+            if (Platform.OS == "android"){
+              this.props.actions.positionCheckboxOnPress(!(checked || included), item.item.value);
+            }
+          }}
+          value         ={checked || included}
+          boxType       ={"square"}
+          tintColors    ={{true: checkBoxColor, false: '#aaaaaa'}}
+          onCheckColor  ={checkBoxColor}
+          onTintColor   ={checkBoxColor}
+          style         ={{ marginRight: 20 }}
+        />
         <Label>{item.item.label} </Label><Text note>{item.item.depname}</Text>
 
         <Icon 
@@ -273,6 +279,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
         />
       </Item>
     );
+    
   }
 
   renderEmptyComponent = () => {

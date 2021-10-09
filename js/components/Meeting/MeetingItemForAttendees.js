@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import {Card, CardItem, Left, Body, Right, Icon, Text, Button, connectStyle, Thumbnail, Title, Label, Item } from 'native-base';
 import CheckBox from '@react-native-community/checkbox';
 
@@ -20,11 +20,14 @@ class MeetingItemForAttendees extends Component {
 			>
 				<CheckBox
 					value         ={this.props.checked}
-					disabled      ={true}
-					onValueChange ={(newValue) => {}}
+					disabled      ={ Platform.OS == "android" ? false : true }
+					onValueChange ={(newValue) => {
+						if (Platform.OS == "android") this.props.itemOnPress(this.props.item);
+					}}
 					boxType       = {"square"}
 					onCheckColor  = {"#00C853"}
 					onTintColor   = {"#00C853"}
+          			tintColors    ={{true: "#00C853", false: '#aaaaaa'}}
 					style         ={{ marginRight: 20 }}
 				/>
 				<Label>{this.props.item.name} </Label><Text note>{this.props.item.depname}</Text>
