@@ -34,6 +34,16 @@ class ContactDetailPage extends React.Component {
       }
     }
 
+    let companyList = props.state.Common.Companies_Contact.companyList
+    let companyName = "";
+    for(let company of companyList){
+      if(company.CLASS3 == item.CO){
+        companyName = company.CONTENT;
+        break;
+      }
+    }
+    item.CO = companyName;
+
     this.state = {
       fabActive:false,
       PICTURE:item.PICTURE
@@ -44,7 +54,7 @@ class ContactDetailPage extends React.Component {
     let user  = this.props.route.params.data;
     let page  = this.props.state.Language.lang.ContactDetailPage;
     let callPhoneButton;
-    
+
     if(user.CELLPHONE){
       callPhoneButton = (
         <ActionButton.Item 
@@ -111,6 +121,7 @@ class ContactDetailPage extends React.Component {
               onPress  ={null}
             />
 
+            {/* 暫時不顯示
             <PersonItem
               title    ={page.CellPhone}
               value    ={user.CELLPHONE}
@@ -118,6 +129,7 @@ class ContactDetailPage extends React.Component {
               isButton ={null}
               onPress  ={null}
             />
+            */}
 
             <PersonItem
               title    ={page.Extension}
@@ -126,7 +138,8 @@ class ContactDetailPage extends React.Component {
               isButton ={null}
               onPress  ={null}
             />
-            {/*
+
+            {/* 暫時不顯示
             <PersonItem
               title    ={"Skype"}
               value    ={user.SKYPE}
@@ -145,11 +158,12 @@ class ContactDetailPage extends React.Component {
             />
           </Card>
         </Content>
+      {/*
         <ActionButton  buttonColor="#5067FF" >
-          {/*撥號按鍵*/}
+          ?//撥號按鍵
           {callPhoneButton}
           
-          {/*添加聯絡人按鍵*/}
+          //添加聯絡人按鍵
           <ActionButton.Item 
             buttonColor='#DD5144' 
             title={page.AddContact} 
@@ -158,7 +172,8 @@ class ContactDetailPage extends React.Component {
             <Icon name="person-add" style={{fontSize: 20,height: 22,color: 'white'}} />
           </ActionButton.Item>
 
-          {/*資料錯誤回報按鍵*/}
+          //資料錯誤回報按鍵
+          //暫時不顯示
           <ActionButton.Item 
             buttonColor='#757575' 
             title={page.wrongInfo} 
@@ -166,8 +181,9 @@ class ContactDetailPage extends React.Component {
           >
             <Icon name="warning" style={{fontSize: 20,height: 22,color: 'white'}} />
           </ActionButton.Item>
+          
         </ActionButton>
-
+        */}
       </Container>
     );
 
@@ -192,9 +208,6 @@ class ContactDetailPage extends React.Component {
       }],
       familyName : (contactor.NAME !== null)? contactor.NAME : "",
       displayName: (contactor.NAME !== null)? contactor.NAME : "",   // for Android
-      // givenName  : (contactor.NAME !== null)? contactor.NAME : "",
-      // familyName: 'Jung',
-      // givenName: 'Carl',
     };
     /*    
     var newPerson = {
@@ -255,6 +268,8 @@ class ContactDetailPage extends React.Component {
      }).catch(err => console.error('An error occurred', err));
   }
 
+  /* 下列功能 暫時沒用到*/
+  /*
   wrongInfoAlert = () => {
     let page = this.props.state.Language.lang.ContactDetailPage;
     
@@ -269,16 +284,20 @@ class ContactDetailPage extends React.Component {
       { cancelable: false }
     )
   }
+  */
 
   /*新增郵件 暫時沒用到*/
   /*
   addEmail(){  }
   */
 
+  /*
   goMyProfile = () => {
     NavigationService.navigate("MineDetail");
   }
+  */
 
+  /*
   goCarAdministrator = () =>{
     let user = this.props.state.UserInfo.UserInfo;
     let company = this.props.route.params.data.CO;
@@ -303,7 +322,7 @@ class ContactDetailPage extends React.Component {
       });
     });
   }
-
+  */
 }
 
 export let ContactDetailPageStyle = connectStyle( 'Page.ContactDetailPage', {} )(ContactDetailPage);
