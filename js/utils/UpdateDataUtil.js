@@ -625,6 +625,9 @@ export async function updateContact(user) {
 	let lData = await SQLite.selectData(lSQL, []);
 	let ltxdat = lData.item(0).TXDAT; //更新時間
 	let promise = new Promise( async (resolve, reject) => {
+		
+		console.log("ltxdat", ltxdat);
+
 		if (ltxdat === null) {
 			let start = new Date().getTime();
 
