@@ -29,7 +29,7 @@ class MeetingItem extends Component {
 		    break;
 		  case "W":
 		    image = require("../../image/meeting/WeChart.png");
-		    imageText = "WeChart";
+		    imageText = "WeChat";
 		    break;
 		  case "Z":
 		    image = require("../../image/meeting/Zoom.png");
