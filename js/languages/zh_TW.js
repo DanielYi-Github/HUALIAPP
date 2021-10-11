@@ -888,7 +888,16 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		selected 				   :"已選擇",
 		person 					   :"人",
 		selectedAttendeeReorder    :"已選與會人員排序",
-		noneNextOrg				   :"此廠區底下目前無可選單位"
+		noneNextOrg    			   :"此廠區底下目前無可選單位",
+		MeetingModeType			   :{
+			Z:"Zoom",
+			S:"Skype",
+			W:"Wechat",
+			T:"騰訊會議",
+			M:"Team",
+			D:"釘釘",
+			A:"實體會議室"
+		}
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "公司文件",

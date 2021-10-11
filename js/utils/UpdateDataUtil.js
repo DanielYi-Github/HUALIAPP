@@ -73,27 +73,7 @@ export async function loginByAD(user){
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code == 200) {
 				data = data.content;
-
-				user.token      = data.token;
-				user.id         = data.member.id;
-				user.name       = data.member.name;
-				user.email      = data.email;
-				user.membereMail= data.member.email; 	// 取郵相SID所使用的email
-				user.depID      = data.member.depid;
-				user.depName    = data.member.depname;
-				user.co         = data.member.coid;
-				user.plantID    = data.member.plantid;
-				user.plantName  = data.member.plantname;
-				user.sex        = data.member.sex;
-				user.isPush     = data.userConfig.push;
-				user.cellphone  = data.cellphone;
-				user.telphone   = data.telphone;
-				user.skype      = data.skype;
-                // user.picture = data.picture ? { uri: `data:image/png;base64,${data.picture}`} : user.picture;
-				user.pictureUrl = data.picture;
-				user.birthday   = data.member.brndat ? data.member.brndat : user.birthday;
-				user.certTips = data.userConfig.certTips;
-
+				user = setUserData(user, data);
 				DeviceStorageUtil.set('User', user); //存在客戶端
 				params = {
 					"Message": "success",
@@ -124,10 +104,9 @@ export async function loginByEmpid(user, lang) {
 		let params = {
 			"userId": Common.encrypt(user.loginID),
 			"lang": lang,
-			"token": "",
 			"content": {
 				"userid"    : Common.encrypt(user.loginID),
-				"pwd"       : Common.encrypt(user.password),
+				"pwd"       : user.password,
 				"regid"     : user.regID,
 				"appversion": version,
 				"platform"  : Platform.OS
@@ -136,45 +115,23 @@ export async function loginByEmpid(user, lang) {
 
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.content){
-				let tempData=data.content;
-				if(tempData.userConfig.reset=="Y"){
+				data = data.content;
+
+				if( data.userConfig.reset == "Y" ){
 					params = {
 						"Message": "initialEmp",
-						"basicData": tempData
+						"basicData": data
 					}
 					resolve(params);
 				}else{
-					//工號登陸需將login內容改為id內容
-					user.setLoginID(tempData.member.id);				
-		    		user.setPassword(Common.encrypt(user.getPassword()));
-
-					user.setCO(tempData.member.coid);
-					user.setDepID(tempData.member.depid);
-					user.setDepName(tempData.member.depname);
-					user.setEmail(tempData.email);
-					user.setID(tempData.member.id);
-					user.setName(tempData.member.name);
-					user.setPlantID(tempData.member.plantid);
-					user.setPlantName(tempData.member.plantname);
-					user.setSex(tempData.member.sex);
-					user.setToken(tempData.token);
-					user.lang = tempData.lang;
-					user.birthday = tempData.member.brndat;
-					user.cellphone = tempData.cellphone;
-					user.isPush = tempData.userConfig.push;
-					user.skype = tempData.skype;;
-					user.telphone = tempData.telphone;
-					user.pictureUrl = tempData.picture;
-					// user.picture = tempData.picture ? {uri: `data:image/png;base64,${tempData.picture}`} : user.picture;
-					user.membereMail= tempData.member.email;
-					user.certTips = tempData.userConfig.certTips;
+					user.setLoginID(data.member.id); //工號登陸需將login內容改為id內容				
+					user = setUserData(user, data);
 					DeviceStorageUtil.set('User', user); //存在客戶端
-
 					params = {
 						"Message": "success",
 						"Value": {
 							user: user,
-							lang: tempData.lang
+							lang: data.lang
 						},
 					}
 					resolve(params);
@@ -193,13 +150,73 @@ export async function loginByEmpid(user, lang) {
  * @param String loginID
  * @return Promise
  */
-export async function getMBUserInfoByToken(user){
+export async function loginByImei(biosInfo,lang){
 	let promise = new Promise((resolve, reject) => {
-		let url = "org/getUserByToken";
+		let version  = Device.getVersion();
+		let url = "login/certid";
+		
+		let params = {
+			"userId": Common.encrypt(biosInfo.biosUser.userID),
+			"lang": lang,
+			"content": {
+				"appversion": version,
+				"platform": Platform.OS,
+				"certid": Common.encrypt(biosInfo.biosUser.iemi)
+			}
+		};
+		
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code == 200){
+
+				var user         = new User();
+				let tempData     = data.content;
+				// 判斷是否登入成功
+				user.birthday    = tempData.member.brndat;
+				user.co          = tempData.member.coid;
+				user.depID       = tempData.member.depid;
+				user.depName     = tempData.member.depname;
+				user.dutname     = tempData.member.dutname;
+				user.dutsort     = tempData.member.dutsort;
+				user.email       = tempData.member.email;
+				user.id          = tempData.member.id;
+				user.name        = tempData.member.name;
+				user.plantID     = tempData.member.plantid;
+				user.plantName   = tempData.member.plantname;
+				user.sex         = tempData.member.sex;
+				user.token       = tempData.token;
+				//對於工號登錄的情景下，必須將對應的工號替換loginID
+				user.loginID     = biosInfo.biosUser.userID;
+				user.skype       = tempData.skype;
+				user.telphone    = tempData.telphone;
+				user.cellphone   = tempData.cellphone;
+				user.lang        = tempData.lang;
+				user.pictureUrl  = tempData.picture;
+				user.isPush      = tempData.userConfig.push;
+				user.membereMail = tempData.member.email;
+
+				DeviceStorageUtil.set('User', user); //存在客戶端
+				resolve(user)
+			} else {
+				reject(data.message);
+			}
+		});
+		
+	});
+	return promise;
+}
+
+/**
+ * 利用token取得MB人員資料
+ * @param String loginID
+ * @return Promise
+ */
+export async function loginByToken(user){
+	let promise = new Promise((resolve, reject) => {
+		let url = "login/token";
 		let version  = Device.getVersion();
 		let content = {
 			"appversion":version,
-			"platform":Platform.OS
+			"platform"  :Platform.OS
 		}
 
 		let params = {
@@ -211,7 +228,10 @@ export async function getMBUserInfoByToken(user){
 
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code == 200) {
-				resolve(data.content)
+				data = data.content;
+				user = setUserData(user, data);
+				DeviceStorageUtil.set('User', user); //存在客戶端
+				resolve(user)
 			}else{
 				reject(data.message);
 			}
@@ -219,6 +239,31 @@ export async function getMBUserInfoByToken(user){
 	});
 	return promise;
 }
+
+function setUserData(user, data) {
+	user.token       = data.token;
+	user.id          = data.member.id;
+	user.name        = data.member.name;
+	user.email       = data.email;
+	user.membereMail = data.member.email; 	// 取郵相SID所使用的email
+	user.depID       = data.member.depid;
+	user.depName     = data.member.depname;
+	user.dutname     = data.member.dutname;
+	user.co          = data.member.coid;
+	user.plantID     = data.member.plantid;
+	user.plantName   = data.member.plantname;
+	user.sex         = data.member.sex;
+	user.isPush      = data.userConfig.push;
+	user.cellphone   = data.cellphone;
+	user.telphone    = data.telphone;
+	user.skype       = data.skype;
+	user.pictureUrl  = data.picture;
+	user.birthday    = data.member.brndat ? data.member.brndat : user.birthday;
+	user.certTips    = data.userConfig.certTips;
+	user.lang        = data.lang;
+	return user;
+}
+
 
 export async function updateAPP(user) {
 	let deleteSQL = "DELETE FROM THF_APP";
@@ -543,7 +588,6 @@ export async function updateContact(user) {
 	let lData = await SQLite.selectData(lSQL, []);
 	let ltxdat = lData.item(0).TXDAT; //更新時間
 	let promise = new Promise( async (resolve, reject) => {
-		// console.log("updateContact", ltxdat);
 		if (ltxdat === null) {
 			let start = new Date().getTime();
 			let params = {
@@ -554,7 +598,6 @@ export async function updateContact(user) {
 			let url = "data/getContact";
 
 			NetUtil.getRequestContent(params, url).then((data)=>{
-				// console.log("getRequestContent", data);
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;

@@ -883,7 +883,16 @@ export default {
 		selected 				   :"Selected",
 		person 					   :"attendee",
 		selectedAttendeeReorder    :"Arrangment",
-		noneNextOrg				   :"No Department!"
+		noneNextOrg				   :"No Department!",
+		MeetingModeType			   :{
+			Z:"Zoom",
+			S:"Skype",
+			W:"Wechat",
+			T:"VooV Meeting",
+			M:"Team",
+			D:"DingTalk",
+			A:"Physical meeting room"
+		}
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "Company Document",

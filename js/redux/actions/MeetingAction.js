@@ -10,7 +10,6 @@ export function getMeetingModeType() {
 		dispatch(refreshing(true)); 	
 		let user = getState().UserInfo.UserInfo;
 		let meetingModeTypes = await UpdateDataUtil.getMeetingModeType(user).then((result)=>{
-			// console.log("getMeetingModeType",result);
 			return result;
 		}).catch((e)=>{
 			console.log("e", e);

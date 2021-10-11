@@ -887,7 +887,16 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		selected 				   :"已选择",
 		person 					   :"人",
 		selectedAttendeeReorder    :"已选与会人员排序",
-		noneNextOrg				   :"此厂区底下目前无可选单位"
+		noneNextOrg				   :"此厂区底下目前无可选单位",
+		MeetingModeType			   :{
+			Z:"Zoom",
+			S:"Skype",
+			W:"微信",
+			T:"腾讯会议",
+			M:"Team",
+			D:"钉钉",
+			A:"实体会议室"
+		}
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "公司文件",

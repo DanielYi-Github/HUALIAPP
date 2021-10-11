@@ -884,7 +884,16 @@ export default {
 		selected 				   :"Đã chọn",
 		person 					   :"người",
 		selectedAttendeeReorder    :"sắp xếp",
-		noneNextOrg				   :"Không có Sở!"
+		noneNextOrg				   :"Không có Sở!",
+		MeetingModeType			   :{
+			Z:"Zoom",
+			S:"Skype",
+			W:"Wechat",
+			T:"Hội nghị VooV",
+			M:"Team",
+			D:"DingDing",
+			A:"Phòng họp Vật lý"
+		}
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "Tập tin công ty",
