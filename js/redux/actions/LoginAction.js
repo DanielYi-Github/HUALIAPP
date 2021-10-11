@@ -309,6 +309,23 @@ async function checkLoginByEmpid(user, lang){
 	return result;
 }
 
+export function loginByImei(biosInfo,langStatus) {
+	return dispatch => {
+		//開始顯示載入資料畫面
+		dispatch(login_doing());
+
+		UpdateDataUtil.loginByImei( biosInfo, langStatus ).then((user) => {
+			if (user) {
+				this.initialApi(user,"imei");
+			} else {
+				dispatch(login_done(false));  //登入失敗，跳至登入頁
+			}
+		}).catch((e)=>{	
+			dispatch(login_done(false, e));  //登入失敗，跳至登入頁
+		});
+	}
+}
+
 export function loginByToken(user) {
 	return dispatch => {
 		//開始顯示載入資料畫面
@@ -329,23 +346,6 @@ export function loginByToken(user) {
 		}).catch((e)=>{
 			console.log("e", e);
 			dispatch(logout(e, true)); 	//登入失敗，跳至登入頁
-		});
-	}
-}
-
-export function loginByImei(biosInfo,langStatus) {
-	return dispatch => {
-		//開始顯示載入資料畫面
-		dispatch(login_doing());
-
-		UpdateDataUtil.loginByImei(biosInfo,langStatus).then((user) => {
-			if (user) {
-				this.initialApi(user,"imei");
-			} else {
-				dispatch(login_done(false));  //登入失敗，跳至登入頁
-			}
-		}).catch((e)=>{	
-			dispatch(login_done(false, e));  //登入失敗，跳至登入頁
 		});
 	}
 }
@@ -753,7 +753,7 @@ export function loginChangeAccount(account, password, checkAccType, actions, bio
 		    break;
 		  case "EMPID":
 			userChange.setLoginID(account); 						
-			userChange.setPassword(password);
+			userChange.setPassword(Common.encrypt(password));
 			checkResult = await checkLoginByEmpid(userChange, lang);
 		    break;
 		  default:

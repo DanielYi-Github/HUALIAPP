@@ -56,10 +56,10 @@ export async function loginByAD(user){
 	})
 
 	let promise = new Promise((resolve, reject) => {
-		let version  = Device.getVersion();
-		let url = "login/loginByAD";
-		let params = {
-			"userId":Common.encrypt(user.loginID),
+		let version = Device.getVersion();
+		let url     = "login/loginByAD";
+		let params  = {
+			"userId": Common.encrypt(user.loginID),
 			"lang"  : lang,
 			"content":{
 				"userid"    : Common.encrypt(user.loginID),
@@ -74,7 +74,6 @@ export async function loginByAD(user){
 			if (data.code == 200) {
 				data = data.content;
 				user = setUserData(user, data);
-				DeviceStorageUtil.set('User', user); //存在客戶端
 				params = {
 					"Message": "success",
 					"Value": {
@@ -99,11 +98,11 @@ export async function loginByAD(user){
 export async function loginByEmpid(user, lang) {
 	let params = {};
 	let promise = new Promise((resolve, reject) => {
-		let version  = Device.getVersion();
-		let url = "login/empid";
-		let params = {
+		let version = Device.getVersion();
+		let url     = "login/empid";
+		let params  = {
 			"userId": Common.encrypt(user.loginID),
-			"lang": lang,
+			"lang"  : lang,
 			"content": {
 				"userid"    : Common.encrypt(user.loginID),
 				"pwd"       : user.password,
@@ -126,7 +125,6 @@ export async function loginByEmpid(user, lang) {
 				}else{
 					user.setLoginID(data.member.id); //工號登陸需將login內容改為id內容				
 					user = setUserData(user, data);
-					DeviceStorageUtil.set('User', user); //存在客戶端
 					params = {
 						"Message": "success",
 						"Value": {
@@ -150,51 +148,26 @@ export async function loginByEmpid(user, lang) {
  * @param String loginID
  * @return Promise
  */
-export async function loginByImei(biosInfo,lang){
+export async function loginByImei( biosInfo, lang){
 	let promise = new Promise((resolve, reject) => {
-		let version  = Device.getVersion();
-		let url = "login/certid";
-		
-		let params = {
+		let version = Device.getVersion();
+		let url     = "login/certid";
+		let params  = {
 			"userId": Common.encrypt(biosInfo.biosUser.userID),
-			"lang": lang,
+			"lang"  : lang,
 			"content": {
 				"appversion": version,
-				"platform": Platform.OS,
-				"certid": Common.encrypt(biosInfo.biosUser.iemi)
+				"platform"  : Platform.OS,
+				"certid"    : Common.encrypt(biosInfo.biosUser.iemi)
 			}
 		};
 		
 		NetUtil.getRequestContent(params, url).then((data)=>{
 			if (data.code == 200){
-
-				var user         = new User();
-				let tempData     = data.content;
-				// 判斷是否登入成功
-				user.birthday    = tempData.member.brndat;
-				user.co          = tempData.member.coid;
-				user.depID       = tempData.member.depid;
-				user.depName     = tempData.member.depname;
-				user.dutname     = tempData.member.dutname;
-				user.dutsort     = tempData.member.dutsort;
-				user.email       = tempData.member.email;
-				user.id          = tempData.member.id;
-				user.name        = tempData.member.name;
-				user.plantID     = tempData.member.plantid;
-				user.plantName   = tempData.member.plantname;
-				user.sex         = tempData.member.sex;
-				user.token       = tempData.token;
-				//對於工號登錄的情景下，必須將對應的工號替換loginID
-				user.loginID     = biosInfo.biosUser.userID;
-				user.skype       = tempData.skype;
-				user.telphone    = tempData.telphone;
-				user.cellphone   = tempData.cellphone;
-				user.lang        = tempData.lang;
-				user.pictureUrl  = tempData.picture;
-				user.isPush      = tempData.userConfig.push;
-				user.membereMail = tempData.member.email;
-
-				DeviceStorageUtil.set('User', user); //存在客戶端
+				let user     = new User();
+				user.loginID = biosInfo.biosUser.userID;
+				data         = data.content;
+				user         = setUserData(user, data);
 				resolve(user)
 			} else {
 				reject(data.message);
@@ -212,13 +185,12 @@ export async function loginByImei(biosInfo,lang){
  */
 export async function loginByToken(user){
 	let promise = new Promise((resolve, reject) => {
-		let url = "login/token";
-		let version  = Device.getVersion();
+		let version = Device.getVersion();
+		let url     = "login/token";
 		let content = {
-			"appversion":version,
-			"platform"  :Platform.OS
+			"appversion": version,
+			"platform"  : Platform.OS
 		}
-
 		let params = {
 			"lang"  :  user.lang,
 			"token"  : Common.encrypt(user.token),
@@ -230,7 +202,6 @@ export async function loginByToken(user){
 			if (data.code == 200) {
 				data = data.content;
 				user = setUserData(user, data);
-				DeviceStorageUtil.set('User', user); //存在客戶端
 				resolve(user)
 			}else{
 				reject(data.message);
@@ -261,6 +232,8 @@ function setUserData(user, data) {
 	user.birthday    = data.member.brndat ? data.member.brndat : user.birthday;
 	user.certTips    = data.userConfig.certTips;
 	user.lang        = data.lang;
+
+	DeviceStorageUtil.set('User', user); //存在客戶端
 	return user;
 }
 
