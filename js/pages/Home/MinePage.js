@@ -57,8 +57,9 @@ class MinePage extends React.Component {
     
     let isShowBpmDeputySetting = false;   // 是否顯示代理人設定
     let isShowMeetingSetting = false;     // 是否顯示會議管理設定
+    // console.log(this.props.state.UserInfo.UserInfo);
     for(let role of this.props.state.UserInfo.UserInfo.roles){
-      if (role == "Sign") isShowBpmDeputySetting = true;
+      if (role == "BPM") isShowBpmDeputySetting = true;
     }
     /*
     for(let FunctionData of this.props.state.Home.FunctionData){
@@ -66,7 +67,6 @@ class MinePage extends React.Component {
       if (FunctionData.ID == "MeetingList") isShowMeetingSetting = true;
     }
     */
-
 
     return (
       <Container>
