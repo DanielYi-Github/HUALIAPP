@@ -57,10 +57,15 @@ class MinePage extends React.Component {
     
     let isShowBpmDeputySetting = false;   // 是否顯示代理人設定
     let isShowMeetingSetting = false;     // 是否顯示會議管理設定
+    for(let role of this.props.state.UserInfo.UserInfo.roles){
+      if (role == "Sign") isShowBpmDeputySetting = true;
+    }
+    /*
     for(let FunctionData of this.props.state.Home.FunctionData){
       if (FunctionData.ID == "Sign") isShowBpmDeputySetting = true;
       if (FunctionData.ID == "MeetingList") isShowMeetingSetting = true;
     }
+    */
 
 
     return (

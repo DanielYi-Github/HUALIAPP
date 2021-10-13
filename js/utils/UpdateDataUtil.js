@@ -232,6 +232,7 @@ function setUserData(user, data) {
 	user.birthday    = data.member.brndat ? data.member.brndat : user.birthday;
 	user.certTips    = data.userConfig.certTips;
 	user.lang        = data.lang;
+	user.roles       = data.roles;
 
 	DeviceStorageUtil.set('User', user); //存在客戶端
 	return user;
