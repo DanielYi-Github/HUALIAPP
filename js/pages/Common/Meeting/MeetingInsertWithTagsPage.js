@@ -274,7 +274,7 @@ class MeetingInsertWithTagsPage extends React.Component {
     );
   }
 
-  loadMoreData = (isSearching, searchedData = null) => {
+  loadMoreData = (isSearching = {}, searchedData = null) => {
     isSearching = (typeof isSearching == "object") ? false : isSearching;
     let isSearch = isSearching ? isSearching : this.state.isSearch;
     searchedData = (searchedData == null) ? this.state.searchedData : searchedData;
@@ -337,14 +337,22 @@ class MeetingInsertWithTagsPage extends React.Component {
       } else {
         let actionObject = { condition:"" }; //查詢使用
         actionObject.count = this.state.data.length;
+        
         UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
           let isEnd = this.dealIsDataEnd(this.state.data, result);
+            ToastUnit.show('info', isEnd);
+
+          /*
           this.setState({
             data              :isEnd ? this.state.data: this.state.data.concat(result) ,
             isFooterRefreshing:false,
             isEnd             :isEnd
           });
+          */
         }).catch((err) => {
+            ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
+
+          /*
           this.setState({ 
             isShowSearch   :false,
             isSearch       :false,
@@ -363,7 +371,9 @@ class MeetingInsertWithTagsPage extends React.Component {
             ToastUnit.show('error', message);
           }, 300);
           console.log(err);
+          */
         })
+
       }
     }
   }
