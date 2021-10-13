@@ -314,7 +314,6 @@ class MeetingInsertWithTagsPage extends React.Component {
            isEnd:isEnd
           })
         }).catch((err) => {
-          // ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
           this.setState({ 
             isShowSearch   :false,
             isSearch       :false,
@@ -328,11 +327,10 @@ class MeetingInsertWithTagsPage extends React.Component {
             isFooterRefreshing:false
           });
 
-          let message = this.props.lang.MeetingPage.searchError;
           setTimeout(function(){ 
-            ToastUnit.show('error', message);
+            ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
           }, 300);
-          console.log(err);
+          // console.log(err);
         })
       } else {
         let actionObject = { condition:"" }; //查詢使用
@@ -340,19 +338,15 @@ class MeetingInsertWithTagsPage extends React.Component {
         
         UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
           let isEnd = this.dealIsDataEnd(this.state.data, result);
-            ToastUnit.show('info', isEnd);
-
-          /*
           this.setState({
             data              :isEnd ? this.state.data: this.state.data.concat(result) ,
             isFooterRefreshing:false,
             isEnd             :isEnd
           });
-          */
+          
         }).catch((err) => {
-            ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
-
-          /*
+          ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
+          
           this.setState({ 
             isShowSearch   :false,
             isSearch       :false,
@@ -371,9 +365,7 @@ class MeetingInsertWithTagsPage extends React.Component {
             ToastUnit.show('error', message);
           }, 300);
           console.log(err);
-          */
         })
-
       }
     }
   }
