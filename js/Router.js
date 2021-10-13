@@ -15,6 +15,7 @@ import { SafeAreaProvider, SafeAreaView }     from 'react-native-safe-area-conte
 import { NavigationContainer, useIsFocused }  from '@react-navigation/native';
 import { createStackNavigator, TransitionSpecs, CardStyleInterpolators, TransitionPresets } from '@react-navigation/stack';
 import { createDrawerNavigator }from '@react-navigation/drawer';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { withSecurityView }     from './components/WithSecurityView';
 import { createMyNavigator }    from './components/CustomBottomTabNavigation';
 import { navigationRef }        from './utils/NavigationService';
@@ -228,8 +229,26 @@ function AuthStack(){
   )
 }
 
+function HomeScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Home!</Text>
+    </View>
+  );
+}
+
+function SettingsScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Settings!</Text>
+    </View>
+  );
+}
+
 const MyBottomTabNavigator = createMyNavigator();
+// const Tab = createMaterialBottomTabNavigator();
 function HomeTabNavigator(props) {
+  
   const [preventGoback, setPreventGoback] = useState(false);
   let state = useSelector(state => state);
   let theme = state.Theme.theme.['Component.BottomNavigation'];
@@ -273,7 +292,6 @@ function HomeTabNavigator(props) {
 
       return unsubscribe;
     }, [state]);
-  
   return (
       <MyBottomTabNavigator.Navigator  state={state} contentStyle={theme}>
         <MyBottomTabNavigator.Screen name="Home"      component={HomePage} />
@@ -282,7 +300,19 @@ function HomeTabNavigator(props) {
         <MyBottomTabNavigator.Screen name="Mine"      component={MinePage} />
       </MyBottomTabNavigator.Navigator>
   );
+  
+ 
+  /*
+ return (
+     <Tab.Navigator >
+       <Tab.Screen name="Home" component={HomeScreen} />
+     </Tab.Navigator>
+   );
+ */
 }
+
+
+
 
 const AppStack  = createStackNavigator();
 function MainStack(props){

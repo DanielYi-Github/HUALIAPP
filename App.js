@@ -13,128 +13,75 @@ import {
 } from 'react-native';
 import {Header, Colors} from 'react-native/Libraries/NewAppScreen';
 import SplashScreen           from 'react-native-splash-screen';
-import RNCalendarEvents from 'react-native-calendar-events';
+import { NavigationContainer } from '@react-navigation/native';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+/*
+function HomeScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Home!</Text>
+    </View>
+  );
+}
+*/
 
-class App extends React.Component {
+export class HomeScreen extends React.Component {
+  render(){
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Home!</Text>
+      </View>
+    );
+  }
+}
 
+
+function SettingsScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Settings!</Text>
+    </View>
+  );
+}
+
+const Tab = createMaterialBottomTabNavigator();
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Settings" component={SettingsScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
+/*
+export default class App extends React.Component {
     componentDidMount(){
         SplashScreen.hide();
     };
 
     render() {
       return (
-        <View>
-          <StatusBar barStyle="dark-content" />
-          <SafeAreaView>
-            <ScrollView
-              contentInsetAdjustmentBehavior="automatic"
-              style={styles.scrollView}>
-              <Header />
-              {global.HermesInternal == null ? null : (
-                <View style={styles.engine}>
-                  <Text style={styles.footer}>Engine: Hermes</Text>
-                </View>
-              )}
-              <View style={styles.body}>
-                <View style={styles.sectionContainer}>
-                  <Text style={styles.sectionTitle}>Read/Write Auth</Text>
-                  <Text style={styles.sectionDescription}>
-                    <Button
-                      title="Request auth"
-                      onPress={() => {
-                        RNCalendarEvents.requestPermissions().then(
-                          (result) => {
-                            Alert.alert('Auth requested', result);
-                          },
-                          (result) => {
-                            console.error(result);
-                          },
-                        );
-                      }}
-                    />
-                    <Text>{'\n'}</Text>
-                    <Button
-                      title="Check auth"
-                      onPress={() => {
-                        RNCalendarEvents.checkPermissions().then(
-                          (result) => {
-                            Alert.alert('Auth check', result);
-                          },
-                          (result) => {
-                            console.error(result);
-                          },
-                        );
-                      }}
-                    />
-                  </Text>
-                </View>
-                {Platform.OS === 'android' && (
-                  <View style={styles.sectionContainer}>
-                    <Text style={styles.sectionTitle}>Read-Only Auth</Text>
-                    <Text style={styles.sectionDescription}>
-                      <Button
-                        title="Request auth"
-                        onPress={() => {
-                          RNCalendarEvents.requestPermissions(true).then(
-                            (result) => {
-                              Alert.alert('Read-only Auth requested', result);
-                            },
-                            (result) => {
-                              console.error(result);
-                            },
-                          );
-                        }}
-                      />
-                      <Text>{'\n'}</Text>
-                      <Button
-                        title="Check auth"
-                        onPress={() => {
-                          RNCalendarEvents.checkPermissions(true).then(
-                            (result) => {
-                              Alert.alert('Read-only Auth check', result);
-                            },
-                            (result) => {
-                              console.error(result);
-                            },
-                          );
-                        }}
-                      />
-                    </Text>
-                  </View>
-                )}
-                <View style={styles.sectionContainer}>
-                  <Text style={styles.sectionTitle}>Calendars</Text>
-                  <Text style={styles.sectionDescription}>
-                    <Button
-                      title="Find calendars"
-                      onPress={() => {
-                        RNCalendarEvents.findCalendars().then(
-                          (result) => {
-                            Alert.alert(
-                              'Calendars',
-                              result
-                                .reduce((acc, cal) => {
-                                  acc.push(cal.title);
-                                  return acc;
-                                }, [])
-                                .join('\n'),
-                            );
-                          },
-                          (result) => {
-                            console.error(result);
-                          },
-                        );
-                      }}
-                    />
-                  </Text>
-                </View>
-              </View>
-            </ScrollView>
-          </SafeAreaView>
-        </View>
+        <NavigationContainer>
+          <Tab.Navigator>
+                  <Tab.Screen name="Home" component={this.homeScreen} />
+                  <Tab.Screen name="Settings" component={SettingsScreen} />
+                </Tab.Navigator>
+      </NavigationContainer>
       )
     };
+
+    homeScreen(){
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text>Home!</Text>
+        </View>
+      );
+    }
 };
+*/
+
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -174,5 +121,3 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
 });
-
-export default App;

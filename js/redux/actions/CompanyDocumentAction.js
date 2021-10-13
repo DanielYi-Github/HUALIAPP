@@ -1,6 +1,5 @@
 import * as CompanyDocumentTypes from "../actionTypes/CompanyDocumentTypes";
 import * as SQLiteUtil from "../../utils/SQLiteUtil";
-import { exp } from "react-native/Libraries/Animated/src/Easing";
 
 //设定公司文件AppOid actionCreator
 function setCompanyDocumentAppOid(data) {
