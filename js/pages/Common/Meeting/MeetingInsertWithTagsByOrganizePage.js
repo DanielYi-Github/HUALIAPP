@@ -153,6 +153,7 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
             selectList    :factories,
             onItemPress   : async (value)=>{
               await this.props.actions.getOrg(value); // 取得組織架構資料
+              this.props.actions.releaseBlocking(); // 取得組織架構資料
               this.navigateNextOrg();
             },
             renderItemMode:"normal",  // normal一般, multiCheck多選, multiAttendees多選參與人
@@ -203,7 +204,7 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
               onItemPress   :this.props.actions.getPositions,
               renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
               showFooter    :true,
-              title         : this.props.lang.MeetingPage.attendeesInvite
+              title         :this.props.lang.MeetingPage.attendeesInvite
             });
           }else{
             this.navigateNextOrg(value);

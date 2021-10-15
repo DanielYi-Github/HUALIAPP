@@ -205,7 +205,6 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
           {this.props.lang.MeetingPage.selectPosition}
         </Label>
         <FlatList
-          contentContainerStyle = {{flex: 1}}
           keyExtractor          = {(item, index) => index.toString()}
           data                  = {this.props.state.Meeting.attendees_by_position}
           extraData             = {this.props.state.Meeting}

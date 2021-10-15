@@ -749,3 +749,12 @@ export function attendeeItemCalendarOnPress(attendee){
 		});
 	}
 }
+
+export function blocking(){
+	return async (dispatch, getState) => {
+		dispatch({
+			type: MeetingTypes.MEETING_BLOCKING,
+
+		});
+	}
+}

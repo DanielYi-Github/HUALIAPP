@@ -19,7 +19,8 @@ const initialState = {
   companies                     : [],
   selectedCompany               : "",
   attendees_by_position         : [],
-  organization_tree             : null
+  organization_tree             : null,
+  blocking                      : false
 };
 
 export default function index(state = initialState, action = {}) {
