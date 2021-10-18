@@ -129,6 +129,11 @@ export default function index(state = initialState, action = {}) {
         ...state,
         organization_tree:action.organization,
       }
+    case types.MEETING_BLOCKING:
+      return {
+        ...state,
+        blocking:action.isblocking,
+      }
     default:
       return state;
   }

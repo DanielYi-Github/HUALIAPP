@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, FlatList, RefreshControl, VirtualizedList, Platform, Alert, Keyboard, TouchableOpacity } from 'react-native';
+import { View, FlatList, RefreshControl, VirtualizedList, Platform, Alert, Keyboard, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Icon, Title, Text, Card, CardItem, Label, Footer, connectStyle } from 'native-base';
 import { tify, sify} from 'chinese-conv'; 
 import { connect }   from 'react-redux';
 import TagInput      from 'react-native-tags-input';
 import { bindActionCreators } from 'redux';
 import * as RNLocalize from "react-native-localize";
-import CheckBox from '@react-native-community/checkbox';
+import ModalWrapper from "react-native-modal";
 import { NavigationContainer, useRoute, useNavigationState } from '@react-navigation/native';
 import SearchInput, { createFilter } from 'react-native-search-filter'; 
 const KEYS_TO_FILTERS = ['name'];
@@ -37,7 +37,8 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
       sKeyword           : "",          //簡體中文
       tKeyword           : "",          //繁體中文
       isSearch           : false,       //是反顯示關鍵字搜尋結果
-      checkState         : false
+      checkState         : false,
+      loading_index      : false
     };
   }
 
@@ -147,6 +148,15 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
             null
         }
 
+        <ModalWrapper 
+          style             ={{flex: 1}} 
+          isVisible         ={this.props.state.Meeting.blocking}
+          animationInTiming ={5}
+          backdropOpacity   ={0}
+        >
+          <View style={{ flex: 1 }}/>
+        </ModalWrapper>
+
       </Container>
     );
   }
@@ -182,7 +192,7 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
         return this.normal(item.item);
         break;
       case "multiCheck": // 多選
-        return this.multiCheck(item.item);
+        return this.multiCheck(item.item, item.index);
         break;
       case "multiAttendees": // 多選參與人
         return this.multiAttendees(item.item);
@@ -196,15 +206,19 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
         fixedLabel 
         style   ={{padding: 10, backgroundColor: this.props.style.InputFieldBackground }} 
         onPress ={ async ()=>{ 
+          this.setState({ loading_index:item.key })
           this.state.onItemPress(item);
         }} 
       >
-        <Label>{item.name} </Label>
+        <Label>{item.name}</Label>
+        <ActivityIndicator 
+          animating={this.props.state.Meeting.blocking && item.key == this.state.loading_index}
+        />
       </Item>
     );
   }
 
-  multiCheck = (item) => {
+  multiCheck = (item, index) => {
     let allOrgAttendees = this.getAllOrgAttendees(item);
     let selectedCount = 0;
     let included = false;
@@ -221,15 +235,18 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
     }
     let checked = selectedCount == allOrgAttendees.length ? true: false;
     let checkBoxColor = checked == included ? "#00C853": "#9E9E9E";
-    
     return (
       <MeetingItemForOrgnize
         item            = {item}
         checked         = {checked}
         included        = {included}
         checkBoxColor   = {checkBoxColor}
-        itemOnPress     = {this.state.onItemPress}
+        itemOnPress     = {(value)=>{
+          this.setState({ loading_index:index });
+          this.state.onItemPress(value);
+        }}
         onItemNextIconPress = {this.state.onItemNextIconPress}
+        loading         = {this.props.state.Meeting.blocking && index == this.state.loading_index}
       />
     );
   }

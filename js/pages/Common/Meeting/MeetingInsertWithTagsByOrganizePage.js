@@ -152,8 +152,9 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
           NavigationService.navigate("MeetingInsertWithTagsForSelect", {
             selectList    :factories,
             onItemPress   : async (value)=>{
+              this.props.actions.blocking(true); 
               await this.props.actions.getOrg(value); // 取得組織架構資料
-              this.props.actions.releaseBlocking(); // 取得組織架構資料
+              this.props.actions.blocking(false); 
               this.navigateNextOrg();
             },
             renderItemMode:"normal",  // normal一般, multiCheck多選, multiAttendees多選參與人
@@ -194,7 +195,7 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
       NavigationService.push("MeetingInsertWithTagsForSelect", {
         orgManager    :org.members == null ? false : org.members,
         selectList    :org.subDep,
-        onItemPress   :(value)=>{
+        onItemPress   :async (value)=>{
           this.props.actions.organizeCheckboxOnPress( value );
         },
         onItemNextIconPress:(value)=>{

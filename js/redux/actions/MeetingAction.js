@@ -579,12 +579,18 @@ function addOrRemoveTag( item, getState ){
 
 export function organizeCheckboxOnPress(checkItemAttendees){
 	return async (dispatch, getState) => {
+		dispatch({
+			type: MeetingTypes.MEETING_BLOCKING,
+			isblocking:true
+		});
+
 		// 將所有要新增的人員暫存起來
 		// 先檢查是要新增還是刪除
 		// 新增的話先搜尋有沒有在redux裡面了 然後檢查有無會議衝突
 		// 刪除的話搜尋相同id然後刪除
 
-		let allOrgAttendees = await getAllOrgAttendees(checkItemAttendees);
+		// let allOrgAttendees = await getAllOrgAttendees(checkItemAttendees);
+		let allOrgAttendees = getAllOrgAttendees(checkItemAttendees);
 		let reduxAttendees = getState().Meeting.attendees; //已經存在的
 
 		// checkValue檢查看看有沒有全部人包含在裡面
@@ -624,6 +630,7 @@ export function organizeCheckboxOnPress(checkItemAttendees){
 				getState().Meeting.attendees_endDate,
 				getState().UserInfo.UserInfo
 			);
+			console.log("456789");
 
 			if (enableMeeting.length == 0) {
 				reduxAttendees = [...reduxAttendees, ...allOrgAttendees];
@@ -654,6 +661,11 @@ export function organizeCheckboxOnPress(checkItemAttendees){
 				}
 			}
 		}
+
+		dispatch({
+			type: MeetingTypes.MEETING_BLOCKING,
+			isblocking:false
+		});
 
 		dispatch({
 			type     :MeetingTypes.MEETING_SET_ATTENDEES,
@@ -750,11 +762,11 @@ export function attendeeItemCalendarOnPress(attendee){
 	}
 }
 
-export function blocking(){
+export function blocking(isblocking){
 	return async (dispatch, getState) => {
 		dispatch({
 			type: MeetingTypes.MEETING_BLOCKING,
-
+			isblocking
 		});
 	}
 }

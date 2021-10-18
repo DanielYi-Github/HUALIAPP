@@ -260,6 +260,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
           onCheckColor  ={checkBoxColor}
           onTintColor   ={checkBoxColor}
           style         ={{ marginRight: 20 }}
+          animationDuration = {0.01}
         />
         <Label>{item.item.label} </Label><Text note>{item.item.depname}</Text>
 

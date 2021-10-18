@@ -75,6 +75,7 @@ class SortableRow extends Component {
                 onCheckColor = {"#E25241"}
                 onTintColor  = {"#E25241"}
                 tintColors   = {{true: "#E25241", false: '#aaaaaa'}}
+                animationDuration = {0.01}
               />
           </Left>
           <Body style={{justifyContent: 'space-between', paddingLeft: 10, flexDirection: 'row'}}>

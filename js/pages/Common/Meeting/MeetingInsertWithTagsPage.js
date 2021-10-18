@@ -6,7 +6,6 @@ import { connect }   from 'react-redux';
 import TagInput      from 'react-native-tags-input';
 import { bindActionCreators } from 'redux';
 import * as RNLocalize from "react-native-localize";
-import CheckBox from '@react-native-community/checkbox';
 
 import * as MeetingAction      from '../../../redux/actions/MeetingAction';
 import * as UpdateDataUtil     from '../../../utils/UpdateDataUtil';
@@ -149,8 +148,25 @@ class MeetingInsertWithTagsPage extends React.Component {
           :
             <Header style={this.props.style.HeaderBackground}>
               <Left>
-                <Button transparent onPress={() =>NavigationService.goBack()}>
-                  <Icon name='arrow-back' style={{color:this.props.style.color}}/>
+                <Button transparent onPress={() =>{
+                  Alert.alert(
+                    this.props.lang.FormContentGridForEvaluation.continueToGoBack, //請確認是否執行返回?
+                    this.props.lang.FormContentGridForEvaluation.continueToGoBackMsg, //確認返回將不儲存已編輯資料；如欲儲存已編輯資料，請點擊畫面右上角“完成”按鈕
+                    [
+                      {
+                        text: this.props.lang.FormContentGridForEvaluation.cancel, //取消
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel"
+                      },
+                      { 
+                        text: this.props.lang.FormContentGridForEvaluation.goBack, //確認返回, 
+                        onPress: () => NavigationService.goBack(),
+                      style: "destructive",
+                      }
+                    ]
+                  );
+                }}>
+                  <Icon name='close' style={{color:this.props.style.color}}/>
                 </Button>
               </Left>
               <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>

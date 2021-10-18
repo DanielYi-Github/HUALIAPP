@@ -15,3 +15,4 @@ export const MEETING_SET_COMPANIES             = 'MEETING_SET_COMPANIES';   //�
 export const MEETING_SET_ATTENDEES_BY_POSITION = 'MEETING_SET_ATTENDEES_BY_POSITION';   //添加職位分類的與會人員選項
 export const MEETING_SET_ORGANIZATION 		   = 'MEETING_SET_ORGANIZATION';   //添加組織樹選項
 export const MEETING_SET_DEFAULT_MEETION_INFO  = 'MEETING_SET_DEFAULT_MEETION_INFO'; //設置與會人員的初始值
+export const MEETING_BLOCKING 				   = 'MEETING_BLOCKING'; 				//設置畫面是否要鎖住，不能點擊
