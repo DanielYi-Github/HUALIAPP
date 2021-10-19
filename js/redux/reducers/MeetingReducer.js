@@ -20,7 +20,8 @@ const initialState = {
   selectedCompany               : "",
   attendees_by_position         : [],
   organization_tree             : null,
-  blocking                      : false
+  blocking                      : false,
+  isNeedCheckMeetingTime        : true   //是否需要檢查會議時間衝突功能
 };
 
 export default function index(state = initialState, action = {}) {
@@ -99,7 +100,8 @@ export default function index(state = initialState, action = {}) {
         meetingOid         :action.oid,
         attendees          :action.attendees,
         attendees_startDate:action.startdate,
-        attendees_endDate  :action.enddate
+        attendees_endDate  :action.enddate,
+        isNeedCheckMeetingTime:action.isNeedCheckMeetingTime
       }
     case types.MEETING_SET_ATTENDEES:
       return{

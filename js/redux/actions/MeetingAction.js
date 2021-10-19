@@ -36,14 +36,15 @@ function loadModeType(meetingModeTypes){
 	}
 }
 
-export function setInitialMeetingInfoInRedux(attendees, oid, startdate, enddate){
+export function setInitialMeetingInfoInRedux(attendees, oid, startdate, enddate, isNeedCheckMeetingTime = true){
 	return async (dispatch, getState) => {
 		dispatch({
 			type     :MeetingTypes.MEETING_SET_DEFAULT_MEETION_INFO,
 			oid      : oid,
 			attendees: attendees,
 			startdate: startdate,
-			enddate  : enddate
+			enddate  : enddate,
+			isNeedCheckMeetingTime: isNeedCheckMeetingTime
 		}); 
 	}
 }
@@ -509,33 +510,39 @@ function setOrganization_tree(organization){
 
 export function attendeeItemOnPress(attendee){
 	return async (dispatch, getState) => {
-		
-		let enableMeeting = await checkHaveMeetingTime(
-			getState().Meeting.meetingOid,
-			[{id:attendee.id}], 
-			getState().Meeting.attendees_startDate, 
-			getState().Meeting.attendees_endDate,
-			getState().UserInfo.UserInfo
-		);
+		if (getState().Meeting.isNeedCheckMeetingTime) {
+			let enableMeeting = await checkHaveMeetingTime(
+				getState().Meeting.meetingOid,
+				[{id:attendee.id}], 
+				getState().Meeting.attendees_startDate, 
+				getState().Meeting.attendees_endDate,
+				getState().UserInfo.UserInfo
+			);
 
-		if (enableMeeting.length == 0) {
-		  let attendees = addOrRemoveTag( attendee, getState);
-		  dispatch({
-		  	type     :MeetingTypes.MEETING_SET_ATTENDEES,
-		  	attendees: attendees,
-		  }); 
+			if (enableMeeting.length == 0) {
+			  let attendees = addOrRemoveTag( attendee, getState);
+			  dispatch({
+			  	type     :MeetingTypes.MEETING_SET_ATTENDEES,
+			  	attendees: attendees,
+			  }); 
+			} else {
+			  let lang = getState().Language.lang.MeetingPage;
+			  Alert.alert(
+			    lang.alertMessage_duplicate, //"有重複"
+			    `${lang.alertMessage_period} ${attendee.name} ${lang.alertMessage_meetingAlready}`,
+			    [
+			      { text: "OK", onPress: () => console.log("OK Pressed") }
+			    ],
+			    { cancelable: false }
+			  );
+			}
 		} else {
-		  let lang = getState().Language.lang.MeetingPage;
-		  Alert.alert(
-		    lang.alertMessage_duplicate, //"有重複"
-		    `${lang.alertMessage_period} ${attendee.name} ${lang.alertMessage_meetingAlready}`,
-		    [
-		      { text: "OK", onPress: () => console.log("OK Pressed") }
-		    ],
-		    { cancelable: false }
-		  );
+			let attendees = addOrRemoveTag( attendee, getState);
+			dispatch({
+				type     :MeetingTypes.MEETING_SET_ATTENDEES,
+				attendees: attendees,
+			}); 
 		}
-		
 	}
 }
 
@@ -622,35 +629,38 @@ export function organizeCheckboxOnPress(checkItemAttendees){
 				unInside.push(checkItem);
 			}
 
-			// 將所有的集體送出檢查時間有無異常
-			let enableMeeting = await checkHaveMeetingTime(
-				getState().Meeting.meetingOid,
-				unInside, 
-				getState().Meeting.attendees_startDate, 
-				getState().Meeting.attendees_endDate,
-				getState().UserInfo.UserInfo
-			);
-			console.log("456789");
-
-			if (enableMeeting.length == 0) {
-				reduxAttendees = [...reduxAttendees, ...allOrgAttendees];
-			} else {
-				let unAbles = "";
-				for(let i in enableMeeting){
-					unAbles = i==0 ? unAbles+enableMeeting[i].name : unAbles+", "+enableMeeting[i].name
-				}
-				
-  				let lang = getState().Language.lang.MeetingPage;
-				Alert.alert(
-					lang.alertMessage_duplicate, //"有重複"
-					`${lang.alertMessage_period} ${unAbles} ${lang.alertMessage_meetingAlready}`,
-					[
-					  { text: "OK", onPress: () => console.log("OK Pressed") }
-					],
-					{ cancelable: false }
+			// 是否需要檢查會議時間衝突
+			if (getState().Meeting.isNeedCheckMeetingTime) {
+				// 將所有的集體送出檢查時間有無異常
+				let enableMeeting = await checkHaveMeetingTime(
+					getState().Meeting.meetingOid,
+					unInside, 
+					getState().Meeting.attendees_startDate, 
+					getState().Meeting.attendees_endDate,
+					getState().UserInfo.UserInfo
 				);
-			}
 
+				if (enableMeeting.length == 0) {
+					reduxAttendees = [...reduxAttendees, ...allOrgAttendees];
+				} else {
+					let unAbles = "";
+					for(let i in enableMeeting){
+						unAbles = i==0 ? unAbles+enableMeeting[i].name : unAbles+", "+enableMeeting[i].name
+					}
+					
+	  				let lang = getState().Language.lang.MeetingPage;
+					Alert.alert(
+						lang.alertMessage_duplicate, //"有重複"
+						`${lang.alertMessage_period} ${unAbles} ${lang.alertMessage_meetingAlready}`,
+						[
+						  { text: "OK", onPress: () => console.log("OK Pressed") }
+						],
+						{ cancelable: false }
+					);
+				}
+			} else {
+				reduxAttendees = [...reduxAttendees, ...allOrgAttendees];
+			}
 		} else {
 			for(let checkItem of allOrgAttendees){
 				for(let i in reduxAttendees){
@@ -708,34 +718,38 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 				unInside.push(checkItem);
 			}
 
-			// 將所有的集體送出檢查時間有無異常
-			let enableMeeting = await checkHaveMeetingTime(
-				getState().Meeting.meetingOid,
-				unInside, 
-				getState().Meeting.attendees_startDate, 
-				getState().Meeting.attendees_endDate,
-				getState().UserInfo.UserInfo
-			);
-
-			if (enableMeeting.length == 0) {
-				attendees = [...attendees, ...checkItemAttendees];
-			} else {
-				let unAbles = "";
-				for(let i in enableMeeting){
-					unAbles = i==0 ? unAbles+enableMeeting[i].name : unAbles+", "+enableMeeting[i].name
-				}
-				
-  				let lang = getState().Language.lang.MeetingPage;
-				Alert.alert(
-					lang.alertMessage_duplicate, //"有重複"
-					`${lang.alertMessage_period} ${unAbles} ${lang.alertMessage_meetingAlready}`,
-					[
-					  { text: "OK", onPress: () => console.log("OK Pressed") }
-					],
-					{ cancelable: false }
+			//需不需要做會議時間衝突檢查
+			if (getState().Meeting.isNeedCheckMeetingTime){
+				// 將所有的集體送出檢查時間有無異常
+				let enableMeeting = await checkHaveMeetingTime(
+					getState().Meeting.meetingOid,
+					unInside, 
+					getState().Meeting.attendees_startDate, 
+					getState().Meeting.attendees_endDate,
+					getState().UserInfo.UserInfo
 				);
-			}
 
+				if (enableMeeting.length == 0) {
+					attendees = [...attendees, ...checkItemAttendees];
+				} else {
+					let unAbles = "";
+					for(let i in enableMeeting){
+						unAbles = i==0 ? unAbles+enableMeeting[i].name : unAbles+", "+enableMeeting[i].name
+					}
+					
+	  				let lang = getState().Language.lang.MeetingPage;
+					Alert.alert(
+						lang.alertMessage_duplicate, //"有重複"
+						`${lang.alertMessage_period} ${unAbles} ${lang.alertMessage_meetingAlready}`,
+						[
+						  { text: "OK", onPress: () => console.log("OK Pressed") }
+						],
+						{ cancelable: false }
+					);
+				}
+			} else {
+				attendees = [...attendees, ...checkItemAttendees];
+			}
 		} else {
 			for(let checkItem of checkItemAttendees){
 				for(let i in attendees){

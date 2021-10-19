@@ -320,6 +320,10 @@ let MeetingInsertWithTagsForSelectPagefunction = (props) => {
     if (item.name == "MeetingInsertWithTags") {
       MeetingInsertWithTagsPageRouterKey = item.key;
     }
+
+    if (item.name == "MeetingSearchWithTags") {
+      MeetingInsertWithTagsPageRouterKey = item.key;
+    }
   }
 
   return <MeetingInsertWithTagsForSelectPage {...props} MeetingInsertWithTagsPageRouterKey={MeetingInsertWithTagsPageRouterKey} />;

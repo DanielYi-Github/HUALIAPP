@@ -266,6 +266,10 @@ let MeetingInsertWithTagsFurtherPagefunction = (props) => {
     if (item.name == "MeetingInsertWithTags") {
       MeetingInsertWithTagsPageRouterKey = item.key;
     }
+
+    if (item.name == "MeetingSearchWithTags") {
+      MeetingInsertWithTagsPageRouterKey = item.key;
+    }
   }
 
   return <MeetingInsertWithTagsByOrganizePage {...props} MeetingInsertWithTagsPageRouterKey={MeetingInsertWithTagsPageRouterKey} />;

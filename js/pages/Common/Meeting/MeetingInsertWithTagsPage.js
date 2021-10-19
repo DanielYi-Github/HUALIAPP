@@ -48,7 +48,8 @@ class MeetingInsertWithTagsPage extends React.Component {
       this.props.route.params.attendees,
       this.state.oid,
       this.state.startdate,
-      this.state.enddate
+      this.state.enddate,
+      true  // 需要檢測會議時間衝突的設定
     );
     this.loadMoreData();
   }
@@ -272,7 +273,7 @@ class MeetingInsertWithTagsPage extends React.Component {
         </Item>
 
         <View style={{flex: 1, paddingTop: 20}}>
-          <Label style={{paddingLeft: 10, paddingBottom: 5, paddingTop     : 5,color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
+          <Label style={{paddingLeft: 10, paddingBottom: 5, paddingTop: 5,color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
             {`${this.props.state.Language.lang.CreateFormPage.QuickSelect} ${this.props.lang.MeetingPage.attendees}`}
           </Label>
           <FlatList
@@ -462,94 +463,6 @@ class MeetingInsertWithTagsPage extends React.Component {
     string = string.replace(/\s/g,"");
     return string;
   }
-
-  /*
-  itemOnPress = async (item) => {
-    let enableMeeting = await this.checkHaveMeetingTime(item.id, this.state.startdate, this.state.enddate);
-    if (enableMeeting) {
-      this.addTag(item);
-    } else {
-      Alert.alert(
-        this.props.lang.MeetingPage.alertMessage_duplicate, //"有重複"
-        `${this.props.lang.MeetingPage.alertMessage_period} ${item.name} ${this.props.lang.MeetingPage.alertMessage_meetingAlready}`,
-        [
-          { text: "OK", onPress: () => console.log("OK Pressed") }
-        ],
-        { cancelable: false }
-      );
-      
-    }
-  }
-  */
-
-  /*
-  checkHaveMeetingTime = async (id, startTime, endTime) => {
-    let user = this.props.state.UserInfo.UserInfo;
-    let meetingParams = {
-      startdate:startTime,
-      enddate  : endTime,
-      attendees:[ {id:id} ],
-      timezone :RNLocalize.getTimeZone(),
-      oid      : this.state.oid
-    }
-    let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
-      if (result.length == 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }).catch((errorResult)=>{
-      console.log("errorResult",errorResult.message);
-      return false;
-    });
-
-    return searchMeetingResult;
-  }
-  */
-
-  /*
-  addTag = (item) => {      
-    let attendees = this.props.state.Meeting.attendees;
-    let isAdded = false;
-
-    for(let value of attendees){
-      if(item.id == value.id) isAdded = true; 
-    }
-
-    if (isAdded) {
-      this.removeTag(item);
-      // ToastUnit.show('error', this.props.state.Language.lang.CreateFormPage.NoAreadyItem);
-    } else {
-        attendees.push(item);
-        this.props.actions.setAttendees(attendees);
-    }
-    
-    this._content.wrappedInstance.scrollToEnd({animated: true});
-  }
-  */
-  /*
-  calendarOnPress = (item) => {
-    //顯示此人有哪些會議
-    NavigationService.navigate("MeetingTimeForPerson", {
-      person: item,
-    });
-  }
-  */
-
-  /*
-  removeTag = (item) => {
-    let attendees = this.props.state.Meeting.attendees;
-
-    let removeIndex = 0;
-    for(let i in attendees){
-      if(item.id == attendees[i].id) removeIndex = i;
-    }
-
-    attendees.splice(removeIndex, 1);
-
-    this.props.actions.setAttendees(attendees);
-  }
-  */
 }
 
 export let MeetingInsertWithTagsPageStyle = connectStyle( 'Page.FormPage', {} )(MeetingInsertWithTagsPage);
