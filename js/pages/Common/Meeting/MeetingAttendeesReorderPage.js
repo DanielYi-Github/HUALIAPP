@@ -27,7 +27,7 @@ class MeetingAttendeesReorderPage extends React.Component {
       }
 
       return (
-        <Container>
+        <View style                 ={{flex:1}}>
           <Header style={this.props.style.HeaderBackground}>
             <Left>
               <Button transparent onPress={() =>NavigationService.goBack()}>
@@ -59,14 +59,13 @@ class MeetingAttendeesReorderPage extends React.Component {
               </TouchableOpacity>
             </Right>
           </Header>
-
-          <SortableList
-            style                 ={{flex:1}}
-            contentContainerStyle ={{width: this.props.style.PageSize.width}}
-            data                  ={this.props.state.Meeting.attendees}
-            renderRow             ={this.renderSortableRow} 
-            onReleaseRow          ={(key,currentOrder)=>{ this.changeDefaultvalueArray(currentOrder);}}
-          />
+            <SortableList
+              style                 ={{flex:1}}
+              contentContainerStyle ={{width: this.props.style.PageSize.width}}
+              data                  ={this.props.state.Meeting.attendees}
+              renderRow             ={this.renderSortableRow} 
+              onReleaseRow          ={(key,currentOrder)=>{ this.changeDefaultvalueArray(currentOrder);}}
+            />
 
           <Footer>
             <Body>
@@ -94,7 +93,8 @@ class MeetingAttendeesReorderPage extends React.Component {
               </TouchableOpacity>
             </Right>
           </Footer>
-        </Container>
+        </View>
+        
       )
     };
 

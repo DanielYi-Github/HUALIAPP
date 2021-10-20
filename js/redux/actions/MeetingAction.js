@@ -481,6 +481,7 @@ function setAttendees_by_position(companies, selectedCompany){
 
 export function getOrg(value){
 	return async (dispatch, getState) => {
+		// dispatch(meetingBlock(true));
 
 		let user = getState().UserInfo.UserInfo;
 		let action = "org/hr/meeting/getOrg";
@@ -496,7 +497,7 @@ export function getOrg(value){
 			console.log(err);
 			return null;
         })
-
+		// dispatch(meetingBlock(false));
 		dispatch(setOrganization_tree(organization));
 	}
 }
