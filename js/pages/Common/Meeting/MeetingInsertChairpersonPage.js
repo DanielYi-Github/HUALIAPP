@@ -124,7 +124,7 @@ class MeetingInsertChairpersonPage extends React.Component {
     searchedData = (searchedData == null) ? this.state.searchedData : searchedData;
     
     let user = this.props.state.UserInfo.UserInfo;
-    let action = "org/hr/getMBManagers";
+    let action = "org/hr/meeting/getMBManagers";
 
     this.setState({ isFooterRefreshing: true });
     if (!this.state.isFooterRefreshing) {
@@ -178,8 +178,11 @@ class MeetingInsertChairpersonPage extends React.Component {
           console.log(err);
         })
       } else {
-        let actionObject = { condition:"" }; //查詢使用
-        actionObject.count = this.state.data.length;
+        //查詢使用
+        let actionObject = { 
+          condition:"" 
+        }; 
+        // actionObject.count = this.state.data.length;
 
         UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
           let isEnd = this.dealIsDataEnd(this.state.data, result);

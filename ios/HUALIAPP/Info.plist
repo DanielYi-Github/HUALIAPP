@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>華利實業dev</string>
+	<string>华利实业</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -26,6 +26,8 @@
 	<string>$(CODEPUSH_KEY)</string>
 	<key>CodePushServerURL</key>
 	<string>$(CODEPUSH_URL)</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<string>call phone for driver</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -48,16 +50,18 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCalendarsUsageDescription</key>
+	<string>This app requires access to the calendar</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Let user can store coworker's contacted information in user's phone.</string>
+	<string>Let user can store coworker&apos;s contacted information in user&apos;s phone.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Let user can store coworker's contacted information in user's phone.</string>
+	<string>Let user can store coworker&apos;s contacted information in user&apos;s phone.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>User can use faceID to login the app.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>The React-Native Notification library, Jpush, needs user's device location to push notification message to user.</string>
+	<string>The React-Native Notification library, Jpush, needs user&apos;s device location to push notification message to user.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>The React-Native Notification library, Jpush, needs user's device location to push notification message to user.</string>
+	<string>The React-Native Notification library, Jpush, needs user&apos;s device location to push notification message to user.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Let user can upload potots to be their profile image.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -102,5 +106,7 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
 </dict>
 </plist>

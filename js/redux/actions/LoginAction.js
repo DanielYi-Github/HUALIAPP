@@ -215,17 +215,18 @@ export function cancelEmpidFirstLoginState(){
 export function loginByAD(account, password) {
 	//AD賬號登錄
 	return async (dispatch, getState) => {
-		dispatch(login_doing());						//開始顯示載入資料畫面
-		var user = new User(); 							//使用者初始化
-		user.setRegID(getState().Login.jpushRegistrationID);
-		user.setLoginID(account.toLowerCase());			//大寫轉小寫
-		user.setPassword(Common.encrypt(password));
+		dispatch(login_doing());								//開始顯示載入資料畫面
+
+		var user = new User(); 									//使用者初始化
+		user.setRegID( getState().Login.jpushRegistrationID );
+		user.setLoginID( account.toLowerCase() );				//大寫轉小寫
+		user.setPassword( Common.encrypt(password) );
 		
 		let checkResult = await checkLoginByAD(user);	
 		if (checkResult.result) {
 			user      = checkResult.content.Value.user;	// 登入成功
 			user.lang = getState().Language.langStatus;	//給定手機語系
-			this.initialApi(user,"ad");
+			this.initialApi( user, "ad");
 			dispatch( setBiosUserInfo({}, false) );
 		} else {
 			dispatch(login_done(false, checkResult.content)); //登入失敗，顯示訊息  
@@ -255,9 +256,9 @@ export function loginByEmpid(empid, passwordEmp) {
 
 		let lang = getState().Language.langStatus;
 		var user = new User(); //使用者初始化
-		user.setRegID(getState().Login.jpushRegistrationID);
-		user.setLoginID(empid); //工號登陸需將login內容改為id內容
-		user.setPassword(passwordEmp);
+		user.setRegID( getState().Login.jpushRegistrationID );
+		user.setLoginID( empid ); //工號登陸需將login內容改為id內容
+		user.setPassword( Common.encrypt(passwordEmp) );
 
 		let checkResult = await checkLoginByEmpid(user, lang);
 
@@ -266,9 +267,9 @@ export function loginByEmpid(empid, passwordEmp) {
 				case "initialEmp":
 					// 跳頁至修改密碼畫面				
 					NavigationService.navigate('InitialPassword', {
-						empid: empid,
+						empid      : empid,
 						empPassword: passwordEmp,
-						basicData: checkResult.content.basicData
+						basicData  : checkResult.content.basicData
 					});
 					dispatch(login_done(true));
 					break;
@@ -277,7 +278,7 @@ export function loginByEmpid(empid, passwordEmp) {
 					this.initialApi(user, "empid");
 					break;
 				default:
-				dispatch(login_done(false, checkResult.content.Message));
+					dispatch(login_done(false, checkResult.content.Message));
 			}
 		} else {
 			dispatch(login_done(false, checkResult.content.message));
@@ -308,13 +309,32 @@ async function checkLoginByEmpid(user, lang){
 	return result;
 }
 
-export function loginByToken(user) {
+export function loginByImei(biosInfo,langStatus) {
 	return dispatch => {
-
 		//開始顯示載入資料畫面
 		dispatch(login_doing());
-		UpdateDataUtil.getMBUserInfoByToken(user).then((result) => {
+
+		UpdateDataUtil.loginByImei( biosInfo, langStatus ).then((user) => {
+			if (user) {
+				this.initialApi(user,"imei");
+			} else {
+				dispatch(login_done(false));  //登入失敗，跳至登入頁
+			}
+		}).catch((e)=>{	
+			dispatch(login_done(false, e));  //登入失敗，跳至登入頁
+		});
+	}
+}
+
+export function loginByToken(user) {
+	return dispatch => {
+		//開始顯示載入資料畫面
+		dispatch(login_doing());
+
+		UpdateDataUtil.loginByToken(user).then((result) => {
+			user = result;
 			this.initialApi(user,"token");
+
 	  		DeviceStorageUtil.get('update').then((data) => {
 	  		  data = data ? JSON.parse(data) : data;	
 	  	      if( data=='Y'){
@@ -330,37 +350,11 @@ export function loginByToken(user) {
 	}
 }
 
-export function loginByImei(biosInfo,langStatus) {
-	return dispatch => {
-		console.log("loginByImei");
-		//開始顯示載入資料畫面
-		dispatch(login_doing());
-		UpdateDataUtil.getMBUserInfoByImei(biosInfo,langStatus).then((user) => {
-			if (user) {
-				this.initialApi(user,"imei");
-
-				setTimeout(
-					function(){
-				 		// alert("Hello"); 
-				 		DeviceStorageUtil.set('User', user); //存在客戶端
-				 	}, 
-				3000);
-				// DeviceStorageUtil.set('User', user); //存在客戶端
-			} else {
-				dispatch(login_done(false));  //登入失敗，跳至登入頁
-			}
-		}).catch((e)=>{	
-			dispatch(login_done(false, e));  //登入失敗，跳至登入頁
-		});
-	}
-}
-
 /*****APP登入後進行的一連串配置*****/
 export function initialApi( user, way=false ){
 	return (dispatch, getState) => {
 
 		//運行時間最久，最先執行
-		
 		LoggerUtil.uploadLocalDBErrorLog(user); 	// 將資料庫的log上傳至server
   		UpdateDataUtil.updateContact(user); //通訊錄	
   		UpdateDataUtil.updateMSG(user); 	//手機消息-執行最久
@@ -375,7 +369,6 @@ export function initialApi( user, way=false ){
   			console.log(e);
   		})
   		
-
   		//首頁必須出現 統一執行
 		let arr = [
 			UpdateDataUtil.updateAPP(user),
@@ -393,6 +386,8 @@ export function initialApi( user, way=false ){
 		];
 
 	  	Promise.all(arr).then( async (data) => {
+
+	  		
 	  		loadBannerImagesIntoState(dispatch, getState);//撈取HomePage Banners資料
 	        user = certTips(dispatch, getState(), user); //判斷是否進行提示生物識別設定
 			dispatch(setUserInfo(user));				//將資料存放在UserInfoReducer的state裡
@@ -409,6 +404,7 @@ export function initialApi( user, way=false ){
 
 			user = await getUserInfoWithImage(user); 	//處理使用者圖片的後續處理
 			dispatch(setUserInfo(user));				//將資料存放在UserInfoReducer的state裡
+
 			
 	  	}).catch((e)=>{
 	  		
@@ -757,7 +753,7 @@ export function loginChangeAccount(account, password, checkAccType, actions, bio
 		    break;
 		  case "EMPID":
 			userChange.setLoginID(account); 						
-			userChange.setPassword(password);
+			userChange.setPassword(Common.encrypt(password));
 			checkResult = await checkLoginByEmpid(userChange, lang);
 		    break;
 		  default:

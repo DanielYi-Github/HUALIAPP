@@ -3,13 +3,12 @@ import * as React from 'react';
 export const navigationRef = React.createRef();
 import { StackActions } from '@react-navigation/native';
 
-
 export function navigate(routeName, params) {
   navigationRef.current?.navigate(routeName, params);
 }
 
 export function push(routeName, params){
-	console.log(navigationRef);
+	navigationRef.current.dispatch(StackActions.push(routeName, params));
 }
 
 export function goBack(){

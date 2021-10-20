@@ -362,6 +362,18 @@ export function checkRequiredFormValue(formFormat) {
 					} else {
 						item.requiredAlbert = false;
 					}
+
+					// 檢查是不是必填的文字輸入匡，而且需要必填
+					if (item.columntype == "txt" || item.columntype == "tar") {
+					  let string = item.defaultvalue;
+					  string = string.replace(/\r\n/g,"");
+					  string = string.replace(/\n/g,"");
+					  string = string.replace(/\s/g,"");
+					  if (string.length ==0){
+					   item.requiredAlbert = true;
+					   isRequiredAlert = `"${item.component.name}" ${getState().Language.lang.CreateFormPage.RequiredFieldAlert}`; // 新增必填資訊警告
+					  }
+					}
 				}
 			}
 		}
