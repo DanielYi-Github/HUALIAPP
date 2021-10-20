@@ -586,10 +586,7 @@ function addOrRemoveTag( item, getState ){
 
 export function organizeCheckboxOnPress(checkItemAttendees){
 	return async (dispatch, getState) => {
-		dispatch({
-			type: MeetingTypes.MEETING_BLOCKING,
-			isblocking:true
-		});
+		dispatch(meetingBlock(true));
 
 		// 將所有要新增的人員暫存起來
 		// 先檢查是要新增還是刪除
@@ -642,6 +639,7 @@ export function organizeCheckboxOnPress(checkItemAttendees){
 
 				if (enableMeeting.length == 0) {
 					reduxAttendees = [...reduxAttendees, ...allOrgAttendees];
+					dispatch( meetingBlock(false) );
 				} else {
 					let unAbles = "";
 					for(let i in enableMeeting){
@@ -653,13 +651,16 @@ export function organizeCheckboxOnPress(checkItemAttendees){
 						lang.alertMessage_duplicate, //"有重複"
 						`${lang.alertMessage_period} ${unAbles} ${lang.alertMessage_meetingAlready}`,
 						[
-						  { text: "OK", onPress: () => console.log("OK Pressed") }
+						  { text: "OK", onPress: () => {
+							dispatch( meetingBlock(false) );
+						  }}
 						],
 						{ cancelable: false }
 					);
 				}
 			} else {
 				reduxAttendees = [...reduxAttendees, ...allOrgAttendees];
+				dispatch( meetingBlock(false) );
 			}
 		} else {
 			for(let checkItem of allOrgAttendees){
@@ -670,12 +671,8 @@ export function organizeCheckboxOnPress(checkItemAttendees){
 					}
 				}
 			}
+			dispatch( meetingBlock(false) );
 		}
-
-		dispatch({
-			type: MeetingTypes.MEETING_BLOCKING,
-			isblocking:false
-		});
 
 		dispatch({
 			type     :MeetingTypes.MEETING_SET_ATTENDEES,
@@ -697,6 +694,13 @@ function getAllOrgAttendees(checkItemAttendees){
 	}
 
 	return tempAttendees;
+}
+
+function meetingBlock(isblicking){
+	return{
+		type: MeetingTypes.MEETING_BLOCKING,
+		isblocking:isblicking
+	}
 }
 
 export function positionCheckboxOnPress(checkValue, checkItemAttendees){
@@ -778,9 +782,6 @@ export function attendeeItemCalendarOnPress(attendee){
 
 export function blocking(isblocking){
 	return async (dispatch, getState) => {
-		dispatch({
-			type: MeetingTypes.MEETING_BLOCKING,
-			isblocking
-		});
+		dispatch( meetingBlock(isblocking) );
 	}
 }
