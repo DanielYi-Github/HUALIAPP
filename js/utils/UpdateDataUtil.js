@@ -4206,6 +4206,7 @@ export async function updateCompanyDocument(user) {
 			array.push(row.status)
 			array.push(Common.dateFormat(row.crtdat))
 			array.push(Common.dateFormat(row.txdat))
+			array.push(row.sort)
 			return array
 		}
 
@@ -4216,7 +4217,7 @@ export async function updateCompanyDocument(user) {
 					return promise;
 				}
 				let content = data.content
-				let column = "OID,CO,DOC_TYPE,SUBJECT,RELEASE_DAT,AUTH,VISITCOUNT,FILEID,FILEURL,FILESIZE,STATUS,CRTDAT,TXDAT"
+				let column = "OID,CO,DOC_TYPE,SUBJECT,RELEASE_DAT,AUTH,VISITCOUNT,FILEID,FILEURL,FILESIZE,STATUS,CRTDAT,TXDAT,SORT"
 				let excuteList = Common.tranBatchInsertSQL('THF_COMPANY_DOC', content, dataFun, column, 30)
 				SQLite.insertData_new(excuteList).then(() => {
 					let end = new Date().getTime();
@@ -4231,7 +4232,7 @@ export async function updateCompanyDocument(user) {
 					return promise;
 				}
 				let content = data.content
-				let column = "OID,CO,DOC_TYPE,SUBJECT,RELEASE_DAT,AUTH,VISITCOUNT,FILEID,FILEURL,FILESIZE,STATUS,CRTDAT,TXDAT"
+				let column = "OID,CO,DOC_TYPE,SUBJECT,RELEASE_DAT,AUTH,VISITCOUNT,FILEID,FILEURL,FILESIZE,STATUS,CRTDAT,TXDAT,SORT"
 				let excuteList = Common.tranDiffUpdateSQL('THF_COMPANY_DOC', content, dataFun, column, 30)
 				const dExcuteList = excuteList['dExcuteList']
 				const iExcuteList = excuteList['iExcuteList']

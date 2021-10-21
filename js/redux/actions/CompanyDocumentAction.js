@@ -83,7 +83,7 @@ export function initCompanyDocument() {
             //加载分类
             dispatch(loadCompanyDocumentType(arrDocumentType))
             //查询最新文件
-            queryCompanyDocumentData(appOid, 0, 10).then(result => {
+            queryCompanyDocumentData(appOid, 0, 10, null, null, "RELEASE_DAT desc").then(result => {
                 let arrDocumentNewestData = result.raw()
                 //将分类的ICON添加加进文件中
                 packCompanyDocumentData(arrDocumentType, arrDocumentNewestData)
@@ -149,7 +149,7 @@ export function queryCompanyDocumentType(appOid, lang) {
     return SQLiteUtil.selectData(sql, [])
 }
 //查询公司文件sql
-export function queryCompanyDocumentData(appOid, pageNum, pageSize, type, arrCondition) {
+export function queryCompanyDocumentData(appOid, pageNum, pageSize, type, arrCondition, sortColumn) {
     //拼接limit条件
     let limitWhere = ""
     if (pageNum != null && pageNum != undefined && pageSize != null && pageSize != undefined) {
@@ -170,6 +170,10 @@ export function queryCompanyDocumentData(appOid, pageNum, pageSize, type, arrCon
             conditionWhere = ` and (${arrCondition.join('or')}) `
         }
     }
+    //排序欄位
+    if (sortColumn == null && sortColumn == undefined) {
+        sortColumn = "SORT"
+    }
     let sql = `select OID, CO, DOC_TYPE, SUBJECT, date(RELEASE_DAT) as RELEASE_DAT, AUTH, VISITCOUNT+LOCALVISITCOUNT as VISITCOUNT, LOCALVISITCOUNT, FILEID, printf('%.2f',FILESIZE/1000/1000)||' MB' as FILESIZE, STATUS, CRTDAT, TXDAT 
         from(
             select *
@@ -182,7 +186,7 @@ export function queryCompanyDocumentData(appOid, pageNum, pageSize, type, arrCon
                 from THF_PERMISSION 
                 where DATA_TYPE='companydoc' and FUNC_OID='${appOid}'
             ) 
-            order by RELEASE_DAT desc ${limitWhere}
+            order by ${sortColumn} ${limitWhere}
         )`
     return SQLiteUtil.selectData(sql, [])
 }
