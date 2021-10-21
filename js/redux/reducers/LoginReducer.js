@@ -105,6 +105,8 @@ export default function login(state = initialState, action = {}) {
         "DELETE FROM THF_CONTACT",
         "DELETE FROM THF_BANNER",
         "DELETE FROM THF_EVENT",
+        "DELETE FROM THF_DAILY_ORAL_ENGLISH",
+        "DELETE FROM THF_COMPANY_DOC",
         // "DELETE FROM THF_VERSION"
         "DELETE FROM THF_GROUPFILE",
       ];

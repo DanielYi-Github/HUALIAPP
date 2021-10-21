@@ -50,7 +50,8 @@ class FormInputContentGridPage extends Component {
 				<HeaderForGeneral
 				  isLeftButtonIconShow  = {true}
 				  leftButtonIcon        = {{name:"arrow-back"}}
-				  leftButtonOnPress     = {this.pageClose} 
+				  // leftButtonOnPress     = {this.pageClose} 
+				  leftButtonOnPress     = {NavigationService.goBack} 
 				  isRightButtonIconShow = {false}
 				  rightButtonIcon       = {null}
 				  rightButtonOnPress    = {null} 
@@ -190,8 +191,13 @@ class FormInputContentGridPage extends Component {
 			)
 		} else {
 			this.state.confirmOnPress( this.deepClone(tempData), this.state.editCheckItemIndex);
-			this.pageClose();
+			// this.pageClose();
+			NavigationService.goBack();
 		}
+	}
+
+	componentWillUnmount(){
+		this.pageClose();
 	}
 
 	pageClose = () => {
@@ -202,8 +208,6 @@ class FormInputContentGridPage extends Component {
 			data: value,
 			editCheckItemIndex: -1,
 		});
-
-		NavigationService.goBack();
 	}
 
 	// deep clone

@@ -530,9 +530,10 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		WriteQuestion: "求职问题或相关疑问皆可填写，我们会由专人与你联系。",
 		WrongNameMsg : "请填谢您的名字",
 		WrongMailMsg : "请填写您的邮箱",
+		NoEmpty      : "內容不能空白",
 		sucessMsg1   : "请填写您的邮箱感谢你的留言，我们会尽快与你联系。",
 		ErrorMsg     : "很抱歉，服务器营运中，请稍后再试",
-		Submit       : "提交"
+		Submit       : "提交",
 	},
 	RecruitDetailPage: {
 		RecruitInfo: "招聘信息"
@@ -637,12 +638,15 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		msg2:"送了你一个礼物"
 	},
 	DeputyPage:{
+		Condition:"条件",
 		Condition1:"条件1",
 		Relation:"关联性",
 		Condition2:"条件2",
+		Agent:"代理人",
 		DeputyWay:"代理方式",
 		DeputyStartTime:"代理起时",
 		DeputyEndTime:"代理迄时",
+		Notifier:"通知对象",
 		Running:"代理模式已启动，如需编辑请先停用",
 		NoRunning:"代理模式已停用",
 		Rules:"依规则代理",
@@ -827,6 +831,7 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		meetingPlaceInfo           :"会议室资讯",
 		meetingPlaceLink           :"会议连结",
 		meetingPlaceNO             :"入会号",
+		isShowPhysicalmeetingPlace :"是否添加实体会议室",
 		meetingPlace               :"会议室地点",
 		meetingSubjectRequire      :"会议主题必须填写",
 		alertMessage_equal         :"会议结束时间不能\"等于\"开始时间",
@@ -865,8 +870,33 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		crossDayMeeting            :"跨日会议",
 		avalableTime               :"此段时间各位都有空",
 		good                       :"太好了!",
-		yourTimezone   :"会议时间",
-		meetingTimezone:"时间"
+		yourTimezone               :"会议时间",
+		meetingTimezone            :"时间",
+		never                      :"不重复",
+		everyday                   :"每天",
+		workday                    :"工作日(周一到周五)",
+		everyWeek                  :"每周",
+		everyMonth                 :"每月",
+		custom                     :"自定义",
+		Sort     				   :"排序",
+		invitedByPosition 		   :"依职级选择",
+		invitedByOrganization 	   :"依组织架构选择",
+		selectPosition 			   :"请选择职级",
+		departmentHead 		   	   :"部门主管",
+		departmentOfCharged 	   :"管辖组织",
+		selected 				   :"已选择",
+		person 					   :"人",
+		selectedAttendeeReorder    :"已选与会人员排序",
+		noneNextOrg				   :"此厂区底下目前无可选单位",
+		MeetingModeType			   :{
+			Z:"Zoom",
+			S:"Skype",
+			W:"微信",
+			T:"腾讯会议",
+			M:"Team",
+			D:"钉钉",
+			A:"实体会议室"
+		}
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "公司文件",

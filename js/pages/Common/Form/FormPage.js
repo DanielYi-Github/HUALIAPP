@@ -180,7 +180,7 @@ class FormPage extends React.Component {
 
     let formPage = (
       <Container>
-        <MainPageBackground />
+        <MainPageBackground height={250}/>
         {/*標題列*/}
         <HeaderForGeneral
           isLeftButtonIconShow  = {true}
@@ -340,7 +340,7 @@ class FormPage extends React.Component {
       content:content,
       labelname:labelname+this.props.Language.Content
     }
-    // console.log(FormAllowAdd);
+    console.log(FormAllowAdd);
     return (
       <FormContent 
         key    ={0} 
@@ -478,6 +478,14 @@ class FormPage extends React.Component {
         if (item.isedit == "Y" && item.required == "Y") {
             if (item.defaultvalue == null) return false;
             if (item.defaultvalue == "" ||  item.defaultvalue.length == 0 ) return false;
+
+            if(item.columntype == "txt" || item.columntype == "tar"){
+              let tempValue = item.defaultvalue;
+              tempValue = tempValue.replace(/\r\n/g,"");
+              tempValue = tempValue.replace(/\n/g,"");
+              tempValue = tempValue.replace(/\s/g,"");
+              if (tempValue.length ==0) return false;
+            }
         }
       }
     }

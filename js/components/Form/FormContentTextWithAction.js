@@ -8,7 +8,6 @@ class FormContentTextWithAction extends Component {
 		super(props);
 		// 名稱、值、參數、能否編輯、強制編輯、欄位資料
 		this.state = {
-			labelname: props.data.component.name,
 			showEditModal: false,
 		};
 	}
@@ -36,7 +35,7 @@ class FormContentTextWithAction extends Component {
 	  				]}
 	  				error={this.props.data.requiredAlbert}>
  			   		  <Label style={{flex: 0, color:"#FE1717"}}>{ required }</Label>
- 			   		  <Label style={{flex: 0 }}>{this.state.labelname}</Label>
+ 			   		  <Label style={{flex: 0 }}>{this.props.data.component.name}</Label>
  			   		  <Text 
  			   		  	style={{
  			   		  		flex: 1, 
@@ -70,7 +69,7 @@ class FormContentTextWithAction extends Component {
   				  ]}
   				  >
  			   		<Label style={{flex: 0, color:"#FE1717"}}>{ required }</Label>
-  				  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
+  				  	<Label style={{flex: 0}}>{this.props.data.component.name}</Label>
   				    <Input 
   				    	scrollEnabled = {false}
   				    	// multiline 

@@ -32,6 +32,11 @@ class MineDetailPage extends React.Component {
       // 是否有資料
       let isUser = result.length ? true : false;
       if (!isUser) {
+        this.setState({
+          showNoUserDataAlert:!isUser,
+          // CarAdministrator: 
+        });
+          /*
         UpdateDataUtil.getCarAdministrator(user, this.props.state.Common.Companies_Contact.defaultCO).then((data)=>{
           // 是否顯示通訊錄資訊
           this.setState({
@@ -44,12 +49,14 @@ class MineDetailPage extends React.Component {
             CarAdministrator: e
           });
         });
+          */
       }
     });
   }
 
   render() {
     let user = this.props.state.UserInfo.UserInfo;
+    console.log(user);
     let page = this.props.state.Language.lang.MineDetailPage;
 
     let renderScene = (route, navigator) => {
@@ -114,7 +121,7 @@ class MineDetailPage extends React.Component {
         {/*
 
           */}
-          <H3 style={{marginTop: 10, marginBottom: 5, color:this.props.style.dynamicTitleColor}}>{user.name}</H3>
+          <H3 style={{marginTop: 10, marginBottom: 5, color:this.props.style.dynamicTitleColor}}>{user.name}{` ${user.dutname ? user.dutname: ''}`}</H3>
           <Text style={{marginBottom: 10, color:this.props.style.dynamicTitleColor}}>{user.plantName}  {user.depName}</Text>
 
           <Card>
@@ -126,6 +133,7 @@ class MineDetailPage extends React.Component {
               onPress  ={null}
             />
 
+            {/*
             <PersonItem
               title    ={page.CellPhone}
               value    ={user.cellphone}
@@ -133,6 +141,7 @@ class MineDetailPage extends React.Component {
               isButton ={true}
               onPress  ={this.goEdit.bind( this,'cellphone', page.CellPhone, user.cellphone, "phone-pad" )}
             />
+            */}
 
             <PersonItem
               title    ={page.Extension}
@@ -142,6 +151,7 @@ class MineDetailPage extends React.Component {
               onPress  ={this.goEdit.bind( this,'telphone', page.Extension, user.telphone, "phone-pad" )}
             />
 
+            {/*
             <PersonItem
               title    ={"Skype"}
               value    ={user.skype}
@@ -149,6 +159,7 @@ class MineDetailPage extends React.Component {
               isButton ={true}
               onPress  ={this.goEdit.bind( this,'skype', "Skype", user.skype, "default" )}
             />
+            */}
 
             <PersonItem
               title    ={page.Mail}
@@ -166,12 +177,14 @@ class MineDetailPage extends React.Component {
                 <Text style={{fontWeight: 'bold', color:"#FF5252"}}>
                   {page.NoUserDataAlertTitle}
                 </Text>
-                  <Text style={{marginTop: 5,color:"#757575"}}>
+                  <Text style={{marginTop: 5, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
                     {page.NoUserDataAlertContent}
 
+                    {/*
                     <Text style={{color:"#47ACF2", fontWeight: 'bold'}} onPress={this.goCarAdministrator}>
                       {" "+page.NoUserDataContactCarAdministrator}
                     </Text>
+                    */}
                   </Text>
 
               </Body>
@@ -215,29 +228,42 @@ class MineDetailPage extends React.Component {
       } else {
         // 上傳圖片
         // this.props.actions.updateUserdata(this.props.state.UserInfo.UserInfo, "picture", response.data);
+        console.log(this.props.state.UserInfo.UserInfo, response.data);
         this.props.actions.updateUserImage(this.props.state.UserInfo.UserInfo, "picture", response.data);
       }
     });
   }
 
   goCarAdministrator = () => {
-    SQLite.selectData(`select * from THF_CONTACT where status='Y' and NAME=? and CO=?`, [this.state.CarAdministrator.name, this.state.CarAdministrator.company]).then((result) => {
-      if (result.length == 0) {
-        let page = this.props.state.Language.lang.ContactDetailPage;
-        Alert.alert(
-          page.NoAdministratorTitle,
-          page.NoAdministratorText,
-          [
-            { text: page.Comfirm, onPress: () =>{} },
-          ],
-          { cancelable: false }
-        )
-      } else {
-        NavigationService.navigate("ContactDetail", {
-          data: result.item(0),
-        });
-      }
-    });
+    let page = this.props.state.Language.lang.ContactDetailPage;
+    if ( typeof this.state.CarAdministrator.name == 'undefined') {
+      Alert.alert(
+        page.NoAdministratorTitle,
+        page.NoAdministratorText,
+        [
+          { text: page.Comfirm, onPress: () =>{} },
+        ],
+        { cancelable: false }
+      )
+    } else {
+      SQLite.selectData(`select * from THF_CONTACT where status='Y' and NAME=? and CO=?`, [this.state.CarAdministrator.name, this.state.CarAdministrator.company]).then((result) => {
+        if (result.length == 0) {
+          Alert.alert(
+            page.NoAdministratorTitle,
+            page.NoAdministratorText,
+            [
+              { text: page.Comfirm, onPress: () =>{} },
+            ],
+            { cancelable: false }
+          )
+        } else {
+          NavigationService.navigate("ContactDetail", {
+            data: result.item(0),
+          });
+        }
+      });
+
+    }
   }
 }
 

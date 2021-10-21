@@ -54,11 +54,19 @@ class MinePage extends React.Component {
         selectThemeName = lang.MinePage.themeLight; 
     }
 
-    // 是否顯示代理人設定
-    let isShowBpmDeputySetting = false;
+    
+    let isShowBpmDeputySetting = false;   // 是否顯示代理人設定
+    let isShowMeetingSetting = false;     // 是否顯示會議管理設定
+    // console.log(this.props.state.UserInfo.UserInfo);
+    for(let role of this.props.state.UserInfo.UserInfo.roles){
+      if (role == "BPM") isShowBpmDeputySetting = true;
+    }
+    /*
     for(let FunctionData of this.props.state.Home.FunctionData){
       if (FunctionData.ID == "Sign") isShowBpmDeputySetting = true;
+      if (FunctionData.ID == "MeetingList") isShowMeetingSetting = true;
     }
+    */
 
     return (
       <Container>
@@ -141,6 +149,30 @@ class MinePage extends React.Component {
               null
             }
 
+            {/*會議管理設定*/}
+            {/* isShowMeetingSetting ?
+              <MineItem
+                title    = {"會議管理設定"}
+                iconBackgroundColor = {"#00B0FF"}
+                iconName = {"calendar"}
+                iconType = {"MaterialCommunityIcons"}
+                text     = {null}
+                onPress  = {this.goNext.bind(this,"MeetingSetting")}
+              />  
+              :
+              null
+            */}
+
+            {/*主題顏色*/}
+            <MineItem
+              title    = {lang.MinePage.changeTheme}
+              iconBackgroundColor = {"#ffc107"}
+              iconName = {"skin"}
+              iconType = {"AntDesign"}
+              text     = {selectThemeName}
+              onPress  = {this.showThemeSheet}
+            />
+
             {/*建議與反饋*/}
             <MineItem
               title    = {this.props.state.Language.lang.MinePage.advices}
@@ -159,16 +191,6 @@ class MinePage extends React.Component {
               iconType = {"MaterialCommunityIcons"}
               text     = {null}
               onPress  = {this.goNext.bind(this,"About")}
-            />
-
-            {/*主題顏色*/}
-            <MineItem
-              title    = {lang.MinePage.changeTheme}
-              iconBackgroundColor = {"#ffc107"}
-              iconName = {"skin"}
-              iconType = {"AntDesign"}
-              text     = {selectThemeName}
-              onPress  = {this.showThemeSheet}
             />
 
             {/*账号与安全*/}

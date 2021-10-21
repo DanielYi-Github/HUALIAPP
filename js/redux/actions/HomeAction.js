@@ -202,10 +202,11 @@ async function getWebViewUrl(user,WebViewID){
 		return null;
 	}); 
 	return webViewUrl;
-  }
+}
 
-  export function navigateFunctionPage(app = null, userID = null) {
+export function navigateFunctionPage(app = null, userID = null) {
 	return async (dispatch, getState) => {
+		userID = userID == null ? getState().UserInfo.UserInfo.id: userID; 
 		let recordHitCount = true;
 		let appID = app.ID
 		let appType = app.TYPE
@@ -248,9 +249,6 @@ async function getWebViewUrl(user,WebViewID){
 					case "OutDoorSurvey": //春節出行情況
 						NavigationService.navigate("Survey", {SurveyOID: "B936DC6D18263433E050000A760072A0"});
 						break;
-					case "VietnamCo_Survey": //疫情調查
-						NavigationService.navigate("Survey", {SurveyOID: "CA6ED0659B59A28DE050000A760063E2"});
-						break;
 					case "Documents": //集團文件
 						NavigationService.navigate("DocumentCategories");
 						break;
@@ -288,25 +286,28 @@ async function getWebViewUrl(user,WebViewID){
 				}
 		}
 
+		/*
 		if (recordHitCount) {
 			let iSQL = `insert into THF_APPVISITLOG(USERID,APPID) values('${userID}','${appID}')`;
 			SQLite.insertData(iSQL, []);
 		}
-
-		/*
-		let sSQL = `select * from THF_APPVISITLOG where APPID='${appID}'`;
-		SQLite.selectData(sSQL, []).then((result) => {
-			if (result.length > 0) {
-				let uSQL = `update THF_APPVISITLOG set VISITCOUNT=VISITCOUNT+1 where APPID='${appID}'`;
-				SQLite.updateData(uSQL, []);
-			} else {
-				let iSQL = `insert into THF_APPVISITLOG(USERID,APPID) values('${userID}','${appID}')`;
-				SQLite.insertData(iSQL, []);
-			}
-		});
 		*/
+
+		if (recordHitCount) {
+			let sSQL = `select * from THF_APPVISITLOG where APPID='${appID}'`;
+			SQLite.selectData(sSQL, []).then((result) => {
+				if (result.length > 0) {
+					let uSQL = `update THF_APPVISITLOG set VISITCOUNT=VISITCOUNT+1 where APPID='${appID}'`;
+					SQLite.updateData(uSQL, []);
+				} else {
+					let iSQL = `insert into THF_APPVISITLOG(USERID,APPID,VISITCOUNT) values('${userID}', '${appID}', 1)`;
+					SQLite.insertData(iSQL, []);
+				}
+			});
+		}
 	}
 }
+
 
 export function LockNoticeListState(NoticeListState){
 	return (dispatch, getState) => {
@@ -392,6 +393,7 @@ async function navigateMailFunction(state, dispatch){
 	let mail_isNull = (user.membereMail == "" || user.membereMail == null) ? true : false; 
 
 	if (mail_isNull) { //郵箱為空
+	// if (true) { //郵箱為空
 		//郵件伺服器連線出現問題，請稍後再試!
 		toastShow(state.Language.lang.MailPage.mailError);	 
 	} else {

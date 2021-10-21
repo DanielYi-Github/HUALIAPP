@@ -104,7 +104,7 @@ export default class FindPageFilterItem extends Component {
     	NavigationService.navigate( "MyForm", { Form:item });  // 表單獲取失敗要show 出提示訊息
 	}
 
-	goContact(item){
+	goContact = (item) => {
     	NavigationService.navigate( "ContactDetail", { data:item });
 	}
 

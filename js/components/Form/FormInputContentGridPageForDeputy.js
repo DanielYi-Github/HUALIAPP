@@ -106,7 +106,7 @@ class FormInputContentGridPageForDeputy extends Component {
 				<HeaderForGeneral
 				  isLeftButtonIconShow  = {true}
 				  leftButtonIcon        = {{name:"arrow-back"}}
-				  leftButtonOnPress     = {this.pageClose} 
+				  leftButtonOnPress     = {NavigationService.goBack} 
 				  isRightButtonIconShow = {false}
 				  rightButtonIcon       = {null}
 				  rightButtonOnPress    = {null} 
@@ -143,9 +143,6 @@ class FormInputContentGridPageForDeputy extends Component {
 
 		// 替換值，同時驗證grid之間 個筆資料的特殊驗證關係
 		// 改变item的defaultvalue值为当前所选（paramcode）或填的值
-		console.log('value',value);
-		console.log('item',this.deepClone(item));
-		console.log('AllItem.listComponent',this.deepClone(AllItem.listComponent));
 		item = FormUnit.updateFormValue(value, item, AllItem.listComponent);
 		
 		// 改变listComponent的defaultvalue值为当前所选（paramcode）或填的值
@@ -168,7 +165,6 @@ class FormInputContentGridPageForDeputy extends Component {
 				}
 			}
 		}
-		console.log('changeItem',this.deepClone(item));
 
 		// 判斷是否有url的action動作
 		// call API捞取资料（item.columnaction）
@@ -177,7 +173,6 @@ class FormInputContentGridPageForDeputy extends Component {
 			item,
 			AllItem.listComponent
 		);
-		console.log('columnactionValue',columnactionValue);
 		
 		// 根据条件1所选项设定条件2为cbo/txt，以及条件2 paramList值
 		if(editIndex == 3){
@@ -217,7 +212,6 @@ class FormInputContentGridPageForDeputy extends Component {
 		let checkIdisMe = true;
 		let tempData = this.state.data;
 		let temList = this.deepClone(tempData.listComponent);
-		console.log('temList',temList);
 
 		//判斷是否為不可編輯的狀態
 		if(temList[5].columntype != "txt" && temList[5].isedit == "Y"){
@@ -231,23 +225,19 @@ class FormInputContentGridPageForDeputy extends Component {
 				temList[6].defaultvalue = tempCond2;	
 			}else{
 				//判斷是否為修改
-				console.log('this.props.mixParam',this.props.mixParam);
 				let ckeckParam1 = this.getParamValue(temList[3].defaultvalue);
-				console.log('ckeckParam1',ckeckParam1);
 				if(ckeckParam1){
 					let tempCond1 = temList[3].defaultvalue;
 					temList[2].defaultvalue = tempCond1;
 				}
 
 				let ckeckParam2 = this.getParamValue(temList[5].defaultvalue);
-				console.log('ckeckParam2',ckeckParam2);
 				if(ckeckParam2){
 					let tempRelation = temList[5].defaultvalue;
 					temList[4].defaultvalue = tempRelation;
 				}
 
 				let ckeckParam3 = this.getParamValue(temList[7].defaultvalue);
-				console.log('ckeckParam3',ckeckParam3);
 				if(ckeckParam3){
 					let tempCond2 = temList[7].defaultvalue;
 					temList[6].defaultvalue = tempCond2;	
@@ -336,9 +326,14 @@ class FormInputContentGridPageForDeputy extends Component {
 
 				// 回调函数
 				this.state.confirmOnPress(tempData);
-				this.pageClose();
+				// this.pageClose();
+				NavigationService.goBack();
 			}
 		}
+	}
+
+	componentWillUnmount(){
+		this.pageClose();
 	}
 
 	pageClose = () => {
@@ -349,8 +344,6 @@ class FormInputContentGridPageForDeputy extends Component {
 			data: value,
 			editCheckItemIndex: -1,
 		});
-
-		NavigationService.goBack();
 	}
 
 	getParamValue(key){

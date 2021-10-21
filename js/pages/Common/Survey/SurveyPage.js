@@ -179,7 +179,8 @@ class SurveyPage extends React.Component {
              onPress         ={this.changePosition}
           />
           */}
-          
+         
+
 
           <Carousel
             ref            = {(c) => { this._carousel = c; }}
@@ -249,6 +250,7 @@ class SurveyPage extends React.Component {
               <Label style={{alignSelf: 'flex-start'}}>{this.props.state.Survey.surveyExplain}</Label>
             </CardItem>
           </Card>
+
           <Card>
             <CardItem style={{flexDirection: 'column'}}>     
               <Title style={{color:this.props.state.Theme.theme.variables.ExplainText.color, paddingTop: 5, paddingBottom: 5}}>

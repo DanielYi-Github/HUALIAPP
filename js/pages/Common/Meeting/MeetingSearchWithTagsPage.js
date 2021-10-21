@@ -7,12 +7,12 @@ import TagInput      from 'react-native-tags-input';
 import { bindActionCreators } from 'redux';
 import * as RNLocalize from "react-native-localize";
 
-
+import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 import * as UpdateDataUtil    from '../../../utils/UpdateDataUtil';
 import * as NavigationService from '../../../utils/NavigationService';
 import ToastUnit              from '../../../utils/ToastUnit';
-import * as MeetingAction     from '../../../redux/actions/MeetingAction';
-
+import TinyCircleButton        from '../../../components/TinyCircleButton';
+import MeetingItemForAttendees from '../../../components/Meeting/MeetingItemForAttendees';
 
 class MeetingSearchWithTagsPage extends React.Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class MeetingSearchWithTagsPage extends React.Component {
       sendValueBack : this.props.route.params.onPress,       // 將直傳回上一個物件,
       text : {
               COLUMN1: null, 
-              name: null, 
+              name   : null, 
               COLUMN3: null, 
               COLUMN4: null
             },
@@ -43,6 +43,15 @@ class MeetingSearchWithTagsPage extends React.Component {
   }
 
   componentDidMount(){
+    //將與會人員放入redux state中
+    this.props.actions.setInitialMeetingInfoInRedux(
+      this.state.attendees,
+      null,
+      this.state.startdate,
+      this.state.enddate,
+      false  // 不需要檢測會議時間衝突的設定
+    );
+
     this.loadMoreData();
   }
 
@@ -51,9 +60,16 @@ class MeetingSearchWithTagsPage extends React.Component {
     let contentList = this.state.isSearch ? this.state.searchedData : this.state.data;
     // let contentList = [];
 
+    /*
     //整理tags的資料格式
     let tagsArray = [];
     for(let value of this.state.attendees) tagsArray.push(value.name);
+    let tags = { tag: '', tagsArray: tagsArray }
+    */
+
+    //整理tags的資料格式
+    let tagsArray = [];
+    for(let value of this.props.state.Meeting.attendees) tagsArray.push(value.name);
     let tags = { tag: '', tagsArray: tagsArray }
 
     return (
@@ -142,8 +158,25 @@ class MeetingSearchWithTagsPage extends React.Component {
           :
             <Header style={this.props.style.HeaderBackground}>
               <Left>
-                <Button transparent onPress={() =>NavigationService.goBack()}>
-                  <Icon name='arrow-back' style={{color:this.props.style.color}}/>
+                <Button transparent onPress={() =>{
+                  Alert.alert(
+                    this.props.lang.FormContentGridForEvaluation.continueToGoBack, //請確認是否執行返回?
+                    this.props.lang.FormContentGridForEvaluation.continueToGoBackMsg, //確認返回將不儲存已編輯資料；如欲儲存已編輯資料，請點擊畫面右上角“完成”按鈕
+                    [
+                      {
+                        text: this.props.lang.FormContentGridForEvaluation.cancel, //取消
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel"
+                      },
+                      { 
+                        text: this.props.lang.FormContentGridForEvaluation.goBack, //確認返回, 
+                        onPress: () => NavigationService.goBack(),
+                      style: "destructive",
+                      }
+                    ]
+                  );
+                }}>
+                  <Icon name='close' style={{color:this.props.style.color}}/>
                 </Button>
               </Left>
               <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>
@@ -159,7 +192,8 @@ class MeetingSearchWithTagsPage extends React.Component {
                   style={{backgroundColor: '#47ACF2', paddingLeft: 10, paddingRight: 10,paddingTop: 5,paddingBottom: 5, borderRadius: 10}}
                   onPress={()=>{
                     Keyboard.dismiss();
-                    this.state.sendValueBack(this.state.attendees);
+                    // this.state.sendValueBack(this.state.attendees);
+                    this.state.sendValueBack(this.props.state.Meeting.attendees);
                     NavigationService.goBack();
                   }}
                 >
@@ -168,28 +202,68 @@ class MeetingSearchWithTagsPage extends React.Component {
               </Right>
             </Header>
         }
-        <Label style={{marginLeft: 5, paddingTop: 20, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder }}>
-          {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd} ${this.props.lang.MeetingPage.attendees}`}
-        </Label>
+        <Item style={{ 
+          justifyContent: 'space-between', 
+          paddingLeft   : 10, 
+          paddingRight  : 10, 
+          paddingTop    : 20, 
+          paddingBottom : 5, 
+        }}>
+          <Label style={{ color:this.props.style.inputWithoutCardBg.inputColorPlaceholder }}>
+            {`${this.props.state.Language.lang.CreateFormPage.AlreadyAdd} ${this.props.lang.MeetingPage.attendees}`}
+          </Label>
+        </Item>
+
         <View style={{flex:0.3, backgroundColor: this.props.style.InputFieldBackground}}>
             <Content ref ={(c) => { this._content = c; }}>
               <Item style={{backgroundColor: this.props.style.InputFieldBackground, borderBottomWidth: 0}}>
                 <TagInput
                   disabled            ={true}
                   autoFocus           ={false}
-                  updateState         ={(state)=>{ this.deleteTag(state); }}
+                  // updateState      ={(state)=>{ this.deleteTag(state); }}
+                  updateState         ={(state)=>{ this.props.actions.removeAttendee(state); }}
                   tags                ={tags}
                   inputContainerStyle ={{ height: 0 }}
                   tagsViewStyle       ={{ margin:0 }}
-                  tagStyle={{backgroundColor:"#DDDDDD", borderWidth:0}}
-                  tagTextStyle={{color:"#666"}}
+                  tagStyle            ={{backgroundColor:"#DDDDDD", borderWidth:0}}
+                  tagTextStyle        ={{color:"#666"}}
                 />
               </Item> 
             </Content>
         </View>
 
+        {/*依職級選擇*/}
+        <Item 
+          style={{ 
+            backgroundColor: this.props.style.InputFieldBackground, 
+            height         : this.props.style.inputHeightBase,
+            paddingLeft    : 10,
+            paddingRight   : 5,
+            marginTop      : 30 
+          }}
+          onPress  = {()=>{ NavigationService.navigate("MeetingInsertWithTagsByPosition"); }}
+        >
+            <Label style={{flex:1}}>{this.props.lang.MeetingPage.invitedByPosition}</Label>
+            <Icon name='arrow-forward' />
+        </Item>
+
+        {/*依組織架構選擇*/}
+        <Item 
+          style={{ 
+            backgroundColor  : this.props.style.InputFieldBackground, 
+            height           : this.props.style.inputHeightBase,
+            paddingLeft      : 10,
+            paddingRight     : 5,
+            borderBottomWidth: 0, 
+          }}
+          onPress = {()=>{ NavigationService.navigate("MeetingInsertWithTagsByOrganize"); }}
+        >
+            <Label style={{flex:1}}>{this.props.lang.MeetingPage.invitedByOrganization}</Label>
+            <Icon name='arrow-forward' />
+        </Item>
+
         <View style={{flex: 1, paddingTop: 20}}>
-          <Label style={{marginLeft: 5, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
+          <Label style={{paddingLeft: 10, paddingBottom: 5, paddingTop: 5, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
             {`${this.props.state.Language.lang.CreateFormPage.QuickSelect} ${this.props.lang.MeetingPage.attendees}`}
           </Label>
           <FlatList
@@ -206,7 +280,7 @@ class MeetingSearchWithTagsPage extends React.Component {
     );
   }
 
-  loadMoreData = (isSearching, searchedData = null) => {
+  loadMoreData = (isSearching = {}, searchedData = null) => {
     isSearching = (typeof isSearching == "object") ? false : isSearching;
     let isSearch = isSearching ? isSearching : this.state.isSearch;
     searchedData = (searchedData == null) ? this.state.searchedData : searchedData;
@@ -315,6 +389,7 @@ class MeetingSearchWithTagsPage extends React.Component {
   }
 
   renderTapItem = (item) => {
+    /*
     return (
       <Item 
         fixedLabel 
@@ -326,8 +401,28 @@ class MeetingSearchWithTagsPage extends React.Component {
         <Label>{item.item.name}</Label><Text note>{item.item.depname}</Text>
       </Item>
     );
+    */
+
+    let checked = false;
+    let availableChange = true;
+    for(let attendee of this.props.state.Meeting.attendees){
+      if (attendee.id == item.item.id) {
+        checked = true;
+      }
+    }
+
+    return (
+      <MeetingItemForAttendees
+        item            = {item.item}
+        checked         = {checked}
+        availableChange = {availableChange}
+        itemOnPress     = {this.props.actions.attendeeItemOnPress}
+        calendarOnPress = {this.props.actions.attendeeItemCalendarOnPress}
+      />
+    );
   }
 
+  /*
   addTag = (item) => {      
       let attendees = this.state.attendees;
       let isAdded = false;
@@ -347,7 +442,9 @@ class MeetingSearchWithTagsPage extends React.Component {
       
       this._content.wrappedInstance.scrollToEnd({animated: true});
   }
+  */
 
+  /*
   deleteTag = (state) => {
     let data = this.state.attendees;
     for(let [i, value] of data.entries()){
@@ -370,6 +467,7 @@ class MeetingSearchWithTagsPage extends React.Component {
      attendees: data
     });
   }
+  */
 
   renderFooter = () => {
     let footer = null
@@ -401,6 +499,7 @@ class MeetingSearchWithTagsPage extends React.Component {
     });
   }
 
+  /*
   checkHaveMeetingTime = async (id, startTime, endTime) => {
     let user = this.props.state.UserInfo.UserInfo;
     let meetingParams = {
@@ -422,6 +521,7 @@ class MeetingSearchWithTagsPage extends React.Component {
 
     return enableMeeting;
   }
+  */
 
   deepClone(src) {
     return JSON.parse(JSON.stringify(src));

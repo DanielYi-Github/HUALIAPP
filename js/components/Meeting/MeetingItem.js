@@ -9,31 +9,31 @@ class MeetingItem extends Component {
 
 	render() {
 		let image, imageText = this.props.data.meetingMode;
-		// 缺丁丁跟微軟
+		let lang = this.props.lang;
 		switch(imageText) {
 		  case "M":
 		    image = require("../../image/meeting/Team.png");
-		    imageText = "Teams";
+		    imageText = lang.MeetingModeType.M;
 		    break;
 		  case "D":
 		    image = require("../../image/meeting/Ding.png");
-		    imageText = "釘釘";
+		    imageText = lang.MeetingModeType.D;
 		    break;
 		  case "S":
 		    image = require("../../image/meeting/Skype.png");
-		    imageText = "Skype";
+		    imageText = lang.MeetingModeType.S;
 		    break;
 		  case "T":
 		    image = require("../../image/meeting/Tencent.png");
-		    imageText = "騰訊會議";
+		    imageText = lang.MeetingModeType.T;
 		    break;
 		  case "W":
 		    image = require("../../image/meeting/WeChart.png");
-		    imageText = "WeChart";
+		    imageText = lang.MeetingModeType.W;
 		    break;
 		  case "Z":
 		    image = require("../../image/meeting/Zoom.png");
-		    imageText = "Zoom";
+		    imageText = lang.MeetingModeType.Z;
 		    break;
 		  default:
 		    image = require("../../image/meeting/meeting.png");

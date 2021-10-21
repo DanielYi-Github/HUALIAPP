@@ -57,14 +57,14 @@ export async function loginByAD(user) {
 
 	let promise = new Promise((resolve, reject) => {
 		let version = Device.getVersion();
-		let url = "login/loginByAD";
-		let params = {
+		let url     = "login/loginByAD";
+		let params  = {
 			"userId": Common.encrypt(user.loginID),
-			"lang": lang,
-			"content": {
-				"userid": Common.encrypt(user.loginID),
-				"pwd": user.password,
-				"regid": user.regID,
+			"lang"  : lang,
+			"content":{
+				"userid"    : Common.encrypt(user.loginID),
+				"pwd"       : user.password,
+				"regid"     : user.regID,
 				"appversion": version,
 				"platform": Platform.OS
 			}
@@ -73,28 +73,7 @@ export async function loginByAD(user) {
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code == 200) {
 				data = data.content;
-
-				user.token = data.token;
-				user.id = data.member.id;
-				user.name = data.member.name;
-				user.email = data.email;
-				user.membereMail = data.member.email; 	// 取郵相SID所使用的email
-				user.depID = data.member.depid;
-				user.depName = data.member.depname;
-				user.co = data.member.coid;
-				user.plantID = data.member.plantid;
-				user.plantName = data.member.plantname;
-				user.sex = data.member.sex;
-				user.isPush = data.userConfig.push;
-				user.cellphone = data.cellphone;
-				user.telphone = data.telphone;
-				user.skype = data.skype;
-				// user.picture = data.picture ? { uri: `data:image/png;base64,${data.picture}`} : user.picture;
-				user.pictureUrl = data.picture;
-				user.birthday = data.member.brndat ? data.member.brndat : user.birthday;
-				user.certTips = data.userConfig.certTips;
-
-				DeviceStorageUtil.set('User', user); //存在客戶端
+				user = setUserData(user, data);
 				params = {
 					"Message": "success",
 					"Value": {
@@ -120,61 +99,37 @@ export async function loginByEmpid(user, lang) {
 	let params = {};
 	let promise = new Promise((resolve, reject) => {
 		let version = Device.getVersion();
-		let url = "login/empid";
-		let params = {
+		let url     = "login/empid";
+		let params  = {
 			"userId": Common.encrypt(user.loginID),
-			"lang": lang,
-			"token": "",
+			"lang"  : lang,
 			"content": {
-				"userid": Common.encrypt(user.loginID),
-				"pwd": Common.encrypt(user.password),
-				"regid": user.regID,
+				"userid"    : Common.encrypt(user.loginID),
+				"pwd"       : user.password,
+				"regid"     : user.regID,
 				"appversion": version,
 				"platform": Platform.OS
 			}
 		};
 
 		NetUtil.getRequestContent(params, url).then((data) => {
-			if (data.content) {
-				let tempData = data.content;
-				if (tempData.userConfig.reset == "Y") {
+			if (data.content){
+				data = data.content;
+
+				if( data.userConfig.reset == "Y" ){
 					params = {
 						"Message": "initialEmp",
-						"basicData": tempData
+						"basicData": data
 					}
 					resolve(params);
-				} else {
-					//工號登陸需將login內容改為id內容
-					user.setLoginID(tempData.member.id);
-					user.setPassword(Common.encrypt(user.getPassword()));
-
-					user.setCO(tempData.member.coid);
-					user.setDepID(tempData.member.depid);
-					user.setDepName(tempData.member.depname);
-					user.setEmail(tempData.email);
-					user.setID(tempData.member.id);
-					user.setName(tempData.member.name);
-					user.setPlantID(tempData.member.plantid);
-					user.setPlantName(tempData.member.plantname);
-					user.setSex(tempData.member.sex);
-					user.setToken(tempData.token);
-					user.lang = tempData.lang;
-					user.birthday = tempData.member.brndat;
-					user.cellphone = tempData.cellphone;
-					user.isPush = tempData.userConfig.push;
-					user.skype = tempData.skype;;
-					user.telphone = tempData.telphone;
-					user.pictureUrl = tempData.picture;
-					// user.picture = tempData.picture ? {uri: `data:image/png;base64,${tempData.picture}`} : user.picture;
-					user.membereMail = tempData.member.email;
-					user.certTips = tempData.userConfig.certTips;
-					DeviceStorageUtil.set('User', user); //存在客戶端
-
+				}else{
+					user.setLoginID(data.member.id); //工號登陸需將login內容改為id內容				
+					user = setUserData(user, data);
 					params = {
 						"Message": "success",
 						"Value": {
 							user: user,
-							lang: tempData.lang
+							lang: data.lang
 						},
 					}
 					resolve(params);
@@ -193,15 +148,49 @@ export async function loginByEmpid(user, lang) {
  * @param String loginID
  * @return Promise
  */
-export async function getMBUserInfoByToken(user) {
+export async function loginByImei( biosInfo, lang){
 	let promise = new Promise((resolve, reject) => {
-		let url = "org/getUserByToken";
 		let version = Device.getVersion();
+		let url     = "login/certid";
+		let params  = {
+			"userId": Common.encrypt(biosInfo.biosUser.userID),
+			"lang"  : lang,
+			"content": {
+				"appversion": version,
+				"platform"  : Platform.OS,
+				"certid"    : Common.encrypt(biosInfo.biosUser.iemi)
+			}
+		};
+		
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code == 200){
+				let user     = new User();
+				user.loginID = biosInfo.biosUser.userID;
+				data         = data.content;
+				user         = setUserData(user, data);
+				resolve(user)
+			} else {
+				reject(data.message);
+			}
+		});
+		
+	});
+	return promise;
+}
+
+/**
+ * 利用token取得MB人員資料
+ * @param String loginID
+ * @return Promise
+ */
+export async function loginByToken(user){
+	let promise = new Promise((resolve, reject) => {
+		let version = Device.getVersion();
+		let url     = "login/token";
 		let content = {
 			"appversion": version,
-			"platform": Platform.OS
+			"platform"  : Platform.OS
 		}
-
 		let params = {
 			"lang": user.lang,
 			"token": Common.encrypt(user.token),
@@ -211,14 +200,44 @@ export async function getMBUserInfoByToken(user) {
 
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code == 200) {
-				resolve(data.content)
-			} else {
+				data = data.content;
+				user = setUserData(user, data);
+				resolve(user)
+			}else{
 				reject(data.message);
 			}
 		});
 	});
 	return promise;
 }
+
+function setUserData(user, data) {
+	user.token       = data.token;
+	user.id          = data.member.id;
+	user.name        = data.member.name;
+	user.email       = data.email;
+	user.membereMail = data.member.email; 	// 取郵相SID所使用的email
+	user.depID       = data.member.depid;
+	user.depName     = data.member.depname;
+	user.dutname     = data.member.dutname;
+	user.co          = data.member.coid;
+	user.plantID     = data.member.plantid;
+	user.plantName   = data.member.plantname;
+	user.sex         = data.member.sex;
+	user.isPush      = data.userConfig.push;
+	user.cellphone   = data.cellphone;
+	user.telphone    = data.telphone;
+	user.skype       = data.skype;
+	user.pictureUrl  = data.picture;
+	user.birthday    = data.member.brndat ? data.member.brndat : user.birthday;
+	user.certTips    = data.userConfig.certTips;
+	user.lang        = data.lang;
+	user.roles       = data.roles;
+
+	DeviceStorageUtil.set('User', user); //存在客戶端
+	return user;
+}
+
 
 export async function updateAPP(user) {
 	let deleteSQL = "DELETE FROM THF_APP";
@@ -545,20 +564,12 @@ export async function updateContact(user) {
 	let promise = new Promise(async (resolve, reject) => {
 		if (ltxdat === null) {
 			let start = new Date().getTime();
-
-			let content = {
-				empid: user.id,
-				companyList: [],
-				maxDat: ltxdat
-			}
-
 			let params = {
-				"token": Common.encrypt(user.token),
-				"userId": Common.encrypt(user.loginID),
-				"content": Common.encrypt(JSON.stringify(content))
+				"token"  :Common.encrypt(user.token),
+				"userId" :Common.encrypt(user.loginID),
+				"content": Common.encrypt(ltxdat ? ltxdat: '')
 			};
-
-			let url = "data/getContactData";
+			let url = "data/getContact";
 
 			NetUtil.getRequestContent(params, url).then((data) => {
 				if (data.code != 200) {
@@ -566,7 +577,6 @@ export async function updateContact(user) {
 					return promise;
 				}
 				data = data.content;
-
 				/* 修改後版本 */
 				let max = 50;
 				let lInsert = `INSERT INTO THF_CONTACT (OID,AD,EMPID,NAME,SEX,CO,DEPID,DEPNAME,JOBTITLE,TELPHONE,CELLPHONE,MAIL,SKYPE,PICTURE,STATUS,CRTDAT,TXDAT) VALUES `;
@@ -575,62 +585,51 @@ export async function updateContact(user) {
 				let index = 0;
 				for (let i in data) {
 					i = parseInt(i);
+					index++;
+					let cellphone = cellphone ? data[i].cellphone.replace(/\'/g,"") : "";	
+					iArray = iArray.concat([
+						data[i].oid, 
+						data[i].ad        == null ? "" : data[i].ad, 
+						data[i].empid     == null ? "" : data[i].empid, 
+						data[i].name      == null ? "" : data[i].name, 
+						data[i].sex       == null ? "" : data[i].sex, 
+						data[i].co        == null ? "" : data[i].co,
+						data[i].depid     == null ? "" : data[i].depid,
+						data[i].depname   == null ? "" : data[i].depname,
+						data[i].jobtitle  == null ? "" : data[i].jobtitle,
+						data[i].telphone  == null ? "" : data[i].telphone,
+						data[i].cellphone == null ? "" : data[i].cellphone,
+						data[i].mail      == null ? "" : data[i].mail,
+						data[i].skype     == null ? "" : data[i].skype,
+						data[i].picture   == null ? "" : data[i].picture,
+						data[i].status    == null ? "" : data[i].status,
+						Common.dateFormat(data[i].crtdat), 
+						Common.dateFormat(data[i].txdat)
+					]);
 
-					if (
-						/*找出錯誤的資料，然後剔除他*/
-						// data[i].oid == "34343EC9D52B1165E050A8C0631E763D" || 
-						// data[i].oid == "34343EC9D7B51165E050A8C0631E763D" ||
-						// data[i].oid == "6E3CE6750A9C394CE050A8C0631E42D0" ||
-						// data[i].oid == "6D9BF7A208D46137E050A8C0631E6934"
-						false
-					) {
-						/*錯誤資料不做任何處理*/
-					} else {
-						index++;
-
-						let cellphone = cellphone ? data[i].cellphone.replace(/\'/g, "") : "";
-						iArray = iArray.concat([
-							data[i].oid,
-							data[i].ad == null ? "" : data[i].ad,
-							data[i].empid == null ? "" : data[i].empid,
-							data[i].name == null ? "" : data[i].name,
-							data[i].sex == null ? "" : data[i].sex,
-							data[i].co == null ? "" : data[i].co,
-							data[i].depid == null ? "" : data[i].depid,
-							data[i].depname == null ? "" : data[i].depname,
-							data[i].jobtitle == null ? "" : data[i].jobtitle,
-							data[i].telphone == null ? "" : data[i].telphone,
-							data[i].cellphone == null ? "" : data[i].cellphone,
-							data[i].mail == null ? "" : data[i].mail,
-							data[i].skype == null ? "" : data[i].skype,
-							"",// data[i].picture,
-							data[i].status == null ? "" : data[i].status,
-							Common.dateFormat(data[i].crtdat),
-							Common.dateFormat(data[i].txdat)
-						]);
-
-
-						if ((index) % max == 0) {
-							//達到分批數量，要重置資料
-							lInsert += "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
-							execute.push([lInsert, iArray]);
-							lInsert = "INSERT INTO THF_CONTACT (OID,AD,EMPID,NAME,SEX,CO,DEPID,DEPNAME,JOBTITLE,TELPHONE,CELLPHONE,MAIL,SKYPE,PICTURE,STATUS,CRTDAT,TXDAT) VALUES ";
-							iArray = [];
-						} else if (i == data.length - 1) {
-							lInsert += "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
-							execute.push([lInsert, iArray]);
-						} else {
-							lInsert += "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ),";
-						}
+					
+					if( (index)%max == 0){
+						//達到分批數量，要重置資料
+						lInsert+= "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+						execute.push([lInsert, iArray]);
+						lInsert = "INSERT INTO THF_CONTACT (OID,AD,EMPID,NAME,SEX,CO,DEPID,DEPNAME,JOBTITLE,TELPHONE,CELLPHONE,MAIL,SKYPE,PICTURE,STATUS,CRTDAT,TXDAT) VALUES ";
+						iArray = [];
+					}else if( i == data.length-1 ){
+						lInsert+= "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+						execute.push([lInsert, iArray]);
+					}else{
+						lInsert+= "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ),";
 					}
 				}
 
 				SQLite.insertData_new(execute).then(() => {
 					let end = new Date().getTime();
-					console.log("updateContact_end:" + (end - start) / 1000);
-					updateContactPic(user, ltxdat, content);				//獲取通訊錄圖片資料
+					console.log("updateContact_end:"+ (end - start) / 1000);
+					// updateContactPic(user, ltxdat, content);				//獲取通訊錄圖片資料
 					resolve();
-				});
+				});			
+
+				
 			})
 
 		} else {
@@ -641,22 +640,14 @@ export async function updateContact(user) {
 				if (co.CO) { companyList.push(co.CO); }
 			}
 
-			let content = {
-				empid: user.id,
-				companyList: companyList,
-				maxDat: ltxdat
-			}
-
 			let params = {
-				"token": Common.encrypt(user.token),
-				"userId": Common.encrypt(user.loginID),
-				"content": Common.encrypt(JSON.stringify(content))
+				"token"  :Common.encrypt(user.token),
+				"userId" :Common.encrypt(user.loginID),
+				"content": Common.encrypt(ltxdat ? ltxdat: '')
 			};
+			let url = "data/getContact";
 
-			let url = "data/getContactData";
-
-			NetUtil.getRequestContent(params, url).then((data) => {
-				// console.log(data);
+			NetUtil.getRequestContent(params, url).then((data)=>{
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
@@ -693,8 +684,7 @@ export async function updateContact(user) {
 						data[i].cellphone,
 						data[i].mail,
 						data[i].skype,
-						// data[i].picture,
-						"",
+						data[i].picture,
 						data[i].status,
 						nCrtDat,
 						nTxDat
@@ -724,9 +714,9 @@ export async function updateContact(user) {
 				Promise.all(dExecute).then(() => {
 					Promise.all(iExecute).then(() => {
 						let end = new Date().getTime();
-						console.log("updateContact:" + (end - start) / 1000);
-
-						updateContactPic(user, ltxdat, content);				//獲取通訊錄圖片資料
+						console.log("updateContact:"+ (end - start) / 1000);
+						
+						// updateContactPic(user, ltxdat, content);				//獲取通訊錄圖片資料
 						resolve();
 					})
 				})
@@ -735,7 +725,7 @@ export async function updateContact(user) {
 	});
 	return promise;
 }
-
+/*
 export function updateContactPic(user, ltxdat, content) {
 	let params = {
 		"token": Common.encrypt(user.token),
@@ -760,6 +750,7 @@ export function updateContactPic(user, ltxdat, content) {
 
 	})
 }
+*/
 
 export async function updateMasterData(user) {
 	var start = new Date().getTime();
@@ -1545,16 +1536,19 @@ export async function updateContactToServer(user) {
 	let lSQL = "SELECT * FROM THF_CONTACT WHERE EMPID=? and STATUS='Y'";
 	let lData = await SQLite.selectData(lSQL, [user.id]);
 	let promise = new Promise((resolve, reject) => {
-		if (lData.length > 0) {
+	// console.log("lData", lData);
+		if(lData.length>0){
+			// console.log(user);
 			let content = {
-				empid: user.id,
-				cellphone: lData.item(0).CELLPHONE,
-				telphone: lData.item(0).TELPHONE,
-				mail: lData.item(0).MAIL,
-				skype: lData.item(0).SKYPE,
-				picture: lData.item(0).PICTURE,
-				depname: lData.item(0).DEPNAME,
-				jobtitle: lData.item(0).JOBTITLE
+				empid    : user.id,
+				cellphone: user.cellphone ? user.cellphone : lData.item(0).CELLPHONE,
+				telphone : user.telphone ? user.telphone :lData.item(0).TELPHONE,
+				mail     : user.email ? user.email: lData.item(0).MAIL,
+				skype    : lData.item(0).SKYPE,
+				picture  : lData.item(0).PICTURE,
+				depname	 : lData.item(0).DEPNAME,
+				jobtitle : lData.item(0).JOBTITLE,
+				co       : user.co
 			}
 
 			let params = {
@@ -1565,7 +1559,8 @@ export async function updateContactToServer(user) {
 
 			let url = "org/setContact";
 
-			NetUtil.getRequestContent(params, url).then((data) => {
+			NetUtil.getRequestContent(params, url).then((data)=>{
+				// console.log("data", data);
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
@@ -1882,7 +1877,8 @@ export async function updateVisitLogToServer(user) {
 	let sql = "select * from THF_APPVISITLOG where VISITCOUNT>0";
 	let sData = await SQLite.selectData(sql, []);
 	let promise = new Promise((resolve, reject) => {
-		if (sData.length > 0) {
+
+		if(sData.length>0){
 			let contents = [];
 			for (let i = 0; i < sData.length; i++) {
 				let content = {
@@ -1909,14 +1905,16 @@ export async function updateVisitLogToServer(user) {
 				}
 				data = data.content;
 
-				let uSQL = "update THF_APPVISITLOG set VISITCOUNT=0 where VISITCOUNT>0";
-				SQLite.updateData(uSQL, []).then((data) => {
+				// let uSQL = "update THF_APPVISITLOG set VISITCOUNT=0 where VISITCOUNT>0";
+				let uSQL = "DELETE FROM THF_APPVISITLOG";
+				SQLite.updateData(uSQL,[]).then((data)=>{
 					resolve();
 				}).catch((err) => {
 					reject(err);
 				})
 			})
-		} else {
+			
+		}else{
 			resolve();
 		}
 
@@ -4416,4 +4414,31 @@ export async function updateGroupFileToServer(user) {
 		}
 	})
 	return promise
+}
+
+/* 獲取代理人功能AppID
+* @param user資料
+*/
+export async function getDeputyAppID(user){
+	let promise = new Promise((resolve, reject) => {
+		let url = "data/getParams";
+		let content = {
+			paramtype: 'DeputyAppID',
+		}
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+		};
+
+		NetUtil.getRequestContent(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+			resolve(data);
+		})
+	});
+	return promise;
 }

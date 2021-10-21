@@ -159,6 +159,7 @@ export default {
   HeaderForTransparent:{
     color:"#FFF",
   },
+  bannerLogoViewFontColor:"#FFF",
   //IconColor
   IconColor:"#000",
   //LabelColor

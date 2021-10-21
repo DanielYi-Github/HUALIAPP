@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Keyboard, TouchableOpacity, Platform, Modal, Alert } from 'react-native';
-import { Container, Header, Content, Item, Icon, Input, Text, Label, Button, ListItem, Spinner, connectStyle} from 'native-base';
+import { Container, Header, Content, Item, Icon, Input, Text, Label, Button, ListItem, Spinner, Switch, Right, connectStyle} from 'native-base';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DateFormat from  'dateformat';
@@ -25,35 +25,33 @@ class MeetingInsertPage extends React.PureComponent  {
       let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss").replace(/-/g, "/") );
       let isChangeTime = time1.getHours() == time2.getHours() ? false: true;
 
-      // console.log(Moment( new Date() ).tz(RNLocalize.getTimeZone()).format());
-      // console.log(new Date( Moment( new Date() ).tz(RNLocalize.getTimeZone()).format() ));
-
-      let oid              = null;
-      let isParams         = this.props.route.params ? true : false;
-      let isEditable       = true;                                  //是不是在編輯中
-      let headerName       = props.lang.MeetingPage.insertMeeting; 
-      let isModify         = false;                                 //有沒有資格編輯
-      let subject          = "";
-      let description      = "";
-      let startTime        = new Date().getTime();
-      let endTime          = new Date().getTime();
-      startTime            = startTime + (600000-(startTime%600000));
-      endTime              = endTime + (600000-(endTime%600000));
-      let initiator        = { id : props.state.UserInfo.UserInfo.id };  //發起人
-      let chairperson      = { id : props.state.UserInfo.UserInfo.id };  //主席
-      let chairpersonLabel = props.state.UserInfo.UserInfo.name;
-      let attendees        = [];
-      let meetingMode      = "A";
-      let meetingPlace     = "";
-      let meetingPlaceName = "";
-      let meetingNumber    = "";
-      let meetingPassword  = "";
-      let remindtime       = 15;
-      let now              = startTime;
-      let isEndDateChange  = false;
-      let isSearchedMeeting = true;    // 有沒有找到此會議的訊息
-      let timezone = RNLocalize.getTimeZone();
-      let showTimezone = false; //顯示時區資訊
+      let oid               = null;
+      let isParams          = this.props.route.params ? true : false;
+      let isEditable        = true;                                  //是不是在編輯中
+      let headerName        = props.lang.MeetingPage.insertMeeting; 
+      let isModify          = false;                                 //有沒有資格編輯
+      let subject           = "";
+      let description       = "";
+      let startTime         = new Date().getTime();
+      let endTime           = new Date().getTime();
+      startTime             = startTime + (600000-(startTime%600000));
+      endTime               = endTime + (600000-(endTime%600000)) + 3600000;
+      let initiator         = { id : props.state.UserInfo.UserInfo.id };  //發起人
+      let chairperson       = { id : props.state.UserInfo.UserInfo.id };  //主席
+      let chairpersonLabel  = props.state.UserInfo.UserInfo.name;
+      let attendees         = [];
+      let meetingMode       = "A";
+      let isOnlineAndPlace  = false;
+      let meetingPlace      = "";
+      let meetingPlaceName  = "";
+      let meetingNumber     = "";
+      let meetingPassword   = "";
+      let remindtime        = 15;
+      let now               = startTime;
+      let isEndDateChange   = false;
+      let isSearchedMeeting = true;                     // 有沒有找到此會議的訊息
+      let timezone          = RNLocalize.getTimeZone(); 
+      let showTimezone      = false;                    // 顯示時區資訊
 
 
       // 判斷當前頁面,從哪個畫面來
@@ -75,6 +73,7 @@ class MeetingInsertPage extends React.PureComponent  {
             chairpersonLabel = meetingParam.chairperson.name;
             attendees        = meetingParam.attendees;
             meetingMode      = meetingParam.meetingMode;
+            isOnlineAndPlace = meetingParam.place;
             meetingPlace     = meetingParam.meetingPlace ? meetingParam.meetingPlace : meetingPlace;
             meetingPlaceName = meetingParam.meetingPlaceName ? meetingParam.meetingPlaceName : meetingPlaceName;
             meetingNumber    = meetingParam.meetingNumber ? meetingParam.meetingNumber : meetingNumber;
@@ -85,11 +84,10 @@ class MeetingInsertPage extends React.PureComponent  {
             break;
           case 'MeetingSearch': // 參與人員搜尋那邊過來的
             startTime = new Date( meetingParam.startdate.replace(/-/g, "/") ).getTime();
-            endTime   = new Date( meetingParam.enddate.replace(/-/g, "/") ).getTime();
-
-            // now       = isChangeTime ? startTime-28800000 : startTime;
             startTime = isChangeTime ? startTime-28800000 : startTime;
+            endTime   = new Date( meetingParam.enddate.replace(/-/g, "/") ).getTime();
             endTime   = isChangeTime ? endTime-28800000 : endTime;
+            
             attendees = meetingParam.attendees;
             isEndDateChange = true;
             break;
@@ -119,6 +117,7 @@ class MeetingInsertPage extends React.PureComponent  {
               chairpersonLabel = meetingParam.chairperson.name;
               attendees        = meetingParam.attendees;
               meetingMode      = meetingParam.meetingMode;
+              isOnlineAndPlace = meetingParam.place;
               meetingPlace     = meetingParam.meetingPlace ? meetingParam.meetingPlace : meetingPlace;
               meetingPlaceName = meetingParam.meetingPlaceName ? meetingParam.meetingPlaceName : meetingPlaceName;
               meetingNumber    = meetingParam.meetingNumber ? meetingParam.meetingNumber : meetingNumber;
@@ -132,13 +131,11 @@ class MeetingInsertPage extends React.PureComponent  {
             }
             break;
           default:
-            // console.log(`Sorry, we are out of ${expr}.`);
         }
       }
 
       startTime = isModify && isChangeTime ? new Date(startTime).getTime()-28800000: startTime;
       endTime = isModify && isChangeTime  ? new Date(endTime).getTime()-28800000: endTime;
-      // console.log(Platform.OS, time1.getHours() , time2.getHours(), isChangeTime);
 
 	    this.state = {
         isChangeTime    :isChangeTime, //記錄部分機型會將時間直接+8小時
@@ -153,6 +150,7 @@ class MeetingInsertPage extends React.PureComponent  {
         startdate       :DateFormat( new Date(startTime), "yyyy-mm-dd HH:MM:ss"),
         enddate         :DateFormat( new Date(endTime), "yyyy-mm-dd HH:MM:ss"),
         meetingMode     :meetingMode,
+        isOnlineAndPlace:isOnlineAndPlace,        // 線上與實體會議同時進行
         meetingPlace    :meetingPlace,
         meetingPlaceName:meetingPlaceName ,
         meetingNumber   :meetingNumber,
@@ -194,7 +192,7 @@ class MeetingInsertPage extends React.PureComponent  {
         isEndDateChange       : isEndDateChange,
         isDelete              : false,  // 是否刪除表單
         timezone              : timezone,
-        showTimezone          : showTimezone 
+        showTimezone          : showTimezone,
       }
 	}
 
@@ -225,6 +223,8 @@ class MeetingInsertPage extends React.PureComponent  {
   }
 
   componentDidMount(){
+    this.props.actions.setRegularMeetingOptionsDefaultValue();  //設定多語系值
+
     if (this.state.isSearchedMeeting) {
       this.props.actions.getMeetingModeType();  //獲取參會方式的選項
     } else {
@@ -261,6 +261,14 @@ class MeetingInsertPage extends React.PureComponent  {
       }
     }
 
+    // 整理例行性會議資料
+    let regularMeetingLabel = "";
+    for(let regularMeetingOptions of this.props.state.Meeting.regularMeetingOptions){
+      if(  this.props.state.Meeting.regularMeetingDefaultOptions == regularMeetingOptions.value ){
+        regularMeetingLabel = regularMeetingOptions.label;
+      }
+    }
+
     // 整理參會方式名稱
     let meetingPlaceName = "";
     for(let meetingModeTypes of this.props.state.Meeting.meetingModeTypes){
@@ -277,7 +285,7 @@ class MeetingInsertPage extends React.PureComponent  {
     let nowTimeZone = RNLocalize.getTimeZone();
     let differentZone = this.state.timezone == nowTimeZone ? false : true;
     let timezone = nowTimeZone.split("/")[1];
-    // console.log(timezone);
+
     return (
       <Container>
         <HeaderForGeneral
@@ -319,7 +327,6 @@ class MeetingInsertPage extends React.PureComponent  {
           
           {/*時間*/}
           {
-            // differentZone ? <Label style={{marginTop: 20, paddingLeft: 10}}>{this.props.lang.MeetingPage.yourTimezone}</Label> : null
             this.state.showTimezone ? <Label style={{marginTop: 20, paddingLeft: 10}}>{this.props.lang.MeetingPage.yourTimezone} ( {timezone} {this.props.lang.MeetingPage.meetingTimezone} )</Label> : null
           }
            <Item style={{ backgroundColor: this.props.style.InputFieldBackground,  borderWidth: 0, flexDirection: 'row', marginTop: this.state.showTimezone ? null: 20 }}>
@@ -346,11 +353,6 @@ class MeetingInsertPage extends React.PureComponent  {
               <Text>{Moment( new Date(enddate) ).tz(RNLocalize.getTimeZone()).format("HH:mm")}</Text>
             </TouchableOpacity>
           </Item>
-          {/* differentZone?
-            <Label style={{paddingLeft: 10}}>{timezone} {this.props.lang.MeetingPage.meetingTimezone}: {Moment( this.state.startdate ).tz(this.state.timezone).format('HH:mm')} - {Moment( this.state.enddate ).tz(this.state.timezone).format('HH:mm')}</Label>
-            :
-              null
-          /*}
           
           {/*會議主席*/}
           <Item 
@@ -364,7 +366,6 @@ class MeetingInsertPage extends React.PureComponent  {
             }}
             disabled= {!this.state.isEditable}
             onPress = {()=>{
-              // console.log(this.state);
               NavigationService.navigate("MeetingInsertChairperson", {
                 startdate: this.state.startdate,
                 enddate  : this.state.enddate,
@@ -403,7 +404,7 @@ class MeetingInsertPage extends React.PureComponent  {
                     style   ={{fontSize:30, color: '#20b11d'}}
                     onPress ={()=>{
                       NavigationService.navigate("MeetingInsertWithTags",{
-                        attendees: this.state.attendees,
+                        attendees: this.deepClone(this.state.attendees),
                         startdate: this.state.startdate,
                         enddate  : this.state.enddate,
                         onPress  : this.selectAttendees,
@@ -482,6 +483,38 @@ class MeetingInsertPage extends React.PureComponent  {
               this.state.isEditable ? <Icon name='arrow-forward' /> : null
             }
           </Item>
+
+          {/*例行性會議 未完成*/}
+          {/*
+            <Item 
+              style={{
+                backgroundColor: this.props.style.InputFieldBackground,
+                height         : this.props.style.inputHeightBase,
+                paddingLeft    : 10,
+                paddingRight   : 5,
+                marginTop      : 20,
+              }}
+              disabled = {!this.state.isEditable}
+              onPress  = {()=>{
+                Keyboard.dismiss();
+                NavigationService.navigate("MeetingInsertWithRegular", {
+                  startdate: this.state.startdate,
+                  enddate  : this.state.enddate,
+                  onPress  : "",
+                  // oid      : this.state.oid
+                });
+              }}
+            >
+              <Icon name='reload-circle-outline' />
+              <Label style={{flex:1}}>{"例行性會議"}</Label>
+              {
+               this.state.isEditable ? <Text>{regularMeetingLabel}</Text> : <Label>{regularMeetingLabel}</Label>  
+              }
+              {
+                this.state.isEditable ? <Icon name='arrow-forward' /> : null
+              }
+            </Item>
+          */}
 
           {/*顯示會議的按鈕*/}
           { this.renderMeetingActionButton() }
@@ -571,14 +604,10 @@ class MeetingInsertPage extends React.PureComponent  {
 
   showDateTimePicker = (editStartorEndDatetime) => {
     let startdate = new Date( this.state.startdate.replace(/-/g, "/") ).getTime();
-    console.log(this.state.startdate.replace(/-/g, "/"));
     let enddate = new Date( this.state.enddate.replace(/-/g, "/") ).getTime();
-    // startdate = this.state.isChangeTime ? startdate-28800000: startdate;
-    // enddate = this.state.isChangeTime ? enddate-28800000: enddate;
-
       if (this.state.isEndDateChange) {
       } else {
-        enddate = startdate;
+        // enddate = startdate + 3600000;
       }
     
     if (Platform.OS == "ios") {
@@ -607,7 +636,6 @@ class MeetingInsertPage extends React.PureComponent  {
   setDate = (date) => {
     if (date.type == "set") {
       this.setState({
-        // editDatetimeValue:this.state.isChangeTime ? date.nativeEvent.timestamp-28800000: date.nativeEvent.timestamp ,
         editDatetimeValue:date.nativeEvent.timestamp,
         showDatePicker   :false,
         showTimePicker   :true,
@@ -620,14 +648,24 @@ class MeetingInsertPage extends React.PureComponent  {
   }
 
   setTime = (time) => {
-    console.log(DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"));
     if (time.type == "set") {
       if (this.state.editStartorEndDatetime) {
+
         //start
-        this.setState({
-          startdate      :DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"),
-          showTimePicker    : false,
-        });
+        if (this.state.isModify) {
+          this.setState({
+            startdate      :DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"),
+            showTimePicker    : false,
+          });
+        } else {
+          // 編輯開始時間要自動幫結束時間增加一小時
+          let enddate = time.nativeEvent.timestamp+3600000;
+          this.setState({
+            startdate      :DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"),
+            enddate        :DateFormat( new Date(enddate), "yyyy-mm-dd HH:MM:ss"),
+            showTimePicker    : false,
+          });
+        }
       } else {
         //end
         this.setState({
@@ -635,7 +673,6 @@ class MeetingInsertPage extends React.PureComponent  {
           showTimePicker    : false, 
         });
       }
-
     }else{
       this.setState({
         showTimePicker:false
@@ -645,12 +682,24 @@ class MeetingInsertPage extends React.PureComponent  {
   
   setDatetime = () => {
     if (this.state.editStartorEndDatetime) {
-      //start
+      //start 
       let editDatetimeValue = this.state.editDatetimeValue-1000 >= this.state.now ? this.state.editDatetimeValue : this.state.now;
-      this.setState({
-        startdate      :DateFormat( new Date(editDatetimeValue), "yyyy-mm-dd HH:MM:ss"),
-        showDateTimePicker    : false, // for ios
-      });
+
+      // 查看是不是編輯模式，如果是，結束時間不作變動，如果不是，結束時間要變更
+      if (this.state.isModify) {
+        this.setState({
+          startdate      :DateFormat( new Date(editDatetimeValue), "yyyy-mm-dd HH:MM:ss"),
+          showDateTimePicker    : false, // for ios
+        });
+      } else {
+        // 編輯開始時間要自動幫結束時間增加一小時
+        let enddate = editDatetimeValue.getTime()+3600000;
+        this.setState({
+          startdate      :DateFormat( new Date(editDatetimeValue), "yyyy-mm-dd HH:MM:ss"),
+          enddate        :DateFormat( new Date(enddate), "yyyy-mm-dd HH:MM:ss"),
+          showDateTimePicker    : false, // for ios
+        });
+      }
     } else {
       //end
       let editDatetimeValue = this.state.editDatetimeValue;
@@ -686,7 +735,7 @@ class MeetingInsertPage extends React.PureComponent  {
 
   selectAttendees = (attendees) => {
     this.setState({
-      attendees:[...this.state.attendees]
+      attendees:[...attendees]
     });
   }
 
@@ -837,6 +886,37 @@ class MeetingInsertPage extends React.PureComponent  {
           break;
       }
 
+      compontent.push(
+        <Item 
+          style={{
+            backgroundColor: this.props.style.InputFieldBackground,
+            height: this.props.style.inputHeightBase,
+            paddingLeft: 10,
+            paddingRight: 15,
+          }}
+        >
+          <Label>{this.props.lang.MeetingPage.isShowPhysicalmeetingPlace}</Label>
+          <Right>
+          <Switch 
+            disabled={!this.state.isEditable}
+            value    = {this.state.isOnlineAndPlace} 
+            onChange = {()=>{this.setState({isOnlineAndPlace:!this.state.isOnlineAndPlace})}}
+          />
+          </Right>
+        </Item>
+      );
+
+      if (this.state.isOnlineAndPlace) {
+        let setStateFunction = (text)=>{ this.setState({ meetingPlace:text }); }
+        compontent.push(
+          this.renderMeetingPlaceInfoItem(
+            this.props.lang.MeetingPage.meetingPlace,
+            this.state.isEditable,
+            this.state.meetingPlace,
+            setStateFunction
+          )
+        );
+      }
     } else {
       let setStateFunction = (text)=>{ this.setState({ meetingPlace:text }); }
       compontent.push(
@@ -992,6 +1072,7 @@ class MeetingInsertPage extends React.PureComponent  {
           startdate      :DateFormat( startdate, "yyyy-mm-dd HH:MM:ss"),
           enddate        :this.state.enddate,
           meetingMode    :this.state.meetingMode,
+          place          :this.state.isOnlineAndPlace,
           meetingPlace   :this.state.meetingPlace,
           meetingNumber  :this.state.meetingNumber,
           meetingPassword:this.state.meetingPassword,
@@ -999,12 +1080,12 @@ class MeetingInsertPage extends React.PureComponent  {
           initiator      :this.state.initiator,
           chairperson    :this.state.chairperson,
           attendees      :this.state.attendees,
-          // timezone       :new Date( this.state.startdate.replace(/-/g, "/") ).getTimezoneOffset().toString(),
           timezone       :RNLocalize.getTimeZone(),
+          repeatType     :"NR",
+          repeatEndDate  :"",
+          weekDays       :[]
       }
-
-      console.log("meetingParams", meetingParams);
-
+      
       if (this.state.isModify) {
         // 修改會議
         meetingParams.oid = this.state.oid;
@@ -1039,6 +1120,11 @@ class MeetingInsertPage extends React.PureComponent  {
     string = string.replace(/\n/g,"");
     string = string.replace(/\s/g,"");
     return string.length == 0 ? true : false;
+  }
+
+  // deep clone
+  deepClone(src) {
+    return JSON.parse(JSON.stringify(src));
   }
 
   componentWillUnmount(){

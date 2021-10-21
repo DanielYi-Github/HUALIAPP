@@ -20,6 +20,8 @@ import * as HomeAction      from '../redux/actions/HomeAction';
 import * as MessageAction   from '../redux/actions/MessageAction';
 import * as MeetingAction   from '../redux/actions/MeetingAction';
 import MessageRouter   from '../utils/MessageRouter';
+import MainPageBackground  from '../components/MainPageBackground';
+
 
 
 
@@ -37,10 +39,10 @@ class SplashPage extends React.Component {
     //是否允許APP進行初始化程序
     if (this.props.state.Login.enableAppInitialFunction) {
       this.props.actions.appInit( this.props.actions );      // APP初始化程序
-      SplashScreen.hide();
       MessageRouter.initial();                                          // 處理訊息分流的類別
       MessageRouter.addListeners(this.props.state, this.props.actions); // 處理訊息分流的類別
       MessageRouter.addMessageListener(this.props.actions);             // 啟動訊息觸發的監聽器
+      SplashScreen.hide();
     }
   }
 
@@ -56,6 +58,7 @@ class SplashPage extends React.Component {
   render() {
     return (
       <Container style={{ alignItems: 'center',  justifyContent: 'center' }}>
+        <MainPageBackground height={0}/>
         <Image style={{ width:250, height:250 }} source ={require("../image/login/icon-noback.png")} />
           {
             this.props.state.AppInit.showUpdateProgress ?

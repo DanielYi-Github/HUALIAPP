@@ -113,7 +113,7 @@ let NetUtil = {
 				} else {
 					response.text().then( err => {
 						console.log("err", err);
-						// LoggerUtil.addErrorLog(url, "API request in APP", "FATAL", err);
+						LoggerUtil.addErrorLog(url, "API request in APP", "FATAL", err);
 					});
 					return { message:"Response Error!", code:-2 }; 
 				}

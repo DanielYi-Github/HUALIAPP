@@ -16,6 +16,7 @@ class AdvicesPage extends React.Component {
     this.state = {
       context:'',
       contact:'',
+      isSubmitting:false
     }
   }
 
@@ -76,9 +77,11 @@ class AdvicesPage extends React.Component {
 
             <Button block info 
               style={{width:"70%", alignSelf: 'center', marginTop:35}} 
-              onPress = {this.confirm.bind(this)} >
+              onPress = {this.confirm.bind(this)}
+              disabled = {this.state.isSubmitting}
+            >
               {
-                (this.props.Submit.isSubmitting) ?
+                (this.state.isSubmitting) ?
                   <Spinner color='white'/>
                 :
                   <Text>{this.props.Language.Submit}</Text>
@@ -91,13 +94,22 @@ class AdvicesPage extends React.Component {
 
   confirm = () => {
     //值不能為空
-    if (!this.state.context || this.isNull(this.state.context) ) {
+    if(!this.state.context || this.state.context.replace(/[\r\n]/g,"").replace(/^[\s　]+|[\s　]+$/g, "").length == 0){
       ToastUnit.show('error', this.props.Language.AlertAdvicesMessage);
+      this.setState({
+        isSubmitting:false
+      });
     } 
-    else if(!this.state.contact || this.isNull(this.state.contact) ) {
+    else if(!this.state.contact || this.state.contact.replace(/[\r\n]/g,"").replace(/^[\s　]+|[\s　]+$/g, "").length == 0){
+      this.setState({
+        isSubmitting:false
+      });
       ToastUnit.show('error', this.props.Language.AlertContactInfoMsg);
     }
     else{
+      this.setState({
+        isSubmitting:true
+      });
       this.props.actions.submitAdvices(this.props.UserInfo.UserInfo, this.state.context, this.state.contact);
     }
   }

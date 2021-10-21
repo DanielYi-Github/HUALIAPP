@@ -3,13 +3,12 @@ import { View, Platform, Alert, NativeModules, AppState } from 'react-native';
 import { Icon, Text, StyleProvider, Root, connectStyle} from 'native-base';
 import { connect, useSelector, useDispatch}from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as AppInitAction     from './redux/actions/AppInitAction';
-import * as HomeAction        from './redux/actions/HomeAction';
-import * as ThemeAction       from './redux/actions/ThemeAction';
-import * as CommonAction      from './redux/actions/CommonAction';
-import * as LoginAction       from './redux/actions/LoginAction';
-// import * as MeetingAction       from './redux/actions/MeetingAction';
-import * as MessageAction   from './redux/actions/MessageAction';
+import * as AppInitAction from './redux/actions/AppInitAction';
+import * as HomeAction    from './redux/actions/HomeAction';
+import * as ThemeAction   from './redux/actions/ThemeAction';
+import * as CommonAction  from './redux/actions/CommonAction';
+import * as LoginAction   from './redux/actions/LoginAction';
+import * as MessageAction from './redux/actions/MessageAction';
 
 
 import { SafeAreaProvider, SafeAreaView }     from 'react-native-safe-area-context';
@@ -74,6 +73,7 @@ import PublishSubmitPage       from './pages/Common/Publish/PublishSubmitPage';
 import PublishSubmitSelectPage from './pages/Common/Publish/PublishSubmitSelectPage';
 
 import DeputyPage         from './pages/Mine/DeputyPage';
+import MeetingSettingPage from './pages/Mine/MeetingSettingPage';
 import AdvicesPage        from './pages/Mine/AdvicesPage';
 import AboutPage          from './pages/Mine/AboutPage';
 import OperationPage      from './pages/Mine/OperationPage';
@@ -98,16 +98,23 @@ import KPICategoryPage         from './pages/Common/Report/KPI/KPICategoryPage';
 
 import CreateWebViewPage       from './pages/Common/CreateWebViewPage';
 
-import MeetingSearchPage            from './pages/Common/Meeting/MeetingSearchPage';
-import MeetingSearchWithTagsPage    from './pages/Common/Meeting/MeetingSearchWithTagsPage';
-import MeetingTimeForSearchPage     from './pages/Common/Meeting/MeetingTimeForSearchPage';
-import MeetingListPage              from './pages/Common/Meeting/MeetingListPage';
-import MeetingInsertPage            from './pages/Common/Meeting/MeetingInsertPage';
-import MeetingInsertChairpersonPage from './pages/Common/Meeting/MeetingInsertChairpersonPage';
-import MeetingInsertWithTagsPage    from './pages/Common/Meeting/MeetingInsertWithTagsPage';
-import MeetingTimeForPersonPage     from './pages/Common/Meeting/MeetingTimeForPersonPage';
+import MeetingSearchPage                     from './pages/Common/Meeting/MeetingSearchPage';
+import MeetingSearchWithTagsPage             from './pages/Common/Meeting/MeetingSearchWithTagsPage';
+import MeetingTimeForSearchPage              from './pages/Common/Meeting/MeetingTimeForSearchPage';
+import MeetingListPage                       from './pages/Common/Meeting/MeetingListPage';
+import MeetingInsertPage                     from './pages/Common/Meeting/MeetingInsertPage';
+import MeetingInsertChairpersonPage          from './pages/Common/Meeting/MeetingInsertChairpersonPage';
+import MeetingInsertWithTagsPage             from './pages/Common/Meeting/MeetingInsertWithTagsPage';
+import MeetingInsertWithTagsByPositionPage   from './pages/Common/Meeting/MeetingInsertWithTagsByPositionPage';
+import MeetingInsertWithTagsByOrganizePage   from './pages/Common/Meeting/MeetingInsertWithTagsByOrganizePage';
+import MeetingInsertWithTagsForSelectPage    from './pages/Common/Meeting/MeetingInsertWithTagsForSelectPage';
+import MeetingInsertWithRegularPage          from './pages/Common/Meeting/MeetingInsertWithRegularPage';
+import MeetingInsertWithRegularCustomizePage from './pages/Common/Meeting/MeetingInsertWithRegularCustomizePage';
 
-import DailyOralEnglishPage from "./pages/Common/DailyOralEnglish/DailyOralEnglishPage";
+import MeetingTimeForPersonPage    from './pages/Common/Meeting/MeetingTimeForPersonPage';
+import MeetingAttendeesReorderPage from './pages/Common/Meeting/MeetingAttendeesReorderPage';
+
+import DailyOralEnglishPage       from "./pages/Common/DailyOralEnglish/DailyOralEnglishPage";
 import DailyOralEnglishDetailPage from "./pages/Common/DailyOralEnglish/DailyOralEnglishDetailPage";
 
 import CompanyDocumentPage from "./pages/Common/CompanyDocument/CompanyDocumentPage";
@@ -204,6 +211,7 @@ function AuthStack(){
         component={InitialPasswordPage} 
         options={{
           cardStyleInterpolator: Platform.OS == 'ios' ? CardStyleInterpolators.forModalPresentationIOS : CardStyleInterpolators.forFadeFromBottomAndroid,
+          cardOverlayEnabled: true
         }}
       />
       <Stack.Screen 
@@ -211,6 +219,7 @@ function AuthStack(){
         component={SmsCheckPage} 
         options={{
           cardStyleInterpolator: Platform.OS == 'ios' ? CardStyleInterpolators.forModalPresentationIOS : CardStyleInterpolators.forFadeFromBottomAndroid,
+          cardOverlayEnabled: true
         }}
       />
       <Stack.Screen name ="LoginByBios" component={LoginByBiosPage} />
@@ -322,6 +331,7 @@ function MainStack(props){
       <AppStack.Screen name ="PublishSubmitSelect"  component={PublishSubmitSelectPage} />
 
       <AppStack.Screen name ="Deputy"           component={DeputyPage} />
+      <AppStack.Screen name ="MeetingSetting"   component={MeetingSettingPage} />
       <AppStack.Screen name ="Advices"          component={AdvicesPage} />
       <AppStack.Screen name ="Operation"        component={OperationPage} />
       <AppStack.Screen name ="About"            component={AboutPage} />
@@ -345,17 +355,29 @@ function MainStack(props){
 
       <AppStack.Screen name ="CreateWebView"  component={CreateWebViewPage} />
 
-      <AppStack.Screen name ="MeetingList" component={MeetingListPage} />
-      <AppStack.Screen name ="MeetingSearch" component={MeetingSearchPage} />
-      <AppStack.Screen name ="MeetingSearchWithTags" component={MeetingSearchWithTagsPage} />
-      <AppStack.Screen name ="MeetingInsert" component={MeetingInsertPage} />
-      <AppStack.Screen name ="MeetingInsertWithTags" component={MeetingInsertWithTagsPage} />
-
       <AppStack.Screen name ="DailyOralEnglish" component={DailyOralEnglishPage}/>
       <AppStack.Screen name ="DailyOralEnglishDetail" component={DailyOralEnglishDetailPage}/>
+
+      <AppStack.Screen name ="MeetingList"                      component={MeetingListPage} />
+      <AppStack.Screen name ="MeetingSearch"                    component={MeetingSearchPage} />
+      <AppStack.Screen name ="MeetingSearchWithTags"            component={MeetingSearchWithTagsPage} />
+      <AppStack.Screen name ="MeetingInsert"                    component={MeetingInsertPage} />
+      <AppStack.Screen name ="MeetingInsertWithTags"            component={MeetingInsertWithTagsPage} />
+      <AppStack.Screen name ="MeetingInsertWithTagsByPosition"  component={MeetingInsertWithTagsByPositionPage} />
+      <AppStack.Screen name ="MeetingInsertWithTagsByOrganize"  component={MeetingInsertWithTagsByOrganizePage} />
+      <AppStack.Screen name ="MeetingInsertWithTagsForSelect"   component={MeetingInsertWithTagsForSelectPage} />
+
+      <AppStack.Screen name ="MeetingInsertWithRegular"         component={MeetingInsertWithRegularPage} />
+      <AppStack.Screen name ="MeetingInsertWithRegularCustomize" component={MeetingInsertWithRegularCustomizePage} />
       
       <AppStack.Screen name ="MeetingInsertChairperson" component={MeetingInsertChairpersonPage} />
       <AppStack.Screen name ="MeetingTimeForPerson" component={MeetingTimeForPersonPage} />
+      <AppStack.Screen name ="MeetingAttendeesReorder" component={MeetingAttendeesReorderPage} 
+        options={{
+          cardStyleInterpolator: Platform.OS == 'ios' ? CardStyleInterpolators.forModalPresentationIOS : CardStyleInterpolators.forFadeFromBottomAndroid,
+          cardOverlayEnabled: true
+        }}
+      />
       <AppStack.Screen name ="MeetingTimeForSearch" component={MeetingTimeForSearchPage} />
 
       <AppStack.Screen name = "CompanyDocument" component = {CompanyDocumentPage} />

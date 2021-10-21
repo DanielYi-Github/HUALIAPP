@@ -13,7 +13,8 @@ import ToastUnit              from '../../utils/ToastUnit';
 class FormContentGridDataTablePage extends Component {
 	constructor(props) {
 		super(props);
-		let widthArrList = props.route.params.editable ? [27.5, 60]: [27.5];
+		// let widthArrList = props.route.params.editable ? [27.5, 60]: [27.5];
+		let widthArrList = [27.5];
 		for (let component of props.route.params.data.listComponent) {
 			if (component.columntype != "hidetxt") {
 				widthArrList.push(65);
@@ -38,7 +39,8 @@ class FormContentGridDataTablePage extends Component {
 	}
 
 	render() {
-		let tableHead = this.state.editable ? [ "", this.state.lang.FormContentGridForEvaluation.tableAction ] : [""] ;
+		// let tableHead = this.state.editable ? [ "", this.state.lang.FormContentGridForEvaluation.tableAction ] : [""] ;
+		let tableHead = [""] ;
 
 		for(let i in this.state.data.listComponent){
 			if(this.state.data.listComponent[i].columntype != "hidetxt"){
@@ -48,7 +50,8 @@ class FormContentGridDataTablePage extends Component {
 
 		let tableData = [];
 		for(let i in this.state.data.defaultvalue){
-			const rowData = this.state.editable ? [ parseInt(i)+1, this.renderEditButton( this.state.data.defaultvalue[i], i ) ] : [parseInt(i)+1];
+			// const rowData = this.state.editable ? [ parseInt(i)+1, this.renderEditButton( this.state.data.defaultvalue[i], i ) ] : [parseInt(i)+1];
+			const rowData = [parseInt(i)+1];
 
 			for(let j in this.state.data.defaultvalue[i]){
 				if (this.state.data.defaultvalue[i][j].columntype != "hidetxt") {

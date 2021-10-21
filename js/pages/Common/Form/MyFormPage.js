@@ -37,7 +37,7 @@ class MyFormPage extends React.Component {
   render() {
     let myFormPage = (
       <Container>
-      <MainPageBackground />
+      <MainPageBackground height={250}/>
       {/*標題列*/}
       <HeaderForGeneral
         isLeftButtonIconShow  = {true}
