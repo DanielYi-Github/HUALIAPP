@@ -812,9 +812,10 @@ class MeetingInsertPage extends React.PureComponent  {
         } else {
           // 顯示線上會議的帳號與密碼
           this.setState({
-            meetingMode    :this.props.state.Meeting.meetingModeTypes[buttonIndex].paramcode,
+            meetingMode     :this.props.state.Meeting.meetingModeTypes[buttonIndex].paramcode,
             meetingPlaceName:this.props.state.Meeting.meetingModeTypes[buttonIndex].paramname,
-            isOnlineMeeting :true
+            isOnlineMeeting :true,
+            meetingPlace    :""
           });
         }
         break;
