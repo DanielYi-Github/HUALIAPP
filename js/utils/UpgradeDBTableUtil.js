@@ -178,35 +178,44 @@ let UpgradeDBTableUtil = {
 			}
 		});
 		//檢查有無表單
-		SQLite.checkTableField("THF_COMPANY_DOC", "SORT").then((data) => {
-			if (!data) {
-				SQLite.dropTable("THF_COMPANY_DOC").then(result => {
-					if (result) {
-						let createTable = `CREATE TABLE THF_COMPANY_DOC ( 
-							OID char ( 32 ) NOT NULL, 
-							CO varchar ( 2 ) NOT NULL, 
-							DOC_TYPE varchar ( 2 ) NOT NULL, 
-							SUBJECT varchar ( 255 ) NOT NULL, 
-							RELEASE_DAT numeric NOT NULL DEFAULT (datetime('now','+8 hour')),
-							AUTH varchar ( 2 ) NOT NULL, 
-							VISITCOUNT int NOT NULL, 
-							LOCALVISITCOUNT int DEFAULT 0, 
-							FILEID varchar ( 30 ) NOT NULL, 
-							FILEURL varchar ( 255 ) NOT NULL, 
-							FILESIZE float NOT NULL, 
-							STATUS char ( 1 ) NOT NULL DEFAULT 'Y', 
-							CRTDAT numeric NOT NULL DEFAULT (datetime('now','+8 hour')), 
-							TXDAT numeric DEFAULT (datetime('now','+8 hour')),
-							SORT float NOT NULL, 
-							PRIMARY KEY(OID)  
-						  )`;
-						SQLite.createTable(createTable).then((e) => {
-							console.log(e);
-						});
+		SQLite.checkTable("THF_COMPANY_DOC").then(async result => {
+			let isCreate = false
+			if (result) {
+				let checkFieldResult = await SQLite.checkTableField("THF_COMPANY_DOC", "SORT")
+				if (!checkFieldResult) {
+					let dropResult = await SQLite.dropTable("THF_COMPANY_DOC")
+					if (dropResult) {
+						isCreate = true
 					}
-				})
+				}
+			} else {
+				isCreate = true
+			}
+			if (isCreate) {
+				let createTable = `CREATE TABLE THF_COMPANY_DOC ( 
+					OID char ( 32 ) NOT NULL, 
+					CO varchar ( 2 ) NOT NULL, 
+					DOC_TYPE varchar ( 2 ) NOT NULL, 
+					SUBJECT varchar ( 255 ) NOT NULL, 
+					RELEASE_DAT numeric NOT NULL DEFAULT (datetime('now','+8 hour')),
+					AUTH varchar ( 2 ) NOT NULL, 
+					VISITCOUNT int NOT NULL, 
+					LOCALVISITCOUNT int DEFAULT 0, 
+					FILEID varchar ( 30 ) NOT NULL, 
+					FILEURL varchar ( 255 ) NOT NULL, 
+					FILESIZE float NOT NULL, 
+					STATUS char ( 1 ) NOT NULL DEFAULT 'Y', 
+					CRTDAT numeric NOT NULL DEFAULT (datetime('now','+8 hour')), 
+					TXDAT numeric DEFAULT (datetime('now','+8 hour')),
+					SORT float NOT NULL, 
+					PRIMARY KEY(OID)  
+				  )`;
+				SQLite.createTable(createTable).then((e) => {
+					console.log(e);
+				});
 			}
 		});
+
 		//檢查有無表(APP文件表)
 		SQLite.checkTable("THF_APP_FILE").then((data) => {
 			if (!data) {

@@ -225,7 +225,7 @@ class CompanyDocumentPage extends Component {
                 arrCondition.push(sKeyword)
                 arrCondition.push(tKeyword)
             }
-            CompanyDocumentAction.queryCompanyDocumentData(appOid, pageNum, pageSize, null, arrCondition).then(result => {
+            CompanyDocumentAction.queryCompanyDocumentData(appOid, pageNum, pageSize, null, arrCondition, "RELEASE_DAT desc").then(result => {
                 let arrFile = result.raw()
                 //将分类ICON放进文件
                 let arrType = this.props.state.CompanyDocument.companyDocumentType
