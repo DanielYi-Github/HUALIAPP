@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, RefreshControl, VirtualizedList, Platform, Alert, Keyboard, TouchableOpacity } from 'react-native';
+import { View, FlatList, RefreshControl, VirtualizedList, Platform, Alert, Keyboard, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Icon, Title, Text, Card, CardItem, Label, Footer, connectStyle } from 'native-base';
 import { tify, sify} from 'chinese-conv'; 
 import { connect }   from 'react-redux';
@@ -34,6 +34,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
       isFooterRefreshing: false,
       isEnd             : false,       //紀錄搜尋結果是否已經沒有更多資料
       defaultCompany    : props.state.UserInfo.UserInfo.co, //預設公司
+      loading_index     : null,
     };
   }
 
@@ -244,6 +245,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
         fixedLabel 
         style   ={{paddingLeft: 10, paddingRight: 5, backgroundColor: this.props.style.InputFieldBackground}} 
         onPress ={ async ()=>{ 
+          this.setState({ loading_index: item.index });
           this.props.actions.positionCheckboxOnPress(!(checked || included), item.item.value);
         }} 
       >
@@ -251,6 +253,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
           disabled      ={ Platform.OS == "android" ? false : true }
           onValueChange ={(newValue) => {
             if (Platform.OS == "android"){
+              this.setState({ loading_index: item.index });
               this.props.actions.positionCheckboxOnPress(!(checked || included), item.item.value);
             }
           }}
@@ -264,8 +267,13 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
         />
         <Label>{item.item.label} </Label><Text note>{item.item.depname}</Text>
 
+        <ActivityIndicator 
+          animating ={this.props.state.Meeting.blocking && item.index == this.state.loading_index}
+          color     ={this.props.style.SpinnerColor}
+          style     ={{marginRight: 10}}
+        />
         <Icon 
-          style ={{padding: 10, paddingRight: 10, paddingLeft: '40%'}}
+          style ={{padding: 10, paddingRight: 10}}
           name  ='arrow-forward'
           onPress={()=>{
             NavigationService.navigate("MeetingInsertWithTagsForSelect", {
@@ -283,11 +291,20 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
   }
 
   renderEmptyComponent = () => {
-    return (
-      <Item style={{padding: 15, justifyContent: 'center', backgroundColor: this.props.style.InputFieldBackground}}>
-          <Label>{this.props.state.Language.lang.ListFooter.NoMore}</Label>
-      </Item>
-    );
+    if (this.props.state.Meeting.isRefreshing) {
+      return (
+        <Item style={{padding: 15, justifyContent: 'center', backgroundColor: this.props.style.InputFieldBackground}}>
+            <Label>{this.props.state.Language.lang.ListFooter.Loading}</Label>
+        </Item>
+      );
+    } else {
+      return (
+        <Item style={{padding: 15, justifyContent: 'center', backgroundColor: this.props.style.InputFieldBackground}}>
+            <Label>{this.props.state.Language.lang.ListFooter.NoMore}</Label>
+        </Item>
+      );
+    }
+    
   }
 
   dedup(arr) {

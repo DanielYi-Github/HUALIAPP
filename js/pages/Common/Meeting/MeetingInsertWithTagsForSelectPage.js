@@ -211,8 +211,10 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
         }} 
       >
         <Label>{item.name}</Label>
-        <ActivityIndicator 
-          animating={this.props.state.Meeting.blocking && item.key == this.state.loading_index}
+        <ActivityIndicator
+          animating ={this.props.state.Meeting.blocking && item.key == this.state.loading_index}
+          color     ={this.props.style.SpinnerColor}
+          style     ={{marginRight: 10}}
         />
       </Item>
     );

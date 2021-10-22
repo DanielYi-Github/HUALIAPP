@@ -17,7 +17,6 @@ export function getMeetingModeType() {
 		});
 		dispatch(loadModeType(meetingModeTypes)); 	
 		dispatch(refreshing(false)); 	
-
 	}
 }
 
@@ -414,6 +413,8 @@ function setCompanyList_MeetingCO(companies){
 
 export function getPositions(selectedCompany){
 	return async (dispatch, getState) => {
+		dispatch(refreshing(true));
+
 		let sql = `select * from THF_MASTERDATA 
 				   where CLASS1='HRPosition' and STATUS='Y' 
 				   order by SORT;`
@@ -468,6 +469,7 @@ export function getPositions(selectedCompany){
         	}
         }
 		dispatch(setAttendees_by_position(companyPositions, selectedCompany));
+		dispatch(refreshing(false));
 	}
 }
 
@@ -492,6 +494,7 @@ export function getOrg(value){
         
         // 取得該公司裡面的廠區
         let organization = await UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
+        	// console.log("organization", result);
 			return result;
         }).catch((err) => {
 			console.log(err);
@@ -637,6 +640,7 @@ export function organizeCheckboxOnPress(checkItemAttendees){
 					getState().Meeting.attendees_endDate,
 					getState().UserInfo.UserInfo
 				);
+				console.log("enableMeeting", enableMeeting);
 
 				if (enableMeeting.length == 0) {
 					reduxAttendees = [...reduxAttendees, ...allOrgAttendees];
@@ -706,6 +710,8 @@ function meetingBlock(isblicking){
 
 export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 	return async (dispatch, getState) => {
+		dispatch( meetingBlock(true) );
+
 		// 先檢查是要新增還是刪除
 		// 新增的話先搜尋有沒有在裡面了 然後檢查有無會議衝突
 		// 刪除的話搜尋相同id然後刪除
@@ -736,6 +742,7 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 
 				if (enableMeeting.length == 0) {
 					attendees = [...attendees, ...checkItemAttendees];
+					dispatch( meetingBlock(false) );
 				} else {
 					let unAbles = "";
 					for(let i in enableMeeting){
@@ -747,13 +754,14 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 						lang.alertMessage_duplicate, //"有重複"
 						`${lang.alertMessage_period} ${unAbles} ${lang.alertMessage_meetingAlready}`,
 						[
-						  { text: "OK", onPress: () => console.log("OK Pressed") }
+						  { text: "OK", onPress: () => dispatch( meetingBlock(false) ) }
 						],
 						{ cancelable: false }
 					);
 				}
 			} else {
 				attendees = [...attendees, ...checkItemAttendees];
+				dispatch( meetingBlock(false) );
 			}
 		} else {
 			for(let checkItem of checkItemAttendees){
@@ -764,6 +772,7 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 					}
 				}
 			}
+			dispatch( meetingBlock(false) );
 		}
 
 		dispatch({

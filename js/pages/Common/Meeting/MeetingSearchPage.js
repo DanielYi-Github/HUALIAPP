@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Keyboard, TouchableOpacity, Platform, Modal, Alert } from 'react-native';
-import { Container, Header, Content, Item, Icon, Input, Title, Text, Label, Button, ListItem, connectStyle, Card, CardItem, Body} from 'native-base';
+import { Container, Header, Content, Item, Icon, Input, Title, Text, Label, Button, ListItem, connectStyle, Card, CardItem, Body, Spinner} from 'native-base';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DateFormat             from  'dateformat';
@@ -286,6 +286,13 @@ class MeetingSearchPage extends React.PureComponent  {
           :
             null
         }
+
+        {/*是否顯示loading 畫面*/}
+        <Modal animationType="fade" transparent={true} visible={this.props.state.Meeting.isRefreshing} >
+          <Container style={{justifyContent: 'center', alignItems: 'center', backgroundColor:this.props.style.SpinnerbackgroundColor}}>
+            <Spinner color={this.props.style.SpinnerColor}/>
+          </Container>
+        </Modal>
       </Container>
     );
 	}

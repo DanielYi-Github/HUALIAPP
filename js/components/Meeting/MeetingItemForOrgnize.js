@@ -38,7 +38,11 @@ class MeetingItemForOrgnize extends Component {
 		      />
 		    <Label>{item.name} </Label>
 
-		    <ActivityIndicator animating={this.props.loading}/>
+		    <ActivityIndicator 
+		    	animating={this.props.loading}
+		    	color     ={this.props.style.SpinnerColor}
+		    	style     ={{marginRight: 10}}
+		    />
 		    <Icon 
 		      style ={{borderWidth: 0, padding: 10, paddingRight: 10}}
 		      name  ='arrow-forward'

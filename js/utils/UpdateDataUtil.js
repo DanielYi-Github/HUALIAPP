@@ -2755,7 +2755,9 @@ export async function getCreateFormDetailFormat(user, url, content = {}){
 			"userId" :Common.encrypt(user.loginID),
 			"content":Common.encrypt(content)
 		}
+		// console.log(url, params)
 		NetUtil.getRequestContent(params, url).then((data)=>{
+			// console.log("data", data);
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;

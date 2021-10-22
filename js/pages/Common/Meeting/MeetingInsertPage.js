@@ -588,16 +588,11 @@ class MeetingInsertPage extends React.PureComponent  {
         }
 
         {/*是否顯示loading 畫面*/}
-        {
-          (this.props.state.Meeting.isRefreshing) ? 
-            <Modal animationType="fade" transparent={true} visible={true} >
-              <Container style={{justifyContent: 'center', alignItems: 'center', backgroundColor:this.props.style.SpinnerbackgroundColor}}>
-                <Spinner color={this.props.style.SpinnerColor}/>
-              </Container>
-            </Modal>
-          :
-            null
-        }
+        <Modal animationType="fade" transparent={true} visible={this.props.state.Meeting.isRefreshing} >
+          <Container style={{justifyContent: 'center', alignItems: 'center', backgroundColor:this.props.style.SpinnerbackgroundColor}}>
+            <Spinner color={this.props.style.SpinnerColor}/>
+          </Container>
+        </Modal>
       </Container>
     );
 	}
@@ -1099,19 +1094,19 @@ class MeetingInsertPage extends React.PureComponent  {
 
   cancelMeeting = () => {
     Alert.alert(
-          this.props.lang.MeetingPage.alert, // "提醒！"
-          this.props.lang.MeetingPage.deleteConfirm, //"確定刪除此會議" 
-          [
-            {
-              text: this.props.lang.Common.Cancel, //"取消"
-              onPress: () => console.log("Cancel Pressed"),
-              style: "cancel"
-            },
-            { text: this.props.lang.Common.Comfirm, onPress: () => {
-              this.setState({isDelete:true});
-              this.props.actions.cancelMeeting(this.state.oid);
-            }}
-          ]
+      this.props.lang.MeetingPage.alert, // "提醒！"
+      this.props.lang.MeetingPage.deleteConfirm, //"確定刪除此會議" 
+      [
+        {
+          text: this.props.lang.Common.Cancel, //"取消"
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: this.props.lang.Common.Comfirm, onPress: () => {
+          this.setState({isDelete:true});
+          this.props.actions.cancelMeeting(this.state.oid);
+        }}
+      ]
     );
   }
 
