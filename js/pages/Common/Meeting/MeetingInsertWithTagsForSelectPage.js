@@ -38,7 +38,8 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
       tKeyword           : "",          //繁體中文
       isSearch           : false,       //是反顯示關鍵字搜尋結果
       checkState         : false,
-      loading_index      : false
+      loading_index      : false,
+      selectAllChkEvent  : this.props.route.params.selectAllChkEvent ? this.props.route.params.selectAllChkEvent: null
     };
   }
 
@@ -143,6 +144,15 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
               selectNumber = {this.props.state.Meeting.attendees.length}
               onPress      = { () => NavigationService.navigate("MeetingAttendeesReorder")}
               MeetingInsertWithTagsPageRouterKey  = {this.props.MeetingInsertWithTagsPageRouterKey}
+              // 我需要知道他有沒有全選
+              // 有全選要勾 沒全選不勾
+              // 全選之後要作什麼
+              // 取消全選之後要作什麼
+              showAllSelectChk       = {true}
+              allSelectChkValue      = {this.allSelectChkValue(filteredData)}
+              onSelectChkValueChange = {(value)=>{
+                this.state.selectAllChkEvent(value, filteredData)
+              }}
             />
           :
             null
@@ -311,6 +321,25 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
     string = string.replace(/\n/g,"");
     string = string.replace(/\s/g,"");
     return string;
+  }
+
+  allSelectChkValue = (items) => {
+    // 清單的全部有沒有包含已選擇的全部
+    let isAllSelected = false;
+    for(let item of items){
+      isAllSelected = false
+      for(let attendee of this.props.state.Meeting.attendees){
+        if(item.id == attendee.id){
+          isAllSelected = true;
+          break;
+        }
+      }
+
+      if(!isAllSelected) break;
+      
+    }
+
+    return isAllSelected
   }
 }
 

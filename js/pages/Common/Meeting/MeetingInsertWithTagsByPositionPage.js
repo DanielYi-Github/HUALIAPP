@@ -218,6 +218,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
           selectNumber = {this.props.state.Meeting.attendees.length}
           onPress      = {()=>NavigationService.navigate("MeetingAttendeesReorder")}
           MeetingInsertWithTagsPageRouterKey = {this.props.MeetingInsertWithTagsPageRouterKey}
+          showAllSelectChk = {false}
         />
       </Container>
     );
@@ -281,7 +282,8 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
               onItemPress   :this.props.actions.getPositions,
               renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
               showFooter    :true,
-              title         :this.props.lang.MeetingPage.attendeesInvite
+              title         :this.props.lang.MeetingPage.attendeesInvite,
+              selectAllChkEvent : this.props.actions.positionCheckboxOnPress // 全選使用的功能
             });
           }}
         />

@@ -716,18 +716,27 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 		// 新增的話先搜尋有沒有在裡面了 然後檢查有無會議衝突
 		// 刪除的話搜尋相同id然後刪除
 		let attendees = getState().Meeting.attendees; //已經存在的
+		console.log("getState().Meeting.attendees", attendees);
 		if (checkValue) {
 
 			// 檢查有哪些人沒有在裡面
 			let unInside = [];
+
 			for(let checkItem of checkItemAttendees){
+				let isinside = false;
 				for(let attendee of attendees){
 					if(checkItem.id == attendee.id){
+						isinside = true;
 						break;
 					}
 				}
-				unInside.push(checkItem);
+
+				if(!isinside){
+					unInside.push(checkItem);
+				}
 			}
+
+			console.log("unInside", unInside);
 
 			//需不需要做會議時間衝突檢查
 			if (getState().Meeting.isNeedCheckMeetingTime){
@@ -741,7 +750,7 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 				);
 
 				if (enableMeeting.length == 0) {
-					attendees = [...attendees, ...checkItemAttendees];
+					attendees = [...attendees, ...unInside];
 					dispatch( meetingBlock(false) );
 				} else {
 					let unAbles = "";
@@ -760,7 +769,7 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 					);
 				}
 			} else {
-				attendees = [...attendees, ...checkItemAttendees];
+				attendees = [...attendees, ...unInside];
 				dispatch( meetingBlock(false) );
 			}
 		} else {
