@@ -842,6 +842,7 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		alertMessage_duplicate     :"有重复",
 		alertMessage_period        :"该时段",
 		alertMessage_meetingAlready:"已有安排会议",
+		alertMessage_meetingAttendeesAlready:" 此段时间已安排其他会议",
 		meetingSchedule            :"会议时程",
 		noMeetings                 :"暂时无会议",
 		myMeetings                 :"我的会议",

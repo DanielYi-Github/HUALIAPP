@@ -836,6 +836,7 @@ export default {
 		alertMessage_duplicate      :"Có sự trùng lặp",
 		alertMessage_period         :"Giai đoạn này",
 		alertMessage_meetingAlready :"Cuộc họp đã lên lịch/ Đã sắp xếp cuộc họp này",
+		alertMessage_meetingAttendeesAlready:" cuộc họp đã lên lịch/ Đã sắp xếp cuộc họp này",
 		meetingSchedule             :"Lịch họp",
 		noMeetings                  :"Tạm thời không có cuộc họp",
 		myMeetings                  :"Cuộc họp của tôi",

@@ -843,6 +843,7 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		alertMessage_duplicate     :"有重複",
 		alertMessage_period        :"該時段",
 		alertMessage_meetingAlready:"已有安排會議",
+		alertMessage_meetingAttendeesAlready:" 此段時間已安排其他會議",
 		meetingSchedule            :"會議時程",
 		noMeetings                 :"暫時無會議",
 		myMeetings                 :"我的會議",

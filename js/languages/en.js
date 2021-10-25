@@ -838,6 +838,7 @@ export default {
 		alertMessage_duplicate     :"Conflict",
 		alertMessage_period        :"The period",
 		alertMessage_meetingAlready:"has scheduled",
+		alertMessage_meetingAttendeesAlready:" have scheduled in the period.",
 		meetingSchedule            :"Schedule",
 		noMeetings                 :"No appointments",
 		myMeetings                 :"My appointments",

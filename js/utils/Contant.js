@@ -12,5 +12,6 @@ export const CODE_PUSH_KEY_ANDROID = '9ai2v7OA6K1iZDUAtCuCTm91aR6Y4ksvOXqog';
 export const CODE_PUSH_KEY_IOS     = 'pTMusJbFgikGtX7cgHKDGQl1JiYP4ksvOXqog';
 
 // 測試機
+// 
 // export const CODE_PUSH_KEY_ANDROID = 'onpNlKOEeSLvZybeEKXPVQVHmc6O4ksvOXqog';
 // export const CODE_PUSH_KEY_IOS = 'AJhlSYXl4E1Vhy1XxvQN6Q0IsDKl4ksvOXqog';

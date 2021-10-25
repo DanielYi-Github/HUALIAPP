@@ -477,6 +477,7 @@ class MeetingSearchPage extends React.PureComponent  {
       let isRequestSussce = false;
       let errorMessage = "";
       let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
+        // console.log("result", result);
         isRequestSussce = true;
         return result;
       }).catch((errorResult)=>{
