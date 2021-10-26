@@ -29,20 +29,14 @@ class DocCategoriesNewsTabList extends Component {
 	rederDocumentItem = (item) => {
 		return(
 			<DocCategoriesNewsButton 
-				title = {item.item.detail} 
-				time  = {item.item.dmodified}
-				hits  = {item.item.hits}
+				title = {item.item.DETAIL} 
+				time  = {item.item.DMODIFIED}
+				hits  = {item.item.VISITCOUNT}
 				item = {item.item}
 				lang = {this.props.lang}
-			    onPress = {() => this.showDocDetail(item)}
+			    onPress = {() => this.props.onPress(item)}
 			/>
 		);
-	}
-
-	showDocDetail(item){
-  	    NavigationService.navigate("DocumentDetail", {
-      		data: item,
-		});
 	}
 
 	renderSeparator=()=>{

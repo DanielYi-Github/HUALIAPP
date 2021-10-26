@@ -1,129 +1,126 @@
 import React from 'react';
-import { FlatList} from 'react-native';
+import { FlatList } from 'react-native';
 import { Container } from 'native-base';
 
-import * as NavigationService  from '../../../utils/NavigationService';
+import * as NavigationService from '../../../utils/NavigationService';
 import DocumentContentItem from '../../../components/Document/DocumentContentItem';
-import HeaderForGeneral  from '../../../components/HeaderForGeneral';
+import HeaderForGeneral from '../../../components/HeaderForGeneral';
 import NoMoreItem from '../../../components/NoMoreItem';
-import MainPageBackground     from '../../../components/MainPageBackground';
+import MainPageBackground from '../../../components/MainPageBackground';
 import { connect } from 'react-redux';
 import * as UpdateDataUtil from '../../../utils/UpdateDataUtil';
-import { bindActionCreators }   from 'redux';
-import * as DocumentAction      from '../../../redux/actions/DocumentAction';
+import { bindActionCreators } from 'redux';
+import * as DocumentAction from '../../../redux/actions/DocumentAction';
 
 class DocumentNewsContentPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      DocContentData :this.props.state.Document.GroupFileNewsData,
-      isLoading   :false,
-      showFooter  :false,
-      isFooterRefreshing: false,
-      isEnd             :this.props.state.Document.GroupFileNewsData.length<10?true:false
+      DocContentData: this.props.state.Document.GroupFileNewsData,
+      isEnd: false,
     }
   }
 
-
   render() {
-
     return (
       <Container>
-        <MainPageBackground height={null}/>
+        <MainPageBackground height={null} />
         {/*標題列*/}
         <HeaderForGeneral
-          isLeftButtonIconShow  = {true}
-          leftButtonIcon        = {{name:"arrow-back"}}
-          leftButtonOnPress     = {this.cancelSelect.bind(this)} 
-          isRightButtonIconShow = {false}
-          rightButtonIcon       = {null}
-          rightButtonOnPress    = {null} 
-          title                 = {this.props.state.Language.lang.DocumentCategoriesPage.NewsFiles}
-          isTransparent         = {false}
+          isLeftButtonIconShow={true}
+          leftButtonIcon={{ name: "arrow-back" }}
+          leftButtonOnPress={this.cancelSelect.bind(this)}
+          isRightButtonIconShow={false}
+          rightButtonIcon={null}
+          rightButtonOnPress={null}
+          title={this.props.state.Language.lang.DocumentCategoriesPage.NewsFiles}
+          isTransparent={false}
         />
-          <FlatList
-            keyExtractor          ={(item, index) => index.toString()}
-            data                  = {this.state.DocContentData}
-            extraData             = {this.state}
-            renderItem            = {this.renderDocContentItem}
-            ListFooterComponent   = {this.renderFooter}
-            onEndReachedThreshold = {0.3}
-            onEndReached          = {this.state.isEnd ? null :this.loadMoreData}
-          />      
+        <FlatList
+          keyExtractor={(item, index) => index.toString()}
+          data={this.state.DocContentData}
+          extraData={this.state}
+          renderItem={this.renderDocContentItem}
+          ListFooterComponent={this.renderFooter}
+          onEndReachedThreshold={0.3}
+          onEndReached={this.loadMoreData}
+        />
       </Container>
     );
   }
 
   loadMoreData = () => {
-    this.setState({ 
-      isFooterRefreshing: true,
-      isLoading:true
-    });
-
-    let user = this.props.state.UserInfo.UserInfo;
-
-    if (!this.state.isFooterRefreshing) {
-      if(this.state.DocContentData.length%10!=0){
+    let isEnd = this.state.isEnd
+    if (!isEnd) {
+      let page = this.state.DocContentData.length
+      DocumentAction.queryGroupFileData(page, 10).then(result => {
+        let data = result.raw()
+        let dataLength = data.length
+        let tempData = [...this.state.DocContentData, ...data];
+        if (dataLength == 0 || dataLength % 10 != 0) {
           this.setState({
-            isFooterRefreshing:false,
-            isEnd:true,
-            isLoading:false
+            DocContentData: tempData,
+            isEnd: true,
           });
-      }else{
-        let page=Math.ceil(this.state.DocContentData.length/10)+1;
-        UpdateDataUtil.getGroupFileNewsData(user, this.props.state.Language.langStatus, {page:page, condition:null}).then((dataT)=>{
-            let tempData = [ ...this.state.DocContentData,...dataT];
-            this.setState({
-              DocContentData: tempData,
-              isFooterRefreshing:false,
-              isEnd:false,
-              isLoading:false
-            });
-            this.props.actions.loadGroupFilesNewsState(tempData);
-        })
-      }
+        } else {
+          this.setState({
+            DocContentData: tempData,
+          });
+        }
+      })
     }
   }
 
-
-
   renderDocContentItem = (item) => {
-    let data=item;
-    if (data.item.icon == null ) return null;
-    return(
-      <DocumentContentItem 
-        selectedInfo = {data.item}
-        inconInfo    = {data.item.icon} 
-        lang         = {this.props.state.Language.lang}
-        onPress      = {() => this.showDocDetail(data)}
+    let data = item;
+    if (data.item.ICON == null) return null;
+    return (
+      <DocumentContentItem
+        selectedInfo={data.item}
+        inconInfo={data.item.ICON}
+        lang={this.props.state.Language.lang}
+        onPress={() => this.showDocDetail(data)}
       />
-    );      
+    );
   }
 
-  async showDocDetail (item) {
+  showDocDetail(item) {
+    this.increaseVisitCount(item.index, item.item.DID)
     NavigationService.navigate("DocumentDetail", {
       data: item,
     });
-    
+
   }
 
-  cancelSelect(){
+  increaseVisitCount = (index, did) => {
+    let length = this.props.state.Document.GroupFileNewsData.length
+    if (index < length) {
+      this.props.actions.increaseNewestFileVisitCount(index, did)
+    } else {
+      let data = this.state.DocContentData
+      data[index].VISITCOUNT++
+      this.setState({ DocContentData: data })
+      DocumentAction.increaseDBVisitCount(did)
+    }
+
+  }
+
+  cancelSelect() {
     NavigationService.goBack();
   }
 
-
   renderFooter = () => {
     if (this.state.isEnd) {
-        return (<NoMoreItem text={this.props.state.Language.lang.ListFooter.NoMore}/>);       
+      return (<NoMoreItem text={this.props.state.Language.lang.ListFooter.NoMore} />);
     } else {
-        return <NoMoreItem text={this.props.state.Language.lang.ListFooter.Loading}/>;
+      return <NoMoreItem text={this.props.state.Language.lang.ListFooter.Loading} />;
     }
   }
 }
 
 export default connect(
   (state) => ({
-    state: {...state}
+    state: { ...state }
   }),
   (dispatch) => ({
     actions: bindActionCreators({

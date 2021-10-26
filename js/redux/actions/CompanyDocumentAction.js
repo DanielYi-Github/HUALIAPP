@@ -83,7 +83,7 @@ export function initCompanyDocument() {
             //加载分类
             dispatch(loadCompanyDocumentType(arrDocumentType))
             //查询最新文件
-            queryCompanyDocumentData(appOid, 0, 10).then(result => {
+            queryCompanyDocumentData(appOid, 0, 10, null, null, "RELEASE_DAT desc").then(result => {
                 let arrDocumentNewestData = result.raw()
                 //将分类的ICON添加加进文件中
                 packCompanyDocumentData(arrDocumentType, arrDocumentNewestData)
@@ -149,7 +149,7 @@ export function queryCompanyDocumentType(appOid, lang) {
     return SQLiteUtil.selectData(sql, [])
 }
 //查询公司文件sql
-export function queryCompanyDocumentData(appOid, pageNum, pageSize, type, arrCondition) {
+export function queryCompanyDocumentData(appOid, pageNum, pageSize, type, arrCondition, sortColumn) {
     //拼接limit条件
     let limitWhere = ""
     if (pageNum != null && pageNum != undefined && pageSize != null && pageSize != undefined) {
@@ -170,7 +170,11 @@ export function queryCompanyDocumentData(appOid, pageNum, pageSize, type, arrCon
             conditionWhere = ` and (${arrCondition.join('or')}) `
         }
     }
-    let sql = `select OID, CO, DOC_TYPE, SUBJECT, date(RELEASE_DAT) as RELEASE_DAT, AUTH, VISITCOUNT+LOCALVISITCOUNT as VISITCOUNT, LOCALVISITCOUNT, FILEID, FILEURL, printf('%.2f',FILESIZE/1000/1000)||' MB' as FILESIZE, STATUS, CRTDAT, TXDAT 
+    //排序欄位
+    if (sortColumn == null && sortColumn == undefined) {
+        sortColumn = "SORT"
+    }
+    let sql = `select OID, CO, DOC_TYPE, SUBJECT, date(RELEASE_DAT) as RELEASE_DAT, AUTH, VISITCOUNT+LOCALVISITCOUNT as VISITCOUNT, LOCALVISITCOUNT, FILEID, printf('%.2f',FILESIZE/1000/1000)||' MB' as FILESIZE, STATUS, CRTDAT, TXDAT 
         from(
             select *
             from THF_COMPANY_DOC 
@@ -182,7 +186,7 @@ export function queryCompanyDocumentData(appOid, pageNum, pageSize, type, arrCon
                 from THF_PERMISSION 
                 where DATA_TYPE='companydoc' and FUNC_OID='${appOid}'
             ) 
-            order by RELEASE_DAT desc ${limitWhere}
+            order by ${sortColumn} ${limitWhere}
         )`
     return SQLiteUtil.selectData(sql, [])
 }
@@ -224,30 +228,9 @@ export function increaseVisitCount(oid) {
         dispatch(addCompanyDocumentVisitCount(oid))
 
         //修改DB访问数
-        let sql = `select LOCALVISITCOUNT from THF_COMPANY_DOC where OID = '${oid}' `
-        SQLiteUtil.selectData(sql, []).then(result => {
-            let raw = result.raw()
-            if (raw.length > 0) {
-                let localVisitCount = raw[0].LOCALVISITCOUNT + 1
-                let sql1 = `update THF_COMPANY_DOC set LOCALVISITCOUNT=? where OID=? `
-                let values = [localVisitCount,oid]
-                SQLiteUtil.updateData(sql1, values).catch(e => {
-                    console.log('increaseVisitCount Error',e);
-                })
-            }
-        })
-    }
-}
-//更新DB和redux的fileUrl
-export function updateCompanyDocumentFileUrl(oid, fileUrl) {
-    return async (dispatch, getState) => {
-        //修改redux state fileUrl
-        dispatch(setCompanyDocumentFileUrlData(oid, fileUrl))
-        //修改DB fileUrl
-        let sql = `update THF_COMPANY_DOC set FILEURL=? where OID=? `
-        let values = [fileUrl, oid]
-        SQLiteUtil.updateData(sql, values).catch(e => {
-            console.log('updateCompanyDocumentFileUrl Error',e);
+        let sql = `update THF_COMPANY_DOC set LOCALVISITCOUNT=LOCALVISITCOUNT + 1 where OID='${oid}' `
+        SQLiteUtil.updateData(sql).catch(e => {
+            console.log('increaseVisitCount Error', e);
         })
     }
 }

@@ -22,6 +22,7 @@ class CompanyDocumentPage extends Component {
             isSearch: false,//是否搜寻资料
             searchData: [],//搜寻资料
             isSearchEnd: false,//是否查询加载结束
+            isSearchLoading: false,//是否正在加载数据
             //关键字
             isSEqualsT: true,//搜寻关键字简繁体是否相同
             keyword: "",//搜寻关键字
@@ -117,7 +118,7 @@ class CompanyDocumentPage extends Component {
                                     renderItem={this.renderSearchCard}
                                     ListFooterComponent={this.renderSearchFooter}
                                     onEndReachedThreshold={0.3}
-                                    onEndReached={this.loadMoreSearchData}
+                                    onEndReached={() => this.loadMoreSearchData(false)}
                                 />
                     }
                 </Content>
@@ -149,8 +150,9 @@ class CompanyDocumentPage extends Component {
     }
     renderSearchFooter = () => {
         let isSearchLoading = this.state.isSearchLoading
+        let isSearchEnd = this.state.isSearchEnd
         let text = this.props.state.Language.lang.ListFooter.Searching
-        if (!isSearchLoading) {
+        if (!isSearchLoading || isSearchEnd) {
             text = this.props.state.Language.lang.ListFooter.NoMore
         }
         return (
@@ -199,48 +201,57 @@ class CompanyDocumentPage extends Component {
             this.setState({
                 isSearch: true
             });
-            this.loadMoreSearchData()
+            this.loadMoreSearchData(true)
         }
 
     }
     //加载更多搜寻资料
-    loadMoreSearchData = () => {
+    loadMoreSearchData = (isReload) => {
         let isSearchEnd = this.state.isSearchEnd
-        if (!isSearchEnd) {
-            let searchLength = this.state.searchData.length
-            if (searchLength % 10 == 0) {
-                let appOid = this.props.state.CompanyDocument.companyDocumentAppOid
-                let pageNum = searchLength > 0 ? searchLength++ : searchLength
-                let pageSize = 10
-                let isSEqualsT = this.state.isSEqualsT
-                let queryExcute = []
-                if (isSEqualsT) {
-                    let keyword = this.state.keyword
-                    let arrCondition = [keyword]
-                    queryExcute.push(CompanyDocumentAction.queryCompanyDocumentData(appOid, pageNum, pageSize, null, arrCondition))
-                } else {
-                    let sKeyword = this.state.sKeyword
-                    let tKeyword = this.state.tKeyword
-                    let arrCondition = [sKeyword, tKeyword]
-                    queryExcute.push(CompanyDocumentAction.queryCompanyDocumentData(appOid, pageNum, pageSize, null, arrCondition))
-                }
-                Promise.all(queryExcute).then(result => {
-                    let arrFile = []
-                    for (const fileData of result) {
-                        arrFile = arrFile.concat(fileData.raw())
-                    }
-                    //去除重复元素
-                    Common.filterDuplicateElement(arrFile)
-                    //将分类ICON放进文件
-                    let arrType = this.props.state.CompanyDocument.companyDocumentType
-                    CompanyDocumentAction.packCompanyDocumentData(arrType, arrFile)
-                    let searchData = this.state.searchData.concat(arrFile)
-                    this.setState({
-                        searchData
-                    })
-                })
-
+        if (!isSearchEnd || isReload) {
+            this.setState({ isSearchLoading: true })//正在加载
+            let appOid = this.props.state.CompanyDocument.companyDocumentAppOid
+            //重新加载笔数归0
+            let pageNum = isReload ? 0 : this.state.searchData.length
+            let pageSize = 10
+            let isSEqualsT = this.state.isSEqualsT
+            let arrCondition = []
+            if (isSEqualsT) {
+                let keyword = this.state.keyword
+                arrCondition.push(keyword)
+            } else {
+                let sKeyword = this.state.sKeyword
+                let tKeyword = this.state.tKeyword
+                arrCondition.push(sKeyword)
+                arrCondition.push(tKeyword)
             }
+            CompanyDocumentAction.queryCompanyDocumentData(appOid, pageNum, pageSize, null, arrCondition, "RELEASE_DAT desc").then(result => {
+                let arrFile = result.raw()
+                //将分类ICON放进文件
+                let arrType = this.props.state.CompanyDocument.companyDocumentType
+                CompanyDocumentAction.packCompanyDocumentData(arrType, arrFile)
+                let searchData
+                if (isReload) {
+                    searchData = arrFile
+                } else {//非重新查询将资料添加到原来资料的后面
+                    searchData = this.state.searchData.concat(arrFile)
+                }
+                let length = arrFile.length
+                if (length == 0 || length % 10 != 0) {
+                    this.setState({
+                        searchData,
+                        isSearchEnd: true,
+                        isSearchLoading: false
+                    })
+                } else {
+                    this.setState({
+                        searchData,
+                        isSearchEnd: false,
+                        isSearchLoading: false
+                    })
+                }
+
+            })
         }
     }
     //显示文件
@@ -249,28 +260,14 @@ class CompanyDocumentPage extends Component {
         //更新访问数
         this.props.actions.increaseVisitCount(oid)
         //跳转文件画面
-        let file = this.props.state.CompanyDocument.companyDocumentFileUrlData[oid]
-        file = file ? file : item.FILEURL
         NavigationService.navigate("ViewFile", {
-            url: 'companydoc/getCompanyDocumentUrl',
-            content: {
-                oid,
-                fileid: item.FILEID
-            },
-            file,
+            url: 'companydoc/downloadCompanyDocumentFile',
+            content: item.FILEID,
             fileType: "pdf",
             pageTtile: item.SUBJECT,
-            isDecode: true,
-            callBack: this.showDocumentCallBack(oid)
+            isDownload: true,
+            fileId: item.FILEID,
         });
-    }
-    //回調更新fileUrl
-    showDocumentCallBack = (oid) => {
-        //data参数为ViewFilePage组件回调时传递的参数
-        return (data) => {
-            let file = data.file
-            this.props.actions.updateCompanyDocumentFileUrl(oid, file)
-        }
     }
 }
 

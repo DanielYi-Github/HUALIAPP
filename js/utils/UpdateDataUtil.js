@@ -1,12 +1,12 @@
-import { Platform }      from 'react-native';
-import NetInfo           from "@react-native-community/netinfo";
+import { Platform } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 import * as RNLocalize from "react-native-localize";
 import DeviceStorageUtil from './DeviceStorageUtil';
-import * as SQLite       from './SQLiteUtil';
-import * as Device       from './DeviceInfoUtil';
-import NetUtil           from './NetUtil';
-import Common            from './Common';
-import User              from '../object/User';
+import * as SQLite from './SQLiteUtil';
+import * as Device from './DeviceInfoUtil';
+import NetUtil from './NetUtil';
+import Common from './Common';
+import User from '../object/User';
 
 /**
 * 回寫THF_LOG到Server
@@ -20,11 +20,11 @@ export async function setErrorLog(user, position, level, msg) {
 		let obj = [];
 		for (var i in msg) {
 			let content = {
-				userid  : user[i].loginID,
+				userid: user[i].loginID,
 				position: position[i],
 				loglevel: level[i],
-				content : JSON.stringify(msg[i]),
-				crtemp  : user[i].id,
+				content: JSON.stringify(msg[i]),
+				crtemp: user[i].id,
 			}
 			obj.push(content);
 		}
@@ -49,7 +49,7 @@ export async function setErrorLog(user, position, level, msg) {
  * @param user User
  * @return promise
  */
-export async function loginByAD(user){
+export async function loginByAD(user) {
 	let lang;
 	await DeviceStorageUtil.get('locale').then((data) => {
 		lang = data ? JSON.parse(data) : data;
@@ -66,7 +66,7 @@ export async function loginByAD(user){
 				"pwd"       : user.password,
 				"regid"     : user.regID,
 				"appversion": version,
-				"platform"  : Platform.OS
+				"platform": Platform.OS
 			}
 		};
 
@@ -108,7 +108,7 @@ export async function loginByEmpid(user, lang) {
 				"pwd"       : user.password,
 				"regid"     : user.regID,
 				"appversion": version,
-				"platform"  : Platform.OS
+				"platform": Platform.OS
 			}
 		};
 
@@ -133,8 +133,8 @@ export async function loginByEmpid(user, lang) {
 						},
 					}
 					resolve(params);
-				} 
-			}else {
+				}
+			} else {
 				// reject(data);
 				resolve(data);
 			}
@@ -192,13 +192,13 @@ export async function loginByToken(user){
 			"platform"  : Platform.OS
 		}
 		let params = {
-			"lang"  :  user.lang,
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"lang": user.lang,
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content)),
 		};
 
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code == 200) {
 				data = data.content;
 				user = setUserData(user, data);
@@ -248,20 +248,20 @@ export async function updateAPP(user) {
 
 		let content = {
 			"empid": user.id,
-			"co"   : user.co,
-			"pzid" : user.plantID,
+			"co": user.co,
+			"pzid": user.plantID,
 			"depid": user.depID,
 			"lang": user.lang,
 		}
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
 		let url = "data/getUserApp";
 
-		NetUtil.getRequestContent(params, url).then((data)=>{
-			if (data.code != 200) reject(data); 
+		NetUtil.getRequestContent(params, url).then((data) => {
+			if (data.code != 200) reject(data);
 
 			let insertSQL = "INSERT INTO THF_APP VALUES";
 			let apps = [];
@@ -295,7 +295,7 @@ export async function updateAPP(user) {
 			}
 
 			if (data.length > 0) {
-				SQLite.insertData(insertSQL, apps).then( () => resolve() );
+				SQLite.insertData(insertSQL, apps).then(() => resolve());
 
 				let end = new Date().getTime();
 				console.log("updateAPP:" + (end - start) / 1000);
@@ -310,36 +310,36 @@ export async function updateAPP(user) {
 export async function updateMSG(user) {
 	let start = new Date().getTime();
 
-	let lSQL   = "SELECT MAX(TXDAT) as TXDAT FROM THF_MSG"; //取最大的更新時間的SQL指令
-	let lData  = await SQLite.selectData(lSQL, []);			//執行查詢指令
+	let lSQL = "SELECT MAX(TXDAT) as TXDAT FROM THF_MSG"; //取最大的更新時間的SQL指令
+	let lData = await SQLite.selectData(lSQL, []);			//執行查詢指令
 	let ltxdat = lData.item(0).TXDAT; 						//更新時間
 
 	let promise = new Promise((resolve, reject) => {
 		let content = {
 			"empid": user.id,
-			"co"   : user.co,
-			"pzid" : user.plantID,
+			"co": user.co,
+			"pzid": user.plantID,
 			"depid": user.depID,
 			"txdat": (ltxdat == null) ? '' : ltxdat,
 		}
 		let params = {
-			"token"  :Common.encrypt(user.token),
-			"userId" :Common.encrypt(user.loginID),
-			"content":Common.encrypt(JSON.stringify(content)),
-			"lang"   :user.lang
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+			"lang": user.lang
 		};
 		let url = "data/getMsg";
-		
-		NetUtil.getRequestContent(params, url).then( async (data)=>{			
+
+		NetUtil.getRequestContent(params, url).then(async (data) => {
 			if (data.code != 200) reject(data);		// code如果錯誤則直接回報錯誤
-			
+
 			// 共用參數			
-			data    = data.content;
+			data = data.content;
 			let max = 35;
 
 			// 刪除使用相關參數
-			let prepareToDeleteOidArray  = [];
-			let deleteOidArraySQL        = "DELETE FROM THF_MSG WHERE OID in (";
+			let prepareToDeleteOidArray = [];
+			let deleteOidArraySQL = "DELETE FROM THF_MSG WHERE OID in (";
 			let executeDeleteOidArraySQL = [];
 
 			/*
@@ -362,15 +362,15 @@ export async function updateMSG(user) {
 						deleteOidArraySQL += "?,";
 					}
 				}
-				await Promise.all(executeDeleteOidArraySQL).then(() => {});
+				await Promise.all(executeDeleteOidArraySQL).then(() => { });
 			}
 
 			// 新增使用相關參數
-			let prepareToInsertMSGArray  = [];
-			let insertMSGArraySQL        = "INSERT INTO THF_MSG ";
+			let prepareToInsertMSGArray = [];
+			let insertMSGArraySQL = "INSERT INTO THF_MSG ";
 			let executeInsertMSGArraySQL = [];
-			
-			for (let [ index, insertData] of data.entries() ) {
+
+			for (let [index, insertData] of data.entries()) {
 				// console.log(insertData, index);
 				prepareToInsertMSGArray = prepareToInsertMSGArray.concat([
 					insertData.oid,
@@ -418,11 +418,11 @@ export async function updateNotice(user) {
 	let lData = await SQLite.selectData(lSQL, []);
 	let ltxdat = lData.item(0).TXDAT; //更新時間
 	let promise = new Promise((resolve, reject) => {
-	// console.log("ltxdat", ltxdat);
+		// console.log("ltxdat", ltxdat);
 		let params = {
 			"token": Common.encrypt(user.token),
 			"userId": Common.encrypt(user.loginID),
-			"content": Common.encrypt(ltxdat ? ltxdat: '')
+			"content": Common.encrypt(ltxdat ? ltxdat : '')
 		}
 
 		let url = "data/getNotice";
@@ -485,7 +485,7 @@ export async function updateNotice(user) {
 			NetUtil.getRequestContent(params, url).then((data) => {
 				if (data.code == 200) {
 					data = data.content;
-					
+
 					let max = 50;
 					let dArray = [];
 					let iArray = [];
@@ -561,7 +561,7 @@ export async function updateContact(user) {
 	let lSQL = "SELECT MAX(TXDAT) as TXDAT FROM THF_CONTACT"; //取最大的更新時間
 	let lData = await SQLite.selectData(lSQL, []);
 	let ltxdat = lData.item(0).TXDAT; //更新時間
-	let promise = new Promise( async (resolve, reject) => {
+	let promise = new Promise(async (resolve, reject) => {
 		if (ltxdat === null) {
 			let start = new Date().getTime();
 			let params = {
@@ -571,7 +571,7 @@ export async function updateContact(user) {
 			};
 			let url = "data/getContact";
 
-			NetUtil.getRequestContent(params, url).then((data)=>{
+			NetUtil.getRequestContent(params, url).then((data) => {
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
@@ -583,7 +583,7 @@ export async function updateContact(user) {
 				let iArray = [];
 				let execute = [];
 				let index = 0;
-				for (let i in data) {	
+				for (let i in data) {
 					i = parseInt(i);
 					index++;
 					let cellphone = cellphone ? data[i].cellphone.replace(/\'/g,"") : "";	
@@ -621,8 +621,8 @@ export async function updateContact(user) {
 						lInsert+= "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ),";
 					}
 				}
-				
-				SQLite.insertData_new(execute).then(()=>{
+
+				SQLite.insertData_new(execute).then(() => {
 					let end = new Date().getTime();
 					console.log("updateContact_end:"+ (end - start) / 1000);
 					// updateContactPic(user, ltxdat, content);				//獲取通訊錄圖片資料
@@ -631,13 +631,13 @@ export async function updateContact(user) {
 
 				
 			})
-			
+
 		} else {
 			lSQL = "select DISTINCT CO from THF_CONTACT;"; //取最大的更新時間
 			lData = await SQLite.selectData(lSQL, []);
 			let companyList = [];
-			for(let co of lData.raw()){
-				if (co.CO) {companyList.push(co.CO); }
+			for (let co of lData.raw()) {
+				if (co.CO) { companyList.push(co.CO); }
 			}
 
 			let params = {
@@ -652,8 +652,8 @@ export async function updateContact(user) {
 					reject(data); //已在其他裝置登入
 					return promise;
 				}
-				data = data.content;				
-				
+				data = data.content;
+
 				let max = 30;
 				let dArray = [];
 				let iArray = [];
@@ -662,20 +662,20 @@ export async function updateContact(user) {
 				let dExecute = [];
 				let iExecute = [];
 				let index = 0;
-				
+
 				for (let i = 0; i < data.length; i++) {
 					index++;
 
 					dArray = dArray.concat([data[i].oid]);
-					
+
 					let nCrtDat = Common.dateFormat(data[i].crtdat);
 					let nTxDat = Common.dateFormat(data[i].txdat);
 					iArray = iArray.concat([
-						data[i].oid, 
-						data[i].ad, 
-						data[i].empid, 
-						data[i].name, 
-						data[i].sex, 
+						data[i].oid,
+						data[i].ad,
+						data[i].empid,
+						data[i].name,
+						data[i].sex,
 						data[i].co,
 						data[i].depid,
 						data[i].depname,
@@ -686,13 +686,13 @@ export async function updateContact(user) {
 						data[i].skype,
 						data[i].picture,
 						data[i].status,
-						nCrtDat, 
+						nCrtDat,
 						nTxDat
 					]);
-					
-					if(index==max){
-						lDelete+= "?)";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? ";
+
+					if (index == max) {
+						lDelete += "?)";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? ";
 						dExecute.push(SQLite.deleteData(lDelete, dArray));
 						iExecute.push(SQLite.insertData(lInsert, iArray));
 						dArray = [];
@@ -700,19 +700,19 @@ export async function updateContact(user) {
 						lDelete = "DELETE FROM THF_CONTACT WHERE OID in (";
 						lInsert = "INSERT INTO THF_CONTACT ";
 						index = 0;
-					}else if(i==data.length-1){
-						lDelete+= "?)";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? ";
+					} else if (i == data.length - 1) {
+						lDelete += "?)";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? ";
 						dExecute.push(SQLite.deleteData(lDelete, dArray));
 						iExecute.push(SQLite.insertData(lInsert, iArray));
-					}else{
-						lDelete+= "?,";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? union all";
+					} else {
+						lDelete += "?,";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? union all";
 					}
 				}
-				
-				Promise.all(dExecute).then(()=>{
-					Promise.all(iExecute).then(()=>{
+
+				Promise.all(dExecute).then(() => {
+					Promise.all(iExecute).then(() => {
 						let end = new Date().getTime();
 						console.log("updateContact:"+ (end - start) / 1000);
 						
@@ -728,14 +728,14 @@ export async function updateContact(user) {
 /*
 export function updateContactPic(user, ltxdat, content) {
 	let params = {
-		"token"  :Common.encrypt(user.token),
-		"userId" :Common.encrypt(user.loginID),
-		"content":Common.encrypt(JSON.stringify(content))
+		"token": Common.encrypt(user.token),
+		"userId": Common.encrypt(user.loginID),
+		"content": Common.encrypt(JSON.stringify(content))
 	};
 
 	let url = "data/getContactPic";
 
-	NetUtil.getRequestContent(params, url).then((data)=>{
+	NetUtil.getRequestContent(params, url).then((data) => {
 		data = data.content;
 
 		let execute = [];
@@ -747,7 +747,7 @@ export function updateContactPic(user, ltxdat, content) {
 		SQLite.updateData_new(execute).then(() => {
 			// resolve();
 		});
-			
+
 	})
 }
 */
@@ -792,10 +792,10 @@ export async function updateMasterData(user) {
 					return promise;
 				}
 				content = data.content;
-				let excuteList = Common.tranBatchInsertSQL('THF_MASTERDATA',content,dataFun,13,30)
-				SQLite.insertData_new(excuteList).then(()=>{
+				let excuteList = Common.tranBatchInsertSQL('THF_MASTERDATA', content, dataFun, 13, 30)
+				SQLite.insertData_new(excuteList).then(() => {
 					let end = new Date().getTime();
-					console.log("updateMasterData_end:"+ (end - start) / 1000);
+					console.log("updateMasterData_end:" + (end - start) / 1000);
 					resolve();
 				});
 			})
@@ -806,13 +806,13 @@ export async function updateMasterData(user) {
 					return promise;
 				}
 				content = data.content;
-				let excuteList = Common.tranDiffUpdateSQL('THF_MASTERDATA',content,dataFun,13,30)
+				let excuteList = Common.tranDiffUpdateSQL('THF_MASTERDATA', content, dataFun, 13, 30)
 				const dExcuteList = excuteList['dExcuteList']
 				const iExcuteList = excuteList['iExcuteList']
-				Promise.all(dExcuteList.map(excute => SQLite.deleteData(excute[0], excute[1]))).then(()=>{
-					Promise.all(iExcuteList.map(excute => SQLite.insertData(excute[0],excute[1]))).then(()=>{
+				Promise.all(dExcuteList.map(excute => SQLite.deleteData(excute[0], excute[1]))).then(() => {
+					Promise.all(iExcuteList.map(excute => SQLite.insertData(excute[0], excute[1]))).then(() => {
 						let end = new Date().getTime();
-						console.log("updateMasterData:"+ (end - start) / 1000);
+						console.log("updateMasterData:" + (end - start) / 1000);
 						resolve();
 					})
 				})
@@ -820,7 +820,7 @@ export async function updateMasterData(user) {
 		}
 	});
 
-	
+
 	return promise;
 }
 
@@ -853,35 +853,35 @@ export async function updateLanguage(user) {
 				let iArray = [];
 				let execute = [];
 
-				for(let i in data){
+				for (let i in data) {
 					i = parseInt(i);
 					iArray = iArray.concat([
 						data[i].oid,
-					 	data[i].langid,
-					 	data[i].langtype,
-					 	data[i].langcontent,
+						data[i].langid,
+						data[i].langtype,
+						data[i].langcontent,
 						data[i].status,
 						Common.dateFormat(data[i].crtdat),
 						Common.dateFormat(data[i].txdat)
 					]);
 
-					if( (i+1)%max == 0 ){
+					if ((i + 1) % max == 0) {
 						//達到分批數量，要重置資料
-						lInsert+= " select ?,?,?,?,?,?,? ";
+						lInsert += " select ?,?,?,?,?,?,? ";
 						execute.push([lInsert, iArray]);
 						lInsert = "INSERT INTO THF_LANGUAGE ";
 						iArray = [];
-					}else if(i==data.length-1){
-						lInsert+= " select ?,?,?,?,?,?,? ";
+					} else if (i == data.length - 1) {
+						lInsert += " select ?,?,?,?,?,?,? ";
 						execute.push([lInsert, iArray]);
-					}else{
-						lInsert+= " select ?,?,?,?,?,?,? union all";
+					} else {
+						lInsert += " select ?,?,?,?,?,?,? union all";
 					}
 				}
 
-				SQLite.insertData_new(execute).then(()=>{
-				let end = new Date().getTime();
-					console.log("updateLanguage_end:"+ (end - start) / 1000);
+				SQLite.insertData_new(execute).then(() => {
+					let end = new Date().getTime();
+					console.log("updateLanguage_end:" + (end - start) / 1000);
 					resolve();
 				});
 
@@ -902,21 +902,21 @@ export async function updateLanguage(user) {
 				let dExecute = [];
 				let iExecute = [];
 				let index = 0;
-				
+
 				for (let i = 0; i < data.length; i++) {
 					index++;
 
 					dArray = dArray.concat([data[i].oid]);
-					
+
 					let nCrtDat = Common.dateFormat(data[i].crtdat);
 					let nTxDat = Common.dateFormat(data[i].txdat);
 					iArray = iArray.concat([data[i].oid, data[i].langid, data[i].langtype, data[i].langcontent,
-						data[i].status,nCrtDat, nTxDat
+					data[i].status, nCrtDat, nTxDat
 					]);
-					
-					if(index==max){
-						lDelete+= "?)";
-						lInsert+= " select ?,?,?,?,?,?,? ";
+
+					if (index == max) {
+						lDelete += "?)";
+						lInsert += " select ?,?,?,?,?,?,? ";
 						dExecute.push(SQLite.deleteData(lDelete, dArray));
 						iExecute.push(SQLite.insertData(lInsert, iArray));
 						dArray = [];
@@ -924,21 +924,21 @@ export async function updateLanguage(user) {
 						lDelete = "DELETE FROM THF_LANGUAGE WHERE OID in (";
 						lInsert = "INSERT INTO THF_LANGUAGE ";
 						index = 0;
-					}else if(i==data.length-1){
-						lDelete+= "?)";
-						lInsert+= " select ?,?,?,?,?,?,? ";
+					} else if (i == data.length - 1) {
+						lDelete += "?)";
+						lInsert += " select ?,?,?,?,?,?,? ";
 						dExecute.push(SQLite.deleteData(lDelete, dArray));
 						iExecute.push(SQLite.insertData(lInsert, iArray));
-					}else{
-						lDelete+= "?,";
-						lInsert+= " select ?,?,?,?,?,?,? union all";
+					} else {
+						lDelete += "?,";
+						lInsert += " select ?,?,?,?,?,?,? union all";
 					}
 				}
-				
-				Promise.all(dExecute).then(()=>{
-					Promise.all(iExecute).then(()=>{
+
+				Promise.all(dExecute).then(() => {
+					Promise.all(iExecute).then(() => {
 						let end = new Date().getTime();
-						console.log("updateLanguage:"+ (end - start) / 1000);
+						console.log("updateLanguage:" + (end - start) / 1000);
 						resolve();
 					})
 				})
@@ -947,7 +947,7 @@ export async function updateLanguage(user) {
 		}
 	});
 
-	
+
 	return promise;
 }
 
@@ -964,7 +964,7 @@ export async function updateEvent(user) {
 		let params = {
 			"token": Common.encrypt(user.token),
 			"userId": Common.encrypt(user.loginID),
-			"content": Common.encrypt(ltxdat ? ltxdat : '' )
+			"content": Common.encrypt(ltxdat ? ltxdat : '')
 		}
 
 		if (ltxdat === null) {
@@ -980,41 +980,41 @@ export async function updateEvent(user) {
 				let iArray = [];
 				let execute = [];
 				let index = 0;
-			
+
 				for (let i = 0; i < data.length; i++) {
 					index++;
-					
+
 					let nCrtDat = Common.dateFormat(data[i].crtdat);
 					let nTxDat = Common.dateFormat(data[i].txdat);
 					iArray = iArray.concat([
-						data[i].oid, 
-						data[i].id, 
-						data[i].type, 
-						data[i].content1, 
-						data[i].content2, 
-						data[i].content3, 
+						data[i].oid,
+						data[i].id,
+						data[i].type,
+						data[i].content1,
+						data[i].content2,
+						data[i].content3,
 						data[i].content4,
 						data[i].status,
-						nCrtDat, 
+						nCrtDat,
 						nTxDat
 					]);
-					
-					if(index==max){
+
+					if (index == max) {
 						//達到分批數量，要重置資料
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,? ";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,? ";
 						execute.push(SQLite.insertData(lInsert, iArray));
 						lInsert = "INSERT INTO THF_EVENT ";
 						iArray = [];
-						index=0;
-					}else if(i==data.length-1){
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,? ";
+						index = 0;
+					} else if (i == data.length - 1) {
+						lInsert += " select ?,?,?,?,?,?,?,?,?,? ";
 						execute.push(SQLite.insertData(lInsert, iArray));
-					}else{
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,? union all";
+					} else {
+						lInsert += " select ?,?,?,?,?,?,?,?,?,? union all";
 					}
 				}
 
-				Promise.all(execute).then(()=>{
+				Promise.all(execute).then(() => {
 					resolve();
 				})
 
@@ -1035,7 +1035,7 @@ export async function updateEvent(user) {
 				let dExecute = [];
 				let iExecute = [];
 				let index = 0;
-				
+
 				for (let i = 0; i < data.length; i++) {
 					index++;
 
@@ -1054,10 +1054,10 @@ export async function updateEvent(user) {
 						nCrtDat,
 						nTxDat
 					]);
-					
-					if(index==max){
-						lDelete+= "?)";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,? ";
+
+					if (index == max) {
+						lDelete += "?)";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,? ";
 						dExecute.push(SQLite.deleteData(lDelete, dArray));
 						iExecute.push(SQLite.insertData(lInsert, iArray));
 						dArray = [];
@@ -1065,19 +1065,19 @@ export async function updateEvent(user) {
 						lDelete = "DELETE FROM THF_EVENT WHERE OID in (";
 						lInsert = "INSERT INTO THF_EVENT ";
 						index = 0;
-					}else if(i==data.length-1){
-						lDelete+= "?)";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,? ";
+					} else if (i == data.length - 1) {
+						lDelete += "?)";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,? ";
 						dExecute.push(SQLite.deleteData(lDelete, dArray));
 						iExecute.push(SQLite.insertData(lInsert, iArray));
-					}else{
-						lDelete+= "?,";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,? union all";
+					} else {
+						lDelete += "?,";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,? union all";
 					}
 				}
-				
-				Promise.all(dExecute).then(()=>{
-					Promise.all(iExecute).then(()=>{
+
+				Promise.all(dExecute).then(() => {
+					Promise.all(iExecute).then(() => {
 						resolve();
 					})
 				})
@@ -1091,7 +1091,7 @@ export async function updateEvent(user) {
 /**
 * 取得同步APP Banner API
 */
-export async function updateBanner(user){
+export async function updateBanner(user) {
 	let lSQL = "SELECT MAX(TXDAT) as TXDAT FROM THF_BANNER"; //取最大的更新時間
 	let lData = await SQLite.selectData(lSQL, []);
 	let ltxdat = lData.item(0).TXDAT; //更新時間
@@ -1112,20 +1112,20 @@ export async function updateBanner(user){
 					return promise;
 				}
 				data = data.content;
-				
-				let max     = 50;
+
+				let max = 50;
 				let lInsert = "INSERT INTO THF_BANNER ";
-				let iArray  = [];
+				let iArray = [];
 				let execute = [];
-				
-				for(let i in data ){
+
+				for (let i in data) {
 					i = parseInt(i);
 
 					iArray = iArray.concat([
-						data[i].oid, 
-						data[i].id, 
-						data[i].downurl, 
-						data[i].opentype, 
+						data[i].oid,
+						data[i].id,
+						data[i].downurl,
+						data[i].opentype,
 						data[i].appid,
 						data[i].portalurl,
 						data[i].sort,
@@ -1134,24 +1134,24 @@ export async function updateBanner(user){
 						Common.dateFormat(data[i].crtdat),
 						Common.dateFormat(data[i].txdat),
 					]);
-					
-					if( (i+1)%max == 0 ){
+
+					if ((i + 1) % max == 0) {
 						//達到分批數量，要重置資料
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,? ";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,? ";
 						execute.push([lInsert, iArray]);
 						lInsert = "INSERT INTO THF_BANNER ";
 						iArray = [];
-					}else if( (i+1) == data.length ){
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,? ";
+					} else if ((i + 1) == data.length) {
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,? ";
 						execute.push([lInsert, iArray]);
-					}else{
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,? union all";
+					} else {
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,? union all";
 					}
 				}
 
-				SQLite.insertData_new(execute).then(()=>{
-				let end = new Date().getTime();
-					console.log("updateBanner_end:"+ (end - start) / 1000);
+				SQLite.insertData_new(execute).then(() => {
+					let end = new Date().getTime();
+					console.log("updateBanner_end:" + (end - start) / 1000);
 					resolve();
 				});
 			})
@@ -1162,23 +1162,23 @@ export async function updateBanner(user){
 					return promise;
 				}
 				data = data.content;
-				
-				let max      = 50;
-				let dArray   = [];
-				let iArray   = [];
-				let lDelete  = "DELETE FROM THF_BANNER WHERE OID in (";
-				let lInsert  = "INSERT INTO THF_BANNER ";
+
+				let max = 50;
+				let dArray = [];
+				let iArray = [];
+				let lDelete = "DELETE FROM THF_BANNER WHERE OID in (";
+				let lInsert = "INSERT INTO THF_BANNER ";
 				let dExecute = [];
 				let iExecute = [];
-				
-				for(let i in data){
+
+				for (let i in data) {
 					i = parseInt(i);
 					dArray = dArray.concat([data[i].oid]);
 					iArray = iArray.concat([
-						data[i].oid, 
-						data[i].id, 
-						data[i].downurl, 
-						data[i].opentype, 
+						data[i].oid,
+						data[i].id,
+						data[i].downurl,
+						data[i].opentype,
 						data[i].appid,
 						data[i].portalurl,
 						data[i].sort,
@@ -1188,31 +1188,31 @@ export async function updateBanner(user){
 						Common.dateFormat(data[i].txdat),
 					]);
 
-					if( (i+1)%max == 0 ){
-						lDelete+= "?)";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,? ";
+					if ((i + 1) % max == 0) {
+						lDelete += "?)";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,? ";
 						dExecute.push(SQLite.deleteData(lDelete, dArray));
 						iExecute.push(SQLite.insertData(lInsert, iArray));
 						dArray = [];
 						iArray = [];
 						lDelete = "DELETE FROM THF_BANNER WHERE OID in (";
 						lInsert = "INSERT INTO THF_BANNER ";
-					}else if( i == data.length-1 ){
-						lDelete+= "?)";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,? ";
+					} else if (i == data.length - 1) {
+						lDelete += "?)";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,? ";
 						dExecute.push(SQLite.deleteData(lDelete, dArray));
 						iExecute.push(SQLite.insertData(lInsert, iArray));
-					}else{
-						lDelete+= "?,";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,? union all";
+					} else {
+						lDelete += "?,";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,? union all";
 					}
 
 				}
 
-				Promise.all(dExecute).then(()=>{
-					Promise.all(iExecute).then(()=>{
+				Promise.all(dExecute).then(() => {
+					Promise.all(iExecute).then(() => {
 						let end = new Date().getTime();
-						console.log("updateBanner_end:"+ (end - start) / 1000);
+						console.log("updateBanner_end:" + (end - start) / 1000);
 						resolve();
 					})
 				})
@@ -1224,12 +1224,12 @@ export async function updateBanner(user){
 
 export async function updateVersion() {
 	let start = new Date().getTime();
-	
-	let lSQL   = "SELECT MAX(TXDAT) as TXDAT FROM THF_VERSION"; //取最大的更新時間
-	let lData  = await SQLite.selectData(lSQL, []);
+
+	let lSQL = "SELECT MAX(TXDAT) as TXDAT FROM THF_VERSION"; //取最大的更新時間
+	let lData = await SQLite.selectData(lSQL, []);
 	let ltxdat = lData.item(0).TXDAT; 							//更新時間
-	let url    = "version/getVersion";
-	let params = { "content":ltxdat ? ltxdat : "" };
+	let url = "version/getVersion";
+	let params = { "content": ltxdat ? ltxdat : "" };
 
 	let promise = new Promise((resolve, reject) => {
 		if (ltxdat === null) {
@@ -1244,33 +1244,33 @@ export async function updateVersion() {
 				let iArray = [];
 				let execute = [];
 
-				for(let i in data){
+				for (let i in data) {
 					i = parseInt(i);
 					iArray = iArray.concat([
-						data[i].oid, 
-						data[i].no, 
-						data[i].explain, 
-						data[i].type, 
+						data[i].oid,
+						data[i].no,
+						data[i].explain,
+						data[i].type,
 						data[i].url,
 						data[i].platform,
 						data[i].islatest,
 						data[i].ismust,
 						data[i].status,
-						Common.dateFormat(data[i].crtdat), 
+						Common.dateFormat(data[i].crtdat),
 						Common.dateFormat(data[i].txdat)
 					]);
 
-					if( i == data.length-1){
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,? ";
+					if (i == data.length - 1) {
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,? ";
 						execute.push([lInsert, iArray]);
-					}else{
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,? union all";
+					} else {
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,? union all";
 					}
 				}
 
-				SQLite.insertData_new(execute).then(()=>{
+				SQLite.insertData_new(execute).then(() => {
 					let end = new Date().getTime();
-					console.log("updateVersion_end:"+ (end - start) / 1000);
+					console.log("updateVersion_end:" + (end - start) / 1000);
 
 					resolve();
 				});
@@ -1291,50 +1291,50 @@ export async function updateVersion() {
 				let dExecute = [];
 				let iExecute = [];
 
-				for(let i in data){
+				for (let i in data) {
 					i = parseInt(i);
 					dArray = dArray.concat([data[i].oid]);
 
 					iArray = iArray.concat([
-						data[i].oid, 
-						data[i].no, 
-						data[i].explain, 
-						data[i].type, 
+						data[i].oid,
+						data[i].no,
+						data[i].explain,
+						data[i].type,
 						data[i].url,
 						data[i].platform,
 						data[i].islatest,
 						data[i].ismust,
 						data[i].status,
-						Common.dateFormat(data[i].crtdat), 
+						Common.dateFormat(data[i].crtdat),
 						Common.dateFormat(data[i].txdat)
 					]);
 
-					if( i == data.length-1 ){
-						lDelete+= "?)";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,? ";
+					if (i == data.length - 1) {
+						lDelete += "?)";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,? ";
 						dExecute.push([lDelete, dArray]);
 						iExecute.push([lInsert, iArray]);
-					}else{
-						lDelete+= "?,";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,? union all";
+					} else {
+						lDelete += "?,";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,? union all";
 					}
 				}
 
-				if (dExecute.length==0 && iExecute.length==0) {
+				if (dExecute.length == 0 && iExecute.length == 0) {
 					let end = new Date().getTime();
-					console.log("updateVersion:"+ (end - start) / 1000);
+					console.log("updateVersion:" + (end - start) / 1000);
 					resolve();
 				} else {
-					SQLite.deleteData_new(dExecute).then(()=>{
-						SQLite.insertData_new(iExecute).then(()=>{
+					SQLite.deleteData_new(dExecute).then(() => {
+						SQLite.insertData_new(iExecute).then(() => {
 							let end = new Date().getTime();
-							console.log("updateVersion:"+ (end - start) / 1000);
+							console.log("updateVersion:" + (end - start) / 1000);
 							resolve();
 						});
 					});
 				}
 
-			}).catch( e => {
+			}).catch(e => {
 				console.log(e);
 			});
 		}
@@ -1345,23 +1345,23 @@ export async function updateVersion() {
 /**
 * 如果本地THF_MSG_USERREAD沒資料的話，更新Server端資料
 */
-export async function updateRead(user){
+export async function updateRead(user) {
 	var start = new Date().getTime();
 	let lSQL = "SELECT 1 FROM THF_MSG_USERREAD";
 	let lData = await SQLite.selectData(lSQL, []);
 	let promise = new Promise((resolve, reject) => {
-		if(lData.length==0){
+		if (lData.length == 0) {
 			let start = new Date().getTime();
 
 			let params = {
-				"token"  :Common.encrypt(user.token),
-				"userId" :Common.encrypt(user.loginID),
-				"content":Common.encrypt(user.loginID)
+				"token": Common.encrypt(user.token),
+				"userId": Common.encrypt(user.loginID),
+				"content": Common.encrypt(user.loginID)
 			};
 
 			let url = "data/getUserread";
 
-			NetUtil.getRequestContent(params, url).then((data)=>{
+			NetUtil.getRequestContent(params, url).then((data) => {
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
@@ -1375,39 +1375,39 @@ export async function updateRead(user){
 				for (let i in data) {
 					i = parseInt(i);
 					iArray = iArray.concat([
-						data[i].msgoid, 
-						data[i].userid, 
-						data[i].isread, 
+						data[i].msgoid,
+						data[i].userid,
+						data[i].isread,
 						Common.dateFormat(data[i].readtime),
 						data[i].isupdate,
 						data[i].status,
-						Common.dateFormat(data[i].crtdat), 
+						Common.dateFormat(data[i].crtdat),
 						Common.dateFormat(data[i].txdat)
 					]);
 
-					if( (i+1)%max == 0 ){
+					if ((i + 1) % max == 0) {
 						//達到分批數量，要重置資料
-						lInsert+= " select ?,?,?,?,?,?,?,? ";
+						lInsert += " select ?,?,?,?,?,?,?,? ";
 						execute.push([lInsert, iArray]);
 						lInsert = "INSERT INTO THF_MSG_USERREAD(MSGOID,USERID,ISREAD,READTIME,ISUPDATE,STATUS,CRTDAT,TXDAT) ";
 						iArray = [];
-					}else if( i == data.length-1 ){
-						lInsert+= " select ?,?,?,?,?,?,?,? ";
-						execute.push( [lInsert, iArray] );
-					}else{
-						lInsert+= " select ?,?,?,?,?,?,?,? union all";
+					} else if (i == data.length - 1) {
+						lInsert += " select ?,?,?,?,?,?,?,? ";
+						execute.push([lInsert, iArray]);
+					} else {
+						lInsert += " select ?,?,?,?,?,?,?,? union all";
 					}
 				}
 
-				SQLite.insertData_new(execute).then(()=>{
-				let end = new Date().getTime();
-					console.log("updateRead_end:"+ (end - start) / 1000);
+				SQLite.insertData_new(execute).then(() => {
+					let end = new Date().getTime();
+					console.log("updateRead_end:" + (end - start) / 1000);
 					resolve();
-				});	
+				});
 			})
-		}else{
+		} else {
 			let end = new Date().getTime();
-			console.log("updateRead:"+ (end - start) / 1000);
+			console.log("updateRead:" + (end - start) / 1000);
 			resolve();
 		}
 	});
@@ -1417,100 +1417,100 @@ export async function updateRead(user){
 /**
 * 回寫THF_MSG_UserRead到Server
 */
-export async function setRead(user,msgoid){
+export async function setRead(user, msgoid) {
 	let lSQL = "SELECT * FROM THF_MSG_USERREAD WHERE ISUPDATE='N' AND MSGOID=?";
 	let lData = await SQLite.selectData(lSQL, [msgoid]);
 	console.log("lData", lData);
 	let promise = new Promise((resolve, reject) => {
-		if(lData.length>0){
+		if (lData.length > 0) {
 			let obj = [];
 			let readtime = new Date(lData.item(0).READTIME).getTime();
 
 			let content = {
-				msgoid:lData.item(0).MSGOID,
-				userid:lData.item(0).USERID,
-				isread:lData.item(0).ISREAD,
-				readtime:readtime,
-				isupdate:'Y',
-				crtemp:user.loginID
+				msgoid: lData.item(0).MSGOID,
+				userid: lData.item(0).USERID,
+				isread: lData.item(0).ISREAD,
+				readtime: readtime,
+				isupdate: 'Y',
+				crtemp: user.loginID
 			}
-			
+
 			obj.push(content);
 
 			let params = {
-				"token"  :Common.encrypt(user.token),
-				"userId" :Common.encrypt(user.loginID),
+				"token": Common.encrypt(user.token),
+				"userId": Common.encrypt(user.loginID),
 				"content": Common.encrypt(JSON.stringify(obj))
 			};
 
 			let url = "data/setUserread";
 
-			NetUtil.getRequestContent(params, url).then((data)=>{
+			NetUtil.getRequestContent(params, url).then((data) => {
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
 				}
 				data = data.content;
 
-				if(data!=null){
+				if (data != null) {
 					let uSQL = "UPDATE THF_MSG_USERREAD SET ISUPDATE='Y' WHERE ISUPDATE='N' AND MSGOID=?";
-					SQLite.updateData(uSQL,[msgoid]).then(()=>{ resolve(); })
-				}else{
+					SQLite.updateData(uSQL, [msgoid]).then(() => { resolve(); })
+				} else {
 					resolve();
 				}
 			})
-		}else{
+		} else {
 			resolve();
 		}
 	});
 	return promise;
-	
+
 }
 
-export async function setReads(user){
+export async function setReads(user) {
 	let lSQL = "SELECT * FROM THF_MSG_USERREAD WHERE ISUPDATE='N'";
 	let lData = await SQLite.selectData(lSQL, []);
 	let promise = new Promise((resolve, reject) => {
-		if(lData.length>0){
+		if (lData.length > 0) {
 			let obj = [];
-			for(let i=0;i<lData.length;i++){
+			for (let i = 0; i < lData.length; i++) {
 				let readtime = new Date(lData.item(i).READTIME).getTime();
 				let content = {
-					msgoid:lData.item(i).MSGOID,
-					userid:lData.item(i).USERID,
-					isread:lData.item(i).ISREAD,
-					readtime:readtime,
-					isupdate:'Y',
-					crtemp:user.loginID
+					msgoid: lData.item(i).MSGOID,
+					userid: lData.item(i).USERID,
+					isread: lData.item(i).ISREAD,
+					readtime: readtime,
+					isupdate: 'Y',
+					crtemp: user.loginID
 				}
 				obj.push(content);
 			}
-			
+
 			let params = {
-				"token"  :Common.encrypt(user.token),
-				"userId" :Common.encrypt(user.loginID),
+				"token": Common.encrypt(user.token),
+				"userId": Common.encrypt(user.loginID),
 				"content": Common.encrypt(JSON.stringify(obj))
 			};
 
 			let url = "data/setUserread";
 
-			NetUtil.getRequestContent(params, url).then((data)=>{
+			NetUtil.getRequestContent(params, url).then((data) => {
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
 				}
 				data = data.content;
 
-				if(data!=null){
+				if (data != null) {
 					let uSQL = "UPDATE THF_MSG_USERREAD SET ISUPDATE='Y' WHERE ISUPDATE='N'";
-					SQLite.updateData(uSQL,[]).then(()=>{
+					SQLite.updateData(uSQL, []).then(() => {
 						resolve();
 					})
-				}else{
+				} else {
 					resolve();
 				}
 			})
-		}else{
+		} else {
 			resolve();
 		}
 	});
@@ -1521,18 +1521,18 @@ export async function setReads(user){
 * 更新本地DB
 *
 */
-export async function setContact(user,id,context){
+export async function setContact(user, id, context) {
 	let sql = `update THF_CONTACT set ${id}='${context}' where EMPID='${user.id}'`;
-	SQLite.updateData(sql,[]);
+	SQLite.updateData(sql, []);
 	let promise = new Promise((resolve, reject) => {
-		SQLite.updateData(sql,[]).then(()=>{
+		SQLite.updateData(sql, []).then(() => {
 			resolve();
 		});
 	});
 	return promise;
 }
 
-export async function updateContactToServer(user){
+export async function updateContactToServer(user) {
 	let lSQL = "SELECT * FROM THF_CONTACT WHERE EMPID=? and STATUS='Y'";
 	let lData = await SQLite.selectData(lSQL, [user.id]);
 	let promise = new Promise((resolve, reject) => {
@@ -1552,9 +1552,9 @@ export async function updateContactToServer(user){
 			}
 
 			let params = {
-				"token"  :Common.encrypt(user.token),
-				"userId" :Common.encrypt(user.loginID),
-				"content":Common.encrypt(JSON.stringify(content))
+				"token": Common.encrypt(user.token),
+				"userId": Common.encrypt(user.loginID),
+				"content": Common.encrypt(JSON.stringify(content))
 			};
 
 			let url = "org/setContact";
@@ -1566,98 +1566,98 @@ export async function updateContactToServer(user){
 					return promise;
 				}
 
- 				resolve();
+				resolve();
 			})
-		}else{
+		} else {
 			resolve();
 		}
 	});
 	return promise;
 }
 
-export async function updateContactImageToServer(user, lang, content){
+export async function updateContactImageToServer(user, lang, content) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "upload/headimage";
 		let params = {
-			"token"  :Common.encrypt(user.token),
-			"userId" :Common.encrypt(user.loginID),
-			"lang"   :lang,
-			"content":Common.encrypt(content)
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
+			"lang": lang,
+			"content": Common.encrypt(content)
 		};
-		
-		NetUtil.getRequestJson(params, url).then((data)=>{
+
+		NetUtil.getRequestJson(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			resolve(data);
 		})
-		
+
 	});
 	return promise;
 }
 
-export async function updateMBUserToServer(user){
+export async function updateMBUserToServer(user) {
 	let content = {
-		'userid':user.loginID,
-		'ispush':user.isPush,
-		'lang'  :user.lang
-    }
+		'userid': user.loginID,
+		'ispush': user.isPush,
+		'lang': user.lang
+	}
 
-    let params = {
-			"token"  :Common.encrypt(user.token),
-			"userId" :Common.encrypt(user.loginID),
-			"content":Common.encrypt(JSON.stringify(content)),
-			"lang"   :user.lang
-    };
+	let params = {
+		"token": Common.encrypt(user.token),
+		"userId": Common.encrypt(user.loginID),
+		"content": Common.encrypt(JSON.stringify(content)),
+		"lang": user.lang
+	};
 
-    let url = "org/setUser";
-	
+	let url = "org/setUser";
+
 	let promise = new Promise((resolve, reject) => {
-	    NetUtil.getRequestContent(params, url).then((data)=>{
-	    	if (data.code != 200) {
-	    		reject(data); //已在其他裝置登入
-	    		return promise;
-	    	}
+		NetUtil.getRequestContent(params, url).then((data) => {
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
 
- 			resolve();
+			resolve();
 		})
 	});
 
 	return promise;
 }
 
-export async function updateMBUserNotificationEnable(user){
+export async function updateMBUserNotificationEnable(user) {
 	let lang;
-    await DeviceStorageUtil.get('locale').then((data)=>{
-    	lang = data?JSON.parse(data):data;
-    })
+	await DeviceStorageUtil.get('locale').then((data) => {
+		lang = data ? JSON.parse(data) : data;
+	})
 
 	let content = {
-      'push':user.isPush,
-    }
+		'push': user.isPush,
+	}
 
-    let params = {
-		"token"  :Common.encrypt(user.token),
-		"userId" :Common.encrypt(user.loginID),
-		"content":Common.encrypt(JSON.stringify(content)),
-		"lang"   :lang,
-    };
+	let params = {
+		"token": Common.encrypt(user.token),
+		"userId": Common.encrypt(user.loginID),
+		"content": Common.encrypt(JSON.stringify(content)),
+		"lang": lang,
+	};
 
-    let url = "org/user/config/update";
-	
+	let url = "org/user/config/update";
+
 	let promise = new Promise((resolve, reject) => {
-	    NetUtil.getRequestContent(params, url).then((data)=>{
-	    	if (data.code != 200) {
-	    		reject(data.message); //已在其他裝置登入
-	    		return promise;
-	    	}
- 			resolve(data.content);
+		NetUtil.getRequestContent(params, url).then((data) => {
+			if (data.code != 200) {
+				reject(data.message); //已在其他裝置登入
+				return promise;
+			}
+			resolve(data.content);
 		})
 	});
 
 	return promise;
-	
+
 }
 
 /**
@@ -1671,16 +1671,16 @@ export async function updateMBUserNotificationEnable(user){
 * }
 *
 */
-export async function getBPMRootTask(user,content){
+export async function getBPMRootTask(user, content) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/getRootTaskList";
 		let params = {
-			"token"  :Common.encrypt(user.token),
-			"userId" :Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
 
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -1688,7 +1688,7 @@ export async function getBPMRootTask(user,content){
 			data = data.content;
 
 			if (Array.isArray(data)) {
-				resolve(data); 
+				resolve(data);
 			} else {
 				reject(data);
 			}
@@ -1706,15 +1706,15 @@ export async function getBPMRootTask(user,content){
 * }
 *
 */
-export async function getBPMTaskList(user,content){
+export async function getBPMTaskList(user, content) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/getTaskList";
 		let params = {
-			"token"  :Common.encrypt(user.token),
-			"userId" :Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			// console.log(data);
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
@@ -1723,7 +1723,7 @@ export async function getBPMTaskList(user,content){
 			data = data.content;
 
 			if (Array.isArray(data)) {
-				resolve(data); 
+				resolve(data);
 			} else {
 				reject(data);
 			}
@@ -1737,25 +1737,25 @@ export async function getBPMTaskList(user,content){
 /**
 * 由收到的OID去更新MSG資料
 */
-export async function updateMSGByOID(user,oid,lang) {
+export async function updateMSGByOID(user, oid, lang) {
 	let url = "data/getMsgByOID";
 	let content = {
-		"msgoid":oid,
-		"empid" :user.id,
-		"co"    :user.co,
-		"pzid"  :user.plantID,
-		"depid" :user.depID
+		"msgoid": oid,
+		"empid": user.id,
+		"co": user.co,
+		"pzid": user.plantID,
+		"depid": user.depID
 	};
 
 	let params = {
-		"token"  :Common.encrypt(user.token),
-		"userId" :Common.encrypt(user.loginID),
-		"content":Common.encrypt(JSON.stringify(content)),
-		"lang"   :lang,
+		"token": Common.encrypt(user.token),
+		"userId": Common.encrypt(user.loginID),
+		"content": Common.encrypt(JSON.stringify(content)),
+		"lang": lang,
 	};
-	
+
 	let promise = new Promise((resolve, reject) => {
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -1763,36 +1763,36 @@ export async function updateMSGByOID(user,oid,lang) {
 			data = data.content;
 
 			let lSelect = "SELECT * FROM THF_MSG WHERE OID=?";
-			SQLite.selectData(lSelect,[data.oid]).then((data1)=>{
-				if(data1.length==0){
+			SQLite.selectData(lSelect, [data.oid]).then((data1) => {
+				if (data1.length == 0) {
 					let lInsert = "INSERT INTO THF_MSG select ?,?,?,?,?,?,?,?,?,?,?,? ";
 					let nCrtDat = Common.dateFormat(data.crtdat);
 					let nTxDat = Common.dateFormat(data.txdat);
 					let iArray = [
-							data.oid, 
-							data.type, 
-							data.title, 
-							data.content,
-							data.eventoid, 
-							data.ispush, 
-							data.ext1, 
-							data.ext2, 
-							data.ext3, 
-							data.status,
-							nCrtDat, 
-							nTxDat
-						];
-					SQLite.insertData(lInsert, iArray).then(()=>{
+						data.oid,
+						data.type,
+						data.title,
+						data.content,
+						data.eventoid,
+						data.ispush,
+						data.ext1,
+						data.ext2,
+						data.ext3,
+						data.status,
+						nCrtDat,
+						nTxDat
+					];
+					SQLite.insertData(lInsert, iArray).then(() => {
 						resolve();
 					})
-				}else{
+				} else {
 					let lUpdate = "UPDATE THF_MSG SET TITLE=?,CONTENT=? where OID=?";
-					SQLite.updateData(lUpdate,[data.title, data.content, data.oid]).then(()=>{
+					SQLite.updateData(lUpdate, [data.title, data.content, data.oid]).then(() => {
 						resolve();
 					})
 				}
 			})
-		}).catch(e=>{
+		}).catch(e => {
 			console.log(e);
 		})
 	});
@@ -1802,17 +1802,17 @@ export async function updateMSGByOID(user,oid,lang) {
 /**
 * 設定Push資料
 */
-export async function setPushMsg(user,content) {
+export async function setPushMsg(user, content) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "msg/setPushMsg";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
 		// console.log(params);
-		
-		NetUtil.getRequestContent(params, url).then((data)=>{
+
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -1820,22 +1820,22 @@ export async function setPushMsg(user,content) {
 			data = data.content;
 			resolve(data);
 		})
-		
+
 	});
 	return promise;
 }
 
-export async function getBPMForm(user,content){
+export async function getBPMForm(user, content) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/getBPMForm";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
 		// console.log(params);
 
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -1844,7 +1844,7 @@ export async function getBPMForm(user,content){
 			if (typeof data.content != "undefined" && data.content == null) {
 				reject(data.message ? data.message : "Loading Error");
 			}
-			
+
 			resolve(data.content);
 			return promise;
 		})
@@ -1852,53 +1852,53 @@ export async function getBPMForm(user,content){
 	return promise;
 }
 
-export async function getAllSignResult(user,content){
+export async function getAllSignResult(user, content) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/getAllSignResult";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
-			
- 			resolve(data);
+
+			resolve(data);
 		})
 	});
 	return promise;
 }
 
-export async function updateVisitLogToServer(user){
+export async function updateVisitLogToServer(user) {
 	let sql = "select * from THF_APPVISITLOG where VISITCOUNT>0";
 	let sData = await SQLite.selectData(sql, []);
 	let promise = new Promise((resolve, reject) => {
 
 		if(sData.length>0){
 			let contents = [];
-			for(let i=0;i<sData.length;i++){
+			for (let i = 0; i < sData.length; i++) {
 				let content = {
-					"userid"    :sData.item(i).USERID,
-					"appid"     :sData.item(i).APPID,
-					"visitcount":sData.item(i).VISITCOUNT,
-					"visitdate" :sData.item(i).VISITDATE,
+					"userid": sData.item(i).USERID,
+					"appid": sData.item(i).APPID,
+					"visitcount": sData.item(i).VISITCOUNT,
+					"visitdate": sData.item(i).VISITDATE,
 				}
 				contents.push(content);
 			}
 
 			let params = {
-				"token"  :Common.encrypt(user.token),
-				"userId" :Common.encrypt(user.loginID),
-				"content":Common.encrypt(JSON.stringify(contents))
+				"token": Common.encrypt(user.token),
+				"userId": Common.encrypt(user.loginID),
+				"content": Common.encrypt(JSON.stringify(contents))
 			};
 
 			let url = "data/setVisitLog";
 
-			NetUtil.getRequestContent(params, url).then((data)=>{
+			NetUtil.getRequestContent(params, url).then((data) => {
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
@@ -1909,7 +1909,7 @@ export async function updateVisitLogToServer(user){
 				let uSQL = "DELETE FROM THF_APPVISITLOG";
 				SQLite.updateData(uSQL,[]).then((data)=>{
 					resolve();
-				}).catch((err)=>{
+				}).catch((err) => {
 					reject(err);
 				})
 			})
@@ -1917,7 +1917,7 @@ export async function updateVisitLogToServer(user){
 		}else{
 			resolve();
 		}
-		
+
 	});
 	return promise;
 }
@@ -1930,22 +1930,22 @@ export async function updateVisitLogToServer(user){
 * }
 *
 */
-export async function getBPMSignState(user,content){
+export async function getBPMSignState(user, content) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/getBPMSignState";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
-			
- 			resolve(data);
+
+			resolve(data);
 		})
 	});
 	return promise;
@@ -1963,22 +1963,22 @@ export async function getBPMSignState(user,content){
 * }
 *
 */
-export async function completeTask(user,content){
+export async function completeTask(user, content) {
 	let promise = new Promise((resolve, reject) => {
-		
+
 		let url = "app/bpm/completeTask";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
 
-		NetUtil.getRequestJson(params, url).then((data)=>{
+		NetUtil.getRequestJson(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
-			}			
- 			resolve(data);
+			}
+			resolve(data);
 		})
 	});
 	return promise;
@@ -1996,21 +1996,21 @@ export async function completeTask(user,content){
 * }
 *
 */
-export async function goBackTask(user,content){
+export async function goBackTask(user, content) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/goBackTask";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestJson(params, url).then((data)=>{
+		NetUtil.getRequestJson(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
-			
- 			resolve(data);
+
+			resolve(data);
 		})
 	});
 	return promise;
@@ -2026,47 +2026,47 @@ export async function goBackTask(user,content){
 * }
 *
 */
-export async function suspendTask(user,content){
+export async function suspendTask(user, content) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/suspendTask";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
-			
- 			resolve(data);
+
+			resolve(data);
 		})
 	});
 	return promise;
 }
 
-export async function setFeedBack(user,content,contact){
+export async function setFeedBack(user, content, contact) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/setFeedBack";
 		let obj = {
 			"userid": user.loginID,
-			"content":content,
-			"contact":contact
+			"content": content,
+			"contact": contact
 		}
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(obj))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -2074,7 +2074,7 @@ export async function setFeedBack(user,content,contact){
 /**
 * 模糊查詢派車系統
 */
-export async function getCarRelatedData(user,search){
+export async function getCarRelatedData(user, search) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/getCarRelatedData";
 		let content = {
@@ -2082,11 +2082,11 @@ export async function getCarRelatedData(user,search){
 			"search": search,
 		}
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -2106,19 +2106,19 @@ export async function getCarRelatedData(user,search){
 /**
 * 關鍵字查詢我的表單
 */
-export async function getTaskByKeyword(user,search){
+export async function getTaskByKeyword(user, search) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/getTaskByKeyword";
 		let content = {
-			id:user.id,
-			keyword:search	
+			id: user.id,
+			keyword: search
 		}
 		let params = {
-			"token"  :Common.encrypt(user.token),
-			"userId" :Common.encrypt(user.loginID),
-			"content":Common.encrypt(JSON.stringify(content))
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				// reject(data); //已在其他裝置登入
 				resolve([]);
@@ -2144,19 +2144,19 @@ export async function getTaskByKeyword(user,search){
 * }
 *
 */
-export async function getMyTaskByKeyword(user,search){
+export async function getMyTaskByKeyword(user, search) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/getMyTaskByKeyword";
 		let content = {
-			id:user.id,
-			keyword:search	
+			id: user.id,
+			keyword: search
 		}
 		let params = {
-			"token"  :Common.encrypt(user.token),
-			"userId" :Common.encrypt(user.loginID),
-			"content":Common.encrypt(JSON.stringify(content))
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				// reject(data); //已在其他裝置登入
 				resolve([]);
@@ -2177,21 +2177,21 @@ export async function getMyTaskByKeyword(user,search){
 /**
 * 查詢通訊錄管理員
 */
-export async function getCarAdministrator(user,company){
+export async function getCarAdministrator(user, company) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/car/getAdministrator";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(company))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -2203,7 +2203,7 @@ export async function getCarAdministrator(user,company){
 * @param company 要查詢的公司別
 * @param year 要查詢的年份
 */
-export async function getBirthdayWeekData(user,company,year){
+export async function getBirthdayWeekData(user, company, year) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/getBirthdayWeekData";
 		let obj = {
@@ -2212,16 +2212,16 @@ export async function getBirthdayWeekData(user,company,year){
 			"id": user.id
 		}
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(obj))
 		};
-		NetUtil.getRequestJson(params, url).then((data)=>{
+		NetUtil.getRequestJson(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -2234,7 +2234,7 @@ export async function getBirthdayWeekData(user,company,year){
 * @param tid 被送祝福人的ID
 * @param type 祝福類型（例：蛋糕CAKE/禮物GIFT）
 */
-export async function setBirthdayAdmireData(user,year,tid,type){
+export async function setBirthdayAdmireData(user, year, tid, type) {
 	let obj = {
 		"year": year,
 		"id": user.id,
@@ -2245,17 +2245,17 @@ export async function setBirthdayAdmireData(user,year,tid,type){
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/setBirthdayAdmireData";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(obj))
 		};
-		NetUtil.getRequestJson(params, url).then((data)=>{
+		NetUtil.getRequestJson(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -2268,7 +2268,7 @@ export async function setBirthdayAdmireData(user,year,tid,type){
 * @param tid 被送祝福人的ID
 * @param content 留言内容
 */
-export async function setBirthdayMsgData(user,year,tid,content){
+export async function setBirthdayMsgData(user, year, tid, content) {
 	let obj = {
 		"year": year,
 		"id": user.id,
@@ -2279,16 +2279,16 @@ export async function setBirthdayMsgData(user,year,tid,content){
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/setBirthdayMsgData";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(obj))
 		};
-		NetUtil.getRequestJson(params, url).then((data)=>{
+		NetUtil.getRequestJson(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -2301,7 +2301,7 @@ export async function setBirthdayMsgData(user,year,tid,content){
 * @param year 要查詢的年份
 * @param tid 要查詢的目標人員
 */
-export async function getBirthdayData(user,year,coid,tid){
+export async function getBirthdayData(user, year, coid, tid) {
 	let obj = {
 		"coid": coid,
 		"year": year,
@@ -2310,17 +2310,17 @@ export async function getBirthdayData(user,year,coid,tid){
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/getBirthdayData";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(obj))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -2331,160 +2331,21 @@ export async function getBirthdayData(user,year,coid,tid){
 * @param user資料
 * @param content json包含 id、lang id例如 G00010
 */
-export async function getBPMCreateForm(user,content){
+export async function getBPMCreateForm(user, content) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/getBPMCreateForm";
-		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
-			"content": Common.encrypt(JSON.stringify(content))
-		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
-			if (data.code != 200) {
-				reject(data); //已在其他裝置登入
-				return promise;
-			}
-			data = data.content;
- 			resolve(data);
-		})
-	});
-	return promise;
-}
-
-/**
-* 取得集團分類列表
-* @param user資料
-* @param language 語系
-*/
-export async function getGroupFileCategoriesData(user,language){
-	let obj = {
-		"language": language
-	}
-	let promise = new Promise((resolve, reject) => {
-		let url = "app/eip/getGroupFileCategoriesData";
-		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
-			"content": Common.encrypt(JSON.stringify(obj))
-		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
-			if (data.code != 200) {
-				reject(data); //已在其他裝置登入
-				return promise;
-			}
-			data = data.content;
- 			resolve(data);
-		})
-	});
-	return promise;
-}
-
-/**
-* 取得集團分類內容列表
-* @param user資料
-* @param tid 類別代號
-*/
-export async function getGroupFileContentData(user,tid, content = {}){
-	let obj = {
-		"tid": tid,
-		"content":content
-	}
-	let promise = new Promise((resolve, reject) => {
-		let url = "app/eip/getGroupFileContentData";
-		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
-			"content": Common.encrypt(JSON.stringify(obj))
-		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
-			if (data.code != 200) {
-				reject(data); //已在其他裝置登入
-				return promise;
-			}
-			data = data.content;
- 			resolve(data);
-
-		})
-	});
-	return promise;
-}
-
-/**
-* 取得集團分類內容明細列表
-* @param user資料
-* @param tid 類別代號
-* @param did 明細代號
-*/
-export async function getGroupFileDetailData(user,tid,did){
-	let obj = {
-		"tid": tid,
-		"did": did
-	}
-	let promise = new Promise((resolve, reject) => {
-		let url = "app/eip/getGroupFileDetailData";
-		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
-			"content": Common.encrypt(JSON.stringify(obj))
-		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
-			if (data.code != 200) {
-				reject(data); //已在其他裝置登入
-				return promise;
-			}
-			data = data.content;
- 			resolve(data);
-
-		})
-	});
-	return promise;
-}
-
-/**
-* 取得集團最新文件列表
-* @param user資料
-*/
-export async function getGroupFileNewsData(user,lang, content = {}){
-
-	let promise = new Promise((resolve, reject) => {
-		let url = "app/eip/getGroupFileNewsData";
-		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
-			"content": Common.encrypt(JSON.stringify(content)),
-			"lang" : lang
-		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
-			if (data.code != 200) {
-				reject(data); //已在其他裝置登入
-				return promise;
-			}
-			data = data.content;
- 			resolve(data);
-		})
-	});
-	return promise;
-}
-
-/**
-* 取得管理文章列表
-* @param user資料
-*/
-export async function getManArticleContentData(user, content = {}){
-	let promise = new Promise((resolve, reject) => {
-		let url = "app/eip/getManArticleContentData";
 		let params = {
 			"token": Common.encrypt(user.token),
 			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
-		}
-		NetUtil.getRequestJson(params, url).then((data) => {
+		};
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -2493,12 +2354,12 @@ export async function getManArticleContentData(user, content = {}){
 /**
 * 取得公開畫面參數
 */
-export async function getPublicView(){
+export async function getPublicView() {
 	let promise = new Promise((resolve, reject) => {
 		let url = "public/getPublicView";
 		let params = {};
-		
-		NetUtil.getRequestContent(params, url).then((data)=>{
+
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -2510,7 +2371,7 @@ export async function getPublicView(){
 			} else {
 				resolve([]);
 			}
-		}).catch((e)=>{
+		}).catch((e) => {
 			reject();
 		});
 	});
@@ -2520,12 +2381,12 @@ export async function getPublicView(){
 /**
 * 取得公開畫面內容參數
 */
-export async function getPublicViewContent(){
+export async function getPublicViewContent() {
 	let promise = new Promise((resolve, reject) => {
 		let url = "public/getPublicViewContent";
 		let params = {};
-		
-		NetUtil.getRequestContent(params, url).then((data)=>{
+
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -2537,7 +2398,7 @@ export async function getPublicViewContent(){
 			} else {
 				resolve([]);
 			}
-		}).catch((e)=>{
+		}).catch((e) => {
 			reject(e);
 		});
 	});
@@ -2547,7 +2408,7 @@ export async function getPublicViewContent(){
 /**
 * 取得招聘信息清單
 */
-export async function getRecruitmentList(){
+export async function getRecruitmentList() {
 	let promise = new Promise((resolve, reject) => {
 		let url = "public/getRecruitmentList";
 		let params = {};
@@ -2558,11 +2419,11 @@ export async function getRecruitmentList(){
 			}
 			data = data.content;
 
- 			if (data !== null) {
- 				resolve(data);
- 			} else {
- 				resolve([]);
- 			}
+			if (data !== null) {
+				resolve(data);
+			} else {
+				resolve([]);
+			}
 		})
 	});
 	return promise;
@@ -2572,11 +2433,11 @@ export async function getRecruitmentList(){
 * 取得招聘信息
 * @param oid 
 */
-export async function getRecruitment(oid){
+export async function getRecruitment(oid) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "public/getRecruitment";
 		let params = {
-			content : oid
+			content: oid
 		}
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
@@ -2584,7 +2445,7 @@ export async function getRecruitment(oid){
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -2603,7 +2464,7 @@ export async function setFeedBackByPublic(name, content, contact) {
 		let url = "public/setFeedBack";
 		let params = {
 			"token": "",
-			"userId":"",
+			"userId": "",
 			"content": Common.encrypt(JSON.stringify(obj))
 
 		}
@@ -2631,27 +2492,27 @@ export async function setFeedBackByPublic(name, content, contact) {
 * @param rootid
 * @param tskid
 */
-export async function getBPMTaskImage(user,rootid,tskid){
+export async function getBPMTaskImage(user, rootid, tskid) {
 	let content = {
-		"rootid" : rootid,
-		"tskid" : tskid
+		"rootid": rootid,
+		"tskid": tskid
 	}
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/getTaskImage";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
 
-			
- 			resolve(data);
+
+			resolve(data);
 		})
 	});
 	return promise;
@@ -2664,14 +2525,14 @@ export async function updatePermission(user) {
 	SQLite.deleteData(deleteSQL, null);
 	let promise = new Promise((resolve, reject) => {
 		let start = new Date().getTime();
-		
+
 		let url = "data/getDataPermission";
 		let params = {
-			"token":Common.encrypt(user.token),
-			"userId":Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(user.id)
 		};
-		
+
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
@@ -2717,28 +2578,28 @@ export async function updatePermission(user) {
 /**
 * 取得BPM附檔內容
 */
-export async function getBPMAttachedFile(user,artId,ansId,itemId,fileName){
+export async function getBPMAttachedFile(user, artId, ansId, itemId, fileName) {
 	let content = {
-		"artId" : artId,
-		"ansId" : ansId,
-		"itemId" : itemId,
-		"fileName" : fileName
+		"artId": artId,
+		"ansId": ansId,
+		"itemId": itemId,
+		"fileName": fileName
 	}
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/getAttachedFile";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
 
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -2747,35 +2608,35 @@ export async function getBPMAttachedFile(user,artId,ansId,itemId,fileName){
 /**
 * 共用取直方法
 */
-export async function getCreateFormDetailFormat(user, url, content = {}){
+export async function getCreateFormDetailFormat(user, url, content = {}) {
 	let promise = new Promise((resolve, reject) => {
-		content = (typeof content == "string") ? content: JSON.stringify(content); 
+		content = (typeof content == "string") ? content : JSON.stringify(content);
 		let params = {
-			"token"  :Common.encrypt(user.token),
-			"userId" :Common.encrypt(user.loginID),
-			"content":Common.encrypt(content)
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
+			"content": Common.encrypt(content)
 		}
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
 }
 
-export async function registerForm(user, content){
+export async function registerForm(user, content) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/registerForm";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -2794,7 +2655,7 @@ export async function registerForm(user, content){
 * @param oid 
 * @param status 设置状态
 */
-export async function setBirthdayMsgStatusData(user,oid,status){
+export async function setBirthdayMsgStatusData(user, oid, status) {
 	let obj = {
 		"oid": oid,
 		"status": status
@@ -2802,18 +2663,18 @@ export async function setBirthdayMsgStatusData(user,oid,status){
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/setBirthdayMsgStatusData";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(obj))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
 
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -2827,7 +2688,7 @@ export async function setBirthdayMsgStatusData(user,oid,status){
 * @param tid 被留言人
 * @param status 狀態
 */
-export async function getBirthdayMsgTotalData(user,year,id,tid,status){
+export async function getBirthdayMsgTotalData(user, year, id, tid, status) {
 	let obj = {
 		"year": year,
 		"id": id,
@@ -2837,44 +2698,44 @@ export async function getBirthdayMsgTotalData(user,year,id,tid,status){
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/getBirthdayMsgTotalData";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(obj))
 		};
-		NetUtil.getRequestJson(params, url).then((data)=>{
+		NetUtil.getRequestJson(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
-}	
+}
 
 /**
 * 取得登錄人員代理人信息
 */
-export async function getBPMDeputySetting(user){
+export async function getBPMDeputySetting(user) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/getDeputySetting";
 		let content = {
-			"empid" : user.id,
+			"empid": user.id,
 		}
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content)),
-			"lang" : user.lang
+			"lang": user.lang
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
 
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -2883,7 +2744,7 @@ export async function getBPMDeputySetting(user){
 /**
 * 修改登錄人員代理人信息
 */
-export async function setBPMDeputySetting(user,content){
+export async function setBPMDeputySetting(user, content) {
 	// let content = {
 	// 	"deputyState":"true",
 	// 	"byDeputyRule":"true",
@@ -2903,18 +2764,18 @@ export async function setBPMDeputySetting(user,content){
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/setDeputySetting";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
 
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -2927,7 +2788,7 @@ export async function setBPMDeputySetting(user,content){
 * @param year 年份
 * @param month 月份
 */
-export async function getReportManKPIData(user,co,year,month){
+export async function getReportManKPIData(user, co, year, month) {
 	let obj = {
 		"co": co,
 		"year": year,
@@ -2936,21 +2797,21 @@ export async function getReportManKPIData(user,co,year,month){
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bi/getReportManKPIData";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(obj))
 		};
-		NetUtil.getRequestJson(params, url).then((data)=>{
+		NetUtil.getRequestJson(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
-}	
+}
 
 /**
 * 取得生產KPI報表列表
@@ -2959,7 +2820,7 @@ export async function getReportManKPIData(user,co,year,month){
 * @param year 年份
 * @param month 月份
 */
-export async function getReportProKPIData(user,co,year,month){
+export async function getReportProKPIData(user, co, year, month) {
 	let obj = {
 		"user": user,
 		"co": co,
@@ -2969,21 +2830,21 @@ export async function getReportProKPIData(user,co,year,month){
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bi/getReportProKPIData";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(obj))
 		};
-		NetUtil.getRequestJson(params, url).then((data)=>{
+		NetUtil.getRequestJson(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
-}	
+}
 
 /**
 * 取得生產KPI明細報表列表
@@ -2994,7 +2855,7 @@ export async function getReportProKPIData(user,co,year,month){
 * @param kpi_id kpi代號
 * @param belong 歸屬 MAN/PRO
 */
-export async function getReportKPIDetailData(user,co,year,month,kpi_id,belong){
+export async function getReportKPIDetailData(user, co, year, month, kpi_id, belong) {
 	let obj = {
 		"user": user,
 		"co": co,
@@ -3006,26 +2867,26 @@ export async function getReportKPIDetailData(user,co,year,month,kpi_id,belong){
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bi/getReportKPIDetailData";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(obj))
 		};
-		NetUtil.getRequestJson(params, url).then((data)=>{
+		NetUtil.getRequestJson(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
-}	
+}
 
 /**
 * 取得同步APP Module API
 */
-export async function updateModule(user){
+export async function updateModule(user) {
 	let lSQL = "SELECT MAX(TXDAT) as TXDAT FROM THF_MODULE"; //取最大的更新時間
 	let lData = await SQLite.selectData(lSQL, []);
 	let ltxdat = lData.item(0).TXDAT; //更新時間
@@ -3048,20 +2909,20 @@ export async function updateModule(user){
 				}
 				data = data.content;
 
-				
-				let max     = 50;
+
+				let max = 50;
 				let lInsert = "INSERT INTO THF_MODULE ";
-				let iArray  = [];
+				let iArray = [];
 				let execute = [];
-				
-				for(let i in data ){
+
+				for (let i in data) {
 					i = parseInt(i);
 
 					iArray = iArray.concat([
-						data[i].oid, 
-						data[i].parentoid, 
-						data[i].layer, 
-						data[i].id, 
+						data[i].oid,
+						data[i].parentoid,
+						data[i].layer,
+						data[i].id,
 						data[i].name,
 						data[i].explain,
 						data[i].icon,
@@ -3071,27 +2932,27 @@ export async function updateModule(user){
 						Common.dateFormat(data[i].crtdat),
 						Common.dateFormat(data[i].txdat),
 					]);
-					
-					if( (i+1)%max == 0 ){
+
+					if ((i + 1) % max == 0) {
 						//達到分批數量，要重置資料
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,? ";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,?,? ";
 						execute.push([lInsert, iArray]);
 						lInsert = "INSERT INTO THF_MODULE ";
 						iArray = [];
-					}else if( (i+1) == data.length ){
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,? ";
+					} else if ((i + 1) == data.length) {
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,?,? ";
 						execute.push([lInsert, iArray]);
-					}else{
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,? union all";
+					} else {
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,?,? union all";
 					}
 				}
 
-				SQLite.insertData_new(execute).then(()=>{
-				let end = new Date().getTime();
-					console.log("updateModule_end:"+ (end - start) / 1000);
+				SQLite.insertData_new(execute).then(() => {
+					let end = new Date().getTime();
+					console.log("updateModule_end:" + (end - start) / 1000);
 					resolve();
 				});
-				
+
 			})
 		} else {
 			NetUtil.getRequestContent(params, url).then((data) => {
@@ -3100,23 +2961,23 @@ export async function updateModule(user){
 					return promise;
 				}
 				data = data.content;
-				
-				let max      = 50;
-				let dArray   = [];
-				let iArray   = [];
-				let lDelete  = "DELETE FROM THF_MODULE WHERE OID in (";
-				let lInsert  = "INSERT INTO THF_MODULE ";
+
+				let max = 50;
+				let dArray = [];
+				let iArray = [];
+				let lDelete = "DELETE FROM THF_MODULE WHERE OID in (";
+				let lInsert = "INSERT INTO THF_MODULE ";
 				let dExecute = [];
 				let iExecute = [];
-				
-				for(let i in data){
+
+				for (let i in data) {
 					i = parseInt(i);
 					dArray = dArray.concat([data[i].oid]);
 					iArray = iArray.concat([
-						data[i].oid, 
-						data[i].parentoid, 
-						data[i].layer, 
-						data[i].id, 
+						data[i].oid,
+						data[i].parentoid,
+						data[i].layer,
+						data[i].id,
 						data[i].name,
 						data[i].explain,
 						data[i].icon,
@@ -3127,31 +2988,31 @@ export async function updateModule(user){
 						Common.dateFormat(data[i].txdat),
 					]);
 
-					if( (i+1)%max == 0 ){
-						lDelete+= "?)";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,? ";
+					if ((i + 1) % max == 0) {
+						lDelete += "?)";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,?,? ";
 						dExecute.push(SQLite.deleteData(lDelete, dArray));
 						iExecute.push(SQLite.insertData(lInsert, iArray));
 						dArray = [];
 						iArray = [];
 						lDelete = "DELETE FROM THF_BANNER WHERE OID in (";
 						lInsert = "INSERT INTO THF_BANNER ";
-					}else if( i == data.length-1 ){
-						lDelete+= "?)";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,? ";
+					} else if (i == data.length - 1) {
+						lDelete += "?)";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,?,? ";
 						dExecute.push(SQLite.deleteData(lDelete, dArray));
 						iExecute.push(SQLite.insertData(lInsert, iArray));
-					}else{
-						lDelete+= "?,";
-						lInsert+= " select ?,?,?,?,?,?,?,?,?,?,?,? union all";
+					} else {
+						lDelete += "?,";
+						lInsert += " select ?,?,?,?,?,?,?,?,?,?,?,? union all";
 					}
 
 				}
 
-				Promise.all(dExecute).then(()=>{
-					Promise.all(iExecute).then(()=>{
+				Promise.all(dExecute).then(() => {
+					Promise.all(iExecute).then(() => {
 						let end = new Date().getTime();
-						console.log("updateModule_end:"+ (end - start) / 1000);
+						console.log("updateModule_end:" + (end - start) / 1000);
 						resolve();
 					})
 				})
@@ -3170,16 +3031,16 @@ export async function setLoginInfo(user) {
 	// console.log("setLoginInfo", user);
 	let url = 'data/setLoginInfo';
 	let content = {
-		"userid"         : user.loginID,
-		"ip"             : await Device.getIP(),
-		"platform"       : Platform.OS,
+		"userid": user.loginID,
+		"ip": await Device.getIP(),
+		"platform": Platform.OS,
 		"platformversion": Device.getSystemVersion(),
-		"model"          : Device.getModel(),
-		"appversion"     : Device.getVersion(),
-		"empid"          : user.id,
-		"timezone"       : RNLocalize.getTimeZone()
+		"model": Device.getModel(),
+		"appversion": Device.getVersion(),
+		"empid": user.id,
+		"timezone": RNLocalize.getTimeZone()
 	}
-	
+
 	let params = {
 		"token": Common.encrypt(user.token),
 		"userId": Common.encrypt(user.loginID),
@@ -3201,16 +3062,16 @@ export async function setLoginInfo(user) {
 	return promise;
 }
 
-export async function getCarData(user,company,date){
+export async function getCarData(user, company, date) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/getCarData";
 		let content = {
-			"company" : company,
-			"startdate" : date
+			"company": company,
+			"startdate": date
 		}
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
 		NetUtil.getRequestContent(params, url).then((data) => {
@@ -3230,20 +3091,20 @@ export async function getCarData(user,company,date){
 * @param user User
 * @return String
 */
-export async function getSessionID(user){
+export async function getSessionID(user) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/webmail/getSessionID";
 		let mail;
 		if (user.membereMail == null || user.membereMail == "") {
 			mail = user.email;
-		}else{
+		} else {
 			mail = user.membereMail;
 		}
-		
+
 		let params = {
-			"token"  :Common.encrypt(user.token),
-			"userId" :Common.encrypt(user.loginID),
-			"content":Common.encrypt(mail)
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
+			"content": Common.encrypt(mail)
 		}
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
@@ -3252,7 +3113,7 @@ export async function getSessionID(user){
 			}
 			resolve(data);
 		})
-		
+
 	});
 	return promise;
 }
@@ -3270,14 +3131,14 @@ export async function getSessionID(user){
  * @param lang 多語係 
  * @return json 
  */
-export async function  getCountryData(empid,obj,lang){
+export async function getCountryData(empid, obj, lang) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "public/nationcode/get";
 		let params = {
-			"token":"",
-			"userId":empid,
-			"lang":lang,
-			"content":""
+			"token": "",
+			"userId": empid,
+			"lang": lang,
+			"content": ""
 		}
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
@@ -3295,34 +3156,34 @@ export async function  getCountryData(empid,obj,lang){
  * 確認驗證碼資料
  * @param empid String
 	 * @param obj OBJECT
- 	let obj={
-      "empid":this.state.empid,
-      "nationCode":this.state.areaSelected.paramcode,
-      "phoneNumber":this.state.tel,
-      "identityNumber":this.state.idCard,
-      "code":this.state.verifyCode
-    }
+	  let obj={
+	  "empid":this.state.empid,
+	  "nationCode":this.state.areaSelected.paramcode,
+	  "phoneNumber":this.state.tel,
+	  "identityNumber":this.state.idCard,
+	  "code":this.state.verifyCode
+	}
  * @param lang String 多語係
  * @return json 
  */
-export async function getVerificationData(empid,obj,lang) {
+export async function getVerificationData(empid, obj, lang) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/sms/verify";
 		let Empid = Common.encrypt(empid);
 		let content = Common.encrypt(JSON.stringify(obj));
 		let params = {
-			"token":"",
-			"userId":Empid,
-			"content":content,
-			"lang":lang
+			"token": "",
+			"userId": Empid,
+			"content": content,
+			"lang": lang
 		};
 
-		NetUtil.getRequestJson(params, url).then((data)=>{
-			if(data.code!= 200){
+		NetUtil.getRequestJson(params, url).then((data) => {
+			if (data.code != 200) {
 				reject(data);
 				return promise;
 			}
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -3340,24 +3201,24 @@ export async function getVerificationData(empid,obj,lang) {
  * @param lang String 多語係
  * @return json 
  */
-export async function getVerificationCode(empid,obj,lang) {
+export async function getVerificationCode(empid, obj, lang) {
 
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/sms/send";
 		let Empid = Common.encrypt(empid);
 		let content = Common.encrypt(JSON.stringify(obj));
 		let params = {
-			"token":"",
-			"userId":Empid,
-			"content":content,
-			"lang":lang
+			"token": "",
+			"userId": Empid,
+			"content": content,
+			"lang": lang
 		};
-		NetUtil.getRequestJson(params, url).then((data)=>{
-			if(data.code!= 200){
+		NetUtil.getRequestJson(params, url).then((data) => {
+			if (data.code != 200) {
 				reject(data);
 				return promise;
 			}
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -3369,25 +3230,25 @@ export async function getVerificationCode(empid,obj,lang) {
  * @param lang String 多語係
  * @return json 
  */
-export function getUpdatePwdData(empid,pwd,lang) {
+export function getUpdatePwdData(empid, pwd, lang) {
 	let promise = new Promise((resolve, reject) => {
 		let Empid = Common.encrypt(empid);
 		let Pwd = Common.encrypt(pwd);
-		let obj={
-			"userid":empid,
-			"pwd":Pwd
+		let obj = {
+			"userid": empid,
+			"pwd": Pwd
 		}
 		let content = Common.encrypt(JSON.stringify(obj));
 		let params = {
-			"token":"",
-			"userId":Empid,
-			"content":content,
-			"lang":lang
+			"token": "",
+			"userId": Empid,
+			"content": content,
+			"lang": lang
 		};
 
 		let url = "org/user/pwd/update";
-		NetUtil.getRequestContent(params, url).then((data)=>{
-			if (data.message=="ok") {
+		NetUtil.getRequestContent(params, url).then((data) => {
+			if (data.message == "ok") {
 				resolve(data);
 			} else {
 				reject(data);
@@ -3397,28 +3258,28 @@ export function getUpdatePwdData(empid,pwd,lang) {
 	return promise;
 }
 
-export function getIemiExist(iemi){
+export function getIemiExist(iemi) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/cert/exists";
 
 		let params = {
-			"token"  : "",
-			"userId" : "",
+			"token": "",
+			"userId": "",
 			"content": Common.encrypt(iemi)
 		};
 
-		NetUtil.getRequestContent(params, url).then((data)=>{
-			if(data.code!= 200){
+		NetUtil.getRequestContent(params, url).then((data) => {
+			if (data.code != 200) {
 				reject(data);
 				return promise;
 			}
- 			resolve(data);
+			resolve(data);
 		});
 	});
 	return promise;
 }
 
-export function setBiosUserIemi(user,iemi,remore=false){
+export function setBiosUserIemi(user, iemi, remore = false) {
 	let promise = new Promise((resolve, reject) => {
 		let url = remore ? "data/cert/delete" : "data/cert/add";
 
@@ -3428,17 +3289,17 @@ export function setBiosUserIemi(user,iemi,remore=false){
 		}
 		*/
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(iemi),
-			"lang":user.lang
+			"lang": user.lang
 		};
-		NetUtil.getRequestJson(params, url).then((data)=>{
-			if(data.code!= 200){
+		NetUtil.getRequestJson(params, url).then((data) => {
+			if (data.code != 200) {
 				reject(data);
 				return promise;
 			}
- 			resolve(data);
+			resolve(data);
 		});
 	});
 	return promise;
@@ -3450,11 +3311,11 @@ export function setBiosUserIemi(user,iemi,remore=false){
  * @return Promise
  */
 
-export async function getMBUserInfoByImei(biosInfo,lang){
+export async function getMBUserInfoByImei(biosInfo, lang) {
 	let promise = new Promise((resolve, reject) => {
-		let version  = Device.getVersion();
+		let version = Device.getVersion();
 		let url = "login/certid";
-		
+
 		let params = {
 			"token": "",
 			"userId": Common.encrypt(biosInfo.biosUser.userID),
@@ -3465,42 +3326,42 @@ export async function getMBUserInfoByImei(biosInfo,lang){
 			},
 			"lang": lang
 		};
-		
-		NetUtil.getRequestContent(params, url).then((data)=>{
-			if (data.code == 200){
 
-				var user         = new User();
-				let tempData     = data.content;
+		NetUtil.getRequestContent(params, url).then((data) => {
+			if (data.code == 200) {
+
+				var user = new User();
+				let tempData = data.content;
 				// 判斷是否登入成功
-				user.birthday    = tempData.member.brndat;
-				user.co          = tempData.member.coid;
-				user.depID       = tempData.member.depid;
-				user.depName     = tempData.member.depname;
-				user.dutname     = tempData.member.dutname;
-				user.dutsort     = tempData.member.dutsort;
-				user.email       = tempData.member.email;
-				user.id          = tempData.member.id;
-				user.name        = tempData.member.name;
-				user.plantID     = tempData.member.plantid;
-				user.plantName   = tempData.member.plantname;
-				user.sex         = tempData.member.sex;
-				user.token       = tempData.token;
+				user.birthday = tempData.member.brndat;
+				user.co = tempData.member.coid;
+				user.depID = tempData.member.depid;
+				user.depName = tempData.member.depname;
+				user.dutname = tempData.member.dutname;
+				user.dutsort = tempData.member.dutsort;
+				user.email = tempData.member.email;
+				user.id = tempData.member.id;
+				user.name = tempData.member.name;
+				user.plantID = tempData.member.plantid;
+				user.plantName = tempData.member.plantname;
+				user.sex = tempData.member.sex;
+				user.token = tempData.token;
 				//對於工號登錄的情景下，必須將對應的工號替換loginID
-				user.loginID     = biosInfo.biosUser.userID;
-				user.skype       = tempData.skype;
-				user.telphone    = tempData.telphone;
-				user.cellphone   = tempData.cellphone;
-				user.lang        = tempData.lang;
-				user.pictureUrl  = tempData.picture;
-				user.isPush      = tempData.userConfig.push;
+				user.loginID = biosInfo.biosUser.userID;
+				user.skype = tempData.skype;
+				user.telphone = tempData.telphone;
+				user.cellphone = tempData.cellphone;
+				user.lang = tempData.lang;
+				user.pictureUrl = tempData.picture;
+				user.isPush = tempData.userConfig.push;
 				user.membereMail = tempData.member.email;
-				
+
 				resolve(user)
 			} else {
 				reject(data.message);
 			}
 		});
-		
+
 	});
 	return promise;
 }
@@ -3511,19 +3372,19 @@ export async function getMBUserInfoByImei(biosInfo,lang){
  * @return Promise
  */
 
-export async function getMBVerifyMode(lang){
+export async function getMBVerifyMode(lang) {
 	let promise = new Promise((resolve, reject) => {
 
 		let url = "public/verifyMode/get";
 		let params = {
-			"token"  : "",
-			"userId" : "",
+			"token": "",
+			"userId": "",
 			"content": "",
-			"lang":lang
+			"lang": lang
 		};
 
 
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (!data.content) {
 				reject("no network");
 				return promise;
@@ -3546,33 +3407,33 @@ export async function getMisPsalyms(user, appPublicKey) {
 		let company = user.co + user.plantID;
 
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(company),
-			"lang"   : user.lang
+			"lang": user.lang
 		};
 
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data != null) {
-				if (data.code == 0 ) {
+				if (data.code == 0) {
 					reject(data); //已在其他裝置登入
-				}else if (data.code != 200) {
+				} else if (data.code != 200) {
 					reject(data); //有其他失誤
-				}else if (data.content == null){
+				} else if (data.content == null) {
 					reject(data); //有其他失誤
-				}else{
+				} else {
 					resolve(data);
 				}
 			} else {
 				reject(data);
 			}
 		})
-		
+
 	});
 	return promise;
 }
 
-export async function exchangeRSAPubliceKey(user, PubliceKey){
+export async function exchangeRSAPubliceKey(user, PubliceKey) {
 	let promise = new Promise((resolve, reject) => {
 		let key = JSON.stringify({
 			"publickey": PubliceKey,
@@ -3580,26 +3441,26 @@ export async function exchangeRSAPubliceKey(user, PubliceKey){
 
 		let url = "app/mis/salary/publickey/get";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(key),
 		};
 
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data != null) {
-				if (data.code == 0 ) {		
+				if (data.code == 0) {
 					//已在其他裝置登入
 					data.apiState = false;
-					reject(data); 
-				}else if(data.code != 200){
+					reject(data);
+				} else if (data.code != 200) {
 					//APP Server API通訊錯誤
 					data.apiState = false;
 					reject(data);
-				}else if(data.content == "" || data.content == null){
+				} else if (data.content == "" || data.content == null) {
 					// HR server 回傳值為空
 					data.apiState = true;
 					reject(data);
-				}else{
+				} else {
 					data.apiState = true;
 					// data = Common.decryptMisInfo(data.content);
 					data = JSON.parse(data.content);
@@ -3632,24 +3493,24 @@ export async function getMisSalary(user, date, PubliceKey) {
 
 		let url = "app/mis/salary/get";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(date),
-			"lang"   : user.lang
+			"lang": user.lang
 		};
 
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data != null) {
-				if (data.code == 0 ) {		//已在其他裝置登入
-					data.apiState = false;
-					reject(data); 
-				}else if(data.code != 200){ //APP Server API通訊錯誤
+				if (data.code == 0) {		//已在其他裝置登入
 					data.apiState = false;
 					reject(data);
-				}else if(data.content == null || data.content == ""){
+				} else if (data.code != 200) { //APP Server API通訊錯誤
+					data.apiState = false;
+					reject(data);
+				} else if (data.content == null || data.content == "") {
 					data.apiState = true;
 					reject(data);
-				}else{
+				} else {
 					// data = Common.decryptMisInfo(data.content);
 					data = JSON.parse(data.content);
 					resolve(data);
@@ -3658,9 +3519,9 @@ export async function getMisSalary(user, date, PubliceKey) {
 			} else {
 				reject(data);
 			}
-			
+
 		})
-		
+
 	});
 	return promise;
 }
@@ -3678,20 +3539,20 @@ export async function getMisSalary(user, date, PubliceKey) {
  * @param lang String 多語係
  * @return json 
  */
-export async function getVerifyIdentityAndtel(empid,obj,lang) {
+export async function getVerifyIdentityAndtel(empid, obj, lang) {
 
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/sms/identity/verify";
 		let Empid = Common.encrypt(empid);
 		let content = Common.encrypt(JSON.stringify(obj));
 		let params = {
-			"token":"",
-			"userId":Empid,
-			"content":content,
-			"lang":lang
+			"token": "",
+			"userId": Empid,
+			"content": content,
+			"lang": lang
 		};
 
-		NetUtil.getRequestJson(params, url).then((data)=>{
+		NetUtil.getRequestJson(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -3707,18 +3568,18 @@ export async function getVerifyIdentityAndtel(empid,obj,lang) {
  * 獲取登錄方式 single/tab
  * @return Promise
  */
-export async function getLoginMode(){
+export async function getLoginMode() {
 	let promise = new Promise((resolve, reject) => {
 
 		let url = "public/loginMode/get";
 		let params = {
-			"token"  : "",
-			"userId" : "",
+			"token": "",
+			"userId": "",
 			"content": "",
-			"lang":""
+			"lang": ""
 		};
 
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -3734,19 +3595,19 @@ export async function getLoginMode(){
  * 判斷該人員是工號/AD賬號&&確認工號是否存在
  * @return Promise
  */
-export async function getSingleUser(userId,lang){
+export async function getSingleUser(userId, lang) {
 	let promise = new Promise((resolve, reject) => {
 
 		let url = "login/user/get";
 		let params = {
-			"token"  : "",
-			"userId" : userId,
+			"token": "",
+			"userId": userId,
 			"content": "",
-			"lang":lang
+			"lang": lang
 		};
 
 
-		NetUtil.getRequestJson(params, url).then((data)=>{
+		NetUtil.getRequestJson(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -3758,32 +3619,32 @@ export async function getSingleUser(userId,lang){
 	return promise;
 }
 
-export async function updateCertTips(user,certTips='N'){
+export async function updateCertTips(user, certTips = 'N') {
 	let lang;
-    await DeviceStorageUtil.get('locale').then((data)=>{
-    	lang = data?JSON.parse(data):data;
-    })
+	await DeviceStorageUtil.get('locale').then((data) => {
+		lang = data ? JSON.parse(data) : data;
+	})
 
 	let content = {
-      'certTips':certTips
-    }
+		'certTips': certTips
+	}
 
-    let params = {
-		"token"  :Common.encrypt(user.token),
-		"userId" :Common.encrypt(user.loginID),
-		"content":Common.encrypt(JSON.stringify(content)),
-		"lang"   :lang,
-    };
+	let params = {
+		"token": Common.encrypt(user.token),
+		"userId": Common.encrypt(user.loginID),
+		"content": Common.encrypt(JSON.stringify(content)),
+		"lang": lang,
+	};
 
-    let url = "org/user/config/update";
-	
+	let url = "org/user/config/update";
+
 	let promise = new Promise((resolve, reject) => {
-	    NetUtil.getRequestContent(params, url).then((data)=>{
-	    	if (data.code != 200) {
-	    		reject(data.message); //已在其他裝置登入
-	    		return promise;
-	    	}
- 			resolve(data.content);
+		NetUtil.getRequestContent(params, url).then((data) => {
+			if (data.code != 200) {
+				reject(data.message); //已在其他裝置登入
+				return promise;
+			}
+			resolve(data.content);
 		})
 	});
 
@@ -3834,21 +3695,21 @@ export async function getSeasonThemeDisplay() {
 	if (isConnected) {
 		return await NetUtil.getRequestContent(params, url).then((data) => {
 			data.content = (data.code != 200) ? false : data.content
-			return ( data.content ) ? true : false;
+			return (data.content) ? true : false;
 		})
 	} else {
-		return false ;
+		return false;
 	}
 }
 
 export async function getAndroidChangeAppMessage(version, platform) {
 	let content = {
-		no:version,
-		platform:platform == "android"? "A": "I"
-    }
-    let params = {
-		"content":content,
-    };
+		no: version,
+		platform: platform == "android" ? "A" : "I"
+	}
+	let params = {
+		"content": content,
+	};
 	let url = "version/check";
 
 	let isConnected = await NetInfo.fetch().then((state) => {
@@ -3861,7 +3722,7 @@ export async function getAndroidChangeAppMessage(version, platform) {
 			return data.content;
 		})
 	} else {
-		return false ;
+		return false;
 	}
 }
 
@@ -3871,22 +3732,22 @@ export async function getAndroidChangeAppMessage(version, platform) {
 * @param user資料
 * @param content json包含 id、lang id例如 G00010
 */
-export async function getCreateSurvey(user, content){
+export async function getCreateSurvey(user, content) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/survey/getCreateSurvey";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
-			"lang" : Common.encrypt(user.lang),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
+			"lang": Common.encrypt(user.lang),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -3897,14 +3758,14 @@ export async function getCreateSurvey(user, content){
 * @param user資料
 * @param content
 */
-export async function registerSurvey(user, content, url){
+export async function registerSurvey(user, content, url) {
 	let promise = new Promise((resolve, reject) => {
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -3922,15 +3783,15 @@ export async function registerSurvey(user, content, url){
 * @param user資料
 * @param content json包含 id、lang id例如 G00010
 */
-export async function getHomeIconNum(user, content = ""){
+export async function getHomeIconNum(user, content = "") {
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/getHomeIconNum";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -3946,19 +3807,19 @@ export async function getHomeIconNum(user, content = ""){
 * 取得是否顯示防疫專區SOP的按鈕
 * @param user資料
 */
-export async function getSurveySOPSwitch(user){
+export async function getSurveySOPSwitch(user) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "public/getSwitch";
 		let params = {
 			"content": "EpiHelp"
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -3968,19 +3829,19 @@ export async function getSurveySOPSwitch(user){
 * 取得是否顯示會議預約SOP的按鈕
 * @param user資料
 */
-export async function getMeetingSOPSwitch(user){
+export async function getMeetingSOPSwitch(user) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "public/getSwitch";
 		let params = {
 			"content": "MeetingSop"
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -3992,27 +3853,27 @@ export async function getMeetingSOPSwitch(user){
 * @param user資料
 * @param content thf_app中 帶webview的id 例：InTimeDataWebView
 */
-export async function getWebViewUrlFromParamAbout(user,content){
+export async function getWebViewUrlFromParamAbout(user, content) {
 
-	content ={
-		"urlCode":content,
-		"lang":user.lang
+	content = {
+		"urlCode": content,
+		"lang": user.lang
 	}
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/getWebViewUrlFromParamAbout";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content)),
-			"lang" : Common.encrypt(user.lang)
+			"lang": Common.encrypt(user.lang)
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -4022,19 +3883,19 @@ export async function getWebViewUrlFromParamAbout(user,content){
  * 差异更新每日一句英语资料
  * @param {*} user 
  */
-export async function updateDailyOralEnglish(user){
+export async function updateDailyOralEnglish(user) {
 	let start = new Date().getTime();
 	// 查询最大异动日期
 	let sql = "SELECT MAX(TXDAT) AS TXDAT FROM THF_DAILY_ORAL_ENGLISH"
-	let data = await SQLite.selectData(sql,[])
+	let data = await SQLite.selectData(sql, [])
 	let maxTxdat = data.item(0).TXDAT
-	let promise = new Promise((resolve,reject)=>{
+	let promise = new Promise((resolve, reject) => {
 		//获取数据的API参数和URL
 		let enContent = Common.encrypt(maxTxdat ? maxTxdat : '')
 		let params = {
-			token:Common.encrypt(user.token),
-			userId:Common.encrypt(user.loginID),
-			content:enContent
+			token: Common.encrypt(user.token),
+			userId: Common.encrypt(user.loginID),
+			content: enContent
 		}
 		let url = 'data/getEnglish'
 		//资料格式转换方法
@@ -4052,31 +3913,31 @@ export async function updateDailyOralEnglish(user){
 		}
 
 		if (maxTxdat === null) {//没有资料则批量插入
-			NetUtil.getRequestContent(params,url).then(data => {
+			NetUtil.getRequestContent(params, url).then(data => {
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
 				}
 				let content = data.content
-				let excuteList = Common.tranBatchInsertSQL('THF_DAILY_ORAL_ENGLISH',content,dataFun,8,30)
-				SQLite.insertData_new(excuteList).then(()=>{
+				let excuteList = Common.tranBatchInsertSQL('THF_DAILY_ORAL_ENGLISH', content, dataFun, 8, 30)
+				SQLite.insertData_new(excuteList).then(() => {
 					let end = new Date().getTime();
 					console.log("updateDailyOralEnglish_end:" + (end - start) / 1000);
 					resolve();
 				})
 			})
-		}else {//有资料则差异更新
-			NetUtil.getRequestContent(params,url).then(data => {
+		} else {//有资料则差异更新
+			NetUtil.getRequestContent(params, url).then(data => {
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
 				}
 				let content = data.content
-				let excuteList = Common.tranDiffUpdateSQL('THF_DAILY_ORAL_ENGLISH',content,dataFun,8,30)
+				let excuteList = Common.tranDiffUpdateSQL('THF_DAILY_ORAL_ENGLISH', content, dataFun, 8, 30)
 				const dExcuteList = excuteList['dExcuteList']
 				const iExcuteList = excuteList['iExcuteList']
-				Promise.all(dExcuteList.map(excute => SQLite.deleteData(excute[0], excute[1]))).then(()=>{
-					Promise.all(iExcuteList.map(excute => SQLite.insertData(excute[0], excute[1]))).then(()=>{
+				Promise.all(dExcuteList.map(excute => SQLite.deleteData(excute[0], excute[1]))).then(() => {
+					Promise.all(iExcuteList.map(excute => SQLite.insertData(excute[0], excute[1]))).then(() => {
 						let end = new Date().getTime();
 						console.log("updateDailyOralEnglish:" + (end - start) / 1000);
 						resolve();
@@ -4093,27 +3954,27 @@ export async function updateDailyOralEnglish(user){
 * 取得參會方式
 * @param user資料
 */
-export async function getMeetingModeType(user){
+export async function getMeetingModeType(user) {
 
-	let content ={
-		"paramtype":"MeetingModeType"
+	let content = {
+		"paramtype": "MeetingModeType"
 	}
 
 	let promise = new Promise((resolve, reject) => {
 		let url = "data/getParams";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content)),
 			// "lang"   : Common.encrypt(user.lang)
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -4124,22 +3985,22 @@ export async function getMeetingModeType(user){
 * 新增會議
 * @param user資料
 */
-export async function addMeeting(user, content){
+export async function addMeeting(user, content) {
 
 	let promise = new Promise((resolve, reject) => {
 		let url = "meeting/add";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content)),
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -4151,23 +4012,23 @@ export async function addMeeting(user, content){
 * 修改會議
 * @param user資料
 */
-export async function modifyMeeting(user, content){
+export async function modifyMeeting(user, content) {
 
 	let promise = new Promise((resolve, reject) => {
 		let url = "meeting/modify";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content)),
 		};
 		// console.log("params", params);
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -4179,22 +4040,22 @@ export async function modifyMeeting(user, content){
 * 刪除會議
 * @param user資料
 */
-export async function cancelMeeting(user, content){
+export async function cancelMeeting(user, content) {
 
 	let promise = new Promise((resolve, reject) => {
 		let url = "meeting/cancel";
 		let params = {
-			"token"  : Common.encrypt(user.token),
-			"userId" : Common.encrypt(user.loginID),
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content)),
 		};
-		NetUtil.getRequestContent(params, url).then((data)=>{
+		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
 			data = data.content;
- 			resolve(data);
+			resolve(data);
 		})
 	});
 	return promise;
@@ -4205,25 +4066,25 @@ export async function cancelMeeting(user, content){
 * 取得會議
 * @param user資料
 */
-export async function getMeetings(user, content){
-		let promise = new Promise((resolve, reject) => {
-			let url = "meeting/get";
-			let params = {
-				"token"  : Common.encrypt(user.token),
-				"userId" : Common.encrypt(user.loginID),
-				"content": Common.encrypt(JSON.stringify(content)),
-				// "lang"   : Common.encrypt(user.lang)
-			};
-			NetUtil.getRequestContent(params, url).then((data)=>{
-				if (data.code != 200) {
-					reject(data); //已在其他裝置登入
-					return promise;
-				}
-				data = data.content;
-	 			resolve(data);
-			})
-		});
-		return promise;
+export async function getMeetings(user, content) {
+	let promise = new Promise((resolve, reject) => {
+		let url = "meeting/get";
+		let params = {
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+			// "lang"   : Common.encrypt(user.lang)
+		};
+		NetUtil.getRequestContent(params, url).then((data) => {
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+			resolve(data);
+		})
+	});
+	return promise;
 }
 
 
@@ -4232,25 +4093,25 @@ export async function getMeetings(user, content){
 * 取得取得多位特定人員的會議時程
 * @param user資料
 */
-export async function searchMeeting(user, content){
-		let promise = new Promise((resolve, reject) => {
-			let url = "meeting/checkDoubleDateTime";
-			let params = {
-				"token"  : Common.encrypt(user.token),
-				"userId" : Common.encrypt(user.loginID),
-				"content": Common.encrypt(JSON.stringify(content)),
-				"lang"   : Common.encrypt(user.lang)
-			};
-			NetUtil.getRequestContent(params, url).then((data)=>{
-				if (data.code != 200) {
-					reject(data); //已在其他裝置登入
-					return promise;
-				}
-				data = data.content;
-	 			resolve(data);
-			})
-		});
-		return promise;
+export async function searchMeeting(user, content) {
+	let promise = new Promise((resolve, reject) => {
+		let url = "meeting/checkDoubleDateTime";
+		let params = {
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+			"lang": Common.encrypt(user.lang)
+		};
+		NetUtil.getRequestContent(params, url).then((data) => {
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+			resolve(data);
+		})
+	});
+	return promise;
 }
 
 /**
@@ -4258,26 +4119,26 @@ export async function searchMeeting(user, content){
 * 獲取特定人的會議時程
 * @param user資料
 */
-export async function getPersonDateTime(user, content){
-		let promise = new Promise((resolve, reject) => {
-			let url = "meeting/getDateTime";
-			let params = {
-				"token"  : Common.encrypt(user.token),
-				"userId" : Common.encrypt(user.loginID),
-				"content": Common.encrypt(JSON.stringify(content)),
-				// "lang"   : Common.encrypt(user.lang)
-			};
-			// console.log(params);
-			NetUtil.getRequestContent(params, url).then((data)=>{
-				if (data.code != 200) {
-					reject(data); //已在其他裝置登入
-					return promise;
-				}
-				data = data.content;
-	 			resolve(data);
-			})
-		});
-		return promise;
+export async function getPersonDateTime(user, content) {
+	let promise = new Promise((resolve, reject) => {
+		let url = "meeting/getDateTime";
+		let params = {
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+			// "lang"   : Common.encrypt(user.lang)
+		};
+		// console.log(params);
+		NetUtil.getRequestContent(params, url).then((data) => {
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+			resolve(data);
+		})
+	});
+	return promise;
 }
 
 /**
@@ -4285,46 +4146,46 @@ export async function getPersonDateTime(user, content){
 * 獲取特定人的有空的會議時程
 * @param user資料
 */
-export async function getFreeDateTime(user, content){
-		let promise = new Promise((resolve, reject) => {
-			let url = "meeting/getFreeDateTime";
-			let params = {
-				"token"  : Common.encrypt(user.token),
-				"userId" : Common.encrypt(user.loginID),
-				"content": Common.encrypt(JSON.stringify(content)),
-				// "lang"   : Common.encrypt(user.lang)
-			};
-			// console.log(params);
+export async function getFreeDateTime(user, content) {
+	let promise = new Promise((resolve, reject) => {
+		let url = "meeting/getFreeDateTime";
+		let params = {
+			"token": Common.encrypt(user.token),
+			"userId": Common.encrypt(user.loginID),
+			"content": Common.encrypt(JSON.stringify(content)),
+			// "lang"   : Common.encrypt(user.lang)
+		};
+		// console.log(params);
 
-			NetUtil.getRequestContent(params, url).then((data)=>{
-				if (data.code != 200) {
-					reject(data); //已在其他裝置登入
-					return promise;
-				}
-				data = data.content;
-	 			resolve(data);
-			})
-		});
-		return promise;
+		NetUtil.getRequestContent(params, url).then((data) => {
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+			resolve(data);
+		})
+	});
+	return promise;
 }
 
 /**
  * 差异更新公司文件资料
  * @param {*} user 
  */
-export async function updateCompanyDocument(user){
+export async function updateCompanyDocument(user) {
 	let start = new Date().getTime();
 	// 查询最大异动日期
 	let sql = "SELECT MAX(TXDAT) AS TXDAT FROM THF_COMPANY_DOC"
-	let data = await SQLite.selectData(sql,[])
+	let data = await SQLite.selectData(sql, [])
 	let maxTxdat = data.item(0).TXDAT
-	let promise = new Promise((resolve,reject)=>{
+	let promise = new Promise((resolve, reject) => {
 		//获取数据的API参数和URL
 		let enContent = Common.encrypt(maxTxdat ? maxTxdat : '')
 		let params = {
-			token:Common.encrypt(user.token),
-			userId:Common.encrypt(user.loginID),
-			content:enContent
+			token: Common.encrypt(user.token),
+			userId: Common.encrypt(user.loginID),
+			content: enContent
 		}
 		let url = 'data/getCompanyDoc'
 		//资料格式转换方法
@@ -4343,37 +4204,38 @@ export async function updateCompanyDocument(user){
 			array.push(row.status)
 			array.push(Common.dateFormat(row.crtdat))
 			array.push(Common.dateFormat(row.txdat))
+			array.push(row.sort)
 			return array
 		}
 
 		if (maxTxdat === null) {//没有资料则批量插入
-			NetUtil.getRequestContent(params,url).then(data => {
+			NetUtil.getRequestContent(params, url).then(data => {
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
 				}
 				let content = data.content
-				let column = "OID,CO,DOC_TYPE,SUBJECT,RELEASE_DAT,AUTH,VISITCOUNT,FILEID,FILEURL,FILESIZE,STATUS,CRTDAT,TXDAT"
-				let excuteList = Common.tranBatchInsertSQL('THF_COMPANY_DOC',content,dataFun,column,30)
-				SQLite.insertData_new(excuteList).then(()=>{
+				let column = "OID,CO,DOC_TYPE,SUBJECT,RELEASE_DAT,AUTH,VISITCOUNT,FILEID,FILEURL,FILESIZE,STATUS,CRTDAT,TXDAT,SORT"
+				let excuteList = Common.tranBatchInsertSQL('THF_COMPANY_DOC', content, dataFun, column, 30)
+				SQLite.insertData_new(excuteList).then(() => {
 					let end = new Date().getTime();
 					console.log("updateCompanyDocument_end:" + (end - start) / 1000);
 					resolve();
 				})
 			})
-		}else {//有资料则差异更新
-			NetUtil.getRequestContent(params,url).then(data => {
+		} else {//有资料则差异更新
+			NetUtil.getRequestContent(params, url).then(data => {
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
 				}
 				let content = data.content
-				let column = "OID,CO,DOC_TYPE,SUBJECT,RELEASE_DAT,AUTH,VISITCOUNT,FILEID,FILEURL,FILESIZE,STATUS,CRTDAT,TXDAT"
-				let excuteList = Common.tranDiffUpdateSQL('THF_COMPANY_DOC',content,dataFun,column,30)
+				let column = "OID,CO,DOC_TYPE,SUBJECT,RELEASE_DAT,AUTH,VISITCOUNT,FILEID,FILEURL,FILESIZE,STATUS,CRTDAT,TXDAT,SORT"
+				let excuteList = Common.tranDiffUpdateSQL('THF_COMPANY_DOC', content, dataFun, column, 30)
 				const dExcuteList = excuteList['dExcuteList']
 				const iExcuteList = excuteList['iExcuteList']
-				Promise.all(dExcuteList.map(excute => SQLite.deleteData(excute[0], excute[1]))).then(()=>{
-					Promise.all(iExcuteList.map(excute => SQLite.insertData(excute[0], excute[1]))).then(()=>{
+				Promise.all(dExcuteList.map(excute => SQLite.deleteData(excute[0], excute[1]))).then(() => {
+					Promise.all(iExcuteList.map(excute => SQLite.insertData(excute[0], excute[1]))).then(() => {
 						let end = new Date().getTime();
 						console.log("updateCompanyDocument:" + (end - start) / 1000);
 						resolve();
@@ -4389,35 +4251,158 @@ export async function updateCompanyDocument(user){
  * 同步公司文件访问数到Server
  * @param {*} user 
  */
-export async function updateCompanyDocumentToServer(user){
+export async function updateCompanyDocumentToServer(user) {
 	//查询需要同步的资料
 	let sql = ` select OID,LOCALVISITCOUNT from THF_COMPANY_DOC where LOCALVISITCOUNT > 0 `
-	let sData = await SQLite.selectData(sql,[]);
-	let promise = new Promise((resolve,reject) => {
-		let length  = sData.length
+	let sData = await SQLite.selectData(sql, []);
+	let promise = new Promise((resolve, reject) => {
+		let length = sData.length
 		if (length > 0) {
 			let contents = []
-			for (let i = 0; i <length; i++) {
+			for (let i = 0; i < length; i++) {
 				const oid = sData.item(i).OID
 				const visitcount = sData.item(i).LOCALVISITCOUNT
-				let content = {oid,visitcount}
+				let content = { oid, visitcount }
 				contents.push(content)
 			}
 			let enContent = Common.encrypt(JSON.stringify(contents))
 			let params = {
-				token:Common.encrypt(user.token),
-				userId:Common.encrypt(user.loginID),
-				content:enContent
+				token: Common.encrypt(user.token),
+				userId: Common.encrypt(user.loginID),
+				content: enContent
 			}
 			let url = 'companydoc/setCompanyDoc'
-			NetUtil.getRequestContent(params,url).then(data => {
+			NetUtil.getRequestContent(params, url).then(data => {
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
 				}
 				//更新手机访问数
 				let sql1 = `update THF_COMPANY_DOC set VISITCOUNT = VISITCOUNT + LOCALVISITCOUNT, LOCALVISITCOUNT = 0 where LOCALVISITCOUNT > 0 `
-				SQLite.updateData(sql1,[]).then(result => {
+				SQLite.updateData(sql1, []).then(result => {
+					resolve()
+				}).catch(err => {
+					reject(err)
+					return promise
+				})
+			})
+		} else {
+			resolve()
+		}
+	})
+	return promise
+}
+
+/**
+ * 集团文件差异更新
+ * @param {object} user 用户信息
+ * @returns 
+ */
+export async function updateGroupFile(user) {
+	let start = new Date().getTime();
+	// 查询最大异动日期
+	let sql = "SELECT MAX(TXDAT) AS TXDAT FROM THF_GROUPFILE"
+	let data = await SQLite.selectData(sql, [])
+	let maxTxdat = data.item(0).TXDAT
+	let promise = new Promise((resolve, reject) => {
+		//获取数据的API参数和URL
+		let enContent = Common.encrypt(maxTxdat ? maxTxdat : '')
+		let params = {
+			token: Common.encrypt(user.token),
+			userId: Common.encrypt(user.loginID),
+			content: enContent
+		}
+		let url = 'data/getGroupFile'
+		//资料格式转换方法
+		let dataFun = row => {
+			let array = []
+			array.push(row.oid)
+			array.push(row.tid)
+			array.push(row.did)
+			array.push(row.detail)
+			array.push(row.docname)
+			array.push(row.doctype)
+			array.push(row.docsize)
+			array.push(Common.dateFormat(row.dmodified))
+			array.push(row.visitcount)
+			array.push(row.status)
+			array.push(Common.dateFormat(row.crtdat))
+			array.push(Common.dateFormat(row.txdat))
+			return array
+		}
+		//表栏位
+		let column = "OID,TID,DID,DETAIL,DOCNAME,DOCTYPE,DOCSIZE,DMODIFIED,VISITCOUNT,STATUS,CRTDAT,TXDAT"
+		if (maxTxdat === null) {//没有资料则批量插入
+			NetUtil.getRequestContent(params, url).then(data => {
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
+				let content = data.content
+				let excuteList = Common.tranBatchInsertSQL('THF_GROUPFILE', content, dataFun, column, 30)
+				SQLite.insertData_new(excuteList).then(() => {
+					let end = new Date().getTime();
+					console.log("updateGroupFile_end:" + (end - start) / 1000);
+					resolve();
+				})
+			})
+		} else {//有资料则差异更新
+			NetUtil.getRequestContent(params, url).then(data => {
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
+				let content = data.content
+				let excuteList = Common.tranDiffUpdateSQL('THF_GROUPFILE', content, dataFun, column, 30)
+				const dExcuteList = excuteList['dExcuteList']
+				const iExcuteList = excuteList['iExcuteList']
+				Promise.all(dExcuteList.map(excute => SQLite.deleteData(excute[0], excute[1]))).then(() => {
+					Promise.all(iExcuteList.map(excute => SQLite.insertData(excute[0], excute[1]))).then(() => {
+						let end = new Date().getTime();
+						console.log("updateGroupFile:" + (end - start) / 1000);
+						resolve();
+					})
+				})
+			})
+		}
+	})
+
+	return promise
+}
+
+/**
+ * 同步集团文件访问数到Server
+ * @param {*} user 
+ */
+export async function updateGroupFileToServer(user) {
+	//查询需要同步的资料
+	let sql = ` select distinct DID,LOCALVISITCOUNT from THF_GROUPFILE where LOCALVISITCOUNT > 0 `
+	let sData = await SQLite.selectData(sql);
+	let promise = new Promise((resolve, reject) => {
+		let length = sData.length
+		if (length > 0) {
+			let contents = []
+			for (let i = 0; i < length; i++) {
+				const did = sData.item(i).DID
+				const visitcount = sData.item(i).LOCALVISITCOUNT
+				let content = { did, visitcount }
+				contents.push(content)
+			}
+			let enContent = Common.encrypt(JSON.stringify(contents))
+			let params = {
+				token: Common.encrypt(user.token),
+				userId: Common.encrypt(user.loginID),
+				content: enContent
+			}
+			let url = 'app/eip/sync/visitCount'
+			NetUtil.getRequestContent(params, url).then(data => {
+				if (data.code != 200) {
+					reject(data); //已在其他裝置登入
+					return promise;
+				}
+				//更新手机访问数
+				let sql1 = `update THF_GROUPFILE set VISITCOUNT = VISITCOUNT + LOCALVISITCOUNT, LOCALVISITCOUNT = 0 where LOCALVISITCOUNT > 0 `
+				SQLite.updateData(sql1, []).then(result => {
 					resolve()
 				}).catch(err => {
 					reject(err)

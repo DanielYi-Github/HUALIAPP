@@ -50,7 +50,20 @@ class FormContentFile extends Component {
 	rendercheckItem = (item) => {
 		let index = item.index; 
 		item = item.item;
-
+		let fileId = item.fileId
+		let fileName = item.fileName
+		let fileType = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+		switch (fileType) {
+            case "jpg":
+            case "png":
+            case "jpeg":
+            case "gif":
+                fileType = "pic"
+                break;
+            default:
+                fileType = "pdf"
+                break;
+        }
 		return (
 			<CardItem 
 				style={{flexDirection: 'row', borderRadius: 10, paddingLeft: 5}}
@@ -60,12 +73,16 @@ class FormContentFile extends Component {
 						artId:item.artId,
 						ansId:item.ansId,
 						itemId:item.itemId,
-						fileName:item.fileName,
-						fileId:item.fileId
+						fileName,
+						fileId,
 					};
 					NavigationService.navigate("ViewFile", {
 					  content: content,
-					  url:'app/bpm/getAttachedFile'
+					  url:'app/bpm/downloadAttachedFile',
+					  fileType,
+					  pageTtile: fileName,
+					  isDownload: true,
+					  fileId,
 					});
 				}}
 			>	

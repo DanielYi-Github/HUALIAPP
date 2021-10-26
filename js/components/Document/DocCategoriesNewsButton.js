@@ -11,9 +11,10 @@ export default class DocCategoriesNewsButton extends PureComponent{
 	render(){
 		let data=this.props.item;
 		let cardItem=null;
-		let iconParmas = (data.type != "SPACE" && data.type != null) ? data.icon.split(',') : [null,null,null];
+		let type = data.TYPE
+		let iconParmas = (type != "SPACE" && type != null) ? data.ICON.split(',') : [null,null,null];
 		let icon = iconParmas[0];
-		let color = iconParmas[1]; 
+		let color = iconParmas[1];
 		let backgroundColor = iconParmas[2]; //功能鍵的名稱、圖片、按鈕顏色
 		let iconType = iconParmas[3] ? iconParmas[3] : "Ionicons";
 
