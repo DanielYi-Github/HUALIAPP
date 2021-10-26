@@ -44,14 +44,7 @@ function addCompanyDocumentVisitCount(oid) {
         oid
     }
 }
-//设置公司文件fileUrl actionCreator
-function setCompanyDocumentFileUrlData(oid, fileUrl) {
-    return {
-        type: CompanyDocumentTypes.SET_COMPANYDOCUMENT_FILEURLDATA,
-        oid,
-        fileUrl
-    }
-}
+
 //设置公司文件是否正在加载 actionCreator
 function setLoading(loading) {
     return {

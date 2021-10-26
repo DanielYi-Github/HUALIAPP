@@ -202,7 +202,6 @@ let UpgradeDBTableUtil = {
 					VISITCOUNT int NOT NULL, 
 					LOCALVISITCOUNT int DEFAULT 0, 
 					FILEID varchar ( 30 ) NOT NULL, 
-					FILEURL varchar ( 255 ) NOT NULL, 
 					FILESIZE float NOT NULL, 
 					STATUS char ( 1 ) NOT NULL DEFAULT 'Y', 
 					CRTDAT numeric NOT NULL DEFAULT (datetime('now','+8 hour')), 

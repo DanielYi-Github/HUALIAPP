@@ -4199,7 +4199,6 @@ export async function updateCompanyDocument(user) {
 			array.push(row.auth)
 			array.push(row.visitcount)
 			array.push(row.fileid)
-			array.push(row.fileurl ? row.fileurl : '')
 			array.push(row.filesize)
 			array.push(row.status)
 			array.push(Common.dateFormat(row.crtdat))
@@ -4215,7 +4214,7 @@ export async function updateCompanyDocument(user) {
 					return promise;
 				}
 				let content = data.content
-				let column = "OID,CO,DOC_TYPE,SUBJECT,RELEASE_DAT,AUTH,VISITCOUNT,FILEID,FILEURL,FILESIZE,STATUS,CRTDAT,TXDAT,SORT"
+				let column = "OID,CO,DOC_TYPE,SUBJECT,RELEASE_DAT,AUTH,VISITCOUNT,FILEID,FILESIZE,STATUS,CRTDAT,TXDAT,SORT"
 				let excuteList = Common.tranBatchInsertSQL('THF_COMPANY_DOC', content, dataFun, column, 30)
 				SQLite.insertData_new(excuteList).then(() => {
 					let end = new Date().getTime();

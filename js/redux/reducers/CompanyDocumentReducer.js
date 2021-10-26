@@ -45,14 +45,6 @@ export default function index(state = initialState, action = {}) {
                     [action.oid]: state.companyDocumentVisitData[action.oid] + 1
                 }
             }
-        case CompanyDocumentTypes.SET_COMPANYDOCUMENT_FILEURLDATA:
-            return {
-                ...state,
-                companyDocumentFileUrlData: {
-                    ...state.companyDocumentFileUrlData,
-                    [action.oid]: action.fileUrl
-                }
-            }
         case CompanyDocumentTypes.SET_LOADING:
             return {
                 ...state,
