@@ -14,6 +14,7 @@ import HeaderForGeneral       from '../../../components/HeaderForGeneral';
 import FormInputContent       from '../../../components/Form/FormInputContent';
 import * as NavigationService from '../../../utils/NavigationService';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
+import * as UpdateDataUtil    from '../../../utils/UpdateDataUtil';
 import ToastUnit              from '../../../utils/ToastUnit';
 import Common                 from '../../../utils/Common';
 
@@ -71,7 +72,7 @@ class MeetingInsertPage extends React.PureComponent  {
             initiator        = meetingParam.initiator;
             chairperson      = meetingParam.chairperson;
             chairpersonLabel = meetingParam.chairperson.name;
-            attendees        = meetingParam.attendees;
+            attendees        = this.dedup(meetingParam.attendees);
             meetingMode      = meetingParam.meetingMode;
             isOnlineAndPlace = meetingParam.place;
             meetingPlace     = meetingParam.meetingPlace ? meetingParam.meetingPlace : meetingPlace;
@@ -1007,7 +1008,7 @@ class MeetingInsertPage extends React.PureComponent  {
     return button;
   }
 
-  addMeeting = () =>{
+  addMeeting = async () =>{
     // subject
     // description
     // attendees
@@ -1065,36 +1066,61 @@ class MeetingInsertPage extends React.PureComponent  {
       } else {
         startdate = new Date(this.state.startdate.replace(/-/g, "/")).getTime()+1000;
       }
+      startdate = DateFormat( startdate, "yyyy-mm-dd HH:MM:ss");
 
-      let meetingParams = {
-          subject        :this.state.subject,
-          description    :this.state.description,
-          startdate      :DateFormat( startdate, "yyyy-mm-dd HH:MM:ss"),
-          enddate        :this.state.enddate,
-          meetingMode    :this.state.meetingMode,
-          place          :this.state.isOnlineAndPlace,
-          meetingPlace   :this.state.meetingPlace,
-          meetingNumber  :this.state.meetingNumber,
-          meetingPassword:this.state.meetingPassword,
-          remindtime     :this.state.remindtime,
-          initiator      :this.state.initiator,
-          chairperson    :this.state.chairperson,
-          attendees      :this.state.attendees,
-          timezone       :RNLocalize.getTimeZone(),
-          repeatType     :"NR",
-          repeatEndDate  :"",
-          weekDays       :[]
-      }
-      
-      if (this.state.isModify) {
-        // 修改會議
-        meetingParams.oid = this.state.oid;
-        this.props.actions.modifyMeeting(meetingParams);
+      // 先檢測與會人員時間有無重複 沒有重複為true 有重複為false 
+      let enableMeeting = await this.checkHaveMeetingTime(this.state.attendees, startdate, this.state.enddate);
+      if(enableMeeting.result) {
+        
+        let meetingParams = {
+            subject        :this.state.subject,
+            description    :this.state.description,
+            startdate      :startdate,
+            enddate        :this.state.enddate,
+            meetingMode    :this.state.meetingMode,
+            meetingPlace   :this.state.meetingPlace,
+            meetingNumber  :this.state.meetingNumber,
+            meetingPassword:this.state.meetingPassword,
+            remindtime     :this.state.remindtime,
+            initiator      :this.state.initiator,
+            chairperson    :this.state.chairperson,
+            attendees      :this.state.attendees,
+            timezone       :RNLocalize.getTimeZone(),
+            repeatType     :"NR",
+            repeatEndDate  :"",
+            weekDays       :[]
+        }
+
+        if (this.state.isModify) {
+          // 修改會議
+          meetingParams.oid = this.state.oid;
+          this.props.actions.modifyMeeting(meetingParams);
+        } else {
+          // 新增會議
+          this.props.actions.addMeeting(meetingParams);
+        }
       } else {
-        // 新增會議
-        this.props.actions.addMeeting(meetingParams);
+        Alert.alert(
+         this.props.lang.Common.Error,   // 表單動作失敗
+         enableMeeting.message, //`與會人員此段時間已安排其他會議`
+          [{
+              text: this.props.state.Language.lang.Common.Close,   // 關閉 
+              onPress: () => { }, 
+          }],
+        )
       }
     }    
+  }
+
+  dedup(arr) {
+    var hashTable = {};
+
+    return arr.filter(function (el) {
+      var key = JSON.stringify(el);
+      var match = Boolean(hashTable[key]);
+
+      return (match ? false : hashTable[key] = true);
+    });
   }
 
   cancelMeeting = () => {
@@ -1129,6 +1155,58 @@ class MeetingInsertPage extends React.PureComponent  {
 
   componentWillUnmount(){
     this.props.actions.resetMeetingRedux();
+  }
+
+  checkHaveMeetingTime = async (ids, startTime, endTime) => {
+    let user = this.props.state.UserInfo.UserInfo;
+    let meetingParams = {
+      startdate: startTime,
+      enddate  : endTime,
+      attendees: [this.state.chairperson, ...ids],
+      timezone : RNLocalize.getTimeZone(),
+      oid : this.state.oid
+    }
+    let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
+      if (result.length == 0) {
+        return {
+          result: true,
+        };
+      } else {
+        let unableAttendees = [];
+        for(let item of result){
+          if(unableAttendees.length == 0){
+            unableAttendees.push(item.name);
+
+          }else{
+            let isAdd = true;
+            for(let unable of unableAttendees){
+              if(item.name == unable){
+                isAdd = false;
+                break;
+              }
+            }
+
+            if(isAdd){
+              unableAttendees.push(item.name);
+            }
+
+          }
+        }
+
+        return {
+          result: false,
+          message: unableAttendees.toString()+this.props.lang.MeetingPage.alertMessage_meetingAttendeesAlready
+        };
+      }
+    }).catch((errorResult)=>{
+      console.log("errorResult",errorResult.message);
+      return {
+          result: false,
+          message: "系統維護中，請收到再試" 
+      };
+    });
+
+    return searchMeetingResult;
   }
 }
 
