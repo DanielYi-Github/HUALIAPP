@@ -4229,7 +4229,7 @@ export async function updateCompanyDocument(user) {
 					return promise;
 				}
 				let content = data.content
-				let column = "OID,CO,DOC_TYPE,SUBJECT,RELEASE_DAT,AUTH,VISITCOUNT,FILEID,FILEURL,FILESIZE,STATUS,CRTDAT,TXDAT,SORT"
+				let column = "OID,CO,DOC_TYPE,SUBJECT,RELEASE_DAT,AUTH,VISITCOUNT,FILEID,FILESIZE,STATUS,CRTDAT,TXDAT,SORT"
 				let excuteList = Common.tranDiffUpdateSQL('THF_COMPANY_DOC', content, dataFun, column, 30)
 				const dExcuteList = excuteList['dExcuteList']
 				const iExcuteList = excuteList['iExcuteList']
