@@ -59,13 +59,13 @@ class MeetingAttendeesReorderPage extends React.Component {
               </TouchableOpacity>
             </Right>
           </Header>
-            <SortableList
-              style                 ={{flex:1}}
-              contentContainerStyle ={{width: this.props.style.PageSize.width}}
-              data                  ={this.props.state.Meeting.attendees}
-              renderRow             ={this.renderSortableRow} 
-              onReleaseRow          ={(key,currentOrder)=>{ this.changeDefaultvalueArray(currentOrder);}}
-            />
+          <SortableList
+            style                 ={{flex:1}}
+            contentContainerStyle ={{width: this.props.style.PageSize.width}}
+            data                  ={this.props.state.Meeting.attendees}
+            renderRow             ={this.renderSortableRow} 
+            onReleaseRow          ={(key,currentOrder)=>{ this.changeDefaultvalueArray(currentOrder);}}
+          />
 
           <Footer>
             <Body>

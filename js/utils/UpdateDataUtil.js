@@ -418,7 +418,6 @@ export async function updateNotice(user) {
 	let lData = await SQLite.selectData(lSQL, []);
 	let ltxdat = lData.item(0).TXDAT; //更新時間
 	let promise = new Promise((resolve, reject) => {
-	// console.log("ltxdat", ltxdat);
 		let params = {
 			"token": Common.encrypt(user.token),
 			"userId": Common.encrypt(user.loginID),

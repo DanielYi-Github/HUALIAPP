@@ -588,7 +588,7 @@ function addOrRemoveTag( item, getState ){
 	return attendees;
 }
 
-export function organizeCheckboxOnPress(checkItemAttendees){
+export function organizeCheckboxOnPress(checkItemAttendees, allSelectChkValue = null){
 	return async (dispatch, getState) => {
 		dispatch(meetingBlock(true));
 
@@ -597,38 +597,45 @@ export function organizeCheckboxOnPress(checkItemAttendees){
 		// 新增的話先搜尋有沒有在redux裡面了 然後檢查有無會議衝突
 		// 刪除的話搜尋相同id然後刪除
 
-		// let allOrgAttendees = await getAllOrgAttendees(checkItemAttendees);
-		let allOrgAttendees = getAllOrgAttendees(checkItemAttendees);
-		let reduxAttendees = getState().Meeting.attendees; //已經存在的
+		let allOrgAttendees = getAllOrgAttendees(checkItemAttendees);   //組織的所有人
+		let reduxAttendees = getState().Meeting.attendees; 				//已經存在的
 
 		// checkValue檢查看看有沒有全部人包含在裡面
 		let included = false;  // 有沒有包含
 		let checkValue = false; // 有沒有全部包含
-		let selectedCount = 0;
+		// let selectedCount = 0;
 		
 		// 確認有沒有已經包含在裡面，用來顯示不同的勾勾顏色
 		for(let positionAttendee of allOrgAttendees){
 		  for(let propsAttendee of reduxAttendees){
 		    if( positionAttendee.id == propsAttendee.id ){
 		      included = true;
-		      selectedCount++;
+		      // selectedCount++;
 		      break;
 		    }
 		  }
 		}
-		checkValue = selectedCount == allOrgAttendees.length ? true: false;
+		// checkValue = selectedCount == allOrgAttendees.length ? true: false;
+		console.log(included, allSelectChkValue);
+		included = allSelectChkValue == null ? included : !allSelectChkValue
 
 		if (!included) {
 			// 檢查有哪些人沒有在裡面
 			let unInside = [];
 			for(let checkItem of allOrgAttendees){
+				let isinside = false;
 				for(let attendee of reduxAttendees){
 					if(checkItem.id == attendee.id){
+						isinside = true;
 						break;
 					}
 				}
-				unInside.push(checkItem);
+
+				if(!isinside){
+					unInside.push(checkItem);
+				}
 			}
+			console.log("unInside", unInside);
 
 			// 是否需要檢查會議時間衝突
 			if (getState().Meeting.isNeedCheckMeetingTime) {
@@ -640,10 +647,10 @@ export function organizeCheckboxOnPress(checkItemAttendees){
 					getState().Meeting.attendees_endDate,
 					getState().UserInfo.UserInfo
 				);
-				console.log("enableMeeting", enableMeeting);
+				// console.log("enableMeeting", enableMeeting);
 
 				if (enableMeeting.length == 0) {
-					reduxAttendees = [...reduxAttendees, ...allOrgAttendees];
+					reduxAttendees = [...reduxAttendees, ...unInside];
 					dispatch( meetingBlock(false) );
 				} else {
 					let unAbles = "";
@@ -664,7 +671,7 @@ export function organizeCheckboxOnPress(checkItemAttendees){
 					);
 				}
 			} else {
-				reduxAttendees = [...reduxAttendees, ...allOrgAttendees];
+				reduxAttendees = [...reduxAttendees, ...unInside];
 				dispatch( meetingBlock(false) );
 			}
 		} else {

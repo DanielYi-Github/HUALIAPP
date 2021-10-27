@@ -135,6 +135,9 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
           selectNumber = {this.props.state.Meeting.attendees.length}
           onPress      = {()=> NavigationService.navigate("MeetingAttendeesReorder")}
           MeetingInsertWithTagsPageRouterKey = {this.props.MeetingInsertWithTagsPageRouterKey}
+          showAllSelectChk       = {false} // 要不要顯示全選按鈕
+          allSelectChkValue      = {null}  // 全選之後需要給定的值
+          onSelectChkValueChange = {null}  // 全選與取消全選要做的事
         />
       </Container>
     );
@@ -198,21 +201,30 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
           this.props.actions.organizeCheckboxOnPress( value );
         },
         onItemNextIconPress:(value)=>{
+          let orgValue = value;
           if(value.subDep == null){
             NavigationService.push("MeetingInsertWithTagsForSelect", {
-              selectList    :value.members,
-              onItemPress   :this.props.actions.getPositions,
-              renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
-              showFooter    :true,
-              title         :this.props.lang.MeetingPage.attendeesInvite
+              selectList            :value.members,
+              onItemPress           :this.props.actions.getPositions,
+              renderItemMode        :"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
+              showFooter            :true,
+              title                 :this.props.lang.MeetingPage.attendeesInvite,
+              showAllSelectChk      :true,
+              onSelectChkValueChange:(changeValue)=>{
+                this.props.actions.organizeCheckboxOnPress( orgValue, changeValue );
+              }
             });
           }else{
             this.navigateNextOrg(value);
           }
         },
-        renderItemMode:"multiCheck",  // normal一般, multiCheck多選, multiAttendees多選參與人
-        showFooter    :true,
-        title         : this.props.lang.MeetingPage.attendeesInvite
+        renderItemMode        :"multiCheck",  // normal一般, multiCheck多選, multiAttendees多選參與人
+        showFooter            :true,
+        title                 :this.props.lang.MeetingPage.attendeesInvite,
+        showAllSelectChk      :true,
+        onSelectChkValueChange:(changeValue)=>{
+          this.props.actions.organizeCheckboxOnPress( org, changeValue );
+        }
       });
       this.props.actions.blocking(false);
     }else{

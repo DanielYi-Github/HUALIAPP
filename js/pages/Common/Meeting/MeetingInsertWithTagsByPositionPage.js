@@ -214,11 +214,13 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
         />
 
         <MeetingSelectAttendeesFooter
-          lang         = {this.props.state.Language.lang}
-          selectNumber = {this.props.state.Meeting.attendees.length}
-          onPress      = {()=>NavigationService.navigate("MeetingAttendeesReorder")}
+          lang                               = {this.props.state.Language.lang}
+          selectNumber                       = {this.props.state.Meeting.attendees.length}
+          onPress                            = {()=>NavigationService.navigate("MeetingAttendeesReorder")}
           MeetingInsertWithTagsPageRouterKey = {this.props.MeetingInsertWithTagsPageRouterKey}
-          showAllSelectChk = {false}
+          showAllSelectChk       = {false} // 要不要顯示全選按鈕
+          allSelectChkValue      = {null}  // 全選之後需要給定的值
+          onSelectChkValueChange = {null}  // 全選與取消全選要做的事
         />
       </Container>
     );
@@ -278,12 +280,13 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
           name  ='arrow-forward'
           onPress={()=>{
             NavigationService.navigate("MeetingInsertWithTagsForSelect", {
-              selectList    :item.item.value,
-              onItemPress   :this.props.actions.getPositions,
-              renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
-              showFooter    :true,
-              title         :this.props.lang.MeetingPage.attendeesInvite,
-              selectAllChkEvent : this.props.actions.positionCheckboxOnPress // 全選使用的功能
+              selectList       : item.item.value,
+              onItemPress      : this.props.actions.getPositions,
+              renderItemMode   : "multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
+              showFooter       : true,
+              title            : this.props.lang.MeetingPage.attendeesInvite,
+              showAllSelectChk : true,
+              onSelectChkValueChange : this.props.actions.positionCheckboxOnPress // 全選使用的功能
             });
           }}
         />

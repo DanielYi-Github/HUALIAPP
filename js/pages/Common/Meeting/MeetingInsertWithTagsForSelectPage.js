@@ -39,7 +39,8 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
       isSearch           : false,       //是反顯示關鍵字搜尋結果
       checkState         : false,
       loading_index      : false,
-      selectAllChkEvent  : this.props.route.params.selectAllChkEvent ? this.props.route.params.selectAllChkEvent: null
+      showAllSelectChk   : this.props.route.params.showAllSelectChk  ? this.props.route.params.showAllSelectChk: false,
+      onSelectChkValueChange  : this.props.route.params.onSelectChkValueChange ? this.props.route.params.onSelectChkValueChange: null
     };
   }
 
@@ -144,14 +145,13 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
               selectNumber = {this.props.state.Meeting.attendees.length}
               onPress      = { () => NavigationService.navigate("MeetingAttendeesReorder")}
               MeetingInsertWithTagsPageRouterKey  = {this.props.MeetingInsertWithTagsPageRouterKey}
-              // 我需要知道他有沒有全選
-              // 有全選要勾 沒全選不勾
-              // 全選之後要作什麼
-              // 取消全選之後要作什麼
-              showAllSelectChk       = {true}
+              // 要不要顯示全選按鈕
+              showAllSelectChk       = {this.state.showAllSelectChk}
+              // 全選之後需要給定的值           
               allSelectChkValue      = {this.allSelectChkValue(filteredData)}
-              onSelectChkValueChange = {(value)=>{
-                this.state.selectAllChkEvent(value, filteredData)
+              // 全選與取消全選要做的事
+              onSelectChkValueChange = {(value)=>{    
+                this.state.onSelectChkValueChange(value, filteredData)
               }}
             />
           :
@@ -324,6 +324,8 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
   }
 
   allSelectChkValue = (items) => {
+    console.log("allSelectChkValue", items);
+
     // 清單的全部有沒有包含已選擇的全部
     let isAllSelected = false;
     for(let item of items){
@@ -334,9 +336,7 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
           break;
         }
       }
-
       if(!isAllSelected) break;
-      
     }
 
     return isAllSelected
