@@ -272,7 +272,12 @@ class MeetingSearchWithTagsPage extends React.Component {
         </Item>
 
         <View style={{flex: 1, paddingTop: 20}}>
-          <Label style={{paddingLeft: 10, paddingBottom: 5, paddingTop: 5, color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
+          <Label style={{
+            paddingLeft  : 10, 
+            paddingBottom: 5, 
+            paddingTop   : 5, 
+            color        : this.props.style.inputWithoutCardBg.inputColorPlaceholder
+          }}>
             {`${this.props.state.Language.lang.CreateFormPage.QuickSelect} ${this.props.lang.MeetingPage.attendees}`}
           </Label>
           <FlatList
