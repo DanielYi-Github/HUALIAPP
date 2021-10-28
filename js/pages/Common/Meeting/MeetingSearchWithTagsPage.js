@@ -189,7 +189,16 @@ class MeetingSearchWithTagsPage extends React.Component {
                   <Icon name='search' style={{color:this.props.style.color}}/>
                 </Button>
                 <TouchableOpacity 
-                  style={{backgroundColor: '#47ACF2', paddingLeft: 10, paddingRight: 10,paddingTop: 5,paddingBottom: 5, borderRadius: 10}}
+                  style={{
+                    backgroundColor: '#55AE3B', 
+                    borderColor    : '#55AE3B',
+                    paddingLeft    : 10, 
+                    paddingRight   : 10,
+                    paddingTop     : 5,
+                    paddingBottom  : 5, 
+                    borderRadius   : 10,
+                    borderWidth    : 0,
+                  }}
                   onPress={()=>{
                     Keyboard.dismiss();
                     // this.state.sendValueBack(this.state.attendees);

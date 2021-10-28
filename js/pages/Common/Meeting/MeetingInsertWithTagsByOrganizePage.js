@@ -221,10 +221,13 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
         renderItemMode        :"multiCheck",  // normal一般, multiCheck多選, multiAttendees多選參與人
         showFooter            :true,
         title                 :this.props.lang.MeetingPage.attendeesInvite,
-        showAllSelectChk      :true,
+        showAllSelectChk      :false,
+        onSelectChkValueChange:false
+        /*
         onSelectChkValueChange:(changeValue)=>{
           this.props.actions.organizeCheckboxOnPress( org, changeValue );
         }
+        */
       });
       this.props.actions.blocking(false);
     }else{

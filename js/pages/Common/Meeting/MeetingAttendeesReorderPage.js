@@ -5,6 +5,9 @@ import * as NavigationService from '../../../utils/NavigationService';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 import SortableRow         from '../../../components/Form/SortableRow';
 import SortableList from 'react-native-sortable-list';
+import MeetingSelectAttendeesFooter from '../../../components/Meeting/MeetingSelectAttendeesFooter';
+import CheckBox from '@react-native-community/checkbox';
+
 
 import { connect }   from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -25,6 +28,8 @@ class MeetingAttendeesReorderPage extends React.Component {
       for(let person of this.props.state.Meeting.attendees){
         if(person.checked) checkedAttendees++
       }
+      let isCheckedAllAttendees = checkedAttendees == this.props.state.Meeting.attendees.length ? true: false;
+      isCheckedAllAttendees = 0 == this.props.state.Meeting.attendees.length ? false: isCheckedAllAttendees;
 
       return (
         <View style                 ={{flex:1}}>
@@ -68,10 +73,32 @@ class MeetingAttendeesReorderPage extends React.Component {
           />
 
           <Footer>
-            <Body>
-              <Text style={{marginLeft: 15}}>{`${this.props.state.Language.lang.MeetingPage.selected} ${checkedAttendees} ${this.props.state.Language.lang.MeetingPage.person}`}</Text>
+            <Item style={{borderWidth: 1, paddingLeft: 10, borderBottomWidth: 0, borderWidth: 1}}
+              onPress ={()=>{
+                this.onAllCheckBoxTap(!isCheckedAllAttendees);
+              }} 
+            >
+                <CheckBox
+                  disabled      ={ Platform.OS == "android" ? false : true }
+                  onValueChange={(newValue) => {
+                    if (Platform.OS == "android") this.onAllCheckBoxTap(!isCheckedAllAttendees);
+                  }}
+                  value             = {isCheckedAllAttendees}
+                  boxType           = {"square"}
+                  onCheckColor      = {"#F44336"}
+                  onTintColor       = {"#F44336"}
+                  tintColors        = {{true: "#F44336", false: '#aaaaaa'}}
+                  style             = {{ marginRight: 20 }}
+                  animationDuration = {0.01}
+                />
+                  <Label>{"全選"}</Label>
+            </Item>
+            <Body style={{justifyContent: 'flex-end', paddingRight: 10 }}>
+              <Text style={{marginLeft: 15}}>
+                {`${this.props.state.Language.lang.MeetingPage.selected} ${checkedAttendees} ${this.props.state.Language.lang.MeetingPage.person}`}
+                </Text>
             </Body>
-            <Right>
+            <Right style={{flex: 0}}>
               <TouchableOpacity 
                 style={{
                   marginRight    : 15,
@@ -123,6 +150,14 @@ class MeetingAttendeesReorderPage extends React.Component {
     onCheckBoxTap = (index, data) => {
       let array = this.props.state.Meeting.attendees;
       array[index].checked = !array[index].checked;
+      this.props.actions.setAttendees(array);
+    }
+
+    onAllCheckBoxTap = (isCheckedAllAttendees) => {
+      let array = this.props.state.Meeting.attendees;
+      for(let item of array){
+        item.checked = isCheckedAllAttendees;
+      }
       this.props.actions.setAttendees(array);
     }
 

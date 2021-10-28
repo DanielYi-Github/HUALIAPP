@@ -121,7 +121,7 @@ class MeetingInsertWithTagsPage extends React.Component {
                     tKeyword       :"",
                     searchedData   :[],
                     searchedCount  :0,
-                    isEnd:false
+                    isEnd          :false
                   });
                 }}>
                   <Icon name="close" style={{color:this.props.style.color}}/>
