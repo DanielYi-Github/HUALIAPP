@@ -789,20 +789,20 @@
 				CODEPUSH_KEY = AJhlSYXl4E1Vhy1XxvQN6Q0IsDKl4ksvOXqog;
 				CODEPUSH_URL = "http://qas.app.huali-group.com:3000";
 				CODE_SIGN_ENTITLEMENTS = HUALIAPP/HUALIAPP.entitlements;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = 3GFGZ9XDRF;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HUALIAPP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.4.5;
+				MARKETING_VERSION = 1.4.3;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.hff.HUALIAPP;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.hff.HUALIAPP.test;
 				PRODUCT_NAME = HUALIAPP;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -820,19 +820,19 @@
 				CODEPUSH_KEY = AJhlSYXl4E1Vhy1XxvQN6Q0IsDKl4ksvOXqog;
 				CODEPUSH_URL = "http://qas.app.huali-group.com:3000";
 				CODE_SIGN_ENTITLEMENTS = HUALIAPP/HUALIAPP.entitlements;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = 3GFGZ9XDRF;
 				INFOPLIST_FILE = HUALIAPP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.4.5;
+				MARKETING_VERSION = 1.4.3;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.hff.HUALIAPP;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.hff.HUALIAPP.test;
 				PRODUCT_NAME = HUALIAPP;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
