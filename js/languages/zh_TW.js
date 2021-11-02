@@ -51,7 +51,8 @@ export default {
 			Thursday :"週四",
 			Friday   :"週五",
 			Saturday :"週六",
-		}
+		},
+		selectAll: "全選"
 	},
 	InitialPage: {
 		Update                   : '更新',

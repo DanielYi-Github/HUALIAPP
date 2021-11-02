@@ -246,7 +246,11 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
     return (
       <Item 
         fixedLabel 
-        style   ={{paddingLeft: 10, paddingRight: 5, backgroundColor: this.props.style.InputFieldBackground}} 
+        style   ={{
+          paddingLeft: 10, 
+          paddingRight: 5, 
+          backgroundColor: this.props.style.InputFieldBackground,
+        }} 
         onPress ={ async ()=>{ 
           this.setState({ loading_index: item.index });
           this.props.actions.positionCheckboxOnPress(!(checked || included), item.item.value);
@@ -268,15 +272,16 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
           style         ={{ marginRight: 20 }}
           animationDuration = {0.01}
         />
-        <Label>{item.item.label} </Label><Text note>{item.item.depname}</Text>
+        <Label style = {{flex:0}}>{item.item.label} </Label ><Text note>{item.item.depname}</Text>
 
         <ActivityIndicator 
           animating ={this.props.state.Meeting.blocking && item.index == this.state.loading_index}
           color     ={this.props.style.SpinnerColor}
-          style     ={{marginRight: 10}}
+          style     ={{marginRight: 10, marginLeft: 10, borderWidth: 0 }}
         />
+        <View style = {{flex:1}}/>
         <Icon 
-          style ={{padding: 10, paddingRight: 10}}
+          style ={{padding: 10, paddingRight: 10, borderWidth: 0}}
           name  ='arrow-forward'
           onPress={()=>{
             NavigationService.navigate("MeetingInsertWithTagsForSelect", {

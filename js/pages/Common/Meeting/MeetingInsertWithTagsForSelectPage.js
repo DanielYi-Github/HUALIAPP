@@ -153,6 +153,7 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
               onSelectChkValueChange = {(value)=>{    
                 this.state.onSelectChkValueChange(value, filteredData)
               }}
+              animating = {this.props.state.Meeting.blocking}
             />
           :
             null
@@ -220,12 +221,13 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
           this.state.onItemPress(item);
         }} 
       >
-        <Label>{item.name}</Label>
+        <Label style={{flex:0}}>{item.name} </Label>
         <ActivityIndicator
           animating ={this.props.state.Meeting.blocking && item.key == this.state.loading_index}
           color     ={this.props.style.SpinnerColor}
-          style     ={{marginRight: 10}}
+          style     ={{marginRight: 10, marginLeft: 10}}
         />
+        <View style={{flex:1}}/>
       </Item>
     );
   }
@@ -324,7 +326,6 @@ class MeetingInsertWithTagsForSelectPage extends React.Component {
   }
 
   allSelectChkValue = (items) => {
-    console.log("allSelectChkValue", items);
 
     // 清單的全部有沒有包含已選擇的全部
     let isAllSelected = false;

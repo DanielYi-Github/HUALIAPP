@@ -51,7 +51,8 @@ export default {
 			Thursday :"Thu",
 			Friday   :"Fri",
 			Saturday :"Sat",
-		}
+		},
+		selectAll: "Select All"
 	},
 	InitialPage: {
 		Update                   :'Update',		//更新

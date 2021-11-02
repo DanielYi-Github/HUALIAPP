@@ -64,13 +64,15 @@ class MeetingAttendeesReorderPage extends React.Component {
               </TouchableOpacity>
             </Right>
           </Header>
-          <SortableList
-            style                 ={{flex:1}}
-            contentContainerStyle ={{width: this.props.style.PageSize.width}}
-            data                  ={this.props.state.Meeting.attendees}
-            renderRow             ={this.renderSortableRow} 
-            onReleaseRow          ={(key,currentOrder)=>{ this.changeDefaultvalueArray(currentOrder);}}
-          />
+          <View style={{flex:1}}>
+            <SortableList
+              style                 ={{flex:1}}
+              contentContainerStyle ={{width: this.props.style.PageSize.width}}
+              data                  ={this.props.state.Meeting.attendees}
+              renderRow             ={this.renderSortableRow} 
+              onReleaseRow          ={(key,currentOrder)=>{ this.changeDefaultvalueArray(currentOrder);}}
+            />
+          </View>
 
           <Footer>
             <Item style={{borderWidth: 1, paddingLeft: 10, borderBottomWidth: 0, borderWidth: 1}}
@@ -91,7 +93,7 @@ class MeetingAttendeesReorderPage extends React.Component {
                   style             = {{ marginRight: 20 }}
                   animationDuration = {0.01}
                 />
-                  <Label>{"全選"}</Label>
+                  <Label>{this.props.state.Language.lang.Common.selectAll}</Label>
             </Item>
             <Body style={{justifyContent: 'flex-end', paddingRight: 10 }}>
               <Text style={{marginLeft: 15}}>

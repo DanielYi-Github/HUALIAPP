@@ -36,13 +36,14 @@ class MeetingItemForOrgnize extends Component {
 		        style        ={{ marginRight: 20 }}
 		        animationDuration = {0.01}
 		      />
-		    <Label>{item.name} </Label>
+		    <Label style={{flex:0}}>{item.name} </Label>
 
 		    <ActivityIndicator 
 		    	animating={this.props.loading}
 		    	color     ={this.props.style.SpinnerColor}
-		    	style     ={{marginRight: 10}}
+		    	style     ={{marginRight: 10, marginLeft: 10}}
 		    />
+        	<View style={{flex:1}}/>
 		    <Icon 
 		      style ={{borderWidth: 0, padding: 10, paddingRight: 10}}
 		      name  ='arrow-forward'

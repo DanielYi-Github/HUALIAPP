@@ -615,8 +615,7 @@ export function organizeCheckboxOnPress(checkItemAttendees, allSelectChkValue = 
 		    }
 		  }
 		}
-		// checkValue = selectedCount == allOrgAttendees.length ? true: false;
-		console.log(included, allSelectChkValue);
+
 		included = allSelectChkValue == null ? included : !allSelectChkValue
 
 		if (!included) {
@@ -635,8 +634,7 @@ export function organizeCheckboxOnPress(checkItemAttendees, allSelectChkValue = 
 					unInside.push(checkItem);
 				}
 			}
-			console.log("unInside", unInside);
-
+			
 			// 是否需要檢查會議時間衝突
 			if (getState().Meeting.isNeedCheckMeetingTime) {
 				// 將所有的集體送出檢查時間有無異常

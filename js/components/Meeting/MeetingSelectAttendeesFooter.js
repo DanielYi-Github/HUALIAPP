@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavigationContainer, useRoute, useNavigationState } from '@react-navigation/native';
 import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Icon, Title, Text, Card, CardItem, Label, Footer, connectStyle } from 'native-base';
-import { View, FlatList, RefreshControl, VirtualizedList, Platform, Alert, Keyboard, TouchableOpacity } from 'react-native';
+import { View, FlatList, RefreshControl, VirtualizedList, Platform, Alert, Keyboard, TouchableOpacity, ActivityIndicator } from 'react-native';
 import * as NavigationService from '../../utils/NavigationService';
 import CheckBox from '@react-native-community/checkbox';
 
@@ -34,7 +34,12 @@ class MeetingSelectAttendeesFooter extends Component {
 							style             = {{ marginRight: 20 }}
 							animationDuration = {0.01}
 		  			      />
-		  			    <Label>{"全選"}</Label>
+		  			    <Label>{this.props.lang.Common.selectAll}</Label>
+		  			    <ActivityIndicator
+		  			      animating ={this.props.animating}
+		  			      color     ={this.props.style.SpinnerColor}
+		  			      style     ={{marginRight: 10, marginLeft: 10}}
+		  			    />
 					  </Item>
 					:
 						null

@@ -51,7 +51,8 @@ export default {
 			Thursday :"Thứ năm",
 			Friday   :"Thứ sáu",
 			Saturday :"ngày thứ bảy",
-		}
+		},
+		selectAll: "Chọn tất cả"
 	},
 	InitialPage: {
 		Update                   : 'Cập nhật', //更新
