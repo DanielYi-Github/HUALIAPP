@@ -64,6 +64,7 @@
     "react-native-signature-capture": "^0.4.10",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-sortable-list": "^0.0.24",
+    "react-native-sound": "^0.11.1",
     "react-native-splash-screen": "^3.2.0",
     "react-native-sqlite-storage": "^5.0.0",
     "react-native-step-indicator": "^1.0.3",

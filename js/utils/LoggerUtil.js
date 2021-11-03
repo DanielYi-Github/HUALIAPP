@@ -11,6 +11,7 @@ import * as UpdateDataUtil from './UpdateDataUtil';
 */
 export async function addErrorLog(url, position = null, level = "ERROR", msg){
 	let message = { url:url, msg:msg }; // 將錯誤出處與錯誤訊息合併
+	console.log(url, msg);
 	console.log("錯誤提示:\n", message);
 
 	msg = JSON.stringify(message);

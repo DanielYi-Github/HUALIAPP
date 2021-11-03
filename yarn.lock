@@ -7144,6 +7144,11 @@ react-native-sortable-list@^0.0.24:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-sound@^0.11.1:
+  version "0.11.1"
+  resolved "https://repo.huaweicloud.com/repository/npm/react-native-sound/-/react-native-sound-0.11.1.tgz#e28427b3543fbf9fc6d7c96b27e79b27cd134e95"
+  integrity sha512-6cVmCSOvSjCBmIoc+9FFINpT1nW53KlvF/hIyD1uj+HI4NUOma08zI+8pGIpY9cExPmsOh+OoFX3EOODpY78yw==
+
 react-native-splash-screen@^3.2.0:
   version "3.2.0"
   resolved "https://registry.npm.taobao.org/react-native-splash-screen/download/react-native-splash-screen-3.2.0.tgz#d47ec8557b1ba988ee3ea98d01463081b60fff45"

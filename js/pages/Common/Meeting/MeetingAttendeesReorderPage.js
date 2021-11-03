@@ -32,7 +32,7 @@ class MeetingAttendeesReorderPage extends React.Component {
       isCheckedAllAttendees = 0 == this.props.state.Meeting.attendees.length ? false: isCheckedAllAttendees;
 
       return (
-        <View style                 ={{flex:1}}>
+        <View style ={{height: "100%", width: '100%'}}>
           <Header style={this.props.style.HeaderBackground}>
             <Left>
               <Button transparent onPress={() =>NavigationService.goBack()}>
@@ -41,7 +41,7 @@ class MeetingAttendeesReorderPage extends React.Component {
             </Left>
             <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>
                 <Title style={{color:this.props.style.color}} onPress={()=>{ this.setState({ isShowSearch:true });}}>
-                  {this.props.state.Language.lang.MeetingPage.selectedAttendeeReorder}{/*已選與會人員排序*/}
+                  {this.props.state.Language.lang.MeetingPage.selectedAttendeeReorder}
                 </Title>
             </Body>
             <Right style={{alignItems: 'center'}}>
@@ -72,7 +72,7 @@ class MeetingAttendeesReorderPage extends React.Component {
               renderRow             ={this.renderSortableRow} 
               onReleaseRow          ={(key,currentOrder)=>{ this.changeDefaultvalueArray(currentOrder);}}
             />
-          </View>
+         </View>
 
           <Footer>
             <Item style={{borderWidth: 1, paddingLeft: 10, borderBottomWidth: 0, borderWidth: 1}}

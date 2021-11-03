@@ -286,6 +286,8 @@ function HomeTabNavigator(props) {
 
 const AppStack  = createStackNavigator();
 function MainStack(props){
+  // console.log("TransitionSpecs", TransitionSpecs, CardStyleInterpolators, TransitionPresets);
+
   return(
     <AppStack.Navigator headerMode="none">
 
@@ -371,15 +373,34 @@ function MainStack(props){
       <AppStack.Screen name ="MeetingInsertWithRegularCustomize" component={MeetingInsertWithRegularCustomizePage} />
       
       <AppStack.Screen name ="MeetingInsertChairperson" component={MeetingInsertChairpersonPage} />
-      <AppStack.Screen name ="MeetingTimeForPerson" component={MeetingTimeForPersonPage} />
-      <AppStack.Screen name ="MeetingAttendeesReorder" component={MeetingAttendeesReorderPage} 
+      <AppStack.Screen name ="MeetingTimeForPerson"     component={MeetingTimeForPersonPage} />
+      <AppStack.Screen name ="MeetingAttendeesReorder"  component={MeetingAttendeesReorderPage} 
+        /*
+         options={{
+          cardStyleInterpolator: ({ current, layouts }) => {
+              return {
+                cardStyle: {
+                  transform: [
+                    {
+                      translateY: current.progress.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [layouts.screen.height, 0],
+                      }),
+                    },
+                  ],
+                },
+              };
+            },
+         }}
+         */
+        /*
         options={{
           cardStyleInterpolator: Platform.OS == 'ios' ? CardStyleInterpolators.forModalPresentationIOS : CardStyleInterpolators.forFadeFromBottomAndroid,
           cardOverlayEnabled: true
         }}
+        */
       />
       <AppStack.Screen name ="MeetingTimeForSearch" component={MeetingTimeForSearchPage} />
-
       <AppStack.Screen name = "CompanyDocument" component = {CompanyDocumentPage} />
       <AppStack.Screen name = "CompanyDocumentDetail" component = {CompanyDocumentDetailPage} />
     </AppStack.Navigator>
