@@ -363,12 +363,39 @@ PODS:
     - React-Core
   - RNDeviceInfo (7.2.1):
     - React-Core
-  - RNGestureHandler (1.9.0):
+  - RNGestureHandler (1.10.3):
     - React-Core
   - RNLocalize (1.4.3):
     - React-Core
-  - RNReanimated (1.13.2):
+  - RNReanimated (2.2.3):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - Folly
+    - glog
+    - RCTRequired
+    - RCTTypeSafety
+    - React
+    - React-callinvoker
     - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - React-RCTVibration
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (2.15.0):
     - React-Core
   - RNSound (0.11.1):
@@ -670,9 +697,9 @@ SPEC CHECKSUMS:
   RNCPushNotificationIOS: 61a7c72bd1ebad3568025957d001e0f0e7b32191
   RNDateTimePicker: 8eba76de1afd556bc00c874f4d0c0616e30e32f1
   RNDeviceInfo: ae953cf4af2775e45597304fc9513a7931ef81ff
-  RNGestureHandler: 9b7e605a741412e20e13c512738a31bd1611759b
+  RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNLocalize: 7c7aeda16c01db7a0918981c14875c0a53be9b79
-  RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
+  RNReanimated: 8744fb15baf4c582367d910f4f32f5097fb350cb
   RNScreens: 2ad555d4d9fa10b91bb765ca07fe9b29d59573f0
   RNSound: 27e8268bdb0a1f191f219a33267f7e0445e8d62f
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59

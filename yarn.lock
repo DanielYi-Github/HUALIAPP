@@ -164,6 +164,11 @@
   resolved "https://registry.npm.taobao.org/@babel/helper-plugin-utils/download/@babel/helper-plugin-utils-7.10.4.tgz#2f75a831269d4f677de49986dff59927533cf375"
   integrity sha1-L3WoMSadT2d95JmG3/WZJ1M883U=
 
+"@babel/helper-plugin-utils@^7.14.5":
+  version "7.14.5"
+  resolved "https://repo.huaweicloud.com/repository/npm/@babel/helper-plugin-utils/-/helper-plugin-utils-7.14.5.tgz#5ac822ce97eec46741ab70a517971e443a70c5a9"
+  integrity sha512-/37qQCE3K0vvZKwoK4XU/irIJQdIfCJuhU5eKnNxpFDsOkgFaUAwbv+RYw6eYgsC0E4hS7r5KqGULUogqui0fQ==
+
 "@babel/helper-remap-async-to-generator@^7.12.1":
   version "7.12.1"
   resolved "https://registry.npm.taobao.org/@babel/helper-remap-async-to-generator/download/@babel/helper-remap-async-to-generator-7.12.1.tgz?cache=0&sync_timestamp=1602800255908&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fhelper-remap-async-to-generator%2Fdownload%2F%40babel%2Fhelper-remap-async-to-generator-7.12.1.tgz#8c4dbbf916314f6047dc05e6a2217074238347fd"
@@ -538,6 +543,13 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.10.4"
 
+"@babel/plugin-transform-object-assign@^7.10.4":
+  version "7.16.0"
+  resolved "https://repo.huaweicloud.com/repository/npm/@babel/plugin-transform-object-assign/-/plugin-transform-object-assign-7.16.0.tgz#750c726397f1f6402fb1ceffe9d8ff3595c8a0df"
+  integrity sha512-TftKY6Hxo5Uf/EIoC3BKQyLvlH46tbtK4xub90vzi9+yS8z1+O/52YHyywCZvYeLPOvv//1j3BPokLuHTWPcbg==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.14.5"
+
 "@babel/plugin-transform-object-super@^7.0.0":
   version "7.12.1"
   resolved "https://registry.npm.taobao.org/@babel/plugin-transform-object-super/download/@babel/plugin-transform-object-super-7.12.1.tgz?cache=0&sync_timestamp=1602800243072&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fplugin-transform-object-super%2Fdownload%2F%40babel%2Fplugin-transform-object-super-7.12.1.tgz#4ea08696b8d2e65841d0c7706482b048bed1066e"
@@ -727,8 +739,8 @@
 
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
-  resolved "https://registry.npm.taobao.org/@egjs/hammerjs/download/@egjs/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
-  integrity sha1-XcAq91pqBuTC2wICyuOMkmOJUSQ=
+  resolved "https://repo.huaweicloud.com/repository/npm/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
+  integrity sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A==
   dependencies:
     "@types/hammerjs" "^2.0.36"
 
@@ -1367,9 +1379,9 @@
     "@types/node" "*"
 
 "@types/hammerjs@^2.0.36":
-  version "2.0.36"
-  resolved "https://registry.npm.taobao.org/@types/hammerjs/download/@types/hammerjs-2.0.36.tgz#17ce0a235e9ffbcdcdf5095646b374c2bf615a4c"
-  integrity sha1-F84KI16f+83N9QlWRrN0wr9hWkw=
+  version "2.0.40"
+  resolved "https://repo.huaweicloud.com/repository/npm/@types/hammerjs/-/hammerjs-2.0.40.tgz#ded0240b6ea1ad7afc1e60374c49087aaea5dbd8"
+  integrity sha512-VbjwR1fhsn2h2KXAY4oy1fm7dCxaKy0D+deTb8Ilc3Eo3rc5+5eA4rfYmZaHgNJKxVyI0f6WIXzO2zLkVmQPHA==
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0", "@types/istanbul-lib-coverage@^2.0.1":
   version "2.0.3"
@@ -2606,9 +2618,9 @@ create-react-class@^15.6.3:
     object-assign "^4.1.1"
 
 cross-fetch@^3.0.4:
-  version "3.0.6"
-  resolved "https://registry.npm.taobao.org/cross-fetch/download/cross-fetch-3.0.6.tgz#3a4040bc8941e653e0e9cf17f29ebcd177d3365c"
-  integrity sha1-OkBAvIlB5lPg6c8X8p680XfTNlw=
+  version "3.1.4"
+  resolved "https://repo.huaweicloud.com/repository/npm/cross-fetch/-/cross-fetch-3.1.4.tgz#9723f3a3a247bf8b89039f3a380a9244e8fa2f39"
+  integrity sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==
   dependencies:
     node-fetch "2.6.1"
 
@@ -2948,8 +2960,8 @@ encodeurl@^1.0.2, encodeurl@~1.0.2:
 
 encoding@^0.1.11:
   version "0.1.13"
-  resolved "https://registry.npm.taobao.org/encoding/download/encoding-0.1.13.tgz#56574afdd791f54a8e9b2785c0582a2d26210fa9"
-  integrity sha1-VldK/deR9UqOmyeFwFgqLSYhD6k=
+  resolved "https://repo.huaweicloud.com/repository/npm/encoding/-/encoding-0.1.13.tgz#56574afdd791f54a8e9b2785c0582a2d26210fa9"
+  integrity sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==
   dependencies:
     iconv-lite "^0.6.2"
 
@@ -3474,8 +3486,8 @@ fb-watchman@^2.0.0:
 
 fbjs-css-vars@^1.0.0:
   version "1.0.2"
-  resolved "https://registry.npm.taobao.org/fbjs-css-vars/download/fbjs-css-vars-1.0.2.tgz#216551136ae02fe255932c3ec8775f18e2c078b8"
-  integrity sha1-IWVRE2rgL+JVkyw+yHdfGOLAeLg=
+  resolved "https://repo.huaweicloud.com/repository/npm/fbjs-css-vars/-/fbjs-css-vars-1.0.2.tgz#216551136ae02fe255932c3ec8775f18e2c078b8"
+  integrity sha512-b2XGFAFdWZWg0phtAWLHCk836A1Xann+I+Dgd3Gk64MHKZO44FfoD1KxyvbSh0qZsIoXQGGlVztIY+oitJPpRQ==
 
 fbjs-scripts@^1.1.0:
   version "1.2.0"
@@ -3508,8 +3520,8 @@ fbjs@^0.8.4:
 
 fbjs@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.npm.taobao.org/fbjs/download/fbjs-1.0.0.tgz#52c215e0883a3c86af2a7a776ed51525ae8e0a5a"
-  integrity sha1-UsIV4Ig6PIavKnp3btUVJa6OClo=
+  resolved "https://repo.huaweicloud.com/repository/npm/fbjs/-/fbjs-1.0.0.tgz#52c215e0883a3c86af2a7a776ed51525ae8e0a5a"
+  integrity sha512-MUgcMEJaFhCaF1QtWGnmq9ZDRAzECTCRAF7O6UZIlAlkTs1SasiX9aP0Iw7wfD2mJ7wDTNfg2w7u5fSCwJk1OA==
   dependencies:
     core-js "^2.4.1"
     fbjs-css-vars "^1.0.0"
@@ -3521,9 +3533,9 @@ fbjs@^1.0.0:
     ua-parser-js "^0.7.18"
 
 fbjs@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.npm.taobao.org/fbjs/download/fbjs-3.0.0.tgz#0907067fb3f57a78f45d95f1eacffcacd623c165"
-  integrity sha1-CQcGf7P1enj0XZXx6s/8rNYjwWU=
+  version "3.0.1"
+  resolved "https://repo.huaweicloud.com/repository/npm/fbjs/-/fbjs-3.0.1.tgz#70a053d34a96c2b513b559eaea124daed49ace64"
+  integrity sha512-8+vkGyT4lNDRKHQNPp0yh/6E7FfkLg89XqQbOYnvntRh+8RiSD43yrh9E5ejp1muCizTL4nDVG+y8W4e+LROHg==
   dependencies:
     cross-fetch "^3.0.4"
     fbjs-css-vars "^1.0.0"
@@ -3531,7 +3543,7 @@ fbjs@^3.0.0:
     object-assign "^4.1.0"
     promise "^7.1.1"
     setimmediate "^1.0.5"
-    ua-parser-js "^0.7.18"
+    ua-parser-js "^0.7.30"
 
 fd-slicer@~1.1.0:
   version "1.1.0"
@@ -4124,9 +4136,9 @@ iconv-lite@0.4.24, iconv-lite@^0.4.17, iconv-lite@^0.4.24:
     safer-buffer ">= 2.1.2 < 3"
 
 iconv-lite@^0.6.2:
-  version "0.6.2"
-  resolved "https://registry.npm.taobao.org/iconv-lite/download/iconv-lite-0.6.2.tgz#ce13d1875b0c3a674bd6a04b7f76b01b1b6ded01"
-  integrity sha1-zhPRh1sMOmdL1qBLf3awGxtt7QE=
+  version "0.6.3"
+  resolved "https://repo.huaweicloud.com/repository/npm/iconv-lite/-/iconv-lite-0.6.3.tgz#a52f80bf38da1952eb5c681790719871a1a72501"
+  integrity sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==
   dependencies:
     safer-buffer ">= 2.1.2 < 3.0.0"
 
@@ -4252,8 +4264,8 @@ internal-slot@^1.0.2:
 
 invariant@2.2.4, invariant@^2.2.4:
   version "2.2.4"
-  resolved "https://registry.npm.taobao.org/invariant/download/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
-  integrity sha1-YQ88ksk1nOHbYW5TgAjSP/NRWOY=
+  resolved "https://repo.huaweicloud.com/repository/npm/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
+  integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
   dependencies:
     loose-envify "^1.0.0"
 
@@ -4552,7 +4564,7 @@ isobject@^3.0.0, isobject@^3.0.1:
 
 isomorphic-fetch@^2.1.1:
   version "2.2.1"
-  resolved "https://registry.npm.taobao.org/isomorphic-fetch/download/isomorphic-fetch-2.2.1.tgz#611ae1acf14f5e81f729507472819fe9733558a9"
+  resolved "https://repo.huaweicloud.com/repository/npm/isomorphic-fetch/-/isomorphic-fetch-2.2.1.tgz#611ae1acf14f5e81f729507472819fe9733558a9"
   integrity sha1-YRrhrPFPXoH3KVB0coGf6XM1WKk=
   dependencies:
     node-fetch "^1.0.1"
@@ -5087,8 +5099,8 @@ jpush-react-native@^2.8.1:
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
-  resolved "https://registry.npm.taobao.org/js-tokens/download/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
-  integrity sha1-GSA/tZmR35jjoocFDUZHzerzJJk=
+  resolved "https://repo.huaweicloud.com/repository/npm/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
+  integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
 
 js-yaml@^3.13.1:
   version "3.14.1"
@@ -5410,8 +5422,8 @@ logkitty@^0.7.1:
 
 loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.3.1, loose-envify@^1.4.0:
   version "1.4.0"
-  resolved "https://registry.npm.taobao.org/loose-envify/download/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
-  integrity sha1-ce5R+nvkyuwaY4OffmgtgTLTDK8=
+  resolved "https://repo.huaweicloud.com/repository/npm/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
+  integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
 
@@ -5992,6 +6004,11 @@ mkdirp@^0.5.1, mkdirp@^0.5.4:
   dependencies:
     minimist "^1.2.5"
 
+mockdate@^3.0.2:
+  version "3.0.5"
+  resolved "https://repo.huaweicloud.com/repository/npm/mockdate/-/mockdate-3.0.5.tgz#789be686deb3149e7df2b663d2bc4392bc3284fb"
+  integrity sha512-iniQP4rj1FhBdBYS/+eQv7j1tadJ9lJtdzgOpvsOHng/GbcDh2Fhdeq+ZRldrPYdXvCyfFUmFeEwEGXZB5I/AQ==
+
 moment-timezone@^0.5.33:
   version "0.5.33"
   resolved "https://registry.nlark.com/moment-timezone/download/moment-timezone-0.5.33.tgz#b252fd6bb57f341c9b59a5ab61a8e51a73bbd22c"
@@ -6133,8 +6150,8 @@ node-fetch@2.6.1, node-fetch@^2.2.0, node-fetch@^2.6.0:
 
 node-fetch@^1.0.1:
   version "1.7.3"
-  resolved "https://registry.npm.taobao.org/node-fetch/download/node-fetch-1.7.3.tgz?cache=0&sync_timestamp=1602488073262&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fnode-fetch%2Fdownload%2Fnode-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
-  integrity sha1-mA9vcthSEaU0fGsrwYxbhMPrR+8=
+  resolved "https://repo.huaweicloud.com/repository/npm/node-fetch/-/node-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
+  integrity sha512-NhZ4CsKx7cYm2vSrBAr2PvFOe6sWDf0UYLRqA6svUYg7+/TSfVAu49jYC4BvQ4Sms9SZgdqGBgroqfDhJdTyKQ==
   dependencies:
     encoding "^0.1.11"
     is-stream "^1.0.1"
@@ -6242,7 +6259,7 @@ ob1@0.59.0:
 
 object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
-  resolved "https://registry.npm.taobao.org/object-assign/download/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
+  resolved "https://repo.huaweicloud.com/repository/npm/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
   integrity sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=
 
 object-copy@^0.1.0:
@@ -6716,8 +6733,8 @@ progress@^2.0.0, progress@^2.0.3:
 
 promise@^7.1.1:
   version "7.3.1"
-  resolved "https://registry.npm.taobao.org/promise/download/promise-7.3.1.tgz#064b72602b18f90f29192b8b1bc418ffd1ebd3bf"
-  integrity sha1-BktyYCsY+Q8pGSuLG8QY/9Hr078=
+  resolved "https://repo.huaweicloud.com/repository/npm/promise/-/promise-7.3.1.tgz#064b72602b18f90f29192b8b1bc418ffd1ebd3bf"
+  integrity sha512-nolQXZ/4L+bP/UGlkfaIujX9BKxGwmQ9OT4mOt5yvy8iK1h3wqTEJCijzGANTCCl9nWjY41juyAn2K3Q1hLLTg==
   dependencies:
     asap "~2.0.3"
 
@@ -6966,6 +6983,11 @@ react-native-device-info@^7.0.2:
   resolved "https://registry.npm.taobao.org/react-native-device-info/download/react-native-device-info-7.2.1.tgz#06a71703af744a30a1eb621cf20e95b43b3bbf85"
   integrity sha1-BqcXA690SjCh62Ic8g6VtDs7v4U=
 
+react-native-draggable-flatlist@^2.6.2:
+  version "2.6.2"
+  resolved "https://repo.huaweicloud.com/repository/npm/react-native-draggable-flatlist/-/react-native-draggable-flatlist-2.6.2.tgz#d1445fd52e75bc4f4ebbd832a8bc4525cebb8302"
+  integrity sha512-0IBS1lgw137FDaDLccUidHXYu/6PbnIO1R0IXYVfxtNOvhFLfJyGOY526vmO72Sf/ch9yayED4+DaQWGBOqNyw==
+
 react-native-drawer-menu@^0.2.5:
   version "0.2.5"
   resolved "https://registry.npm.taobao.org/react-native-drawer-menu/download/react-native-drawer-menu-0.2.5.tgz#098a5ede6456f6066bb608dabe72b5c297e9a704"
@@ -6987,9 +7009,9 @@ react-native-easy-grid@0.2.2:
     lodash "^4.17.15"
 
 react-native-gesture-handler@^1.8.0:
-  version "1.9.0"
-  resolved "https://registry.npm.taobao.org/react-native-gesture-handler/download/react-native-gesture-handler-1.9.0.tgz#e441b1c0277c3fd4ca3e5c58fdd681e2f0ceddf0"
-  integrity sha1-5EGxwCd8P9TKPlxY/daB4vDO3fA=
+  version "1.10.3"
+  resolved "https://repo.huaweicloud.com/repository/npm/react-native-gesture-handler/-/react-native-gesture-handler-1.10.3.tgz#942bbf2963bbf49fa79593600ee9d7b5dab3cfc0"
+  integrity sha512-cBGMi1IEsIVMgoox4RvMx7V2r6bNKw0uR1Mu1o7NbuHS6BRSVLq0dP34l2ecnPlC+jpWd3le6Yg1nrdCjby2Mw==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
     fbjs "^3.0.0"
@@ -7092,12 +7114,15 @@ react-native-progress@^4.1.2:
     "@react-native-community/art" "^1.1.2"
     prop-types "^15.7.2"
 
-react-native-reanimated@^1.13.1:
-  version "1.13.2"
-  resolved "https://registry.npm.taobao.org/react-native-reanimated/download/react-native-reanimated-1.13.2.tgz#1ae5457b24b4913d173a5a064bb28eae7783d293"
-  integrity sha1-GuVFeyS0kT0XOloGS7KOrneD0pM=
+react-native-reanimated@^2.2.3:
+  version "2.2.3"
+  resolved "https://repo.huaweicloud.com/repository/npm/react-native-reanimated/-/react-native-reanimated-2.2.3.tgz#edecfe477ad9efac6f006f7e1194e8c9aa4fc6d5"
+  integrity sha512-d+BV39Jp4Om0ZkgVjop672/004ytlTfDT01EloO3HFZs9wR2QTuCjekq8yi3xl0G2xGZKd4DXhvqabIa7OnMYA==
   dependencies:
-    fbjs "^1.0.0"
+    "@babel/plugin-transform-object-assign" "^7.10.4"
+    fbjs "^3.0.0"
+    mockdate "^3.0.2"
+    string-hash-64 "^1.0.3"
 
 react-native-rsa-native@^2.0.3:
   version "2.0.3"
@@ -7821,7 +7846,7 @@ set-value@^2.0.0, set-value@^2.0.1:
 
 setimmediate@^1.0.5:
   version "1.0.5"
-  resolved "https://registry.npm.taobao.org/setimmediate/download/setimmediate-1.0.5.tgz#290cbb232e306942d7d7ea9b83732ab7856f8285"
+  resolved "https://repo.huaweicloud.com/repository/npm/setimmediate/-/setimmediate-1.0.5.tgz#290cbb232e306942d7d7ea9b83732ab7856f8285"
   integrity sha1-KQy7Iy4waULX1+qbg3Mqt4VvgoU=
 
 setprototypeof@1.1.1:
@@ -8133,6 +8158,11 @@ strict-uri-encode@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/strict-uri-encode/download/strict-uri-encode-2.0.0.tgz#b9c7330c7042862f6b142dc274bbcc5866ce3546"
   integrity sha1-ucczDHBChi9rFC3CdLvMWGbONUY=
+
+string-hash-64@^1.0.3:
+  version "1.0.3"
+  resolved "https://repo.huaweicloud.com/repository/npm/string-hash-64/-/string-hash-64-1.0.3.tgz#0deb56df58678640db5c479ccbbb597aaa0de322"
+  integrity sha512-D5OKWKvDhyVWWn2x5Y9b+37NUllks34q1dCDhk/vYcso9fmhs+Tl3KR/gE4v5UNj2UA35cnX4KdVVGkG1deKqw==
 
 string-length@^4.0.1:
   version "4.0.1"
@@ -8630,10 +8660,10 @@ typedarray@^0.0.6:
   resolved "https://registry.npm.taobao.org/typedarray/download/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-ua-parser-js@^0.7.18:
-  version "0.7.22"
-  resolved "https://registry.npm.taobao.org/ua-parser-js/download/ua-parser-js-0.7.22.tgz#960df60a5f911ea8f1c818f3747b99c6e177eae3"
-  integrity sha1-lg32Cl+RHqjxyBjzdHuZxuF36uM=
+ua-parser-js@^0.7.18, ua-parser-js@^0.7.30:
+  version "0.7.31"
+  resolved "https://repo.huaweicloud.com/repository/npm/ua-parser-js/-/ua-parser-js-0.7.31.tgz#649a656b191dffab4f21d5e053e27ca17cbff5c6"
+  integrity sha512-qLK/Xe9E2uzmYI3qLeOmI0tEOt+TBBQyUIAh4aAgU05FVYzeZrKUdkAZfBNVGRaHVgV0TDkdEngJSw/SyQchkQ==
 
 uglify-es@^3.1.9:
   version "3.3.9"
@@ -8884,7 +8914,12 @@ whatwg-encoding@^1.0.5:
   dependencies:
     iconv-lite "0.4.24"
 
-whatwg-fetch@>=0.10.0, whatwg-fetch@^3.0.0:
+whatwg-fetch@>=0.10.0:
+  version "3.6.2"
+  resolved "https://repo.huaweicloud.com/repository/npm/whatwg-fetch/-/whatwg-fetch-3.6.2.tgz#dced24f37f2624ed0281725d51d0e2e3fe677f8c"
+  integrity sha512-bJlen0FcuU/0EMLrdbJ7zOnW6ITZLrZMIarMUVmdKtsGvZna8vxKYaexICWPfZ8qwf9fzNq+UEIZrnSaApt6RA==
+
+whatwg-fetch@^3.0.0:
   version "3.5.0"
   resolved "https://registry.npm.taobao.org/whatwg-fetch/download/whatwg-fetch-3.5.0.tgz?cache=0&sync_timestamp=1604658711610&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fwhatwg-fetch%2Fdownload%2Fwhatwg-fetch-3.5.0.tgz#605a2cd0a7146e5db141e29d1c62ab84c0c4c868"
   integrity sha1-YFos0KcUbl2xQeKdHGKrhMDEyGg=

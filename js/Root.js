@@ -6,6 +6,11 @@ import store from './redux/ConfigureStore';
 // import Toast from 'react-native-toast-message';
 import Toast from './components/CustomToast';
 import ToastUnit from './utils/ToastUnit';
+import {
+  GestureHandlerRootView,
+  RectButton,
+} from 'react-native-gesture-handler';
+
 LogBox.ignoreLogs([
 	'Warning: ...', 
 	'Module RCTImageLoader',
@@ -26,6 +31,7 @@ LogBox.ignoreLogs([
 export default class Root extends React.Component {
   render() {
     return (
+      <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
         <Router/>
         <Toast 
@@ -33,6 +39,7 @@ export default class Root extends React.Component {
           config={ToastUnit.toastConfig} 
         />
       </Provider>
+      </GestureHandlerRootView>
     );
   }
 }
