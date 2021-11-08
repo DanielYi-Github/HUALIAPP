@@ -249,6 +249,9 @@ export function navigateFunctionPage(app = null, userID = null) {
 					case "OutDoorSurvey": //春節出行情況
 						NavigationService.navigate("Survey", {SurveyOID: "B936DC6D18263433E050000A760072A0"});
 						break;
+					case "VietnamCo_Survey": //隔離調查
+						NavigationService.navigate("Survey", {SurveyOID: "CA6F2389395FC2F2E050000A7600770B"});
+						break;
 					case "Documents": //集團文件
 						NavigationService.navigate("DocumentCategories");
 						break;
