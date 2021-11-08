@@ -102,7 +102,7 @@ let NetUtil = {
 					}
 				} else {
 					response.text().then( err => {
-						console.log("response.ok == false", response, err);
+						// console.log("response.ok == false", response, err);
 						LoggerUtil.addErrorLog(url, "API request in APP", "FATAL", err);
 					});
 					return { message:"Response Error!", code:-2 }; 
@@ -111,7 +111,7 @@ let NetUtil = {
 				isTimeOut = false;
 			}
 		} catch (err) {
-			console.log("fetch error", response, err);
+			// console.log("fetch error", response, err);
 			LoggerUtil.addErrorLog(url, "API request in APP", "ERROR", err);
 			return { message:"Request Error!", code:-2 };
 		}

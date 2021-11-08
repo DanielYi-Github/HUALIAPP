@@ -261,7 +261,6 @@ export async function updateAPP(user) {
 		let url = "data/getUserApp";
 
 		NetUtil.getRequestContent(params, url).then((data) => {
-			console.log("456789", data);
 			if (data.code != 200) reject(data);
 
 			let insertSQL = "INSERT INTO THF_APP VALUES";

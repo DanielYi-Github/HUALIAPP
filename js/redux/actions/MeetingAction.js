@@ -726,7 +726,6 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 		// 新增的話先搜尋有沒有在裡面了 然後檢查有無會議衝突
 		// 刪除的話搜尋相同id然後刪除
 		let attendees = getState().Meeting.attendees; //已經存在的
-		console.log("getState().Meeting.attendees", attendees);
 		if (checkValue) {
 
 			// 檢查有哪些人沒有在裡面
@@ -746,7 +745,6 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 				}
 			}
 
-			console.log("unInside", unInside);
 
 			//需不需要做會議時間衝突檢查
 			if (getState().Meeting.isNeedCheckMeetingTime){
