@@ -17,9 +17,6 @@ import com.microsoft.codepush.react.CodePush;
 import com.hualiapp.ExitPackage;
 import org.wonday.orientation.OrientationActivityLifecycle;
 
-import com.facebook.react.bridge.JSIModulePackage; // <- add
-import com.swmansion.reanimated.ReanimatedJSIModulePackage; // <- add
-
 public class MainApplication extends Application implements ReactApplication {
   private boolean SHUTDOWN_TOAST = false; // 设置为 true 将不会弹出 toast
   private boolean SHUTDOWN_LOG = false; // 设置为 true 将不会打印 log
@@ -55,11 +52,6 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         protected String getJSMainModuleName() {
           return "index";
-        }
-
-        @Override
-        protected JSIModulePackage getJSIModulePackage() {
-          return new ReanimatedJSIModulePackage(); // <- add
         }
       };
 

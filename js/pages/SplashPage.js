@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, View, DeviceEventEmitter, Platform} from 'react-native';
 import { Container, Spinner, connectStyle, Text } from 'native-base';
 import SplashScreen           from 'react-native-splash-screen';
-import * as Progress from 'react-native-progress';
+import {ProgressView} from "@react-native-community/progress-view";
 import { addDownLoadListener } from 'rn-app-upgrade';
 
 import { connect, useSelector}from 'react-redux';
@@ -21,9 +21,6 @@ import * as MessageAction   from '../redux/actions/MessageAction';
 import * as MeetingAction   from '../redux/actions/MeetingAction';
 import MessageRouter   from '../utils/MessageRouter';
 import MainPageBackground  from '../components/MainPageBackground';
-
-
-
 
 class SplashPage extends React.Component {
   constructor(props) {
@@ -63,10 +60,10 @@ class SplashPage extends React.Component {
           {
             this.props.state.AppInit.showUpdateProgress ?
               <View style={{width:"80%", zIndex:1, position: 'absolute', bottom: "15%"}}>
-                <Progress.Bar
-                  style         = {{ width: "100%" }}
-                  progress      = { this.props.state.AppInit.downloadProgress }
-                  indeterminate = { false }
+                <ProgressView
+                  progressTintColor="orange"
+                  trackTintColor="blue"
+                  progress={this.props.state.AppInit.downloadProgress}
                 />
                 <Text style = {{marginTop: 5}} >{this.props.state.AppInit.upgradeMessage}</Text>            
               </View>

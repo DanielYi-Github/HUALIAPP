@@ -206,7 +206,7 @@ class FormPage extends React.Component {
           {(this.state.allowAddValue) ? this.renderFormAllowAdd() : null}
 
           {/*簽核紀錄*/}
-          { (this.state.records.length) ? this.renderFormRecords() : null}
+          {(this.state.records.length) ? this.renderFormRecords() : null}
 
           {/*手寫板簽核內容 - 簽核完直接送出，暫不顯示*/}
           {/* this.state.showFormDrawSignImage ? this.renderFormDrawSignImage() : null */}
@@ -215,7 +215,7 @@ class FormPage extends React.Component {
           { (this.state.Form.isGroupSign == "false") ? this.renderUnableSign() : null}
 
           {/*顯示 下方空白區域*/}
-          { (this.state.Form.isGroupSign == "true") ? <Body style={{width:"100%", height:100}}/> : null }
+          {(this.state.Form.isGroupSign == "true") ? <Body style={{width:"100%", height:100}}/> : null }
         </KeyboardAwareScrollView>
 
 

@@ -50,6 +50,11 @@ export function setInitialMeetingInfoInRedux(attendees, oid, startdate, enddate,
 
 export function setAttendees(attendees){
 	return async (dispatch, getState) => {
+		attendees.forEach(function(attendee, index, array){
+			attendee.index = index;
+		  	attendee.key = `item-${index}`;
+		});
+
 		dispatch({
 			type     :MeetingTypes.MEETING_SET_ATTENDEES,
 			attendees: attendees,

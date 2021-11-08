@@ -816,7 +816,9 @@ class MeetingInsertPage extends React.PureComponent  {
             meetingMode     :this.props.state.Meeting.meetingModeTypes[buttonIndex].paramcode,
             meetingPlaceName:this.props.state.Meeting.meetingModeTypes[buttonIndex].paramname,
             isOnlineMeeting :true,
-            meetingPlace    :""
+            meetingPlace    :"",
+            meetingNumber   :"",
+            meetingPassword :"",
           });
         }
         break;

@@ -4,9 +4,10 @@ import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Ico
 import * as NavigationService from '../../../utils/NavigationService';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 import SortableRow         from '../../../components/Form/SortableRow';
-import SortableList from 'react-native-sortable-list';
 import MeetingSelectAttendeesFooter from '../../../components/Meeting/MeetingSelectAttendeesFooter';
 import CheckBox from '@react-native-community/checkbox';
+
+import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist";
 
 
 import { connect }   from 'react-redux';
@@ -64,16 +65,13 @@ class MeetingAttendeesReorderPage extends React.Component {
               </TouchableOpacity>
             </Right>
           </Header>
-          <View style={{flex:1}}>
-            <SortableList
-              style                 ={{flex:1}}
-              contentContainerStyle ={{width: this.props.style.PageSize.width}}
-              data                  ={this.props.state.Meeting.attendees}
-              renderRow             ={this.renderSortableRow} 
-              onReleaseRow          ={(key,currentOrder)=>{ this.changeDefaultvalueArray(currentOrder);}}
-            />
-         </View>
-
+          <DraggableFlatList
+            extraData    ={this.props.state.Meeting} 
+            data         ={this.props.state.Meeting.attendees}
+            onDragEnd    ={({ data }) => this.props.actions.setAttendees(data)}
+            keyExtractor ={(item) => item.key}
+            renderItem   ={this.renderSortableRow}
+          />
           <Footer>
             <Item style={{borderWidth: 1, paddingLeft: 10, borderBottomWidth: 0, borderWidth: 1}}
               onPress ={()=>{
@@ -126,19 +124,21 @@ class MeetingAttendeesReorderPage extends React.Component {
         
       )
     };
+   
+   renderSortableRow = ({item, drag, isActive}) => {
+    return(
+      <SortableRow 
+        data           ={item} 
+        active         ={isActive} 
+        index          ={item.index}
+        onCheckBoxTap  ={this.onCheckBoxTap}
+        name           ={item.name}
+        departmentName ={item.depname}
+        onLongPress    ={drag}
+      />
+    );
 
-    renderSortableRow = ({key, index, data, disabled, active}) => {
-      return (
-        <SortableRow 
-          data           ={data} 
-          active         ={active} 
-          index          ={index}
-          onCheckBoxTap  ={this.onCheckBoxTap}
-          name           ={data.name}
-          departmentName ={data.depname}
-        />
-      )
-    }
+   }
 
     changeDefaultvalueArray = (currentOrder) => {
       let array = [];
@@ -174,9 +174,6 @@ class MeetingAttendeesReorderPage extends React.Component {
     }
 };
 
-
-
-
 export let MeetingAttendeesReorderPageStyle = connectStyle( 'Page.FormPage', {} )(MeetingAttendeesReorderPage);
 
 export default connect(
@@ -190,3 +187,4 @@ export default connect(
     }, dispatch)
   })
 )(MeetingAttendeesReorderPageStyle);
+

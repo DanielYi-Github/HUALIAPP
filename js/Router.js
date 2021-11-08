@@ -232,7 +232,7 @@ const MyBottomTabNavigator = createMyNavigator();
 function HomeTabNavigator(props) {
   const [preventGoback, setPreventGoback] = useState(false);
   let state = useSelector(state => state);
-  let theme = state.Theme.theme.['Component.BottomNavigation'];
+  let theme = state.Theme.theme['Component.BottomNavigation'];
   let dispatch = useDispatch();
 
   // 導航欄正顯示且允許進行初始化程式才可增加返回監聽
@@ -374,31 +374,11 @@ function MainStack(props){
       
       <AppStack.Screen name ="MeetingInsertChairperson" component={MeetingInsertChairpersonPage} />
       <AppStack.Screen name ="MeetingTimeForPerson"     component={MeetingTimeForPersonPage} />
-      <AppStack.Screen name ="MeetingAttendeesReorder"  component={MeetingAttendeesReorderPage} 
-        /*
-         options={{
-          cardStyleInterpolator: ({ current, layouts }) => {
-              return {
-                cardStyle: {
-                  transform: [
-                    {
-                      translateY: current.progress.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [layouts.screen.height, 0],
-                      }),
-                    },
-                  ],
-                },
-              };
-            },
-         }}
-         */
-        /*
+      <AppStack.Screen name ="MeetingAttendeesReorder"  component={MeetingAttendeesReorderPage}         
         options={{
           cardStyleInterpolator: Platform.OS == 'ios' ? CardStyleInterpolators.forModalPresentationIOS : CardStyleInterpolators.forFadeFromBottomAndroid,
           cardOverlayEnabled: true
         }}
-        */
       />
       <AppStack.Screen name ="MeetingTimeForSearch" component={MeetingTimeForSearchPage} />
       <AppStack.Screen name = "CompanyDocument" component = {CompanyDocumentPage} />
