@@ -9,15 +9,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as LoginAction from '../../redux/actions/LoginAction';
 
-import FunctionPageBanner from '../../components/FunctionPageBanner';
-import CarItem            from '../../components/CarItem';
-import CustomDatePicker   from '../../components/CustomDatePicker';
-import NoMoreItem 		  from '../../components/NoMoreItem';
-import WaterMarkView 	  from '../../components/WaterMarkView';
-import MainPageBackground from '../../components/MainPageBackground';
-import * as NavigationService  from '../../utils/NavigationService';
-import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
-import ToastUnit from '../../utils/ToastUnit';
+import FunctionPageBanner     from '../../components/FunctionPageBanner';
+import CarItem                from '../../components/CarItem';
+import CustomDatePicker       from '../../components/CustomDatePicker';
+import NoMoreItem             from '../../components/NoMoreItem';
+import WaterMarkView          from '../../components/WaterMarkView';
+import MainPageBackground     from '../../components/MainPageBackground';
+import * as NavigationService from '../../utils/NavigationService';
+import * as UpdateDataUtil    from '../../utils/UpdateDataUtil';
+import ToastUnit              from '../../utils/ToastUnit';
 
 
 class CarsPage extends React.Component {
@@ -139,93 +139,97 @@ class CarsPage extends React.Component {
 		    	     </Body>
 		    	     <Right>
 						{/*日期選擇的下拉式選單*/}
-						{
-          					(Platform.OS === "ios") ?
-          						<Button 
-          							iconLeft 
-          							transparent 
-									style   ={{flex:0}} 
-									onPress ={()=>{this.setState({isShowDatePicker:true}); }}
-          						>
-          							<Icon name="calendar" style={{color:this.props.style.iconColor}}/>
-          							<Text style={{paddingLeft: 5, color:this.props.style.iconColor}}>
-          								{DateFormat(this.state.today, "mm/dd")}
-          							</Text>
-          						</Button>
-          					:
-          						<CustomDatePicker
-									defaultDate      ={new Date(this.state.today)}
-									minimumDate      ={new Date()}
-									modalTransparent ={false}
-									animationType    ={"fade"}
-									mode             ={"date"}
-									locale           ={this.props.state.Language.langStatus}
-          						    onDateChange={(date)=>{
-										this.setState({ today_select:DateFormat(date, "yyyy-mm-dd") });
-										this.searchCars();
-          						    }}
-          						/>
-						}
+  						<Button 
+  							iconLeft 
+  							transparent 
+							style   ={{flex:0}} 
+							onPress ={()=>{this.setState({isShowDatePicker:true}); }}
+  						>
+  							<Icon name="calendar" style={{color:this.props.style.iconColor}}/>
+  							<Text style={{paddingLeft: 5, color:this.props.style.iconColor}}>
+  								{DateFormat(this.state.today, "mm/dd")}
+  							</Text>
+  						</Button>
 					 </Right>
 				</Header>
 
 				<FlatList
-		          keyExtractor={(item, index) => index.toString()}
-				  data = {this.state.CarsData}
-	              ListHeaderComponent={this.renderHeader}
-				  renderItem = {this.renderCarItem}
-				  ListFooterComponent   ={this.renderFooter}    //尾巴
+					keyExtractor        ={(item, index) => index.toString()}
+					data                = {this.state.CarsData}
+					ListHeaderComponent ={this.renderHeader}
+					renderItem          = {this.renderCarItem}
+					ListFooterComponent ={this.renderFooter}    //尾巴
 				/>
 
-     			{/*for ios*/}
-     			<Modal
-     			    animationType="fade"
-     			    transparent={true}
-     			    visible={this.state.isShowDatePicker}
-     			    onRequestClose={() => { /*alert("Modal has been closed.");*/ }}
-     			>
-     			    <View style={{flex:1,backgroundColor:"rgba(0,0,0,.4)", flexDirection:"column", justifyContent:"flex-end"}}>
-     			    	<View style={{backgroundColor:"white"}}>
-     			            <View style={{flexDirection:"row", justifyContent:"space-between"}}>
-     			            	<Button 
-     			            		transparent 
-     			            		style={{flex:0}} 
-     			            		onPress={()=>{ 
-     			            			this.setState({
-     			            				isShowDatePicker:false,
-     			            				today_select:this.state.today
-     			            			}); 
-     			            		}}
-     			            	>
-     			            		<Text style={{color: "black"}}>
-     			            			{this.props.state.Language.lang.Common.Cancel}
-     			            		</Text>
-     			            	</Button>
-     			            	<Button 
-     			            		transparent 
-     			            		style={{flex:0}} 
-     			            		onPress={()=>{ this.searchCars(); }}
-     			            	>
-     			            		<Text style={{color: "black"}}>
-     			            			{this.props.state.Language.lang.FormSign.Comfirm}
-     			            		</Text>
-     			            	</Button>
-     			            </View>
-     			            <View>
-     			        		<DateTimePicker
-									value            ={new Date(this.state.today_select)}
-									minimumDate      ={new Date()}
-									modalTransparent ={false}
-									animationType    ={"fade"}
-									mode             ={"date"}
-									onChange     	 ={this._handleDatePicked}
-									locale           = {this.props.state.Language.langStatus}
-									display = {"spinner"}
-     			    			/>
-     			            </View>
-     			    	</View>
-     			    </View>
-     			</Modal>
+     			{ 	/*for ios*/
+     				Platform.OS === "ios" ? 
+	     			<Modal
+	     			    animationType="fade"
+	     			    transparent={true}
+	     			    visible={this.state.isShowDatePicker}
+	     			    onRequestClose={() => { /*alert("Modal has been closed.");*/ }}
+	     			>
+	     			    <View style={{flex:1,backgroundColor:"rgba(0,0,0,.4)", flexDirection:"column", justifyContent:"flex-end"}}>
+	     			    	<View style={{backgroundColor:"white"}}>
+	     			            <View style={{flexDirection:"row", justifyContent:"space-between"}}>
+	     			            	<Button 
+	     			            		transparent 
+	     			            		style={{flex:0}} 
+	     			            		onPress={()=>{ 
+	     			            			this.setState({
+	     			            				isShowDatePicker:false,
+	     			            				today_select:this.state.today
+	     			            			}); 
+	     			            		}}
+	     			            	>
+	     			            		<Text style={{color: "black"}}>
+	     			            			{this.props.state.Language.lang.Common.Cancel}
+	     			            		</Text>
+	     			            	</Button>
+	     			            	<Button 
+	     			            		transparent 
+	     			            		style={{flex:0}} 
+	     			            		onPress={()=>{ this.searchCars(); }}
+	     			            	>
+	     			            		<Text style={{color: "black"}}>
+	     			            			{this.props.state.Language.lang.FormSign.Comfirm}
+	     			            		</Text>
+	     			            	</Button>
+	     			            </View>
+	     			            <View>
+	     			        		<DateTimePicker
+										value            ={new Date(this.state.today_select)}
+										minimumDate      ={new Date()}
+										modalTransparent ={false}
+										animationType    ={"fade"}
+										mode             ={"date"}
+										onChange     	 ={this._handleDatePicked}
+										locale           = {this.props.state.Language.langStatus}
+										display = {"spinner"}
+	     			    			/>
+	     			            </View>
+	     			    	</View>
+	     			    </View>
+	     			</Modal>
+	     		:
+	     			null
+     			}
+
+     			{
+     				Platform.OS === "android" && this.state.isShowDatePicker ? 
+		        		<DateTimePicker
+							value            ={new Date(this.state.today_select)}
+							minimumDate      ={new Date()}
+							modalTransparent ={false}
+							animationType    ={"fade"}
+							mode             ={"date"}
+							onChange         ={this._handleDatePicked}
+							locale           = {this.props.state.Language.langStatus}
+							// display          = {"spinner"}
+		    			/>
+		    		:
+		    			null
+     			}
 
           		{this.renderActionSheet()}
 			</Container>
@@ -265,7 +269,23 @@ class CarsPage extends React.Component {
 	}
 
 	_handleDatePicked = (event,date) => {
-		this.setState({ today_select:DateFormat(date, "yyyy-mm-dd") });
+		if(date){
+			if( Platform.OS === "ios" ){
+				this.setState({ 
+					today_select:DateFormat(date, "yyyy-mm-dd"),
+				});
+			}else{
+				this.setState({ 
+					today_select:DateFormat(date, "yyyy-mm-dd"),
+					isShowDatePicker:false
+				});
+				this.searchCars();
+			}
+		}else{
+			this.setState({
+				isShowDatePicker:false
+			})
+		}
 	}
 
 	searchCars = () => {

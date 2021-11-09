@@ -247,6 +247,7 @@ class MeetingInsertPage extends React.PureComponent  {
   }
 
 	render() {
+
     //整理tags的資料格式
     let tagsArray = [];
     for(let value of this.state.attendees) {
@@ -527,7 +528,7 @@ class MeetingInsertPage extends React.PureComponent  {
         {
           (this.state.showDatePicker) ? 
             <DateTimePicker 
-              value       ={this.state.editDatetimeValue}
+              value       ={new Date(this.state.editDatetimeValue)}
               minimumDate ={new Date(this.state.now)}
               mode        ={"date"}
               is24Hour    ={true}
@@ -541,7 +542,7 @@ class MeetingInsertPage extends React.PureComponent  {
         {
           (this.state.showTimePicker) ? 
             <DateTimePicker 
-              value    ={this.state.editDatetimeValue}
+              value    ={new Date(this.state.editDatetimeValue)}
               mode     ={"time"}
               is24Hour ={true}
               display  ="spinner"
@@ -601,10 +602,11 @@ class MeetingInsertPage extends React.PureComponent  {
   showDateTimePicker = (editStartorEndDatetime) => {
     let startdate = new Date( this.state.startdate.replace(/-/g, "/") ).getTime();
     let enddate = new Date( this.state.enddate.replace(/-/g, "/") ).getTime();
-      if (this.state.isEndDateChange) {
-      } else {
-        // enddate = startdate + 3600000;
-      }
+
+    if (this.state.isEndDateChange) {
+    } else {
+      // enddate = startdate + 3600000;
+    }
     
     if (Platform.OS == "ios") {
       this.setState({
@@ -646,7 +648,6 @@ class MeetingInsertPage extends React.PureComponent  {
   setTime = (time) => {
     if (time.type == "set") {
       if (this.state.editStartorEndDatetime) {
-
         //start
         if (this.state.isModify) {
           this.setState({
@@ -655,7 +656,7 @@ class MeetingInsertPage extends React.PureComponent  {
           });
         } else {
           // 編輯開始時間要自動幫結束時間增加一小時
-          let enddate = time.nativeEvent.timestamp+3600000;
+          let enddate = time.nativeEvent.timestamp.getTime()+3600000;
           this.setState({
             startdate      :DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"),
             enddate        :DateFormat( new Date(enddate), "yyyy-mm-dd HH:MM:ss"),
@@ -1077,6 +1078,7 @@ class MeetingInsertPage extends React.PureComponent  {
             enddate        :this.state.enddate,
             meetingMode    :this.state.meetingMode,
             meetingPlace   :this.state.meetingPlace,
+            place          :this.state.isOnlineAndPlace,
             meetingNumber  :this.state.meetingNumber,
             meetingPassword:this.state.meetingPassword,
             remindtime     :this.state.remindtime,
@@ -1086,7 +1088,7 @@ class MeetingInsertPage extends React.PureComponent  {
             timezone       :RNLocalize.getTimeZone(),
             repeatType     :"NR",
             repeatEndDate  :"",
-            weekDays       :[]
+            weekDays       :[],
         }
 
         if (this.state.isModify) {

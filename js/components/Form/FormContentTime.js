@@ -19,6 +19,8 @@ class FormContentTime extends Component {
 			}
 		}
 
+		console.log("minuteIntervalArray", minuteIntervalArray);
+
 		// 名稱、值、參數、能否編輯、強制編輯、欄位資料
 		this.state = {
 			labelname     : props.data.component.name,
@@ -57,8 +59,8 @@ class FormContentTime extends Component {
 		if (this.props.data.defaultvalue != null) {
 			let date = DateFormat(new Date(), "yyyy/mm/dd");
 			text = this.props.data.defaultvalue;
-			// value = (new Date(`${date} ${text}:00`)).getTime();
 			value = this.state.isIosPlatform ? (new Date(`${date} ${text}:00`)) : (new Date(`${date} ${text}`)).getTime();
+			// value = new Date(`${date} ${text}:00`);
 
 			let tempTime = this.state.isIosPlatform ? value.getTime() : value;
 			if ( this.state.isIosPlatform && tempTime != this.state.iosTime) {
@@ -114,7 +116,7 @@ class FormContentTime extends Component {
 		            {
 		            	(this.state.showDatePicker && (Platform.OS != "ios") && !this.state.minuteIntervalArray ) ? 
 		            		<DateTimePicker 
-								value    ={value}
+								value    ={new Date(value)}
 								mode     ={"time"}
 								is24Hour ={true}
 								display  ="spinner"

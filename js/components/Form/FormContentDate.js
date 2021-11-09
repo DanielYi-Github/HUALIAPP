@@ -43,6 +43,7 @@ class FormContentDate extends Component {
 		if (this.props.data.defaultvalue != null) {
 			text = this.props.data.defaultvalue;
 			value = this.state.isIosPlatform ? new Date(`${text} 00:00:00`) : (new Date(`${text} 00:00:00`)).getTime();
+			// value = new Date(`${text} 00:00:00`);
 
 			let tempDate = new Date(`${DateFormat( this.state.iosDate, "yyyy/mm/dd")} 00:00:00`);
 			if (value != tempDate) {
@@ -95,7 +96,7 @@ class FormContentDate extends Component {
 			            {
 			            	(this.state.showDatePicker && (Platform.OS != "ios") ) ? 
 			            		<DateTimePicker 
-									value       ={value}
+									value       ={new Date(value)}
 									// minimumDate ={new Date()}
 									mode        ={"date"}
 									is24Hour    ={true}
