@@ -210,12 +210,12 @@ class MeetingSearchPage extends React.PureComponent  {
         {
           (this.state.showDatePicker) ? 
             <DateTimePicker 
-              value    ={this.state.editDatetimeValue}
+              value       ={new Date(this.state.editDatetimeValue)}
               minimumDate = {new Date(this.state.now)}
-              mode     ={"date"}
-              is24Hour ={true}
-              display  ="default"
-              onChange ={this.setDate}
+              mode        ={"date"}
+              is24Hour    ={true}
+              display     ="default"
+              onChange    ={this.setDate}
             />
           :
             null
@@ -224,12 +224,12 @@ class MeetingSearchPage extends React.PureComponent  {
         {
           (this.state.showTimePicker) ? 
             <DateTimePicker 
-              value    ={this.state.editDatetimeValue}
-              mode     ={"time"}
+              value          ={new Date(this.state.editDatetimeValue)}
+              mode           ={"time"}
               minimumDate    = {new Date(this.state.now)}
-              is24Hour ={true}
-              display  ="spinner"
-              onChange ={this.setTime}
+              is24Hour       ={true}
+              display        ="spinner"
+              onChange       ={this.setTime}
               minuteInterval = {10}
             />
           :

@@ -164,7 +164,7 @@ export function getMeetings(condition = ""){
 			console.log("e", e);
 			return [];
 		});
-
+		console.log("meetingsResult", meetingsResult);
 		dispatch({
 			type: MeetingTypes.GET_MEETINGS,
 			meetingsResult
