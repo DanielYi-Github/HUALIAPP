@@ -513,7 +513,7 @@ class MeetingInsertWithRegularCustomizePage extends React.PureComponent  {
         {
           (this.state.showDatePicker) ? 
             <DateTimePicker 
-              value       ={this.state.editDatetimeValue}
+              value       ={new Date(this.state.editDatetimeValue)}
               minimumDate ={new Date(this.state.now)}
               mode        ={"date"}
               is24Hour    ={true}
@@ -527,7 +527,7 @@ class MeetingInsertWithRegularCustomizePage extends React.PureComponent  {
         {
           (this.state.showTimePicker) ? 
             <DateTimePicker 
-              value    ={this.state.editDatetimeValue}
+              value    ={new Date(this.state.editDatetimeValue)}
               mode     ={"time"}
               is24Hour ={true}
               display  ="spinner"
