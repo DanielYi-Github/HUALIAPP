@@ -296,6 +296,7 @@ export function navigateFunctionPage(app = null, userID = null) {
 		}
 		*/
 
+		/*
 		if (recordHitCount) {
 			let sSQL = `select * from THF_APPVISITLOG where APPID='${appID}'`;
 			SQLite.selectData(sSQL, []).then((result) => {
@@ -308,7 +309,24 @@ export function navigateFunctionPage(app = null, userID = null) {
 				}
 			});
 		}
+		*/
+		// 记录点击次数THF_APPVISITLOG
+		if (recordHitCount) {
+			SetAppVisitLog(appID, getState().UserInfo.UserInfo.id);
+		}
 	}
+}
+export function SetAppVisitLog(appID, userID){
+	let sSQL = `select * from THF_APPVISITLOG where APPID='${appID}' and USERID='${userID}'`;
+	SQLite.selectData(sSQL, []).then((result) => {
+		if (result.length > 0) {
+			let uSQL = `update THF_APPVISITLOG set VISITCOUNT=VISITCOUNT+1,VISITDATE=datetime('now'),TXDAT=datetime('now') where APPID='${appID}' and USERID='${userID}'`;
+			SQLite.updateData(uSQL, []);
+		} else {
+			let iSQL = `insert into THF_APPVISITLOG(USERID,APPID,VISITCOUNT) values('${userID}','${appID}',1)`;
+			SQLite.insertData(iSQL, []);
+		}
+	});	
 }
 
 
