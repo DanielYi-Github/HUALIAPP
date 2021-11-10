@@ -17,7 +17,7 @@ class MyFormSelectListButton extends Component{
 		}
 			
 		return(
-			<Body style={this.props.style.MyFormListFilterModalSelect}>
+			<Body style={[this.props.style.MyFormListFilterModalSelect, {height: os == "ios" ? null : 50}]}>
 			  <Label style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{this.props.text}</Label>
 			  <Picker 
 			  	// note
