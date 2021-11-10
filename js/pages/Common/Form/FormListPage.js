@@ -81,7 +81,7 @@ class FormListPage extends React.Component {
     } else {
       filteredData = [];
     }
-   
+
     let formListPage = (
         <Container>
         <MainPageBackground height={null}/>
@@ -100,7 +100,7 @@ class FormListPage extends React.Component {
         <FlatList
           keyExtractor        ={(item, index) => index.toString()}
           data                = {filteredData}
-          extraData           = {filteredData}
+          extraData           = {this.props.state}
           renderItem          = {this.renderFormItem}
           ListFooterComponent = {this.renderFooter}
           refreshControl      ={

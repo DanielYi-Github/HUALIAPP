@@ -95,7 +95,6 @@ class HomePage extends React.Component {
 
   componentDidMount() {
     MessageRouter.getStoreNotificationMsg(this.props.state, this.props.actions); // 針對冷啟動取得跳頁訊息
-    
     AppState.addEventListener('change', this.onChangeAppState);
     if (this.props.state.Home.NoticeData.length == 0 && !this.props.state.Home.isRefreshing) {
       this.props.actions.loadInitialNoticeData(); //撈取公告列表資料 
@@ -172,6 +171,7 @@ class HomePage extends React.Component {
 
   renderContent = () => {
     // 有值再進行渲染
+    // console.log("this.props.state.Home.FunctionData", this.props.state.Home.FunctionData);
     if(this.props.state.Home.FunctionData.length == 0) return null;
     // 根據FunctionData的資料來進行其他資料的獲取
     if(!this.state.isLoadFunctionDataRelateData) this.LoadFunctionDataRelateData();
