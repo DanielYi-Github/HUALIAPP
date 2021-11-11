@@ -384,7 +384,7 @@ export function initialApi( user, way=false ){
   			UpdateDataUtil.updateRead(user),		//訊息讀取表       
 			UpdateDataUtil.setLoginInfo(user),
 			UpdateDataUtil.updateDailyOralEnglish(user), //每日英语
-			UpdateDataUtil.updateCompanyDocument(user) //公司文件
+			UpdateDataUtil.updateCompanyDocument(user) 		//公司文件
 		];
 
 	  	Promise.all(arr).then( async (data) => {
@@ -576,7 +576,6 @@ function certTips(dispatch,state,user){
 		      	Alert.alert(
 			        //溫馨提示
 			        state.Language.lang.Common.Alert,
-			        //是否要删除设备信息
 			        state.Language.lang.LoginPage.FirstCertTips,
 			        [
 			            {text: state.Language.lang.Common.Setting, onPress: () => { NavigationService.navigate('AccountSafe')}},//前往設定

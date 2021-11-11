@@ -35,7 +35,7 @@ class SplashPage extends React.Component {
   componentDidMount(){
     //是否允許APP進行初始化程序
     if (this.props.state.Login.enableAppInitialFunction) {
-      this.props.actions.appInit( this.props.actions );      // APP初始化程序
+      this.props.actions.appInit( this.props.actions );                 // APP初始化程序
       MessageRouter.initial();                                          // 處理訊息分流的類別
       MessageRouter.addListeners(this.props.state, this.props.actions); // 處理訊息分流的類別
       MessageRouter.addMessageListener(this.props.actions);             // 啟動訊息觸發的監聽器
