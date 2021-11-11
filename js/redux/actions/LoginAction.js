@@ -359,6 +359,7 @@ export function initialApi( user, way=false ){
 		LoggerUtil.uploadLocalDBErrorLog(user); 	// 將資料庫的log上傳至server
   		UpdateDataUtil.updateContact(user); //通訊錄	
   		UpdateDataUtil.updateMSG(user); 	//手機消息-執行最久
+		UpdateDataUtil.updateGroupFile(user); //集团文件
 
   		//取得首頁常見功能要顯示幾個
   		UpdateDataUtil.getHomeIconNum(user).then((data)=>{
@@ -383,13 +384,10 @@ export function initialApi( user, way=false ){
   			UpdateDataUtil.updateRead(user),		//訊息讀取表       
 			UpdateDataUtil.setLoginInfo(user),
 			UpdateDataUtil.updateDailyOralEnglish(user), //每日英语
-			UpdateDataUtil.updateCompanyDocument(user), //公司文件
-			UpdateDataUtil.updateGroupFile(user) //集团文件
+			UpdateDataUtil.updateCompanyDocument(user) //公司文件
 		];
 
 	  	Promise.all(arr).then( async (data) => {
-
-	  		
 	  		loadBannerImagesIntoState(dispatch, getState);//撈取HomePage Banners資料
 	        user = certTips(dispatch, getState(), user); //判斷是否進行提示生物識別設定
 			dispatch(setUserInfo(user));				//將資料存放在UserInfoReducer的state裡
@@ -406,8 +404,6 @@ export function initialApi( user, way=false ){
 
 			user = await getUserInfoWithImage(user); 	//處理使用者圖片的後續處理
 			dispatch(setUserInfo(user));				//將資料存放在UserInfoReducer的state裡
-
-			
 	  	}).catch((e)=>{
 	  		
 	  		switch(way) {

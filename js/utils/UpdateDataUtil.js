@@ -212,6 +212,7 @@ export async function loginByToken(user){
 }
 
 function setUserData(user, data) {
+	console.log("setUserData", data);
 	user.token       = data.token;
 	user.id          = data.member.id;
 	user.name        = data.member.name;
@@ -1584,6 +1585,8 @@ export async function updateContactImageToServer(user, lang, content) {
 			"lang": lang,
 			"content": Common.encrypt(content)
 		};
+
+		// console.log("upload/headimage", params);
 
 		NetUtil.getRequestJson(params, url).then((data) => {
 			if (data.code != 200) {
