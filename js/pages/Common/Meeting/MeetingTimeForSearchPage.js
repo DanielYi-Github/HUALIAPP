@@ -145,7 +145,7 @@ class MeetingTimeForPersonPage extends React.PureComponent  {
     let enddate   = new Date( this.state.meetingParams.enddate.replace(/-/g, "/"));
 
     let time1 = new Date();
-    let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss") );
+    let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss").replace(/-/g, "/") );
     let isChangeTime = time1.getHours() == time2.getHours() ? false: true;
 
     startdate = isChangeTime ? startdate.getTime()-28800000: startdate.getTime();

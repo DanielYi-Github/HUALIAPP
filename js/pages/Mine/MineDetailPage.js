@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, ImageBackground, Platform, Image} from 'react-native';
 import { Container, Header, Content, Icon, Button, Left, Body, Right, Title, Text, Card, H3, connectStyle } from 'native-base';
-import ImagePicker from 'react-native-image-picker';  // https://github.com/react-community/react-native-image-picker
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Lightbox    from 'react-native-lightbox';
 
 // import ImgToBase64 from 'react-native-image-base64';  // https://www.npmjs.com/package/react-native-image-base64 //查詢手寫板是否需要移除
@@ -56,7 +56,6 @@ class MineDetailPage extends React.Component {
 
   render() {
     let user = this.props.state.UserInfo.UserInfo;
-    console.log(user);
     let page = this.props.state.Language.lang.MineDetailPage;
 
     let renderScene = (route, navigator) => {
@@ -106,12 +105,15 @@ class MineDetailPage extends React.Component {
               <Button 
                 rounded 
                 onPress = {()=>{
+                  this.goEditImage();
+                  /*
                   Alert.alert(
                     page.Warning,
                     page.WarningContext,
                     [ {text: 'OK', onPress: () => this.goEditImage()}],
                     { cancelable: false }
                   )
+                  */
                 }}
                 style={this.props.style.EditBigProfileImage}>
                   <Icon name="camera"/>
@@ -220,6 +222,44 @@ class MineDetailPage extends React.Component {
       }
     };
 
+    Alert.alert(
+      options.title,
+      `${this.props.state.Language.lang.MineDetailPage.Warning}!!! ${this.props.state.Language.lang.MineDetailPage.WarningContext}`,
+      [
+        {
+          text: options.cancelButtonTitle,
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        {
+          text: options.chooseFromLibraryButtonTitle,
+          onPress: () => {
+            launchImageLibrary({
+              mediaType: 'photo',
+              maxHeight: 200,
+              maxWidth: 200,
+              quality: 0.5,
+              includeBase64: true,
+            }, this.setResponse);
+          }
+        },
+        { text: options.takePhotoButtonTitle, 
+          onPress: () => {
+            launchCamera({
+              mediaType: 'photo',
+              maxHeight: 200,
+              maxWidth: 200,
+              quality: 0.5,
+              saveToPhotos: true,
+              includeBase64: true,
+            }, this.setResponse);
+          } 
+        }
+      ],
+      { cancelable: false }
+    );
+
+    /*
     ImagePicker.showImagePicker(options, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -232,6 +272,15 @@ class MineDetailPage extends React.Component {
         this.props.actions.updateUserImage(this.props.state.UserInfo.UserInfo, "picture", response.data);
       }
     });
+    */
+  }
+
+  setResponse = (response) => {
+    if(response.didCancel){
+      console.log('User cancelled image picker');
+    }else{
+      this.props.actions.updateUserImage(this.props.state.UserInfo.UserInfo, "picture", response.assets[0].base64);
+    }
   }
 
   goCarAdministrator = () => {

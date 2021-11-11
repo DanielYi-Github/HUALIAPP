@@ -6992,10 +6992,10 @@ react-native-image-pan-zoom@^2.1.12:
   resolved "https://registry.npmmirror.com/react-native-image-pan-zoom/download/react-native-image-pan-zoom-2.1.12.tgz#eb98bf56fb5610379bdbfdb63219cc1baca98fd2"
   integrity sha1-65i/VvtWEDeb2/22MhnMG6ypj9I=
 
-react-native-image-picker@^2.3.4:
-  version "2.4.0"
-  resolved "https://registry.npmmirror.com/react-native-image-picker/download/react-native-image-picker-2.4.0.tgz#33231ac6d7794193d595b4e13ca6167fc4d523ef"
-  integrity sha1-MyMaxtd5QZPVlbThPKYWf8TVI+8=
+react-native-image-picker@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.npmmirror.com/react-native-image-picker/download/react-native-image-picker-4.2.0.tgz#852867e340da464fda6895b32d383d88a143e623"
+  integrity sha512-RT/MIDx/j6lSF7ZaHG1CU/Fw+TcY2FejvvzjfWbB3DUBp5cZU6JmIWwFEYD/GD8PSvE/3l6K1r67C02phk/wqw==
 
 react-native-image-zoom-viewer@^3.0.1:
   version "3.0.1"

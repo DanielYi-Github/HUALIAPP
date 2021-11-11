@@ -690,7 +690,7 @@ class MeetingInsertPage extends React.PureComponent  {
         });
       } else {
         // 編輯開始時間要自動幫結束時間增加一小時
-        let enddate = editDatetimeValue.getTime()+3600000;
+        let enddate = (new Date(editDatetimeValue)).getTime()+3600000;
         this.setState({
           startdate      :DateFormat( new Date(editDatetimeValue), "yyyy-mm-dd HH:MM:ss"),
           enddate        :DateFormat( new Date(enddate), "yyyy-mm-dd HH:MM:ss"),

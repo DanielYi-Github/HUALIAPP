@@ -127,14 +127,14 @@ class CarsPage extends React.Component {
 		let carsPage = (
 			<Container>
 	        	<MainPageBackground height={null}/>
-			{/*標題列*/}
-				<Header style={this.props.style.HeaderBackground} searchBar rounded>
+				{/*標題列*/}
+				<Header /*style={this.props.style.HeaderBackground}*/ searchBar rounded>
 		    	     <Left>				
 		    	       	<Button transparent onPress={() =>NavigationService.goBack()}>
 		    	       	 	<Icon name='arrow-back' style={{color:this.props.style.iconColor}}/>
 		    	       	</Button>
 		    	     </Left>
-		    	       <Body>
+		    	      <Body>
 		    	       	<Title style={{color:this.props.style.iconColor}}>{this.props.state.Language.lang.HomePage.Cars}</Title>
 		    	     </Body>
 		    	     <Right>
