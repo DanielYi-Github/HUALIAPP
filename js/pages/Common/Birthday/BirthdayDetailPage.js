@@ -1,7 +1,7 @@
 import React from 'react';
 import {  Alert, Modal, Platform, View, Keyboard, DeviceEventEmitter} from 'react-native';
 import { Spinner, Container, Left, Content, Body, Item, Button, Icon, Text, Right, CardItem, Thumbnail, Tab, Input, connectStyle} from 'native-base';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux';
 import Common                from '../../../utils/Common';
 import * as UpdateDataUtil   from '../../../utils/UpdateDataUtil';

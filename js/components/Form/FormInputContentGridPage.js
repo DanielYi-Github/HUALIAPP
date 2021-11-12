@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Header, Left, Content, Right, Item, Label, Input, Body, Card, CardItem, Title, Button, Icon, Text, CheckBox, Toast, connectStyle } from 'native-base';
 import { View, FlatList, TextField, Alert, Platform, AlertIOS }from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view'
 
 import FormInputContent          from './FormInputContent';
 import FormInputContentGridLabel from './FormInputContentGridLabel';

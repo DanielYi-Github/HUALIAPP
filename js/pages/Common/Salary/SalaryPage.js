@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Easing, Modal, Alert, Platform} from 'react-native';
 import { Container, Content, Tabs, Tab, Spinner, connectStyle, Card, CardItem, Text, Title, Body, Button, ScrollableTab} from 'native-base';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view'
 import Drawer from 'react-native-drawer-menu';
 
 import { connect }            from 'react-redux';

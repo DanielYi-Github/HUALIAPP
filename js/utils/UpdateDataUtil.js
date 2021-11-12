@@ -212,7 +212,6 @@ export async function loginByToken(user){
 }
 
 function setUserData(user, data) {
-	console.log("setUserData", data);
 	user.token       = data.token;
 	user.id          = data.member.id;
 	user.name        = data.member.name;
@@ -1018,7 +1017,6 @@ export async function updateEvent(user) {
 				Promise.all(execute).then(() => {
 					resolve();
 				})
-
 			})
 		} else {
 			NetUtil.getRequestContent(params, url).then((data) => {
@@ -1082,7 +1080,6 @@ export async function updateEvent(user) {
 						resolve();
 					})
 				})
-
 			});
 		}
 	});
@@ -3031,7 +3028,6 @@ export async function updateModule(user) {
 * @return void
 */
 export async function setLoginInfo(user) {
-	// console.log("setLoginInfo", user);
 	let url = 'data/setLoginInfo';
 	let content = {
 		"userid": user.loginID,
@@ -3049,8 +3045,6 @@ export async function setLoginInfo(user) {
 		"userId": Common.encrypt(user.loginID),
 		"content": Common.encrypt(JSON.stringify(content))
 	};
-
-	// console.log(params);
 
 	let promise = new Promise((resolve, reject) => {
 		NetUtil.getRequestContent(params, url).then((data) => {

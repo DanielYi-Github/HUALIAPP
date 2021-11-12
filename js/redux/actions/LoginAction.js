@@ -384,7 +384,7 @@ export function initialApi( user, way=false ){
   			UpdateDataUtil.updateRead(user),		//訊息讀取表       
 			UpdateDataUtil.setLoginInfo(user),
 			UpdateDataUtil.updateDailyOralEnglish(user), //每日英语
-			UpdateDataUtil.updateCompanyDocument(user) 		//公司文件
+			UpdateDataUtil.updateCompanyDocument(user)   //公司文件
 		];
 
 	  	Promise.all(arr).then( async (data) => {
@@ -405,7 +405,6 @@ export function initialApi( user, way=false ){
 			user = await getUserInfoWithImage(user); 	//處理使用者圖片的後續處理
 			dispatch(setUserInfo(user));				//將資料存放在UserInfoReducer的state裡
 	  	}).catch((e)=>{
-	  		
 	  		switch(way) {
 	  		  case "token":
 	  		    dispatch(logout('code:'+e, true));
@@ -421,10 +420,9 @@ export function initialApi( user, way=false ){
 	  		    dispatch(check_done());
 	  		    break;
 	  		  default:
-	  		    dispatch(logout());
+	  		    dispatch(logout('code:'+e, true));
 	  		}
 	  		LoggerUtil.addErrorLog("LoginAction initialApi", "APP Action", "ERROR", e);
-	  		
 	  	})	
 		
 		

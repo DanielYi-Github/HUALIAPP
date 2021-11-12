@@ -4,8 +4,7 @@ import { Container, Header, Icon, Left, Button, Body, Right, Title, Content, Tex
 import ActionButton from 'react-native-action-button';
 import ModalWrapper from "react-native-modal";
 import ActionSheet  from 'react-native-actionsheet';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view'
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';

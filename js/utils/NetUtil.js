@@ -34,8 +34,6 @@ let NetUtil = {
 			body: JSON.stringify(params)
 		};
 
-		// console.log(url, fetchOptions);
-
 		/* 之後再量想想如何處理請求過久問題
 		let isTimeOut = false; 
 		let timeout = setTimeout(function() {
@@ -51,7 +49,7 @@ let NetUtil = {
 		try {
 			let response = await fetch(`${TOMCAT_HOST}${url}`, fetchOptions);
 			// clearTimeout(timeout); 
-			if (!isTimeOut){
+			// if (!isTimeOut){
 				if (response.ok) {
 					let responseJson = await response.json();
 					switch (responseJson.code) {
@@ -102,18 +100,16 @@ let NetUtil = {
 					}
 				} else {
 					response.text().then( err => {
-						// console.log("response.ok == false", response, err);
 						LoggerUtil.addErrorLog(url, "API request in APP", "FATAL", err);
 					});
-					return { message:"Response Error!", code:-2 }; 
+					return { message:"Response is not OK!", code:-2 }; 
 				}
-			}else{
-				isTimeOut = false;
-			}
+			// }else{
+				// isTimeOut = false;
+			// }
 		} catch (err) {
-			// console.log("fetch error", response, err);
-			LoggerUtil.addErrorLog(url, "API request in APP", "ERROR", err);
-			return { message:"Request Error!", code:-2 };
+			// LoggerUtil.addErrorLog(url, "API request in APP", "ERROR", err);
+			return { message:`Request Error at API ${url}, message:"${err}"`, code:-2 };
 		}
 	},
 	async setErrorlog( user, obj ) {
