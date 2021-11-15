@@ -2,6 +2,7 @@ import * as salaryTypes    from '../actionTypes/SalaryTypes';
 import * as LoginTypes     from '../actionTypes/LoginTypes';
 import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
 import DateFormat from 'dateformat'; 
+import { Platform} from 'react-native';
 import { RSA } from 'react-native-rsa-native';
 
 let appKeysPair = "";
@@ -12,6 +13,7 @@ export function getMisPsalyms() {
 		dispatch(refreshing(true)); 	
 
 		UpdateDataUtil.getMisPsalyms(getState().UserInfo.UserInfo).then((data)=>{
+
 			let psalymsDate_jsonFormat = jsonFormat(data.content);
 			dispatch({
 				type: salaryTypes.GET_SALARY_SELECT_DAYS,
@@ -61,6 +63,7 @@ export function exchangeRSAPubliceKey(defaultSelectDay = null){
 			serverPublicKey = data.dataObj;
 			this.getMisSalary(defaultSelectDay);
 		}).catch(errorData => {
+
 			if (errorData == null){
 				errorData = {};
 				errorData.apiState = false;
@@ -98,16 +101,27 @@ export function getMisSalary( date ) {
 			date,
 			appKeysPair.public
 		).then( async (data)=>{
+
 			let encryptedParts = data.publicdata.split("==");
 			let unSignedPart = `${encryptedParts[0]}==`;
-			let verified = await RSA.verify64WithAlgorithm(
-				data.signdata, 
-				unSignedPart, 
-				serverPublicKey, 
-				'SHA256withRSA'
-			).then(result => {
-				return result;
-			});
+
+			// 在ios先跳過驗證
+			let verified = false;
+			if(Platform.OS == 'android'){
+				verified = await RSA.verify64WithAlgorithm(
+					data.signdata, 
+					unSignedPart, 
+					serverPublicKey, 
+					'SHA256withRSA'
+				).then(result => {
+					console.log("data", 0);
+					return result;
+				}).catch( err => {
+					console.log("err", err);
+				});
+			}else{
+				verified = true;
+			}
 
 			if (verified) {
 				let decryptedParts = "";
@@ -138,6 +152,7 @@ export function getMisSalary( date ) {
 			}
 			
 		}).catch(errorData => {
+
 			if (errorData == null){
 				errorData = {};
 				errorData.apiState = false;

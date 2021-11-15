@@ -122,7 +122,7 @@ class FormContentDateTime extends Component {
 			            {
 			            	(this.state.showDatePicker && (Platform.OS != "ios") ) ? 
 			            		<DateTimePicker 
-									value    ={dateValue}
+									value    ={new Date(dateValue)}
 									mode     ={"date"}
 									is24Hour ={true}
 									display  ="default"
@@ -135,7 +135,7 @@ class FormContentDateTime extends Component {
                         {
                         	(this.state.showTimePicker && (Platform.OS != "ios") && !this.state.minuteIntervalArray ) ? 
                         		<DateTimePicker 
-            						value    ={timeValue}
+            						value    ={new Date(timeValue)}
             						mode     ={"time"}
             						is24Hour ={true}
             						display  ="spinner"

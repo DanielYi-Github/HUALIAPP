@@ -1,6 +1,6 @@
 <resources>
-    <!-- <string name="app_name">华利实业</string> -->
-    <string name="app_name">华利实业Beta</string>
+    <string name="app_name">华利实业</string>
+    <!-- <string name="app_name">华利实业Beta</string> -->
     <!-- <string name="app_name">华利实业Dev</string> -->
     <string name="android_auto_update_download_progress">Downing:%1$d%%</string>
     <!-- 正式機 -->
