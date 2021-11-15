@@ -897,7 +897,24 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 			M:"Team",
 			D:"钉钉",
 			A:"实体会议室"
-		}
+		},
+		repeatType:{
+		  NR:"不重复",
+		  ED:"每天",
+		  WD:"工作日(周一到周五)",
+		  EW:"每周",
+		  EM:"每月",
+		  DM:"自定义"
+		},
+		weekDays:{
+			MON:"周一",
+			TUE:"周二",
+			WEB:"周三",
+			THU:"周四",
+			FRI:"周五",
+			SAT:"周六",
+			SUN:"周日"
+		},
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "公司文件",

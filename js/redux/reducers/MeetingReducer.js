@@ -21,7 +21,53 @@ const initialState = {
   attendees_by_position         : [],
   organization_tree             : null,
   blocking                      : false,
-  isNeedCheckMeetingTime        : true   //是否需要檢查會議時間衝突功能
+  isNeedCheckMeetingTime        : true,   //是否需要檢查會議時間衝突功能
+  repeatType:[
+    {
+      type:"NR",
+    },
+    {
+      type:"ED",
+    },
+    {
+      type:"WD",
+    },
+    {
+      type:"EW",
+    },
+    {
+      type:"EM",
+    },
+    {
+      type:"DM",
+    },
+  ],
+  selectedRepeatType:"NR",
+  weekDays:[
+    {
+      value:"MON",
+    },
+    {
+      value:"TUE",
+    },
+    {
+      value:"WEB",
+    },
+    {
+      value:"THU",
+    },
+    {
+      value:"FRI",
+    },
+    {
+      value:"SAT",
+    },
+    {
+      value:"SUN",
+    }
+  ],
+  selectedWeekDays:[],
+  repeatEndDate:null,
 };
 
 export default function index(state = initialState, action = {}) {

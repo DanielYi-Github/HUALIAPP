@@ -487,36 +487,35 @@ class MeetingInsertPage extends React.PureComponent  {
           </Item>
 
           {/*例行性會議 未完成*/}
-          {/*
-            <Item 
-              style={{
-                backgroundColor: this.props.style.InputFieldBackground,
-                height         : this.props.style.inputHeightBase,
-                paddingLeft    : 10,
-                paddingRight   : 5,
-                marginTop      : 20,
-              }}
-              disabled = {!this.state.isEditable}
-              onPress  = {()=>{
-                Keyboard.dismiss();
-                NavigationService.navigate("MeetingInsertWithRegular", {
-                  startdate: this.state.startdate,
-                  enddate  : this.state.enddate,
-                  onPress  : "",
-                  // oid      : this.state.oid
-                });
-              }}
-            >
-              <Icon name='reload-circle-outline' />
-              <Label style={{flex:1}}>{"例行性會議"}</Label>
-              {
-               this.state.isEditable ? <Text>{regularMeetingLabel}</Text> : <Label>{regularMeetingLabel}</Label>  
-              }
-              {
-                this.state.isEditable ? <Icon name='arrow-forward' /> : null
-              }
-            </Item>
-          */}
+          <Item 
+            style={{
+              backgroundColor: this.props.style.InputFieldBackground,
+              height         : this.props.style.inputHeightBase,
+              paddingLeft    : 10,
+              paddingRight   : 5,
+              marginTop      : 20,
+            }}
+            disabled = {!this.state.isEditable}
+            onPress  = {()=>{
+              Keyboard.dismiss();
+              NavigationService.navigate("MeetingInsertWithRegular", {
+                startdate: this.state.startdate,
+                enddate  : this.state.enddate,
+                onPress  : "",
+                // oid      : this.state.oid
+              });
+            }}
+          >
+            <Icon name='reload-circle-outline' />
+            <Label style={{flex:1}}>{"例行性會議"}</Label>
+            {
+             this.state.isEditable ? <Text>{regularMeetingLabel}</Text> : <Label>{regularMeetingLabel}</Label>  
+            }
+            {
+              this.state.isEditable ? <Icon name='arrow-forward' /> : null
+            }
+          </Item>
+          
 
           {/*顯示會議的按鈕*/}
           { this.renderMeetingActionButton() }

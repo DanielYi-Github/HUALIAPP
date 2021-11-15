@@ -894,7 +894,24 @@ export default {
 			M:"Team",
 			D:"DingDing",
 			A:"Phòng họp Vật lý"
-		}
+		},
+		repeatType:{
+			NR: "Không bao giờ",
+			ED: "Mỗi ngày",
+			WD: "Tất cả các ngày làm việc",
+			EW: "Hàng tuần",
+			EM: "Mỗi tháng",
+			DM: "Tùy chỉnh"
+		},
+		weekDays:{
+			MON: "Thứ Hai",
+			TUE: "Thứ Ba",
+			WEB: "Thứ Tư",
+			THU: "Thứ Năm",
+			FRI: "Thứ sáu",
+			SAT: "Thứ Bảy",
+			SUN: "Chủ nhật"
+		},
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "Tập tin công ty",

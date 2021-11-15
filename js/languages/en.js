@@ -44,13 +44,13 @@ export default {
 		androidChangeAPPMessage13:" Don't show again.",
 		WebViewUrlError          :"Abnormal website address acquisition",
 		week:{
-			Sunday   :"Sun",
 			Monday   :"Mon",
 			Tuesday  :"Tue",
 			Wednesday:"Wed",
 			Thursday :"Thu",
 			Friday   :"Fri",
 			Saturday :"Sat",
+			Sunday   :"Sun",
 		},
 		selectAll: "Select All"
 	},
@@ -893,7 +893,24 @@ export default {
 			M:"Team",
 			D:"DingTalk",
 			A:"Physical meeting room"
-		}
+		},
+		repeatType:{
+		  NR:"Never",
+		  ED:"Everyday",
+		  WD:"All Workdays",
+		  EW:"Every Week",
+		  EM:"Every Month",
+		  DM:"Custom"
+		},
+		weekDays:{
+			MON:"Monday",
+			TUE:"Tuesday",
+			WEB:"Wednesday",
+			THU:"Thursday",
+			FRI:"Friday",
+			SAT:"Saturday",
+			SUN:"Sunday"
+		},
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "Company Document",

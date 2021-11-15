@@ -46,8 +46,8 @@ class FormContentDateTime extends Component {
 			}
 		}
 		let required = (this.props.data.required == "Y") ? "*" : "  ";
-		let dateValue = new Date().getTime();
-		let timeValue = new Date().getTime();
+		let dateValue = (new Date()).getTime();
+		let timeValue = (new Date()).getTime();
 		let datetimeValue = new Date(); 		// for ios 預設時間
 		let text = " ";
 
@@ -122,7 +122,7 @@ class FormContentDateTime extends Component {
 			            {
 			            	(this.state.showDatePicker && (Platform.OS != "ios") ) ? 
 			            		<DateTimePicker 
-									value    ={dateValue}
+									value    ={new Date(dateValue)}
 									mode     ={"date"}
 									is24Hour ={true}
 									display  ="default"
@@ -135,7 +135,7 @@ class FormContentDateTime extends Component {
                         {
                         	(this.state.showTimePicker && (Platform.OS != "ios") && !this.state.minuteIntervalArray ) ? 
                         		<DateTimePicker 
-            						value    ={timeValue}
+            						value    ={new Date(timeValue)}
             						mode     ={"time"}
             						is24Hour ={true}
             						display  ="spinner"
@@ -227,7 +227,7 @@ class FormContentDateTime extends Component {
 		             			            </View>
 		             			            <View>
 			            	            		<DateTimePicker 
-			            							value    ={datetimeValue}
+			            							value    ={new Date(datetimeValue)}
 			            							mode     ={"datetime"}
 			            							is24Hour ={true}
 			            							display  ="default"

@@ -898,7 +898,24 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 			M:"Team",
 			D:"釘釘",
 			A:"實體會議室"
-		}
+		},
+		repeatType:{
+		  NR:"不重複",
+		  ED:"每天",
+		  WD:"工作日(週一到週五)",
+		  EW:"每週",
+		  EM:"每月",
+		  DM:"自定義"
+		},
+		weekDays:{
+			MON:"週一",
+			TUE:"週二",
+			WEB:"週三",
+			THU:"週四",
+			FRI:"週五",
+			SAT:"週六",
+			SUN:"週日"
+		},
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "公司文件",
