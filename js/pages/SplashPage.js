@@ -1,26 +1,24 @@
 import React from 'react';
 import { Image, View, DeviceEventEmitter, Platform} from 'react-native';
 import { Container, Spinner, connectStyle, Text } from 'native-base';
-import SplashScreen           from 'react-native-splash-screen';
-import {ProgressView} from "@react-native-community/progress-view";
+import SplashScreen            from 'react-native-splash-screen';
+import {ProgressView}          from "@react-native-community/progress-view";
 import { addDownLoadListener } from 'rn-app-upgrade';
-
-import { connect, useSelector}from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as AppInitAction   from '../redux/actions/AppInitAction';
-import * as ThemeAction     from '../redux/actions/ThemeAction';
-import * as LanguageAction  from '../redux/actions/LanguageAction';
-import * as CommonAction    from '../redux/actions/CommonAction';
-import * as NetworkAction   from '../redux/actions/NetworkAction';
-import * as LoginAction     from '../redux/actions/LoginAction';
-import * as UserInfoAction  from '../redux/actions/UserInfoAction';
-import * as BiometricAction from '../redux/actions/BiometricAction';
-
-import * as HomeAction      from '../redux/actions/HomeAction';
-import * as MessageAction   from '../redux/actions/MessageAction';
-import * as MeetingAction   from '../redux/actions/MeetingAction';
-import MessageRouter   from '../utils/MessageRouter';
-import MainPageBackground  from '../components/MainPageBackground';
+import { connect, useSelector} from 'react-redux';
+import { bindActionCreators }  from 'redux';
+import * as AppInitAction      from '../redux/actions/AppInitAction';
+import * as ThemeAction        from '../redux/actions/ThemeAction';
+import * as LanguageAction     from '../redux/actions/LanguageAction';
+import * as CommonAction       from '../redux/actions/CommonAction';
+import * as NetworkAction      from '../redux/actions/NetworkAction';
+import * as LoginAction        from '../redux/actions/LoginAction';
+import * as UserInfoAction     from '../redux/actions/UserInfoAction';
+import * as BiometricAction    from '../redux/actions/BiometricAction';
+import * as HomeAction         from '../redux/actions/HomeAction';
+import * as MessageAction      from '../redux/actions/MessageAction';
+import * as MeetingAction      from '../redux/actions/MeetingAction';
+import MessageRouter           from '../utils/MessageRouter';
+import MainPageBackground      from '../components/MainPageBackground';
 
 class SplashPage extends React.Component {
   constructor(props) {
