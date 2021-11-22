@@ -885,6 +885,13 @@ export default {
 		person 					   :"attendee",
 		selectedAttendeeReorder    :"Arrangment",
 		noneNextOrg				   :"No Department!",
+		regularMeeting  		   :"Routine",
+		endDate         		   :"End date",
+		needEndDate     		   :"End date can't be empty.",
+		couldNotOverYear		   :"Couldn't over a year",
+		customEveryWeek 		   :"Custom in a week",
+		frequency       		   :"Frequency",
+		frequencyByWeek 		   :"Frequency by week",
 		MeetingModeType			   :{
 			Z:"Zoom",
 			S:"Skype",
@@ -911,6 +918,12 @@ export default {
 			SAT:"Saturday",
 			SUN:"Sunday"
 		},
+		// `將在${label1}的 ${label2} 到 ${label3} 進行會議，直到 ${label4}結束`;
+		regularMsg1:"將在",
+		regularMsg2:"的",
+		regularMsg3:"到",
+		regularMsg4:"進行會議，直到",
+		regularMsg5:"結束",
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "Company Document",

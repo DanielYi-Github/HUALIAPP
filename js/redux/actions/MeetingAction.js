@@ -159,6 +159,7 @@ export function getMeetings(condition = ""){
 			// condition:condition, //查詢使用
 		}
 		let meetingsResult = await UpdateDataUtil.getMeetings(user, content).then((result)=>{
+			console.log("meetingsResult", result);
 			return result;
 		}).catch((e)=>{
 			console.log("e", e);
@@ -811,3 +812,31 @@ export function blocking(isblocking){
 		dispatch( meetingBlock(isblocking) );
 	}
 }
+
+export function setRepeatType(param){
+	return async (dispatch, getState) => {
+		if(
+			param.selectedWeekDays &&
+			getState().Meeting.selectedRepeatType == "DM" &&
+			param.selectedWeekDays.length == 0
+		){
+			dispatch({
+				type              :MeetingTypes.MEETING_SET_REPEATTYPE,
+				selectedRepeatType:"NR",
+				selectedWeekDays  :[],
+				repeatEndDate     :""
+			});
+		}else{
+			dispatch({
+				type              :MeetingTypes.MEETING_SET_REPEATTYPE,
+				selectedRepeatType:param.selectedRepeatType ? param.selectedRepeatType : getState().Meeting.selectedRepeatType,
+				selectedWeekDays  :param.selectedWeekDays ? param.selectedWeekDays : getState().Meeting.selectedWeekDays,
+				repeatEndDate     :typeof param.repeatEndDate != "undefined" ? param.repeatEndDate : getState().Meeting.repeatEndDate
+			});
+		}
+	}
+}
+
+
+
+

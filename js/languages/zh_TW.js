@@ -890,6 +890,13 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		person 					   :"人",
 		selectedAttendeeReorder    :"已選與會人員排序",
 		noneNextOrg    			   :"此廠區底下目前無可選單位",
+		regularMeeting  		   :"例行性會議",
+		endDate         		   :"結束日期",
+		needEndDate     		   :"需要指定結束日期",
+		couldNotOverYear		   :"不能超過一年",
+		customEveryWeek 		   :"每週自定義重複",
+		frequency       		   :"頻率",
+		frequencyByWeek 		   :"按周重複",
 		MeetingModeType			   :{
 			Z:"Zoom",
 			S:"Skype",
@@ -916,6 +923,12 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 			SAT:"週六",
 			SUN:"週日"
 		},
+		// `將在${label1}的 ${label2} 到 ${label3} 進行會議，直到 ${label4}結束`;
+		regularMsg1:"將在",
+		regularMsg2:"的",
+		regularMsg3:"到",
+		regularMsg4:"進行會議，直到",
+		regularMsg5:"結束",
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "公司文件",

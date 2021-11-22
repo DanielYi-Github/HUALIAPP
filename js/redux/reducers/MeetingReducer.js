@@ -29,9 +29,9 @@ const initialState = {
     {
       type:"ED",
     },
-    {
-      type:"WD",
-    },
+    // {
+      // type:"WD",
+    // },
     {
       type:"EW",
     },
@@ -67,7 +67,7 @@ const initialState = {
     }
   ],
   selectedWeekDays:[],
-  repeatEndDate:null,
+  repeatEndDate:"",
 };
 
 export default function index(state = initialState, action = {}) {
@@ -80,9 +80,12 @@ export default function index(state = initialState, action = {}) {
     case types.MEETING_ACTIONRESULT:
       return {
         ...state,
-        actionResult   :action.result,
-        actionResultMsg:action.resultMsg,
-        meetingList    :action.result? []:state.meetingList,
+        actionResult      :action.result,
+        actionResultMsg   :action.resultMsg,
+        meetingList       :action.result? []:state.meetingList,
+        selectedRepeatType:"NR",
+        selectedWeekDays  :[],
+        repeatEndDate     :"",
       }
     case types.MEETING_MODIFYRESULT:
       return {
@@ -101,9 +104,12 @@ export default function index(state = initialState, action = {}) {
     case types.MEETING_RESET:
       return {
         ...state,
-        isRefreshing    : false,
-        meetingModeTypes: [],
-        actionResult    : null,
+        isRefreshing      : false,
+        meetingModeTypes  : [],
+        actionResult      : null,
+        selectedRepeatType: "NR",
+        selectedWeekDays  : [],
+        repeatEndDate     : "",
       }
     case types.MEETINGLIST_RESET:
       return {
@@ -181,6 +187,13 @@ export default function index(state = initialState, action = {}) {
       return {
         ...state,
         blocking:action.isblocking,
+      }
+    case types.MEETING_SET_REPEATTYPE:
+      return {
+        ...state,
+        selectedRepeatType:action.selectedRepeatType,
+        selectedWeekDays  :action.selectedWeekDays,
+        repeatEndDate     :action.repeatEndDate
       }
     default:
       return state;

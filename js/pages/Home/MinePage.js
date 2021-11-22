@@ -152,7 +152,8 @@ class MinePage extends React.Component {
             }
 
             {/*會議管理設定*/}
-            {/* isShowMeetingSetting ?
+            {/*{ isShowMeetingSetting ?*/}
+            { true ?
               <MineItem
                 title    = {"會議管理設定"}
                 iconBackgroundColor = {"#00B0FF"}
@@ -163,7 +164,7 @@ class MinePage extends React.Component {
               />  
               :
               null
-            */}
+            }
 
             {/*主題顏色*/}
             <MineItem

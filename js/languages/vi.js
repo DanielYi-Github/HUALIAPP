@@ -886,6 +886,13 @@ export default {
 		person 					   :"người",
 		selectedAttendeeReorder    :"sắp xếp",
 		noneNextOrg				   :"Không có Sở!",
+		regularMeeting  		   :"lịch trình",
+		endDate         		   :"ngày cuối",
+		needEndDate     		   :"nhu cầu ngày cuối",
+		couldNotOverYear		   :"Không quá một năm",
+		customEveryWeek 		   :"tập quán",
+		frequency       		   :"tần số",
+		frequencyByWeek 		   :"Lặp lại hàng tuần",
 		MeetingModeType			   :{
 			Z:"Zoom",
 			S:"Skype",
@@ -912,6 +919,12 @@ export default {
 			SAT: "Thứ Bảy",
 			SUN: "Chủ nhật"
 		},
+		// `將在${label1}的 ${label2} 到 ${label3} 進行會議，直到 ${label4}結束`;
+		regularMsg1:"sẽ là ",
+		regularMsg2:"của",
+		regularMsg3:"đến",
+		regularMsg4:"Tổ chức cuộc họp cho đến khi",
+		regularMsg5:" Kết thúc",
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "Tập tin công ty",

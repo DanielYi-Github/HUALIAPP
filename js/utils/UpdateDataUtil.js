@@ -4097,10 +4097,10 @@ export async function searchMeeting(user, content) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "meeting/checkDoubleDateTime";
 		let params = {
-			"token": Common.encrypt(user.token),
-			"userId": Common.encrypt(user.loginID),
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content)),
-			"lang": Common.encrypt(user.lang)
+			"lang"   : Common.encrypt(user.lang)
 		};
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {

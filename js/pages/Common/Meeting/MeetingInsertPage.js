@@ -53,6 +53,10 @@ class MeetingInsertPage extends React.PureComponent  {
       let isSearchedMeeting = true;                     // 有沒有找到此會議的訊息
       let timezone          = RNLocalize.getTimeZone(); 
       let showTimezone      = false;                    // 顯示時區資訊
+      let regularMeetingEnable = true;                 // 例行性會議是否可行
+      let repeatType           = props.state.Meeting.repeatType;
+      let repeatEndDate        = props.state.Meeting.repeatEndDate;
+      let weekDays             = props.state.Meeting.weekDays;
 
 
       // 判斷當前頁面,從哪個畫面來
@@ -82,6 +86,10 @@ class MeetingInsertPage extends React.PureComponent  {
             remindtime       = meetingParam.remindtime;
             timezone         = meetingParam.timezone;
             showTimezone     = true;
+            regularMeetingEnable = false;
+            repeatType       = meetingParam.repeatType;
+            repeatEndDate    = meetingParam.repeatEndDate;
+            weekDays         = meetingParam.weekDays;
             break;
           case 'MeetingSearch': // 參與人員搜尋那邊過來的
             startTime = new Date( meetingParam.startdate.replace(/-/g, "/") ).getTime();
@@ -126,6 +134,10 @@ class MeetingInsertPage extends React.PureComponent  {
               remindtime       = meetingParam.remindtime;
               timezone         = meetingParam.timezone;
               showTimezone     = true;
+              regularMeetingEnable = false;
+              repeatType       = meetingParam.repeatType;
+              repeatEndDate    = meetingParam.repeatEndDate;
+              weekDays         = meetingParam.weekDays;
 
             } else {
               isSearchedMeeting = false;
@@ -194,6 +206,10 @@ class MeetingInsertPage extends React.PureComponent  {
         isDelete              : false,  // 是否刪除表單
         timezone              : timezone,
         showTimezone          : showTimezone,
+        regularMeetingEnable  : regularMeetingEnable,
+        repeatType            : repeatType,
+        repeatEndDate         : repeatEndDate,
+        weekDays              : weekDays
       }
 	}
 
@@ -283,6 +299,8 @@ class MeetingInsertPage extends React.PureComponent  {
     startdate = this.state.isChangeTime ? startdate-28800000 : startdate;
     enddate = this.state.isChangeTime ? enddate-28800000 : enddate;
 
+    // 整理例行性會議的文字內容
+    let selectedRepeatTypeLabel = this.props.lang.MeetingPage.repeatType[this.props.state.Meeting.selectedRepeatType];
 
     let nowTimeZone = RNLocalize.getTimeZone();
     let differentZone = this.state.timezone == nowTimeZone ? false : true;
@@ -486,36 +504,43 @@ class MeetingInsertPage extends React.PureComponent  {
             }
           </Item>
 
-          {/*例行性會議 未完成*/}
-          <Item 
-            style={{
-              backgroundColor: this.props.style.InputFieldBackground,
-              height         : this.props.style.inputHeightBase,
-              paddingLeft    : 10,
-              paddingRight   : 5,
-              marginTop      : 20,
-            }}
-            disabled = {!this.state.isEditable}
-            onPress  = {()=>{
-              Keyboard.dismiss();
-              NavigationService.navigate("MeetingInsertWithRegular", {
-                startdate: this.state.startdate,
-                enddate  : this.state.enddate,
-                onPress  : "",
-                // oid      : this.state.oid
-              });
-            }}
-          >
-            <Icon name='reload-circle-outline' />
-            <Label style={{flex:1}}>{"例行性會議"}</Label>
-            {
-             this.state.isEditable ? <Text>{regularMeetingLabel}</Text> : <Label>{regularMeetingLabel}</Label>  
-            }
-            {
-              this.state.isEditable ? <Icon name='arrow-forward' /> : null
-            }
-          </Item>
-          
+          {/*例行性會議*/}
+          {
+            this.state.regularMeetingEnable ? 
+              <Item 
+                style={{
+                  backgroundColor: this.props.style.InputFieldBackground,
+                  height         : this.props.style.inputHeightBase,
+                  paddingLeft    : 10,
+                  paddingRight   : 5,
+                  marginTop      : 20,
+                }}
+                disabled = {!this.state.isEditable}
+                onPress  = {()=>{
+                  Keyboard.dismiss();
+                  NavigationService.navigate("MeetingInsertWithRegular", {
+                    startdate: this.state.startdate,
+                    enddate  : this.state.enddate,
+                    onPress  : "",
+                    // oid      : this.state.oid
+                  });
+                }}
+              >
+                <Icon name='reload-circle-outline' />
+                <Label style={{flex:1}}>{this.props.lang.MeetingPage.regularMeeting}</Label>
+                {
+                 this.state.isEditable ? <Text>{selectedRepeatTypeLabel}</Text> : <Label>{selectedRepeatTypeLabel}</Label>  
+                }
+                {
+                  this.state.isEditable ? <Icon name='arrow-forward' /> : null
+                }
+              </Item>
+            :
+              null
+          }
+
+          {/*顯示例行性會議的提示文字*/}
+          { this.formatRegularMeetingAlertLabel() }
 
           {/*顯示會議的按鈕*/}
           { this.renderMeetingActionButton() }
@@ -715,6 +740,39 @@ class MeetingInsertPage extends React.PureComponent  {
         break;
       case 'vi':
         datetimeString = DateFormat( new Date(datetime), "mm-dd ") + this.props.state.Language.lang.Common.week[DateFormat( new Date(datetime), "dddd")];
+        break;
+      default:
+        datetimeString = DateFormat( new Date(datetime), "mmm dd dddd");
+    }
+    return datetimeString;
+  }
+
+  dateFormatWithoutWeek = (datetime) => {
+    let datetimeString = "";
+    switch (this.props.state.Language.langStatus) {
+      case 'zh-TW':
+      case 'zh-CN':
+        datetimeString = DateFormat( new Date(datetime), "m月d日 ");
+        break;
+      case 'vi':
+        datetimeString = DateFormat( new Date(datetime), "mm-dd ");
+        break;
+      default:
+        datetimeString = DateFormat( new Date(datetime), "mmm dd dddd");
+    }
+    return datetimeString;
+  }
+
+  dateFormatWithoutMonthWeek = (datetime) => {
+    let datetimeString = "";
+    switch (this.props.state.Language.langStatus) {
+      case 'zh-TW':
+      case 'zh-CN':
+        datetimeString = DateFormat( new Date(datetime), "d日 ");
+        break;
+      case 'vi':
+      case 'en':
+        datetimeString = DateFormat( new Date(datetime), "dS");
         break;
       default:
         datetimeString = DateFormat( new Date(datetime), "mmm dd dddd");
@@ -1006,6 +1064,91 @@ class MeetingInsertPage extends React.PureComponent  {
     return button;
   }
 
+  formatRegularMeetingAlertLabel = () => {
+    let regularMeetingAlertLabel = "";
+    let reduxMeeting = this.props.state.Meeting;
+    let langMeeting = this.props.state.Language.lang.MeetingPage;
+
+    if( 
+      this.state.regularMeetingEnable && 
+      this.props.state.Meeting.selectedRepeatType != "NR" && 
+      reduxMeeting.repeatEndDate !== ""
+    ){
+      
+      let label1, label2, label3, label4, label5, label6;
+      regularMeetingAlertLabel = `${langMeeting.repeatType[reduxMeeting.selectedRepeatType]}`;
+
+      switch (reduxMeeting.selectedRepeatType) {
+        case 'ED':
+          label1 = langMeeting.repeatType[reduxMeeting.selectedRepeatType];
+          label2 = Moment( new Date(this.state.startdate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label3 = Moment( new Date(this.state.enddate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label4 = DateFormat(reduxMeeting.repeatEndDate, "yyyy")+"年 "+this.dateFormatWithoutWeek(reduxMeeting.repeatEndDate);
+
+          if(this.props.state.Language.langStatus == "en"){
+            regularMeetingAlertLabel = `The meeting will be scheduled ${label2}-${label3} everyday, end on ${DateFormat(reduxMeeting.repeatEndDate, "mmmm dS, yyyy")}.`;
+          }else{
+            regularMeetingAlertLabel = `${langMeeting.regularMsg1}${label1}${langMeeting.regularMsg2} ${label2} ${langMeeting.regularMsg3} ${label3} ${langMeeting.regularMsg4} ${label4}${langMeeting.regularMsg5}`;
+          }
+          break;
+        case 'EW':
+          label1 = langMeeting.repeatType[reduxMeeting.selectedRepeatType];
+          label2 = this.props.state.Language.lang.Common.week[DateFormat( new Date(this.state.startdate), "dddd")];
+          label3 = Moment( new Date(this.state.startdate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label4 = this.props.state.Language.lang.Common.week[DateFormat( new Date(this.state.enddate), "dddd")];
+          label5 = Moment( new Date(this.state.enddate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label6 = this.dateFormatWithoutWeek(reduxMeeting.repeatEndDate);
+
+          if(this.props.state.Language.langStatus == "en"){
+            regularMeetingAlertLabel = `The meeting will be scheduled from ${DateFormat(new Date(this.state.startdate),"HH:MM, ddd")} to ${DateFormat(new Date(this.state.enddate),"HH:MM, ddd")} every week, end on ${DateFormat(reduxMeeting.repeatEndDate, "mmmm dS, yyyy")}.`;
+          }else{
+            regularMeetingAlertLabel = `${langMeeting.regularMsg1}${label1}${langMeeting.regularMsg2} ${label2}${label3} ${langMeeting.regularMsg3} ${label4}${label5} ${langMeeting.regularMsg4} ${label6}${langMeeting.regularMsg5}`;
+          }
+
+          break;
+        case 'EM':
+          label1 = `${langMeeting.repeatType[reduxMeeting.selectedRepeatType]}`;
+          label2 = this.dateFormatWithoutMonthWeek(new Date(this.state.startdate));
+          label3 = Moment( new Date(this.state.startdate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label4 = this.dateFormatWithoutMonthWeek(new Date(this.state.enddate));
+          label5 = Moment( new Date(this.state.enddate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label6 = this.dateFormatWithoutWeek(reduxMeeting.repeatEndDate);
+
+          if(this.props.state.Language.langStatus == "en"){
+            regularMeetingAlertLabel = `The meeting will be scheduled from ${DateFormat(new Date(this.state.startdate),"HH:MM, dS")} to ${DateFormat(new Date(this.state.enddate),"HH:MM, dS")} every month, end on ${DateFormat(reduxMeeting.repeatEndDate, "mmmm dS, yyyy")}.`;
+          } else {
+            regularMeetingAlertLabel = `${langMeeting.regularMsg1}${label1}${langMeeting.regularMsg2} ${label2}${label3} ${langMeeting.regularMsg3} ${label4}${label5} ${langMeeting.regularMsg4} ${label6}${langMeeting.regularMsg5}`;
+          }
+
+          break;
+        case 'DM':
+          label1 = [];
+          for (const [key, value] of Object.entries(langMeeting.weekDays)) {
+            for(let day of reduxMeeting.selectedWeekDays){
+              if(day == key) label1.push(value);
+            }
+          }
+
+          label2 = Moment( new Date(this.state.startdate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label3 = Moment( new Date(this.state.enddate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label4 = this.dateFormatWithoutWeek(reduxMeeting.repeatEndDate);
+          
+          if(this.props.state.Language.langStatus == "en"){
+            regularMeetingAlertLabel = `The meeting will be scheduled ${label2}-${label3}, ${label1} every week, end on ${DateFormat(reduxMeeting.repeatEndDate, "mmmm dS, yyyy")}.`;
+          } else {
+            regularMeetingAlertLabel = `${langMeeting.regularMsg1}${langMeeting.repeatType.EW} ${langMeeting.regularMsg2}${label1} ${label2} ${langMeeting.regularMsg3} ${label3} ${langMeeting.regularMsg4} ${label4}${langMeeting.regularMsg5}`;
+          }
+
+          break;
+      }
+
+      return <Label style={{margin: 15}}>{regularMeetingAlertLabel}</Label>
+
+    } else {
+      return null;
+    }
+  }
+
   addMeeting = async () =>{
     // subject
     // description
@@ -1085,11 +1228,24 @@ class MeetingInsertPage extends React.PureComponent  {
             chairperson    :this.state.chairperson,
             attendees      :this.state.attendees,
             timezone       :RNLocalize.getTimeZone(),
-            repeatType     :"NR",
-            repeatEndDate  :"",
-            weekDays       :[],
         }
 
+        if (this.state.regularMeetingEnable) {
+          // 先檢測有沒有啟用例行性會議，如果有要確認有沒有設定結束時間，如果沒有設定自動幫他加入過去一年
+          let repeatEndDate = this.props.state.Meeting.repeatEndDate;
+          if(this.props.state.Meeting.selectedRepeatType != 'NR' && repeatEndDate == ""){
+            var d1 = new Date();
+            var d2 = new Date(d1);
+            d2.setFullYear(d2.getFullYear()+1);
+            d2.setDate(d2.getDate()-1);
+            repeatEndDate = DateFormat( d2, "yyyy-mm-dd");
+          }
+
+          meetingParams.repeatType = this.props.state.Meeting.selectedRepeatType;
+          meetingParams.repeatEndDate = repeatEndDate;
+          meetingParams.weekDays = this.props.state.Meeting.selectedWeekDays 
+        }
+        
         if (this.state.isModify) {
           // 修改會議
           meetingParams.oid = this.state.oid;
@@ -1163,7 +1319,7 @@ class MeetingInsertPage extends React.PureComponent  {
       enddate  : endTime,
       attendees: [this.state.chairperson, ...ids],
       timezone : RNLocalize.getTimeZone(),
-      oid : this.state.oid
+      oid      : this.state.oid
     }
     let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
       if (result.length == 0) {

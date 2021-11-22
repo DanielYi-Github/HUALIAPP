@@ -13,7 +13,6 @@ export function getMisPsalyms() {
 		dispatch(refreshing(true)); 	
 
 		UpdateDataUtil.getMisPsalyms(getState().UserInfo.UserInfo).then((data)=>{
-
 			let psalymsDate_jsonFormat = jsonFormat(data.content);
 			dispatch({
 				type: salaryTypes.GET_SALARY_SELECT_DAYS,

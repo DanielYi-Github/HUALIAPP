@@ -889,6 +889,13 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		person 					   :"人",
 		selectedAttendeeReorder    :"已选与会人员排序",
 		noneNextOrg				   :"此厂区底下目前无可选单位",
+		regularMeeting  		   :"例行性会议",
+		endDate         		   :"结束日期",
+		needEndDate     		   :"需要指定结束日期",
+		couldNotOverYear		   :"不能超过一年",
+		customEveryWeek 		   :"每周自定义重复",
+		frequency       		   :"频率",
+		frequencyByWeek 		   :"按周重复",
 		MeetingModeType			   :{
 			Z:"Zoom",
 			S:"Skype",
@@ -915,6 +922,12 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 			SAT:"周六",
 			SUN:"周日"
 		},
+		// `將在${label1}的 ${label2} 到 ${label3} 進行會議，直到 ${label4}結束`;
+		regularMsg1:"将在",
+		regularMsg2:"的",
+		regularMsg3:"到",
+		regularMsg4:"进行会议，直到",
+		regularMsg5:"结束",
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "公司文件",
