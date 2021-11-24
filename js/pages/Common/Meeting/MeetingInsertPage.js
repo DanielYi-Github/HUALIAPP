@@ -505,7 +505,7 @@ class MeetingInsertPage extends React.PureComponent  {
           </Item>
 
           {/*例行性會議*/}
-          {
+          {/*
             this.state.regularMeetingEnable ? 
               <Item 
                 style={{
@@ -537,7 +537,7 @@ class MeetingInsertPage extends React.PureComponent  {
               </Item>
             :
               null
-          }
+          */}
 
           {/*顯示例行性會議的提示文字*/}
           { this.formatRegularMeetingAlertLabel() }

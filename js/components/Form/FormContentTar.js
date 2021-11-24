@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Content, Item, Label, Input, Icon, Text, connectStyle } from 'native-base';
+import { InputAccessoryView, Button, Dimensions, View, Keyboard } from 'react-native';
 
 class FormContentTar extends Component {
 	constructor(props) {
@@ -33,7 +34,6 @@ class FormContentTar extends Component {
 				value = (this.state.value == null) ? value : this.state.value; 
 			}
 
-
 			return(
 				 	<Item fixedLabel 
 				 		style={[
@@ -44,12 +44,11 @@ class FormContentTar extends Component {
 		 			   <Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 		               <Label style={{flex: 1}}>{this.state.labelname}</Label>
 		               <Input 
-		               		multiline
-                          	ref="focusInput"
-		               		value = {value}
+							ref           = "focusInput"
+							value         = {value}
 							scrollEnabled = {false}
-		               		style={{ textAlign: 'right', flex: 1}}
-		               		onEndEditing ={ async (text)=>{
+							style         = {{ textAlign: 'right', flex: 1}}
+							onEndEditing  = { async (text)=>{
 		               			await this.props.onPress(text.nativeEvent.text, this.props.data);
 		               			this.setState({ value:null });
 		               		}}
@@ -59,7 +58,30 @@ class FormContentTar extends Component {
 							onChangeText ={(text)=>{
 								this.setState({ value:text });
 							}}
+							inputAccessoryViewID="Done"
+							multiline       = {true}
+							// returnKeyType   ="done"
+							// blurOnSubmit    ={true}
+							// onSubmitEditing ={()=>{Keyboard.dismiss()}}
 		               	/>
+		               {/*
+		               	<InputAccessoryView nativeID="Done" style={{zIndex: 100}}>
+		               	  <View style={{
+						    width: Dimensions.get('window').width,
+						    height: 48,
+						    flexDirection: 'row',
+						    justifyContent: 'flex-end',
+						    alignItems: 'center',
+						    backgroundColor: '#F8F8F8',
+						  }}>
+		               	    <Button
+		               	      onPress={() => {}}
+		               	      title="Done"
+		               	    />
+		               	  </View>
+		               	</InputAccessoryView>
+		               	*/}
+
 		               	<Icon 
 		               		name='edit' 
 		               		type='MaterialIcons'
@@ -73,7 +95,10 @@ class FormContentTar extends Component {
 		               		:
 		               			null
 		               	}
+
+
 		            </Item>
+
 			);
 		} else {		
 			value = (this.props.data.defaultvalue == null || this.props.data.defaultvalue == "") ? value : this.props.data.defaultvalue;

@@ -231,6 +231,7 @@ function setUserData(user, data) {
 	user.pictureUrl  = data.picture;
 	user.birthday    = data.member.brndat ? data.member.brndat : user.birthday;
 	user.certTips    = data.userConfig.certTips;
+	user.userConfig  = data.userConfig;
 	user.lang        = data.lang;
 	user.roles       = data.roles;
 
