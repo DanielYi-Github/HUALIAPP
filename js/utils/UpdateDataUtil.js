@@ -1680,6 +1680,7 @@ export async function getBPMRootTask(user, content) {
 			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
+		// console.log(params);
 
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
@@ -1715,6 +1716,7 @@ export async function getBPMTaskList(user, content) {
 			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
+		// console.log(params);
 		NetUtil.getRequestContent(params, url).then((data) => {
 			// console.log(data);
 			if (data.code != 200) {

@@ -9,7 +9,7 @@ class FormContentTar extends Component {
 		// 名稱、值、參數、能否編輯、強制編輯、欄位資料
 		this.state = {
 			labelname: props.data.component.name,
-			value:null,
+			value    :null
 		};
 	}
 	
@@ -64,24 +64,7 @@ class FormContentTar extends Component {
 							// blurOnSubmit    ={true}
 							// onSubmitEditing ={()=>{Keyboard.dismiss()}}
 		               	/>
-		               {/*
-		               	<InputAccessoryView nativeID="Done" style={{zIndex: 100}}>
-		               	  <View style={{
-						    width: Dimensions.get('window').width,
-						    height: 48,
-						    flexDirection: 'row',
-						    justifyContent: 'flex-end',
-						    alignItems: 'center',
-						    backgroundColor: '#F8F8F8',
-						  }}>
-		               	    <Button
-		               	      onPress={() => {}}
-		               	      title="Done"
-		               	    />
-		               	  </View>
-		               	</InputAccessoryView>
-		               	*/}
-
+		               	
 		               	<Icon 
 		               		name='edit' 
 		               		type='MaterialIcons'
@@ -95,8 +78,6 @@ class FormContentTar extends Component {
 		               		:
 		               			null
 		               	}
-
-
 		            </Item>
 
 			);

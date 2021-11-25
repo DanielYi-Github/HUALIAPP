@@ -1,5 +1,6 @@
 import React from 'react';
-import { Alert, ActivityIndicator, Modal, View, Platform, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, TextInput } from 'react-native';
+import { Alert, ActivityIndicator, Modal, View, Platform, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, TextInput, InputAccessoryView, Dimensions } from 'react-native';
+import * as ReactNative from 'react-native';
 import { Container, Header, Icon, Left, Button, Body, Right, Title, Content, Text, Card, CardItem, Item, Label, Input, Spinner, connectStyle } from 'native-base';
 import ActionButton from 'react-native-action-button';
 import ModalWrapper from "react-native-modal";
@@ -77,7 +78,9 @@ class FormPage extends React.Component {
       fabActive       :false,     // 顯示簽核的元件
       // showSignModal:false      // 顯示簽核案件的背景圖
       bpmImage        : false,    // 顯示表單的完整圖片
-      isLevelEditable : false     // 判斷這關卡能不能編輯
+      isLevelEditable : false,     // 判斷這關卡能不能編輯
+      keyboardShow:false,
+      keyboardHeight:0
     }
   }
 
@@ -91,11 +94,33 @@ class FormPage extends React.Component {
       this.props.state.Language.langStatus,
       Form.tskid
     );
+
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow',(event)=>this.keyboardDidShow(event) );
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide',(event)=>this.keyboardDidHide(event) );
   }
 
   componentWillUnmount() {
     this.props.actions.setInitialState();
+
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
   }
+
+
+  keyboardDidShow = (event) => {
+    this.setState({
+      keyboardShow:true,
+      keyboardHeight:event.endCoordinates.height
+    })
+  }
+
+  keyboardDidHide = (event) => {
+    this.setState({
+      keyboardShow:false,
+      keyboardHeight:0
+    })
+  }
+
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.state.Form.FormContent) {
@@ -175,7 +200,9 @@ class FormPage extends React.Component {
   }
 
   render() {
-    // console.log("content", this.state.content);
+    console.log(this.props.style);
+    console.log(this.props.state);
+
     let formPage = (
       <Container>
         <MainPageBackground height={250}/>
@@ -190,7 +217,11 @@ class FormPage extends React.Component {
           title                 = {this.state.Form.processname}
           isTransparent         = {true}
         />
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView
+          extraScrollHeight = {200}
+        >
+
+
           {/*表單主旨*/}
           {this.renderFormkeyword()}
 
@@ -240,6 +271,35 @@ class FormPage extends React.Component {
           :
             null
         }
+
+
+        {/* 顯示鍵盤的完成按鈕 */}
+        {
+          this.state.keyboardShow && Platform.OS == "ios" ?  
+            <View style={{
+              width          : Dimensions.get('window').width,
+              height         : 48,
+              flexDirection  : 'row',
+              justifyContent : 'flex-end',
+              alignItems     : 'center',
+              backgroundColor: 'rgba(209, 211, 215, 1)',
+              position       : "absolute",
+              bottom         : this.state.keyboardHeight,
+              borderTopWidth : 0.25,
+              borderColor    : this.props.style.inputWithoutCardBg.inputColorPlaceholder
+            }}>
+              <ReactNative.Button
+                onPress={() => {
+                  this.setState({ keyboardShow:false });
+                  Keyboard.dismiss();
+                }}
+                title={this.props.state.Language.lang.CreateFormPage.Done}
+              />
+            </View>
+          :
+            null
+        }
+        
       </Container>
     );
 
