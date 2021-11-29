@@ -36,7 +36,8 @@ export default (variables /*: * */ = variable) => {
 	  height:Platform.OS === "android" ? variables.toolbarHeight:null,
 	},
     color : variables.HeaderForGeneral.color,
-    colorForTransparent:variables.HeaderForTransparent.color
+    colorForTransparent:variables.HeaderForTransparent.color,
+    inputWithoutCardBg    :variables.inputWithoutCardBackground,
     
   };
 

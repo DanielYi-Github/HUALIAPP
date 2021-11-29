@@ -41,7 +41,6 @@ class FormContentGridDataTablePage extends Component {
 	render() {
 		// let tableHead = this.state.editable ? [ "", this.state.lang.FormContentGridForEvaluation.tableAction ] : [""] ;
 		let tableHead = [""] ;
-
 		for(let i in this.state.data.listComponent){
 			if(this.state.data.listComponent[i].columntype != "hidetxt"){
 				tableHead.push(this.state.data.listComponent[i].component.name);
@@ -143,7 +142,6 @@ class FormContentGridDataTablePage extends Component {
 													marginBottom: 10, 
 													// color       : '#000'
 													// color       : '#575757'
-
 												}}
 											/>
 										)
@@ -226,7 +224,6 @@ class FormContentGridDataTablePage extends Component {
 	// 直接在表格輸入
 	renderInput = (data, rowIndex, columnIndex) => {
 		let isValueExist = data.defaultvalue == "" || data.defaultvalue == " " || data.defaultvalue == null ? false : true;
-
 		if (data.columntype == "txt") {
 			let component = null;
 
@@ -245,8 +242,17 @@ class FormContentGridDataTablePage extends Component {
 						keyboardType = {data.columntype == "number" ? "numeric" : "default"}
 						textAlign    = {"right"}
 						value        = {data.defaultvalue}
-						onChangeText = {text => this.updateStateDefaultValue(text, rowIndex, columnIndex) }
+						onChangeText = {text => {
+					        this.updateStateDefaultValue(text, rowIndex, columnIndex) 
+						}}
 						onEndEditing = {text => {
+									let newText = (text.nativeEvent.text != '' && text.substr(0,1) == '.') ? '' : text.nativeEvent.text;
+							        newText = newText.replace(/^0+[0-9]+/g, "0"); //不能以0开头输入
+							        newText = newText.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+							        newText = newText.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+							        newText  = newText.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+							        newText = newText.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+
 							this.setState({
 								isTextEditing: false,
 								editingPosition: null
@@ -296,7 +302,15 @@ class FormContentGridDataTablePage extends Component {
 					keyboardType = {data.columntype == "number" ? "numeric" : "default"}
 					textAlign    = {"right"}
 					value        = {data.defaultvalue}
-					onChangeText = {text => this.updateStateDefaultValue(text, rowIndex, columnIndex) }
+					onChangeText = {text => {
+						let newText = (text != '' && text.substr(0,1) == '.') ? '' : text;
+				        newText = newText.replace(/^0+[0-9]+/g, "0"); //不能以0开头输入
+				        newText = newText.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+				        newText = newText.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+				        newText  = newText.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+				        newText = newText.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+						this.updateStateDefaultValue(newText, rowIndex, columnIndex)
+					}}
 					onEndEditing = {text => this.confirmStateDefaultValue(text.nativeEvent.text, rowIndex, columnIndex)}
 			    />
 			);
@@ -333,6 +347,7 @@ class FormContentGridDataTablePage extends Component {
 					text: this.state.lang.CreateFormPage.GotIt,
 					onPress: () => {
 						// 修改回原來的值
+						console.log("this.state.preData", this.state.preData);
 						this.setState({
 							data:this.deepClone(this.state.preData)
 						});

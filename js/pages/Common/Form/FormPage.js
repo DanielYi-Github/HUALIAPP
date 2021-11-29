@@ -58,29 +58,29 @@ class FormPage extends React.Component {
     super(props);
     let Form = this.props.route.params.Form;
     this.state = {
-      Form        :Form,
-      content     :null,
-      records     :[],
-      signBtns    :null,
-      signBtnsType:Form.id.substr(0,3),
-      signState   :true,
-      signInfo    :null,
-      signOpinion :"",
+      Form                   :Form,
+      content                :null,
+      records                :[],
+      signBtns               :null,
+      signBtnsType           :Form.id.substr(0,3),
+      signState              :true,
+      signInfo               :null,
+      signOpinion            :"",
       showFormSignActionSheet:false,
       showFormSignTextInput  :false,
       showFormDrawSignImage  :false,
-      handsign        :null,      // 是否需要手寫板簽名
-      showsign        :null,      // 是否需要顯示核決層級
-      signresult      :null,      // 是否需要顯示回簽
-      isAllowAdd      :null,      // 是否顯示加會簽
-      allowAddValue   :null,      // 加會簽的值
-      signImage       :null,      // 圖片base64
-      fabActive       :false,     // 顯示簽核的元件
-      // showSignModal:false      // 顯示簽核案件的背景圖
-      bpmImage        : false,    // 顯示表單的完整圖片
-      isLevelEditable : false,     // 判斷這關卡能不能編輯
-      keyboardShow:false,
-      keyboardHeight:0
+      handsign               :null,      // 是否需要手寫板簽名
+      showsign               :null,      // 是否需要顯示核決層級
+      signresult             :null,      // 是否需要顯示回簽
+      isAllowAdd             :null,      // 是否顯示加會簽
+      allowAddValue          :null,      // 加會簽的值
+      signImage              :null,      // 圖片base64
+      fabActive              :false,     // 顯示簽核的元件
+      // showSignModal       :false      // 顯示簽核案件的背景圖
+      bpmImage               :false,    // 顯示表單的完整圖片
+      isLevelEditable        :false,     // 判斷這關卡能不能編輯
+      keyboardShow           :false,
+      keyboardHeight         :0
     }
   }
 
@@ -106,7 +106,6 @@ class FormPage extends React.Component {
     this.keyboardDidHideListener.remove();
   }
 
-
   keyboardDidShow = (event) => {
     this.setState({
       keyboardShow:true,
@@ -120,7 +119,6 @@ class FormPage extends React.Component {
       keyboardHeight:0
     })
   }
-
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.state.Form.FormContent) {
@@ -200,9 +198,7 @@ class FormPage extends React.Component {
   }
 
   render() {
-    console.log(this.props.style);
-    console.log(this.props.state);
-
+    console.log(this.props.state.Form.FormContent);
     let formPage = (
       <Container>
         <MainPageBackground height={250}/>
@@ -217,11 +213,7 @@ class FormPage extends React.Component {
           title                 = {this.state.Form.processname}
           isTransparent         = {true}
         />
-        <KeyboardAwareScrollView
-          extraScrollHeight = {200}
-        >
-
-
+        <KeyboardAwareScrollView extraScrollHeight = {200}>
           {/*表單主旨*/}
           {this.renderFormkeyword()}
 
@@ -271,7 +263,6 @@ class FormPage extends React.Component {
           :
             null
         }
-
 
         {/* 顯示鍵盤的完成按鈕 */}
         {
@@ -354,7 +345,9 @@ class FormPage extends React.Component {
     return ( app );
   }
 
+  /* 第幾個index修改, 修改後, 修改前 */
   updateFormData = (index, value, item ) => {
+    // console.log(index, value, item);
     this.props.actions.updateFormDefaultValue(value, item, index);
   }
 

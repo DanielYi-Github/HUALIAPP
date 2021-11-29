@@ -194,7 +194,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 		let p3 = UpdateDataUtil.getBPMSignState(userData, content_getBPMSignState);
 
 		Promise.all([p1, p2, p3]).then( async (value) => {
-			console.log("value", value);
+			// console.log("value", value);
 			let isLevelEditable  = value[0].edit == "Y" ? true : false;             //判斷這關卡能不能編輯
 			let handsign         = value[0] ? value[0].handsign : false;			//是否需要手寫板簽名
 			let showsign         = value[0] ? value[0].showsign : false;			//是否需要顯示核決層級
@@ -531,12 +531,12 @@ export function deleteAllForms() {
 	}
 }
 
+  /* 修改後, 修改前, 第幾個index修改 */
 export function updateFormDefaultValue(value, formItem, pageIndex){
 	return async (dispatch, getState) => {
 		let formFormat = getState().Form.FormContent;
 		let editIndex  = formFormat[pageIndex].content.indexOf(formItem);
 		
-		// console.log(1);
 		// 欄位自己的規則比較
 		let ruleCheck = await FormUnit.formFieldRuleCheck(
 								value, 
@@ -545,16 +545,12 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 								formItem.columntype
 							  );
 		if( ruleCheck != true){
-			// console.log(2);
 			dispatch(updateDefaultValueError(ruleCheck.message));
 		} else {
-			// console.log(3);
 			// 進行該欄位的新值舊值更換
 			formItem = await FormUnit.updateFormValue( value, formItem, formFormat[pageIndex].content );
 			formFormat[pageIndex].content[editIndex] = formItem;
-
 			// 判斷是否有url 的 action動作
-			// console.log(4);
 			let	columnactionValue = await FormUnit.getColumnactionValue(
 										getState().UserInfo.UserInfo, 
 										formItem, 
@@ -563,7 +559,7 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 									);
 			// 欄位隱藏或顯示控制
 			// 判斷該值是否填寫表單中顯示
-			// console.log(5);
+			
 			formFormat[pageIndex].content = FormUnit.checkFormFieldShow(
 												columnactionValue.columnList, 
 												formFormat[pageIndex].content

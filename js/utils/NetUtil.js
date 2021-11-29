@@ -48,6 +48,7 @@ let NetUtil = {
 
 		try {
 			let response = await fetch(`${TOMCAT_HOST}${url}`, fetchOptions);
+			url == "app/bpm/getTaskList" ? console.log(url, response) : null;
 			// clearTimeout(timeout); 
 			// if (!isTimeOut){
 				if (response.ok) {
