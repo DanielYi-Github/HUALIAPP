@@ -652,6 +652,45 @@ let FormUnit = {
     }
     return formFormat;
   },
+
+
+  /**修改后的代码 */
+  checkFormFieldShow2(columnactionValue, formFormat){
+    console.log('checkFormFieldShow2');
+    for(let actionValue of columnactionValue){
+      for (let formFormatObject of formFormat) {
+        let formFormatContent = formFormatObject.content
+        for(let content of formFormatContent){        // 判斷該值是否填寫表單中顯示
+          if (actionValue.id == content.component.id) {
+            content.defaultvalue = actionValue.value === "" ? content.defaultvalue : this.deepClone(actionValue.value);
+            content.paramList    = actionValue.paramList;
+            content.show         = actionValue.visible;
+            content.required     = (actionValue.required) ? "Y" : "F";
+  
+            // 需要加入判斷，確認vo是array還是object，如果是array表示要修改的資料為表格grid
+            if (actionValue.voList) {
+              for(let vo of actionValue.voList){     
+                for(let com of content.listComponent){
+                  if (vo.id == com.component.id) {
+                    com.visible   = vo.visible;
+                    com.required  = vo.required; 
+                    com.defaultvalue = vo.value; 
+                    com.paramList = vo.paramList; 
+                  }
+                }
+              }
+            }
+  
+          }
+        }
+      }
+    }
+    return formFormat;
+  },
+
+
+
+
   // 針對listButtom的值進行整理
   formatListButtonOfForm(buttonItem, columns){
     let columnactionColumnParam = {}

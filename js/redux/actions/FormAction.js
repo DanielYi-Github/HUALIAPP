@@ -600,7 +600,7 @@ export function	reloadFormContentIntoState_fromGetColumnactionValue(
 			button, 
 			formContent
 		);
-		console.log("columnactionValueList", columnactionValueList);
+		// console.log("columnactionValueList", columnactionValueList);
 
 		let formFormat = getState().Form.FormContent;
 		let loadMessgaeObject = {
@@ -609,44 +609,46 @@ export function	reloadFormContentIntoState_fromGetColumnactionValue(
 		};
 
 		/*
-		// API請求是否成功
-		if (columnactionValueList.requstError) {
-			// API請求失敗
-			loadMessgaeObject = {
-				type   :'error',
-				message:getState().Language.lang.FormContentGridForEvaluation.loadPreviousScore_Error
-			}
-		} else {
-			// API請求成功,如果msgList有資料，取決serverComfirmUpdateData決定是否進行資料更新
-			if ( columnactionValueList.msgList.length == 0 ) {
-				// msgList沒資料，進行資料更新
-				formFormat = getFormFormat(columnactionValueList, formFormat);
+			// API請求是否成功
+			if (columnactionValueList.requstError) {
+				// API請求失敗
 				loadMessgaeObject = {
-					type   :'success',
-					// message:getState().Language.lang.FormContentGridForEvaluation.loadPreviousScore_Success
-					message:"成功"
+					type   :'error',
+					message:getState().Language.lang.FormContentGridForEvaluation.loadPreviousScore_Error
 				}
 			} else {
-				// msgList有資料，serverComfirmUpdateData決定是否資料更新
-				if (columnactionValueList.serverComfirmUpdateData) {
-					// serverComfirmUpdateData決定資料更新
+				// API請求成功,如果msgList有資料，取決serverComfirmUpdateData決定是否進行資料更新
+				if ( columnactionValueList.msgList.length == 0 ) {
+					// msgList沒資料，進行資料更新
 					formFormat = getFormFormat(columnactionValueList, formFormat);
 					loadMessgaeObject = {
-						type   :'info',
-						message:columnactionValueList.msgList[0]
+						type   :'success',
+						// message:getState().Language.lang.FormContentGridForEvaluation.loadPreviousScore_Success
+						message:"成功"
 					}
 				} else {
-					// serverComfirmUpdateData決定不做資料更新
-					loadMessgaeObject = {
-						type   :'info',
-						message:columnactionValueList.msgList[0]
+					// msgList有資料，serverComfirmUpdateData決定是否資料更新
+					if (columnactionValueList.serverComfirmUpdateData) {
+						// serverComfirmUpdateData決定資料更新
+						formFormat = getFormFormat(columnactionValueList, formFormat);
+						loadMessgaeObject = {
+							type   :'info',
+							message:columnactionValueList.msgList[0]
+						}
+					} else {
+						// serverComfirmUpdateData決定不做資料更新
+						loadMessgaeObject = {
+							type   :'info',
+							message:columnactionValueList.msgList[0]
+						}
 					}
 				}
 			}
-		}
 		*/
 
 		let isShowMessageOrUpdateDate = FormUnit.isShowMessageOrUpdateDate(columnactionValueList, getState().Language.lang);
+		// console.log("isShowMessageOrUpdateDate", isShowMessageOrUpdateDate);
+
 		// 是否顯示提示訊息
 		if (isShowMessageOrUpdateDate.showMessage) {
 			loadMessgaeObject = {
@@ -681,39 +683,45 @@ function showLoadMessgae(type, messgae){
 }
 
 function getFormFormat(columnactionValueList, formFormat){
-	// console.log(formFormat);
-	// console.log(columnactionValueList);
+	console.log(columnactionValueList);
+	console.log(formFormat);
 
 	for(let formContent of formFormat){
 		for(let content of formContent.content){
+
 			for(let columnactionValue of columnactionValueList.columnList){
 				if (content.component.id == columnactionValue.id) {
-					for (let [i, value] of content.defaultvalue.entries()) {
 
-						// console.log(columnactionValue, value);
-						if (columnactionValue.voGrid != null){
-							for(let voGrid of columnactionValue.voGrid[i]){
-								for(let item of value){
-									if(voGrid.id == item.component.id){
-										item.defaultvalue = voGrid.value;
+					// 檢查 content.defaultvalue 的資料型態是不是 array
+					if ( Array.isArray( content.defaultvalue ) ) {
+
+						for (let [i, value] of content.defaultvalue.entries()) {
+
+							if (columnactionValue.voGrid != null){
+								for(let voGrid of columnactionValue.voGrid[i]){
+									for(let item of value){
+										if(voGrid.id == item.component.id) item.defaultvalue = voGrid.value;
 									}
 								}
 							}
+
+							if (columnactionValue.voList != null){}
+							
 						}
 
-						if (columnactionValue.voList != null){
-						}
-						
+					} else {
+						content.defaultvalue = columnactionValue.value
 					}
+
 				}
 			}
+
 		}
 	}
 
 
 	return formFormat;
 }
-
 
 /*
 	//	簽核狀況判斷

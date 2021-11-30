@@ -198,7 +198,7 @@ class FormPage extends React.Component {
   }
 
   render() {
-    console.log(this.props.state.Form.FormContent);
+    // console.log(this.props.state.Form.FormContent);
     let formPage = (
       <Container>
         <MainPageBackground height={250}/>
@@ -347,7 +347,6 @@ class FormPage extends React.Component {
 
   /* 第幾個index修改, 修改後, 修改前 */
   updateFormData = (index, value, item ) => {
-    // console.log(index, value, item);
     this.props.actions.updateFormDefaultValue(value, item, index);
   }
 

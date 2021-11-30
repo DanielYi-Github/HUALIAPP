@@ -48,11 +48,11 @@ let NetUtil = {
 
 		try {
 			let response = await fetch(`${TOMCAT_HOST}${url}`, fetchOptions);
-			url == "app/bpm/getTaskList" ? console.log(url, response) : null;
 			// clearTimeout(timeout); 
 			// if (!isTimeOut){
 				if (response.ok) {
 					let responseJson = await response.json();
+					url == "app/bpm/getTaskList" && responseJson.code != 200  ? console.log(url, response, params) : null;
 					switch (responseJson.code) {
 						case "200": 	// 資料請求成功，內容正確
 							responseJson.code = 200
