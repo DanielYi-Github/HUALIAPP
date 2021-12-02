@@ -124,7 +124,7 @@ class FormContentGridDataTablePage extends Component {
 								}}
 						  />
 						</Table>
-						<KeyboardAwareScrollView>
+						<KeyboardAwareScrollView extraScrollHeight = {30}>
 							<Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
 								{
 									tableData.map((rowData, index) => {
@@ -274,6 +274,7 @@ class FormContentGridDataTablePage extends Component {
 			});
 			let lang = this.state.lang;
 			
+			// 顯示提示
 			await setTimeout(function(){
 				Alert.alert(
 					lang.CreateFormPage.WrongData,

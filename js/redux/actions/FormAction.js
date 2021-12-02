@@ -222,7 +222,7 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					apList.push(temp);
 					apListIndex++;
 				} else {
-					if (tmpList[i].component.name == "cboApporveLevel" && showsign) {
+					if (tmpList[i].component.id == "cboApporveLevel" && showsign == "N") {
 					} else {
 						apList[apListIndex].content.push(tmpList[i]);			
 					}
@@ -558,12 +558,11 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 										formFormat
 									);
 			// 欄位隱藏或顯示控制
-			// 判斷該值是否填寫表單中顯示
-			
-			formFormat[pageIndex].content = FormUnit.checkFormFieldShow(
-												columnactionValue.columnList, 
-												formFormat[pageIndex].content
-											);	
+			// 針對自己所屬的ap 判斷該值是否填寫表單中顯示 
+			// formFormat[pageIndex].content = FormUnit.checkFormFieldShow( columnactionValue.columnList, formFormat[pageIndex].content);	
+			// 針對所有的ap 判斷該值是否填寫表單中顯示 
+			formFormat = FormUnit.checkAllFormFieldShow( columnactionValue.columnList, formFormat);
+
 			dispatch(updateDefaultValue(formFormat));
 		}
 		
@@ -683,8 +682,8 @@ function showLoadMessgae(type, messgae){
 }
 
 function getFormFormat(columnactionValueList, formFormat){
-	console.log(columnactionValueList);
-	console.log(formFormat);
+	// console.log(columnactionValueList);
+	// console.log(formFormat);
 
 	for(let formContent of formFormat){
 		for(let content of formContent.content){

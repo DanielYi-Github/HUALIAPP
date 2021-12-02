@@ -100,6 +100,7 @@ let NetUtil = {
 							return responseJson; 
 					}
 				} else {
+					console.log("response", response);
 					response.text().then( err => {
 						LoggerUtil.addErrorLog(url, "API request in APP", "FATAL", err);
 					});

@@ -105,13 +105,10 @@ class FormListPage extends React.Component {
           ListFooterComponent = {this.renderFooter}
           refreshControl      ={
             <RefreshControl
-              // refreshing = {false}
-              // refreshing = {this.state.refreshing}
               refreshing = {!this.props.state.Form.isLoadDone}
-              onRefresh  ={this.handleOnRefresh.bind(this)}
-              colors     ={[this.props.state.Theme.theme.variables.titleFontColor]}
-              tintColor  ={this.props.state.Theme.theme.variables.titleFontColor}
-
+              onRefresh  = {this.handleOnRefresh.bind(this)}
+              colors     = {[this.props.state.Theme.theme.variables.titleFontColor]}
+              tintColor  = {this.props.state.Theme.theme.variables.titleFontColor}
             />
           }
         />

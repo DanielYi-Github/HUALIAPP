@@ -1717,8 +1717,9 @@ export async function getBPMTaskList(user, content) {
 			"content": Common.encrypt(JSON.stringify(content))
 		};
 		NetUtil.getRequestContent(params, url).then((data) => {
-			// console.log(data);
 			if (data.code != 200) {
+				console.log(data);
+				console.log(params);
 				reject(data); //已在其他裝置登入
 				return promise;
 			}

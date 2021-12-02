@@ -198,7 +198,8 @@ class FormPage extends React.Component {
   }
 
   render() {
-    // console.log(this.props.state.Form.FormContent);
+    console.log(this.props.state.Form.FormContent);
+    
     let formPage = (
       <Container>
         <MainPageBackground height={250}/>
@@ -326,6 +327,7 @@ class FormPage extends React.Component {
       }
 
       if (isShowSgnContent) {
+
       }else{
         app.push(
             <FormContent 
