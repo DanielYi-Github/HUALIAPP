@@ -691,7 +691,6 @@ let FormUnit = {
     return formApFormat;
   },
 
-
   /**修改后的代码 */
   /*
   checkFormFieldShow2(columnactionValue, formFormat){
@@ -727,7 +726,6 @@ let FormUnit = {
     return formFormat;
   },
   */
-
 
   // 針對listButtom的值進行整理
   formatListButtonOfForm(buttonItem, columns){
@@ -1191,6 +1189,37 @@ let FormUnit = {
   // deep clone
   deepClone(src) {
     return JSON.parse(JSON.stringify(src));
+  },
+
+  // 針對合併考核單做的處理
+  findButtonParamFor_PRO08381605165376982(formApFormat){
+    let isUpdate = false;
+    let isFindIsUpdate = false;
+    let buttonParam = null;
+    for(let formFormat of formApFormat){
+      for(let content of formFormat.content){
+        if(content.component.id == "isUpdate"){
+          isUpdate = content.defaultvalue == "Y" ? true: false;
+          isFindIsUpdate = true;
+          break;
+        }
+
+        if(isFindIsUpdate && isUpdate){
+          if(content.listButton){
+            for(let button of content.listButton){
+              if(button.component.id == "sort"){
+                  buttonParam = button;
+                  break;
+              }
+            }
+          }
+        }
+      }
+
+      if(buttonParam != null) break;
+    }
+
+    return buttonParam;
   }
 }
 

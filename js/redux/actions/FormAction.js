@@ -298,7 +298,8 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 					bpmImage,
 					allowAddSign,
 					allowAddAnnounce,
-					isLevelEditable
+					isLevelEditable,
+					processid,
 				) 
 			); 
 			
@@ -308,11 +309,9 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 			if (err.code == "0") {
 				dispatch(logout()); //已在其他裝置登入，強制登出
       			ToastUnit.show('error', getState().Language.lang.Common.TokenTimeout);//使用者Token已過期，請重新登入!
-				
 			}else{
 				dispatch(LoadFormError(err.message)); //撈取中出現問題
 			}
-			
 		})
 	}
 }
@@ -333,7 +332,19 @@ function dealArraytoObject(array) {
 	return array;
 }
 
-function loadFormContent(data, records, signBtns, handsign, showsign, signresult, bpmImage, allowAddSign, allowAddAnnounce, isLevelEditable) {
+function loadFormContent(
+	data, 
+	records, 
+	signBtns, 
+	handsign, 
+	showsign, 
+	signresult, 
+	bpmImage, 
+	allowAddSign, 
+	allowAddAnnounce, 
+	isLevelEditable,
+	proid
+) {
 	return {
 		type: types.LOADFORMCONTENT,
 		data,
@@ -345,7 +356,8 @@ function loadFormContent(data, records, signBtns, handsign, showsign, signresult
 		bpmImage,
 		allowAddSign, 
 		allowAddAnnounce,
-		isLevelEditable
+		isLevelEditable,
+		proid
 	}
 }
 
@@ -563,7 +575,26 @@ export function updateFormDefaultValue(value, formItem, pageIndex){
 			// 針對所有的ap 判斷該值是否填寫表單中顯示 
 			formFormat = FormUnit.checkAllFormFieldShow( columnactionValue.columnList, formFormat);
 
-			dispatch(updateDefaultValue(formFormat));
+			// 針對特定的表單在手機上進行客製優化
+			switch(getState().Form.proid)
+			{
+				// 每月考核單
+			    case "PRO08381605165376982":
+			    	let button = await FormUnit.findButtonParamFor_PRO08381605165376982(formFormat);
+			       	if( button != null){
+			       		this.reloadFormContentIntoState_fromGetColumnactionValue(
+			       			getState().UserInfo.UserInfo, 
+			       			button,
+			       			formFormat
+			       		);
+			       	}else{
+			        	dispatch(updateDefaultValue(formFormat));
+			       	}
+			        break;
+			    // 正常程序
+			    default:
+			        dispatch(updateDefaultValue(formFormat));
+			}
 		}
 		
 	}
@@ -646,7 +677,6 @@ export function	reloadFormContentIntoState_fromGetColumnactionValue(
 		*/
 
 		let isShowMessageOrUpdateDate = FormUnit.isShowMessageOrUpdateDate(columnactionValueList, getState().Language.lang);
-		// console.log("isShowMessageOrUpdateDate", isShowMessageOrUpdateDate);
 
 		// 是否顯示提示訊息
 		if (isShowMessageOrUpdateDate.showMessage) {

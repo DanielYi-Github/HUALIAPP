@@ -14,6 +14,7 @@ const initialState = {
   FormContent        :{},
   FormRecords        :[],
   FormSignBtns       :null,
+  proid              :null,     // 表單種類的id
   isRefreshing       :false,
   isLoadDone         :false,    // 是否已經全部撈取完畢
   isSignDone         :false,    // 簽核過程是否已結束
@@ -83,7 +84,8 @@ export default function Form(state = initialState, action = {}) {
         allowAddAnnounce: action.allowAddAnnounce,  // 是否需要加會
         bpmImage        : action.bpmImage ? action.bpmImage : false ,
         isRefreshing    : false,
-        isLevelEditable : action.isLevelEditable // 判斷這關卡能不能編輯
+        isLevelEditable : action.isLevelEditable, // 判斷這關卡能不能編輯
+        proid           : action.proid            // 表單種類id
       };
     case types.UPDATEDEFAULTVALUE_FOR_FORMSIGN:
       return {
