@@ -36,7 +36,8 @@ class AboutPage extends React.Component {
                   from THF_PERMISSION 
                   where DATA_TYPE = 'masterdata'
                 );`;
-    SQLite.selectData( sql, []).then((result) => {    
+    SQLite.selectData( sql, []).then((result) => {   
+      console.log(result.raw()); 
       this.setState({
         SOPUrl:result.raw()[0].CLASS4
       });
@@ -133,7 +134,7 @@ class AboutPage extends React.Component {
 
   render() {
     let {lang} = this.props.state.Language;
-
+    console.log("this.state.SOPUrl", this.state.SOPUrl);
     return(
       <Container>
         <MainPageBackground height={null}/>

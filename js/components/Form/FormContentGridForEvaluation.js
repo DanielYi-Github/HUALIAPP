@@ -92,7 +92,6 @@ class FormContentGridForEvaluation extends Component {
 		let required = (this.props.data.required == "Y") ? "*" : "  ";
 		let renderItem = null;
 		let showLabelname = (this.state.labelname == "null" || this.state.labelname == null) ? false : true;
-
 		if (this.state.editable) {
 			renderItem = (
 				<View style={{width: '100%'}}>
@@ -100,9 +99,9 @@ class FormContentGridForEvaluation extends Component {
 	            		fixedLabel 
 	            		style={{
 							borderBottomWidth: 0, 
-							paddingTop       : showLabelname ? 15: 0, 
-							paddingBottom    : 15, 
-							borderWidth      : 5 
+							borderWidth      : 5,
+							// paddingTop       : showLabelname ? 15: 0, 
+							// paddingBottom    : 15, 
 	            		}} 
 	            		error={this.props.data.requiredAlbert}
 	            	>
