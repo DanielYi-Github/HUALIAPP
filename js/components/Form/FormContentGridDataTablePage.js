@@ -33,6 +33,7 @@ class FormContentGridDataTablePage extends Component {
 			widthArr          : widthArrList,
 			editCheckItem     : false,
 			editCheckItemIndex: -1,
+			editValue 		  : "",
 			isTextEditing 	  : false,
 			editingPosition   : {},
 		};
@@ -64,7 +65,7 @@ class FormContentGridDataTablePage extends Component {
 			}
 			tableData.push(rowData);
 		}
-		
+
 		return (
 			<Container>
 				<Header style={this.props.style.HeaderBackground}>
@@ -237,8 +238,41 @@ class FormContentGridDataTablePage extends Component {
 				        newText = newText.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
 						this.updateStateDefaultValue(newText, rowIndex, columnIndex)
 					}}
-					onEndEditing = {text => this.confirmStateDefaultValue(text.nativeEvent.text, rowIndex, columnIndex)}
-
+					onEndEditing = { text => {
+							let tempText = text.nativeEvent.text;
+							if( tempText == ""){
+								this.updateStateDefaultValue(this.state.editValue, rowIndex, columnIndex)
+								this.setState({ 
+									editValue : "",
+									isTextEditing : false
+								});
+							}else{
+								this.setState({ 
+									isTextEditing : true
+								});
+								this.confirmStateDefaultValue(tempText, rowIndex, columnIndex);
+							}
+					}}
+					
+					onFocus={(text) => {
+						/*
+						this.setState({ 
+							editValue : data.defaultvalue,
+							isTextEditing : true
+						});
+						this.updateStateDefaultValue("", rowIndex, columnIndex)
+						*/
+						
+						let self = this;
+						setTimeout(() => {
+							self.setState({ 
+								editValue : data.defaultvalue,
+								isTextEditing : true
+							});
+							self.updateStateDefaultValue("", rowIndex, columnIndex)
+						}, 500);
+						
+					}}
 			    />
 			);
 		}
@@ -257,8 +291,8 @@ class FormContentGridDataTablePage extends Component {
 	confirmStateDefaultValue = async (value, rowIndex, columnIndex) => {
 		let data = this.deepClone(this.state.data);
 		let item = data.defaultvalue[rowIndex][columnIndex];
-
 		value = value == "" ? item.defaultvalue:value ;
+
 		// 欄位自己的規則比較
 		let ruleCheck = await FormUnit.formFieldRuleCheck(
 			value,
@@ -266,16 +300,21 @@ class FormContentGridDataTablePage extends Component {
 			data.defaultvalue[rowIndex],
 			item.columntype
 		);
-		
 		if (ruleCheck != true) {
 			// 修改回原來的值
 			this.setState({
 				data:this.deepClone(this.state.preData)
 			});
 			let lang = this.state.lang;
-			
+			/*
+			this.updateStateDefaultValue(this.state.editValue, rowIndex, columnIndex)
+			this.setState({ 
+				editValue : "",
+				isTextEditing : false
+			});
+			*/
 			// 顯示提示
-			await setTimeout(function(){
+			setTimeout(function(){
 				Alert.alert(
 					lang.CreateFormPage.WrongData,
 					ruleCheck.message, [{
@@ -286,6 +325,15 @@ class FormContentGridDataTablePage extends Component {
 					}
 				)
 			}, 50);
+
+			let self = this;
+			setTimeout(function(){
+				self.updateStateDefaultValue(self.state.editValue, rowIndex, columnIndex)
+				self.setState({ 
+					editValue : "",
+					isTextEditing : false
+				});
+			}, 300);
 			
 		} else {
 			// 判斷是否有url 的 action動作
@@ -312,12 +360,14 @@ class FormContentGridDataTablePage extends Component {
 
 				this.setState({
 					data   :this.deepClone(data),
-					preData:this.deepClone(data)
+					preData:this.deepClone(data),
+					isTextEditing : false
 				});
 			}else{
 				// 修改回原來的值
 				this.setState({
-					data:this.deepClone(this.state.preData)
+					data:this.deepClone(this.state.preData),
+					isTextEditing : false
 				});
 			}
 		}
