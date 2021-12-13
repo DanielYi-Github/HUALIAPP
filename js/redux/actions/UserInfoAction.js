@@ -126,6 +126,32 @@ export function updataPassword(newPassword, user, lang) {
         }
 }
 
+// 更新会议通知助手设定数据
+export function updateMeetingAssistantData(user, lang, idArr, contextObj) {
+	return async (dispatch, getState) => {
+		if (getState().Network.networkStatus) {
+			UpdateDataUtil.updateMeetingAssistant(user, contextObj).then((result)=>{
+				// 组合新的user资料
+				for(let i=0 ; i<idArr.length ; i++) {
+					let id = idArr[i];
+					user.userConfig[id] = contextObj[id];
+				}
+				DeviceStorageUtil.set('User', user); 					//更新本地Storage资料
+				dispatch(setUserInfo(user)); 							//更新redux资料
+				console.log('updateMeetingAssistant', result);
+			}).catch((e) => {
+				console.log('updateMeetingAssistant', e);
+			})
+		} else {
+			Alert.alert(
+				lang.Common.Alert,
+				lang.Common.InternetAlert,
+				[{text:lang.InitialPasswordPage.Confirm, onPress:this.confirm=()=>{NavigationService.goBack()}}]
+		   );
+		}
+	}
+}
+
 function refreshing() {
 	return {
 		type: types.SET_REFRESHING

@@ -57,7 +57,8 @@ class MeetingInsertPage extends React.PureComponent  {
       let repeatType           = props.state.Meeting.repeatType;
       let repeatEndDate        = props.state.Meeting.repeatEndDate;
       let weekDays             = props.state.Meeting.weekDays;
-
+      let notified             = false;                 // 被通知會議
+      let notifierNM           = "";                    // 通知人姓名
 
       // 判斷當前頁面,從哪個畫面來
       if (isParams) {
@@ -90,6 +91,8 @@ class MeetingInsertPage extends React.PureComponent  {
             repeatType       = meetingParam.repeatType;
             repeatEndDate    = meetingParam.repeatEndDate;
             weekDays         = meetingParam.weekDays;
+            notified         = meetingParam.manager;
+            notifierNM       = meetingParam.chairperson.name;
             break;
           case 'MeetingSearch': // 參與人員搜尋那邊過來的
             startTime = new Date( meetingParam.startdate.replace(/-/g, "/") ).getTime();
@@ -138,6 +141,8 @@ class MeetingInsertPage extends React.PureComponent  {
               repeatType       = meetingParam.repeatType;
               repeatEndDate    = meetingParam.repeatEndDate;
               weekDays         = meetingParam.weekDays;
+              notified         = meetingParam.manager;
+              notifierNM       = meetingParam.chairperson.name;
 
             } else {
               isSearchedMeeting = false;
@@ -209,7 +214,9 @@ class MeetingInsertPage extends React.PureComponent  {
         regularMeetingEnable  : regularMeetingEnable,
         repeatType            : repeatType,
         repeatEndDate         : repeatEndDate,
-        weekDays              : weekDays
+        weekDays              : weekDays,
+        notified              : notified,
+        notifierNM            : notifierNM
       }
 	}
 
@@ -263,7 +270,6 @@ class MeetingInsertPage extends React.PureComponent  {
   }
 
 	render() {
-
     //整理tags的資料格式
     let tagsArray = [];
     for(let value of this.state.attendees) {
@@ -319,8 +325,17 @@ class MeetingInsertPage extends React.PureComponent  {
           isTransparent         = {false}
         />
         <Content>
+          {/* 被通知会议提示 */}
+          { this.state.notified ?
+              <Label style={{marginTop: 20, paddingLeft: 10, color: 'red'}}>
+                {this.props.lang.MeetingPage.NotifiedTips.replace("xxx", this.state.notifierNM)}
+              </Label>
+            :
+              null
+          }
+
           {/*會議主題*/}
-          <Item style={{ backgroundColor: this.props.style.InputFieldBackground, marginTop: 20, borderWidth: 0, paddingLeft: 10 }}>
+          <Item style={{ backgroundColor: this.props.style.InputFieldBackground, borderWidth: 0, paddingLeft: 10, marginTop: this.state.notified ? null: 20 }}>
               <Label>{this.props.lang.MeetingPage.meetingSubject}</Label>
               <Input 
                 scrollEnabled ={false}

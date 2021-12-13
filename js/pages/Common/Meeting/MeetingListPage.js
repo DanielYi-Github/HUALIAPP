@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Keyboard, SafeAreaView, SectionList } from 'react-native';
+import { View, Keyboard, SafeAreaView, SectionList, Dimensions } from 'react-native';
 import { Container, Header, Body, Left, Right, Button, Item, Icon, Input, Title, Text, Label, Segment, connectStyle} from 'native-base';
 import { tify, sify} from 'chinese-conv'; 
 import { connect } from 'react-redux';
@@ -40,7 +40,8 @@ class MeetingListPage extends React.PureComponent  {
         isLoading      :false,
         showFooter     :false,
         SegmentButton  :"all",
-        isEnd          :false
+        isEnd          :false,
+        screenWidth    :Dimensions.get('window').width
       }
 	}
 
@@ -71,6 +72,8 @@ class MeetingListPage extends React.PureComponent  {
 	render() {
     let userId = this.props.state.UserInfo.UserInfo.id;
     let meetingList = this.props.state.Meeting.meetingList;
+    let managerMeeting = meetingList.filter(value => value.manager).length > 0 ? true : false;
+    let btnWidth = managerMeeting ? this.state.screenWidth / 4 : this.state.screenWidth / 3;
     let keySearched = [];
     // 關鍵字搜尋的整理
     if (this.state.isShowSearch) {
@@ -82,6 +85,8 @@ class MeetingListPage extends React.PureComponent  {
           meetingList = meetingList.filter(createFilter(this.state.keyword, SearchingKey_TO_FILTERS));
         }
     }
+    console.log('this.props.state.Meeting.meetingList', this.props.state.Meeting.meetingList);
+    console.log('meetingList1', meetingList);
 
     // 需要過濾的代碼處理
     switch (this.state.SegmentButton) {
@@ -91,10 +96,15 @@ class MeetingListPage extends React.PureComponent  {
       case 'invited':
         meetingList = meetingList.filter(createFilter(userId, Invited_TO_FILTERS))
         break;
+      case 'manager':
+        meetingList = meetingList.filter(value => value.manager)
+        break;
     }
 
     // 整理顯示會議內容的顯示格式
     meetingList = this.formatMeetingDate(meetingList);
+    
+    console.log('meetingList2', meetingList);
     return (
       <Container>
         <HeaderForSearch
@@ -139,7 +149,7 @@ class MeetingListPage extends React.PureComponent  {
         <Segment style={{backgroundColor: "rgba(0,0,0,0)"}}>
           <Button 
             first 
-            style={{width:"32%", justifyContent: 'center' }} 
+            style={{width: btnWidth, justifyContent: 'center' }} 
             active={this.state.SegmentButton == "all"}
             onPress={()=>{
               this.setState({SegmentButton:"all"});
@@ -148,7 +158,7 @@ class MeetingListPage extends React.PureComponent  {
             <Text>{this.props.lang.MeetingPage.all}</Text>
           </Button>
           <Button 
-            style={{width:"30%", justifyContent: 'center'}} 
+            style={{width: btnWidth, justifyContent: 'center'}} 
             active={this.state.SegmentButton == "create"}
             onPress={()=>{
               this.setState({SegmentButton:"create"});
@@ -158,7 +168,7 @@ class MeetingListPage extends React.PureComponent  {
           </Button>
           <Button 
             last 
-            style={{width:"32%", justifyContent: 'center'}} 
+            style={{width: btnWidth, justifyContent: 'center'}} 
             active={this.state.SegmentButton == "invited"}
             onPress={()=>{
               this.setState({SegmentButton:"invited"});
@@ -166,6 +176,21 @@ class MeetingListPage extends React.PureComponent  {
           >
             <Text>{this.props.lang.MeetingPage.invited}</Text>
           </Button>
+          {
+            managerMeeting ? 
+              <Button 
+                last 
+                style={{width: btnWidth, justifyContent: 'center'}} 
+                active={this.state.SegmentButton == "manager"}
+                onPress={()=>{
+                  this.setState({SegmentButton:"manager"});
+                }}
+              >
+                <Text>{this.props.lang.MeetingPage.Notified}</Text>
+              </Button>
+            :
+              null
+          }         
         </Segment>
         <SectionList
           extraData           ={this.props.state.Meeting.meetingList} 

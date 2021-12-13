@@ -4442,3 +4442,39 @@ export async function getDeputyAppID(user){
 	});
 	return promise;
 }
+
+
+export async function updateMeetingAssistant(user, assistant) {
+	let lang;
+	await DeviceStorageUtil.get('locale').then((data) => {
+		lang = data ? JSON.parse(data) : data;
+	})
+
+	let content = {
+		"openMeetingQuery" :    assistant.openMeetingQuery,
+		"openMeetingMember":    assistant.openMeetingMember,
+		"openMeetingMemberNM":  assistant.openMeetingMemberNM,
+		"openMeetingPush"  :    assistant.openMeetingPush
+	}
+
+	let params = {
+		"token": Common.encrypt(user.token),
+		"userId": Common.encrypt(user.loginID),
+		"content": Common.encrypt(JSON.stringify(content)),
+		"lang": lang,
+	};
+
+	let url = "org/user/config/update";
+
+	let promise = new Promise((resolve, reject) => {
+		NetUtil.getRequestContent(params, url).then((data) => {
+			if (data.code != 200) {
+				reject(data.message); //已在其他裝置登入
+				return promise;
+			}
+			resolve(data.content);
+		})
+	});
+
+	return promise;
+}

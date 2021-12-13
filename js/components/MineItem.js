@@ -9,7 +9,7 @@ export default class MineButton extends Component{
 	render(){
 		return(
 			<CardItem button onPress ={this.props.onPress}>
-			  <Left>
+			  <Left> 
 			    <Button 
 			    	rounded 
 			    	style={{ 
