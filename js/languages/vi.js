@@ -845,6 +845,8 @@ export default {
 		myMeetings                 :"Cuộc họp của tôi",
 		initiator                  :"Tôi khởi xướng",
 		invited                    :"Được mời",
+		Notified				   :"Được thông báo",
+		NotifiedTips			   :"Cuộc họp này là thông báo cuộc họp của xxx",
 		functionMsg                :"Để nhanh chóng biết liệu người bạn muốn mời có lên lịch các cuộc họp khác trong một khoảng thời gian đã định  hay không, bạn có thể sử dụng các cài đặt sau : \"thời gian bắt đầu và kết thúc\" và \"thêm người tham gia\" để nhanh chóng tra cứu  tất cả \"thời gian họp của người gia\" Thời gian họp thuận tiện để bạn sắp xếp cuộc họp và gửi lời mời.",
 		attendeesTimeSearch        :"Tra cứu thời gian của người tham gia họp",
 		insertAttendees            :"Thêm người tham gia họp",
@@ -928,5 +930,14 @@ export default {
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "Tập tin công ty",
+	},
+	MeetingSettingPage:{
+		meetingSettingTitle: "Cài đặt quản lý hội nghị",
+		meetingNotificationAssistant: "Bật trợ lý thông báo cuộc họp",
+		meetingAssistant: "Trợ lý cuộc họp",
+		meetingAssistantTitle: "Vui lòng chọn một trợ lý cuộc họp",
+		shareMeetingNotice: "Có chia sẻ thông báo cuộc họp hay không",
+		meetingNotificationAssistantTxt: 'Nếu bạn bật cài đặt này, lịch họp của bạn sẽ được chia sẻ với "Trợ lý cuộc họp" và cuộc họp của bạn sẽ được hiển thị trong chức năng "Cuộc họp của tôi" của "Trợ lý cuộc họp"',
+		shareMeetingNoticeTxt: 'Nếu bạn bật cài đặt này, thông báo cuộc họp của bạn sẽ được chuyển đến "trợ lý cuộc họp" cùng một lúc',
 	}
 }

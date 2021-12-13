@@ -852,6 +852,8 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		all                        :"全部",
 		initiator                  :"我發起",
 		invited                    :"被邀請",
+		Notified				   :"被通知",
+		NotifiedTips			   :"此會議為xxx的會議通知",
 		functionMsg                :"為了快速得知特定時間內，您想邀請的人員是否已安排其他會議，可使用下列\“起迄時間\”與\”新增與會人員\“的設定，快速查詢所有\”與會人員\“的會議時間，方便您安排會議與發送邀請。",
 		attendeesTimeSearch        :"與會人員時間查詢",
 		insertAttendees            :"新增與會人員",
@@ -932,5 +934,14 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "公司文件",
+	},
+	MeetingSettingPage:{
+		meetingSettingTitle: "會議管理設定",
+		meetingNotificationAssistant: "啟用會議通知助手",
+		meetingAssistant: "會議助手",
+		meetingAssistantTitle: "請選擇會議助手",
+		shareMeetingNotice: "是否分享會議通知",
+		meetingNotificationAssistantTxt: '如開啟此設定，您的會議行程將會分享給"會議助手"，並在"會議助手"的"我的會議"功能中顯示您的會議',
+		shareMeetingNoticeTxt: '如開啟此設定，您的會議通知將會同時推送給"會議助手"',
 	}
 }

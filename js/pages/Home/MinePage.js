@@ -155,7 +155,7 @@ class MinePage extends React.Component {
             {/*{ isShowMeetingSetting ?*/}
             { true ?
               <MineItem
-                title    = {"會議管理設定"}
+                title    = {this.props.state.Language.lang.MeetingSettingPage.meetingSettingTitle}
                 iconBackgroundColor = {"#00B0FF"}
                 iconName = {"calendar"}
                 iconType = {"MaterialCommunityIcons"}

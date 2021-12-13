@@ -844,6 +844,8 @@ export default {
 		myMeetings                 :"My appointments",
 		initiator                  :"Initiated",
 		invited                    :"Invited",
+		Notified				   :"Notified",
+		NotifiedTips			   :"This meeting is xxx's meeting notice",
 		functionMsg                :"To quickly get the avalable schedule of attendees in purticular period, you can choose \"Start-End time\" and \"Attendees\" fields to search the appointments.",
 		attendeesTimeSearch        :"Searching the schedule of attendees",
 		insertAttendees            :"Invite Attendees",
@@ -927,5 +929,14 @@ export default {
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "Company Document",
+	},
+	MeetingSettingPage:{
+		meetingSettingTitle: "Meeting Management Settings",
+		meetingNotificationAssistant: "Enable Meeting Notification Assistant",
+		meetingAssistant: "Meeting Assistant",
+		meetingAssistantTitle: "Please choose a meeting assistant",
+		shareMeetingNotice: "Whether To Share Meeting Notice",
+		meetingNotificationAssistantTxt: 'If you enable this setting, your meeting schedule will be shared with "Meeting Assistant", and your meeting will be displayed in the "My Meeting" function of "Meeting Assistant"',
+		shareMeetingNoticeTxt: 'If you enable this setting, your meeting notification will be pushed to the "meeting assistant" at the same time',
 	}
 }
