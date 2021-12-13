@@ -34,7 +34,8 @@ class FormContentGridDataTablePage extends Component {
 			editCheckItem     : false,
 			editCheckItemIndex: -1,
 			editValue 		  : "",
-			isTextEditing 	  : false,
+			isEditRowIndex	  :"",
+			isEditColumnIndex :"" ,
 			editingPosition   : {},
 		};
 	}
@@ -218,8 +219,10 @@ class FormContentGridDataTablePage extends Component {
 
 			return component;
 		} else {
+			let textInputRef = "textInput"+rowIndex+columnIndex;
 			return(
 				<TextInput
+					ref={input => { this[textInputRef] = input }}
 					style        = {{ 
 						flex       : 1, 
 						borderColor: data.required == "Y" && !isValueExist ? "red" : 'gray', 
@@ -240,38 +243,24 @@ class FormContentGridDataTablePage extends Component {
 					}}
 					onEndEditing = { text => {
 							let tempText = text.nativeEvent.text;
+							
 							if( tempText == ""){
 								this.updateStateDefaultValue(this.state.editValue, rowIndex, columnIndex)
 								this.setState({ 
 									editValue : "",
-									isTextEditing : false
 								});
 							}else{
-								this.setState({ 
-									isTextEditing : true
-								});
 								this.confirmStateDefaultValue(tempText, rowIndex, columnIndex);
 							}
 					}}
 					
 					onFocus={(text) => {
-						/*
 						this.setState({ 
-							editValue : data.defaultvalue,
-							isTextEditing : true
+							editValue        : data.defaultvalue,
+							isEditRowIndex   : rowIndex,
+							isEditColumnIndex: columnIndex
 						});
 						this.updateStateDefaultValue("", rowIndex, columnIndex)
-						*/
-						
-						let self = this;
-						setTimeout(() => {
-							self.setState({ 
-								editValue : data.defaultvalue,
-								isTextEditing : true
-							});
-							self.updateStateDefaultValue("", rowIndex, columnIndex)
-						}, 500);
-						
 					}}
 			    />
 			);
@@ -306,13 +295,7 @@ class FormContentGridDataTablePage extends Component {
 				data:this.deepClone(this.state.preData)
 			});
 			let lang = this.state.lang;
-			/*
-			this.updateStateDefaultValue(this.state.editValue, rowIndex, columnIndex)
-			this.setState({ 
-				editValue : "",
-				isTextEditing : false
-			});
-			*/
+
 			// 顯示提示
 			setTimeout(function(){
 				Alert.alert(
@@ -325,16 +308,6 @@ class FormContentGridDataTablePage extends Component {
 					}
 				)
 			}, 50);
-
-			let self = this;
-			setTimeout(function(){
-				self.updateStateDefaultValue(self.state.editValue, rowIndex, columnIndex)
-				self.setState({ 
-					editValue : "",
-					isTextEditing : false
-				});
-			}, 300);
-			
 		} else {
 			// 判斷是否有url 的 action動作
 			let columnactionValue = await FormUnit.getColumnactionValue(
@@ -350,26 +323,38 @@ class FormContentGridDataTablePage extends Component {
 			if (isShowMessageOrUpdateDate.showMessage) {
 				ToastUnit.show(isShowMessageOrUpdateDate.showMessage.type, isShowMessageOrUpdateDate.showMessage.message);
 			}
-			
+
 			if (isShowMessageOrUpdateDate.updateData) {
 				// 判斷該值是否填寫表單中顯示
 				data.defaultvalue[rowIndex] = FormUnit.checkFormFieldShow(
 					columnactionValue.columnList,
 					data.defaultvalue[rowIndex]
 				);
+				let preData = this.deepClone(data);
+				// 判斷下一個編輯欄位是否是編輯狀態，是就給空直，不是的話不處理
+				if(rowIndex != this.state.isEditRowIndex || columnIndex != this.state.isEditColumnIndex){
+					data.defaultvalue[parseInt(this.state.isEditRowIndex)][parseInt(this.state.isEditColumnIndex)].defaultvalue = "";
+				}
 
 				this.setState({
 					data   :this.deepClone(data),
-					preData:this.deepClone(data),
-					isTextEditing : false
+					preData:this.deepClone(preData),
 				});
+				
 			}else{
+				let preData = this.deepClone(this.state.preData);
+				// 判斷下一個編輯欄位是否是編輯狀態，是就給空直，不是的話不處理
+				if(rowIndex != this.state.isEditRowIndex || columnIndex != this.state.isEditColumnIndex){
+					preData.defaultvalue[parseInt(this.state.isEditRowIndex)][parseInt(this.state.isEditColumnIndex)].defaultvalue = "";
+				}
+
 				// 修改回原來的值
 				this.setState({
-					data:this.deepClone(this.state.preData),
-					isTextEditing : false
+					data         : this.deepClone(preData),
 				});
 			}
+
+
 		}
 	}
 
