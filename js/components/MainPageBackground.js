@@ -10,7 +10,7 @@ import {
 import { Container, connectStyle} from 'native-base';
 
 import Flake from './Animation/Flake';
-import Lantern from './Animation/Lantern';
+// import Lantern from './Animation/Lantern';
 import { WebView } from 'react-native-webview';
 
 const FixTinyText = `
