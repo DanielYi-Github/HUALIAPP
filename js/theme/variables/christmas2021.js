@@ -54,7 +54,7 @@ export default {
 
   //Container
   // containerBgColor: "#F5F6FA",
-  containerBgColor: "rgba(0,0,0,0)",
+  containerBgColor: "rgba(1,9,58,1)",
 
   // Footer
   footerHeight: 55,
@@ -63,7 +63,8 @@ export default {
 
   // Header
   toolbarBtnColor: platform === "ios" ? "#007aff" : "#fff",
-  toolbarDefaultBg: "#4BA928",  // 會變
+  // toolbarDefaultBg: "#4BA928",  // 會變
+  toolbarDefaultBg: "rgba(0,0,0,0)",  // 會變
   toolbarHeight: platform === "ios" ? 64 : 56,
   toolbarSearchIconSize: platform === "ios" ? 20 : 23,
   toolbarInputColor: "#fff",  // 會變
@@ -175,21 +176,24 @@ export default {
     icon_Message_inactive:require("./chrismaxNewYear/Message.png"),
     icon_Mine_active     :require("./chrismaxNewYear/Mine-1.png"),
     icon_Mine_inactive   :require("./chrismaxNewYear/Mine.png"),
-
+    /*
     activeIconColor   :'#FFFFFF',
     inactiveIconColor :'rgba(255, 255, 255, .7)',
-    activeLabelColor  :"#FFFFFF",
-    inactiveLabelColor:"rgba(255, 255, 255, .7)",
+    */
+    activeLabelColor  :"rgba(238, 255, 65, 1)",
+    inactiveLabelColor:"rgba(255, 255, 255, .9)",
+    /*
     barColor          :"#F73525",
     pressColor        : 'rgba(253, 186, 28, 1)',
-    barColor_Home     : "#F73525",
-    pressColor_Home   : "#F73525",
-    barColor_Find     : "#7375A8",
-    pressColor_Find   : "#7375A8",
-    barColor_Message  : "#4BA928",
-    pressColor_Message: "#4BA928",
-    barColor_Mine     : "rgba(253, 186, 28, 1)",
-    pressColor_Mine   : "rgba(253, 186, 28, 1)",
+    */
+    barColor_Home     : "rgba(0,0,0, .4)",
+    pressColor_Home   : "rgba(0,0,0, .4)",
+    barColor_Find     : "rgba(0,0,0, .4)",
+    pressColor_Find   : "rgba(0,0,0, .4)",
+    barColor_Message  : "rgba(0,0,0, .4)",
+    pressColor_Message: "rgba(0,0,0, .4)",
+    barColor_Mine     : "rgba(0,0,0, .4)",
+    pressColor_Mine   : "rgba(0,0,0, .4)",
     // ToolbarStyle      :Basic.ToolbarStyle
   },
   // 458 38
@@ -204,7 +208,8 @@ export default {
   },
   //HomePageBannerTitle
   HomePageBannerTitle:56,
-  HomePageBannerBackgroundColor:"#4BA928",
+  // HomePageBannerBackgroundColor:"#4BA928",
+  HomePageBannerBackgroundColor:"rgba(1,9,58, 1)",
 
   ExplainText:{
     color:"#F73525"
@@ -237,7 +242,8 @@ export default {
     // height: platform === "ios"? 150: 125,
     height: deviceHeight,
     width : "100%",
-    backgroundColor:"#DB4743", 
+    // backgroundColor:"#DB4743", 
+    backgroundColor:"#7E57C2", 
     position: 'absolute',
     source: require("./chrismaxNewYear/christmas.jpg")
   },

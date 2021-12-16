@@ -69,7 +69,7 @@ class MinePage extends React.Component {
       if (FunctionData.ID == "MeetingList") isShowMeetingSetting = true;
     }
     */
-
+    // console.log(user);
     return (
       <Container>
        <MainPageBackground height={200}/>
