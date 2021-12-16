@@ -138,9 +138,8 @@ export function updateMeetingAssistantData(user, lang, idArr, contextObj) {
 				}
 				DeviceStorageUtil.set('User', user); 					//更新本地Storage资料
 				dispatch(setUserInfo(user)); 							//更新redux资料
-				console.log('updateMeetingAssistant', result);
 			}).catch((e) => {
-				console.log('updateMeetingAssistant', e);
+
 			})
 		} else {
 			Alert.alert(

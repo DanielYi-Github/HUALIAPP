@@ -85,8 +85,6 @@ class MeetingListPage extends React.PureComponent  {
           meetingList = meetingList.filter(createFilter(this.state.keyword, SearchingKey_TO_FILTERS));
         }
     }
-    console.log('this.props.state.Meeting.meetingList', this.props.state.Meeting.meetingList);
-    console.log('meetingList1', meetingList);
 
     // 需要過濾的代碼處理
     switch (this.state.SegmentButton) {
@@ -103,8 +101,6 @@ class MeetingListPage extends React.PureComponent  {
 
     // 整理顯示會議內容的顯示格式
     meetingList = this.formatMeetingDate(meetingList);
-    
-    console.log('meetingList2', meetingList);
     return (
       <Container>
         <HeaderForSearch

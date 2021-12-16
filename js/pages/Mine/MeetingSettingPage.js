@@ -155,30 +155,40 @@ class MeetingSettingPage extends React.Component {
   }
 
   openMeetingQueryAct = () => {
+    let AssistantID = this.state.openMeetingMember;
+    let AssistantNM = this.state.openMeetingMemberNM;
     let isOpenMeetingQuery = this.state.openMeetingQuery;
-    let openMeetingQuery;
-    if(isOpenMeetingQuery == 'Y') {
-      this.setState({
-        openMeetingQuery: 'N'
-      });
-      openMeetingQuery = 'N';
+    if(AssistantID != "" && AssistantNM != "") {
+      let openMeetingQuery;
+      if(isOpenMeetingQuery == 'Y') {
+        this.setState({
+          openMeetingQuery: 'N'
+        });
+        openMeetingQuery = 'N';
+      }else {
+        this.setState({
+          openMeetingQuery: 'Y'
+        });
+        openMeetingQuery = 'Y';
+      }
+  
+      let user = this.props.state.UserInfo.UserInfo;
+      let lang = this.props.state.Language.lang;
+      let idArr = ["openMeetingQuery","openMeetingMember","openMeetingMemberNM","openMeetingPush"];
+      let assistantObj = {
+        "openMeetingQuery" :    openMeetingQuery,
+        "openMeetingMember":    this.state.openMeetingMember,
+        "openMeetingMemberNM":  this.state.openMeetingMemberNM,
+        "openMeetingPush"  :    this.state.openMeetingPush
+      }
+      this.props.actions.updateMeetingAssistantData(user, lang, idArr, assistantObj);
     }else {
-      this.setState({
-        openMeetingQuery: 'Y'
-      });
-      openMeetingQuery = 'Y';
+      if(isOpenMeetingQuery == 'N') {
+        NavigationService.navigate("MeetingSettingAssistant", {
+          onPress  : this.selectAssistant
+        });
+      } 
     }
-
-    let user = this.props.state.UserInfo.UserInfo;
-    let lang = this.props.state.Language.lang;
-    let idArr = ["openMeetingQuery","openMeetingMember","openMeetingMemberNM","openMeetingPush"];
-    let assistantObj = {
-      "openMeetingQuery" :    openMeetingQuery,
-      "openMeetingMember":    this.state.openMeetingMember,
-      "openMeetingMemberNM":  this.state.openMeetingMemberNM,
-      "openMeetingPush"  :    this.state.openMeetingPush
-    }
-    this.props.actions.updateMeetingAssistantData(user, lang, idArr, assistantObj);
   }
 
   openMeetingPushAct = () => {
@@ -210,6 +220,7 @@ class MeetingSettingPage extends React.Component {
 
   selectAssistant = (assistant) => {
     this.setState({
+      openMeetingQuery    : "Y",
       openMeetingMember   : assistant.id,
       openMeetingMemberNM : assistant.name,
     });
@@ -220,7 +231,7 @@ class MeetingSettingPage extends React.Component {
     let openMeetingMember = assistant.id;
     let openMeetingMemberNM = assistant.name;
     let assistantObj = {
-      "openMeetingQuery" :    this.state.openMeetingQuery,
+      "openMeetingQuery" :    "Y",
       "openMeetingMember":    openMeetingMember,
       "openMeetingMemberNM":  openMeetingMemberNM,
       "openMeetingPush"  :    this.state.openMeetingPush

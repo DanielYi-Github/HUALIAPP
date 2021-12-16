@@ -30,7 +30,6 @@ class MeetingSettingAssistantPage extends React.Component {
   }
 
   componentDidMount(){
-    console.log('componentDidMount');
     this.loadMoreData();
   }
 
@@ -116,7 +115,6 @@ class MeetingSettingAssistantPage extends React.Component {
   }
 
   loadMoreData = (isSearching = {}, searchedData = null) => {
-    console.log('searchedData', searchedData);
     isSearching = (typeof isSearching == "object") ? false : isSearching;
     let isSearch = isSearching ? isSearching : this.state.isSearch;
     searchedData = (searchedData == null) ? this.state.searchedData : searchedData;
@@ -176,7 +174,6 @@ class MeetingSettingAssistantPage extends React.Component {
           console.log(err);
         })
       } else {
-        console.log('count',this.state.data.length);
         //查詢使用
         let actionObject = { 
           condition:"" 

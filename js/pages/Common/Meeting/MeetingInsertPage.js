@@ -92,7 +92,7 @@ class MeetingInsertPage extends React.PureComponent  {
             repeatEndDate    = meetingParam.repeatEndDate;
             weekDays         = meetingParam.weekDays;
             notified         = meetingParam.manager;
-            notifierNM       = meetingParam.chairperson.name;
+            notifierNM       = meetingParam.managers.join(",");
             break;
           case 'MeetingSearch': // 參與人員搜尋那邊過來的
             startTime = new Date( meetingParam.startdate.replace(/-/g, "/") ).getTime();
@@ -142,7 +142,7 @@ class MeetingInsertPage extends React.PureComponent  {
               repeatEndDate    = meetingParam.repeatEndDate;
               weekDays         = meetingParam.weekDays;
               notified         = meetingParam.manager;
-              notifierNM       = meetingParam.chairperson.name;
+              notifierNM       = meetingParam.managers.join(",");
 
             } else {
               isSearchedMeeting = false;

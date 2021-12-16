@@ -845,7 +845,7 @@ export default {
 		initiator                  :"Initiated",
 		invited                    :"Invited",
 		Notified				   :"Notified",
-		NotifiedTips			   :"This meeting is xxx's meeting notice",
+		NotifiedTips			   :"This meeting is a meeting schedule of xxx",
 		functionMsg                :"To quickly get the avalable schedule of attendees in purticular period, you can choose \"Start-End time\" and \"Attendees\" fields to search the appointments.",
 		attendeesTimeSearch        :"Searching the schedule of attendees",
 		insertAttendees            :"Invite Attendees",
@@ -935,8 +935,8 @@ export default {
 		meetingNotificationAssistant: "Enable Meeting Notification Assistant",
 		meetingAssistant: "Meeting Assistant",
 		meetingAssistantTitle: "Please choose a meeting assistant",
-		shareMeetingNotice: "Whether To Share Meeting Notice",
-		meetingNotificationAssistantTxt: 'If you enable this setting, your meeting schedule will be shared with "Meeting Assistant", and your meeting will be displayed in the "My Meeting" function of "Meeting Assistant"',
-		shareMeetingNoticeTxt: 'If you enable this setting, your meeting notification will be pushed to the "meeting assistant" at the same time',
+		shareMeetingNotice: "Share meeting notice",
+		meetingNotificationAssistantTxt: 'Turn on this setting, and your meeting schedule will be displayed in the "My Meeting" function of "Meeting Assistant"',
+		shareMeetingNoticeTxt: 'Turn on this setting, your meeting notifications will be pushed to the "meeting assistant" at the same time',
 	}
 }

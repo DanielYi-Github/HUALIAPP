@@ -852,7 +852,7 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		initiator                  :"我发起",
 		invited                    :"被邀请",
 		Notified				   :"被通知",
-		NotifiedTips			   :"此会议为xxx的会议通知",
+		NotifiedTips			   :"此会议为xxx的会议行程",
 		functionMsg                :"为了快速得知特定时间内，您想邀请的人员是否已安排其他会议，可使用下列\“起迄时间\”与\”新增与会人员\“的设定，快速查询所有\”与会人员\“的会议时间，方便您安排会议与发送邀请。",
 		attendeesTimeSearch        :"与会人员时间查询",
 		insertAttendees            :"新增与会人员",
@@ -939,8 +939,8 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		meetingNotificationAssistant: "启用会议通知助手",
 		meetingAssistant: "会议助手",
 		meetingAssistantTitle: "请选择会议助手",
-		shareMeetingNotice: "是否分享会议通知",
-		meetingNotificationAssistantTxt: '如开启此设定，您的会议行程将会分享给"会议助手"，并在"会议助手"的"我的会议"功能中显示您的会议',
-		shareMeetingNoticeTxt: '如开启此设定，您的会议通知将会同时推送给"会议助手"',
+		shareMeetingNotice: "分享会议通知",
+		meetingNotificationAssistantTxt: '开启此设定，您的会议行程将会在"会议助手"的"我的会议"功能中显示',
+		shareMeetingNoticeTxt: '开启此设定，您的会议通知将会同时推送给"会议助手"',
 	}
 }
