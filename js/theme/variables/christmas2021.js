@@ -100,8 +100,8 @@ export default {
 
   // Input Without card background
   inputWithoutCardBackground:{
-    inputColor:"#000",
-    inputColorPlaceholder:"#575757"
+    inputColor:"#FFF",
+    inputColorPlaceholder:"#DDD"
   },
 
   // List

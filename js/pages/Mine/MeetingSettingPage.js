@@ -76,7 +76,7 @@ class MeetingSettingPage extends React.Component {
               style       = {[{marginTop:30}]} 
             >           
               <Left>
-                <Text style={{fontSize: 18}}>{MeetingSettinLang.meetingNotificationAssistant}</Text>
+                <Text style={{fontSize: 18, color:this.props.style.inputWithoutCardBg.inputColor}}>{MeetingSettinLang.meetingNotificationAssistant}</Text>
               </Left>
               <Right style={{flexDirection: 'row', flex: 0}}>
                 <Switch 
@@ -102,11 +102,11 @@ class MeetingSettingPage extends React.Component {
                   }}
                 >
                   <Left>
-                    <Text style={{fontSize: 18}}>{MeetingSettinLang.meetingAssistant}</Text>
+                    <Text style={{fontSize: 18, color:this.props.style.inputWithoutCardBg.inputColor}}>{MeetingSettinLang.meetingAssistant}</Text>
                   </Left>
                 
                   <Right style={{flexDirection: 'row', flex: 0}}>
-                    <Text>{this.state.openMeetingMemberNM}</Text>
+                    <Text style={{color:this.props.style.inputWithoutCardBg.inputColor}}>{this.state.openMeetingMemberNM}</Text>
                     <Text>  </Text>
                     <Icon name='arrow-forward' />
                   </Right>
@@ -122,7 +122,7 @@ class MeetingSettingPage extends React.Component {
                   style       = {[{marginTop:30}]} 
                 >           
                   <Left>
-                    <Text style={{fontSize: 18}}>{MeetingSettinLang.shareMeetingNotice}</Text>
+                    <Text style={{fontSize: 18, color:this.props.style.inputWithoutCardBg.inputColor}}>{MeetingSettinLang.shareMeetingNotice}</Text>
                   </Left>
                   <Right style={{flexDirection: 'row', flex: 0}}>
                     <Switch 
@@ -240,8 +240,11 @@ class MeetingSettingPage extends React.Component {
   }
 }
 
-export let AccountSafePageStyle = connectStyle( 'Page.MinePage', {} )(MeetingSettingPage);
-export let MinePageStyle = connectStyle( 'Page.MinePage', {} )(MeetingSettingPage);
+// export let AccountSafePageStyle = connectStyle( 'Page.MinePage', {} )(MeetingSettingPage);
+// export let MinePageStyle = connectStyle( 'Page.MinePage', {} )(MeetingSettingPage);
+
+export let MeetingSettingPageStyle = connectStyle( 'Component.InputWithoutCardBackground', {} )(MeetingSettingPage);
+
 
 export default connect(
   (state) => ({
@@ -252,4 +255,4 @@ export default connect(
       ...UserInfoAction
     }, dispatch)
   })
-)(AccountSafePageStyle,MinePageStyle);
+)(MeetingSettingPageStyle);

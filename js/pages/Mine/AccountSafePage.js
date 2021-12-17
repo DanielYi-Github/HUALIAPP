@@ -49,7 +49,10 @@ class AccountSafePage extends React.Component {
                   onPress={()=>NavigationService.navigate("UpdatePassword")}
               >           
                  <Left>
-                   <Text style={{fontSize: 18}}>{this.props.state.Language.lang.AccountSafePage.UpdatePassword}</Text>
+                   <Text style={{
+                    fontSize: 18,
+                    color:this.props.style.inputWithoutCardBg.inputColor
+                  }}>{this.props.state.Language.lang.AccountSafePage.UpdatePassword}</Text>
                  </Left>
                  <Right style={{flexDirection: 'row', flex: 0}}>
                     <Icon name="arrow-forward" />
@@ -66,7 +69,11 @@ class AccountSafePage extends React.Component {
                   onPress     = {()=>this.switchBios( user, !biometricInfo.biosUser.biometricEnable )}
                 >           
                   <Left>
-                    <Text style={{fontSize: 18}}>{this.props.state.Language.lang.MinePage.Biometrics}</Text>
+                    <Text style={{
+                      fontSize: 18,
+                      color:this.props.style.inputWithoutCardBg.inputColor
+
+                    }}>{this.props.state.Language.lang.MinePage.Biometrics}</Text>
                   </Left>
                   <Right style={{flexDirection: 'row', flex: 0}}>
                     <Switch 
@@ -84,7 +91,12 @@ class AccountSafePage extends React.Component {
                   onPress={this.switchAcc.bind(this, "change")}
               >  
                 <View style={{ alignItems: "center"}}>         
-                  <Text style={{fontSize: 18 ,textAlign:'center'}}>
+                  <Text style={{
+                    fontSize: 18 ,
+                    textAlign:'center',
+                    color:this.props.style.inputWithoutCardBg.inputColor
+
+                  }}>
                     {this.props.state.Language.lang.MinePage.changeAccount}
                   </Text>
                 </View>
@@ -95,7 +107,12 @@ class AccountSafePage extends React.Component {
                   onPress={this.logout.bind(this)}
               >  
                 <View style={{ alignItems: "center"}}>         
-                  <Text style={{fontSize: 18 ,textAlign:'center'}}>
+                  <Text style={{
+                    fontSize: 18 ,
+                    textAlign:'center',
+                    color:this.props.style.inputWithoutCardBg.inputColor
+                    
+                  }}>
                     {this.props.state.Language.lang.MinePage.logout}
                   </Text>
                 </View>
@@ -164,8 +181,10 @@ class AccountSafePage extends React.Component {
 
 }
 
-export let AccountSafePageStyle = connectStyle( 'Page.MinePage', {} )(AccountSafePage);
-export let MinePageStyle = connectStyle( 'Page.MinePage', {} )(AccountSafePage);
+// export let AccountSafePageStyle = connectStyle( 'Page.MinePage', {} )(AccountSafePage);
+// export let MinePageStyle = connectStyle( 'Page.MinePage', {} )(AccountSafePage);
+export let AccountSafePageStyle = connectStyle( 'Component.InputWithoutCardBackground', {} )(AccountSafePage);
+
 
 export default connect(
   (state) => ({
@@ -182,4 +201,4 @@ export default connect(
       ...BiometricAction
     }, dispatch)
   })
-)(AccountSafePageStyle,MinePageStyle);
+)(AccountSafePageStyle);
