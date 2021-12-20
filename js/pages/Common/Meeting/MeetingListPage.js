@@ -163,7 +163,7 @@ class MeetingListPage extends React.PureComponent  {
             <Text>{this.props.lang.MeetingPage.initiator}</Text>
           </Button>
           <Button 
-            last 
+            last = {managerMeeting ? false: true}
             style={{width: btnWidth, justifyContent: 'center'}} 
             active={this.state.SegmentButton == "invited"}
             onPress={()=>{
