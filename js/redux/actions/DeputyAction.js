@@ -20,7 +20,7 @@ export function iniDeputyData(){
 export function loadBPMDeputySetting() {
 	return async (dispatch, getState) => {
 	    await UpdateDataUtil.getBPMDeputySetting(getState().UserInfo.UserInfo).then(async (data) => {
-	    	console.log("loadBPMDeputySetting", data);
+	    	// console.log("loadBPMDeputySetting", data);
 			dispatch(setDeputyBasic(data));	// Call API返回资料存到redux
 	    	await this.basicInit(data);		// 处理转化数据格式
 	    	this.getDeputyTip();			// 代理启动状态
@@ -708,7 +708,7 @@ export function paramInit(){
 			
 		//初始化執行
 		await SQLite.selectData(sql, []).then((result) => {
-			console.log('getSQLData', result.raw());
+			// console.log('getSQLData', result.raw());
 			//如果沒有找到資料，不顯示任何資料
 		    for (let i in result.raw()) {
 		      data.push(result.raw()[i]); 

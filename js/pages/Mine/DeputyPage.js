@@ -1,5 +1,5 @@
 import React from 'react';
-import { Spinner, Container,  Left, Content,  Right, Item, Input, Button,  Text, ListItem, List,  Switch, connectStyle } from 'native-base';
+import { Spinner, Container,  Left, Content,  Right, Item, Input, Button,  Text, ListItem, List,  Switch, connectStyle, Label } from 'native-base';
 import { Alert, Modal, View }    from 'react-native';
 import { connect }               from 'react-redux';
 import { bindActionCreators }    from 'redux';
@@ -64,25 +64,24 @@ class DeputyPage extends React.Component {
         {
           <Content>
               {/* 代理状态 */}
-              <Item  
-                last 
-                style={{ 
-                    marginTop: 15,
-                    marginBottom: 15, 
-                    paddingLeft: 15, 
-                    paddingRight: 15, 
-                    backgroundColor: this.props.style.inputBackgroundColor
+              <Item  style={{ 
+                  marginBottom: 20, 
+                  padding: 15, 
+                  backgroundColor: this.props.style.inputBackgroundColor
                 }} 
               >
                   <Left>
+                    {/*
                     <Input 
                         paddingVertical = {0}
                         scrollEnabled = {false}
                         multiline 
                         value = {lang.Status} 
                         editable = {false} 
-                        style = {{textAlign: 'left'}}
+                        style = {{textAlign: 'left', borderWidth: 1}}
                       />
+                    */}
+                    <Label>{lang.Status}</Label>
                   </Left>
                   <Right>
                       <Text style={{fontSize: 18}}>{Deputy.msgState}</Text>
@@ -90,7 +89,12 @@ class DeputyPage extends React.Component {
               </Item>
               
               {/* 代理方式 */}
-              <View style={{width:"100%", alignItems:"center", justifyContent:"center", backgroundColor:this.props.style.inputBackgroundColor}}>
+              <View style={{
+                width:"100%", 
+                alignItems:"center", 
+                justifyContent:"center", 
+                backgroundColor:this.props.style.inputBackgroundColor
+              }}>
               {
                 (Deputy.deputyWay)?
                   <FormContentCbo 
@@ -103,27 +107,38 @@ class DeputyPage extends React.Component {
                   null
               }
               </View>
+
               {
                 (Deputy.deputyRule) ?
                   // 依规则代理
-                  <ListItem last>
-                  {
-                    (Deputy.deputyRuleComParam && !this.props.state.Deputy.isLoading) ?
-                      <FormInputContent 
-                        data     ={Deputy.deputyRules} 
-                        onPress  ={this.onPressDeputyRules}
-                        editable ={!Deputy.deputyState}
-                        lang     ={this.props.state.Language.lang}
-                        user     ={this.props.state.UserInfo.UserInfo}
-                        mixParam = {Deputy.mixParam}
-                      />
-                    :
-                      null
-                  }
-                  </ListItem>
+                  <View style={{
+                    marginTop: 20,
+                    backgroundColor:this.props.style.inputBackgroundColor,
+                  }}>
+                    <Item>
+                    {
+                      (Deputy.deputyRuleComParam && !this.props.state.Deputy.isLoading) ?
+                        <FormInputContent 
+                          data     ={Deputy.deputyRules} 
+                          onPress  ={this.onPressDeputyRules}
+                          editable ={!Deputy.deputyState}
+                          lang     ={this.props.state.Language.lang}
+                          user     ={this.props.state.UserInfo.UserInfo}
+                          mixParam = {Deputy.mixParam}
+                        />
+                      :
+                        null
+                    }
+                    </Item>
+                  </View>
                 : 
                   // 单一代理
-                  <View style={{width:"100%", alignItems:"center", justifyContent:"center", backgroundColor:this.props.style.inputBackgroundColor}}>
+                  <View style={{
+                    width:"100%", 
+                    alignItems:"center", 
+                    justifyContent:"center", 
+                    backgroundColor:this.props.style.inputBackgroundColor
+                  }}>
                   { 
                     (Deputy.deputyActionValue) ?
                       <FormContentTextWithAction 
@@ -141,13 +156,20 @@ class DeputyPage extends React.Component {
               {/* 多规则代理目前暂不支持多条件组合 */}
               {
                 (Deputy.deputyRuleComParam)?
-                  <Text style={{color:this.props.style.inputWithoutCardBg.inputColor}}>{lang.RulesNotSupport}</Text>
+                  <View style={{width:"100%", alignItems:"flex-start", backgroundColor:this.props.style.inputBackgroundColor, paddingLeft: 15, paddingTop: 5, paddingBottom: 5}}>
+                    <Label>{lang.RulesNotSupport}</Label>
+                  </View>
                 :
                   null
               }
 
               {/* 特定时间代理 */}
-              <ListItem last style={[/*Styles.HeaderBackground,*/{marginTop:15}]}>
+              <Item style={{
+                marginTop:20, 
+                backgroundColor:this.props.style.inputBackgroundColor,
+                padding: 15, 
+                width: '100%'
+              }}>
                 <Left>
                   <Text style={{fontSize: 18}}>
                     {lang.RuningSpecialTime}
@@ -160,7 +182,7 @@ class DeputyPage extends React.Component {
                     onChange ={this.props.actions.switchExecuteDuration}
                   />
                 </Right>
-              </ListItem>
+              </Item>
               {
                 (Deputy.executeDuration) ?
                   <List>
@@ -198,7 +220,12 @@ class DeputyPage extends React.Component {
               }
 
               {/* 代理人完成通知 */}
-              <ListItem last style={{marginTop:15}}>
+              <Item style={{
+                marginTop:20,
+                padding: 15,
+                backgroundColor:this.props.style.inputBackgroundColor,
+                width: '100%'
+              }}>
                 <Left>
                   <Text style={{fontSize: 18}}>{lang.DeputySuccesMsg}</Text>
                 </Left>
@@ -209,29 +236,34 @@ class DeputyPage extends React.Component {
                     onChange ={this.props.actions.switchInformMailMode}
                   />
                 </Right>
-              </ListItem>
+              </Item>
+
+              {/* 通知对象 */}
+              <View style={{
+                alignItems:"center", 
+                backgroundColor:this.props.style.inputBackgroundColor,
+                width: '100%'
+              }}>
               {
-                // 通知对象
-                (Deputy.informMailMode) ?              
-                  <View style={{width:"100%", alignItems:"center", justifyContent:"center", backgroundColor:this.props.style.inputBackgroundColor}}>
-                  { 
-                    (Deputy.informName.actionValue)?
-                      <FormContentTextWithAction 
-                        data     ={Deputy.informName} 
-                        editable ={null} 
-                        onPress  ={this.onPressMsgMember}
-                        lang ={this.props.state.Language.lang}
-                      />
-                    :
-                      null
-                  }
-                  </View>
+                (Deputy.informMailMode && Deputy.informName.actionValue) ?              
+                  <FormContentTextWithAction 
+                    data     ={Deputy.informName} 
+                    editable ={null} 
+                    onPress  ={this.onPressMsgMember}
+                    lang ={this.props.state.Language.lang}
+                  />
                 :
                   null
               }
+              </View>
 
               {/* 登录时不要提示代理人的状况 */}
-              <ListItem last style={{marginTop:15,marginBottom:15}}>
+              <Item style={{
+                marginTop:20,
+                marginBottom:20,
+                padding: 15,
+                backgroundColor:this.props.style.inputBackgroundColor,
+              }}>
                 <Left style={{flex:1}}>
                     <Text style={{fontSize: 18}}>{lang.LoginNotShowDeputyMemStatus}</Text>
                 </Left>
@@ -242,7 +274,7 @@ class DeputyPage extends React.Component {
                     onChange ={this.props.actions.switchDisableMsgPrompt}
                   />
                 </Right>
-              </ListItem>
+              </Item>
 
               {/* 启用/停止按钮 */}
               {
