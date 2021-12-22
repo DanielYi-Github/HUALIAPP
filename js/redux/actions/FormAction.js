@@ -155,7 +155,7 @@ function FormSignsIntoState(data , isLoadDone = false) {
 	}
 }
 
-export function	loadFormContentIntoState(userData, processid, id, rootid, lang, tskid){
+export function	loadFormContentIntoState(userData, formData, lang){
 	return (dispatch, getState) => {
 		dispatch(refresh()); //顯示載入動態
 
@@ -171,22 +171,32 @@ export function	loadFormContentIntoState(userData, processid, id, rootid, lang, 
 		// rdo, 單選項
 		// tar, 多行文字
 		// ap   header
+		let processid = formData.processid
+		let id = formData.id
+		let rootid = formData.rootid
+		let tskid = formData.tskid
+		let isReview = formData.isReview
+		let reviewOid = formData.reviewOid
 
 		let content_getBPMForm = {
 			"proid" : processid,
 			"lineid": id,
 			"tskid" : rootid,
 			"lang"  : lang,
-			"userid": userData.id
+			"userid": userData.id,
+			isReview,
+			reviewOid
 		};
 		let content_getAllSignResult = {
 			"rootid" : rootid,
-			"lang" : lang
+			"lang" : lang,
+			isReview
 		};
 		let content_getBPMSignState = {
 			"proid" : id,
 			"lang"  : lang,
 			"tskid" : tskid,
+			isReview,
 		};
 
 		let p1 = UpdateDataUtil.getBPMForm(userData, content_getBPMForm);
@@ -460,6 +470,8 @@ export function submitSignForm(user, form, info, allowAddValue, isLevelEditable)
 			asTitle      : asTitle,
 			asType       : asType,
 			asMembers    : asMembers,
+			isReview	 : form.isReview,
+			reviewOid    : form.reviewOid
 		}
 		// console.log("sign",sign);
 		

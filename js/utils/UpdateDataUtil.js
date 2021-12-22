@@ -1934,10 +1934,12 @@ export async function updateVisitLogToServer(user) {
 export async function getBPMSignState(user, content) {
 	let promise = new Promise((resolve, reject) => {
 		let url = "app/bpm/getBPMSignState";
+		console.log("getBPMSignState:",user);
 		let params = {
 			"token": Common.encrypt(user.token),
 			"userId": Common.encrypt(user.loginID),
-			"content": Common.encrypt(JSON.stringify(content))
+			"content": Common.encrypt(JSON.stringify(content)),
+			"lang":user.lang
 		};
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {

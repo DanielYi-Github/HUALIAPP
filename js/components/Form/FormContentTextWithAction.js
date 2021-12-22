@@ -28,6 +28,7 @@ class FormContentTextWithAction extends Component {
 
 		if (editable) {
 			renderItem = (
+				<Body style={{flexDirection:'column'}}>
 	  				<Item fixedLabel 
 	  				style={[
 	  					this.props.style.CreateFormPageFiledItemWidth,
@@ -58,6 +59,27 @@ class FormContentTextWithAction extends Component {
 		   		  	   		null
 		   		  	   }
 		            </Item>
+					{
+						//有栏位说明则显示
+						this.props.data.columnExplain == null ? null :
+						(
+							<Item
+								style={[
+									this.props.style.CreateFormPageFiledItemWidth,
+									this.props.style.fixCreateFormPageFiledItemWidth
+								]}
+							>
+								<Label 
+									style={{
+										flex: 0 ,
+										color:'red',
+										fontSize:16
+									}}
+								> {this.props.data.columnExplain} </Label>
+							</Item>
+						)
+					}
+				</Body>
 			);
 		} else {
 			renderItem = (

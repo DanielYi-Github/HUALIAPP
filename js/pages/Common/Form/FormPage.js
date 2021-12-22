@@ -85,11 +85,8 @@ class FormPage extends React.Component {
     let Form = this.state.Form;
     this.props.actions.loadFormContentIntoState( 
       this.props.state.UserInfo.UserInfo, 
-      Form.processid,
-      Form.id,
-      Form.rootid,
-      this.props.state.Language.langStatus,
-      Form.tskid
+      Form,
+      this.props.state.Language.langStatus
     );
   }
 
