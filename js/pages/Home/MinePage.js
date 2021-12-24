@@ -63,13 +63,13 @@ class MinePage extends React.Component {
         if (role == "BPM") isShowBpmDeputySetting = true;
       }
     }
-    /*
+    
     for(let FunctionData of this.props.state.Home.FunctionData){
-      if (FunctionData.ID == "Sign") isShowBpmDeputySetting = true;
+      // if (FunctionData.ID == "Sign") isShowBpmDeputySetting = true;
       if (FunctionData.ID == "MeetingList") isShowMeetingSetting = true;
     }
-    */
-
+    
+    // console.log(user);
     return (
       <Container>
        <MainPageBackground height={200}/>
@@ -152,10 +152,9 @@ class MinePage extends React.Component {
             }
 
             {/*會議管理設定*/}
-            {/*{ isShowMeetingSetting ?*/}
-            { true ?
+            { isShowMeetingSetting ?
               <MineItem
-                title    = {"會議管理設定"}
+                title    = {this.props.state.Language.lang.MeetingSettingPage.meetingSettingTitle}
                 iconBackgroundColor = {"#00B0FF"}
                 iconName = {"calendar"}
                 iconType = {"MaterialCommunityIcons"}

@@ -52,6 +52,7 @@ let NetUtil = {
 			// if (!isTimeOut){
 				if (response.ok) {
 					let responseJson = await response.json();
+					url == "app/bpm/getTaskList" && responseJson.code != 200  ? console.log(url, response, params) : null;
 					switch (responseJson.code) {
 						case "200": 	// 資料請求成功，內容正確
 							responseJson.code = 200
@@ -99,6 +100,7 @@ let NetUtil = {
 							return responseJson; 
 					}
 				} else {
+					console.log("response", response);
 					response.text().then( err => {
 						LoggerUtil.addErrorLog(url, "API request in APP", "FATAL", err);
 					});

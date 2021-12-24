@@ -789,13 +789,13 @@
 				CODEPUSH_KEY = AJhlSYXl4E1Vhy1XxvQN6Q0IsDKl4ksvOXqog;
 				CODEPUSH_URL = "http://qas.app.huali-group.com:3000";
 				CODE_SIGN_ENTITLEMENTS = HUALIAPP/HUALIAPP.entitlements;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3GFGZ9XDRF;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HUALIAPP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.4.5;
+				MARKETING_VERSION = 1.4.7;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -820,12 +820,12 @@
 				CODEPUSH_KEY = pTMusJbFgikGtX7cgHKDGQl1JiYP4ksvOXqog;
 				CODEPUSH_URL = "http://app.huali-group.com:3000";
 				CODE_SIGN_ENTITLEMENTS = HUALIAPP/HUALIAPP.entitlements;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3GFGZ9XDRF;
 				INFOPLIST_FILE = HUALIAPP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.4.5;
+				MARKETING_VERSION = 1.4.7;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",

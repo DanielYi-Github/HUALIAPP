@@ -28,6 +28,7 @@ let MessageRouter = {
       			DeviceStorageUtil.set('storeNotificationMsg', result);
     			DeviceStorageUtil.set('isColdActive', false);
       		} else {
+      			console.log("result.notificationEventType", result.notificationEventType);
 				if (result.notificationEventType == "notificationArrived"){
 					this.dealMessagesOriginalsource(result, props, true);
 				}else{

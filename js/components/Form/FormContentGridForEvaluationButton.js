@@ -28,11 +28,12 @@ class FormContentGridForEvaluationButton extends Component {
 	    		bordered
 	    		onPress = {this.props.onPress} 
 	    		style={{
-	    			height: null,
-	    			paddingTop: 4,
-	    			paddingBottom: 4,
-	    			padding: 8,
-	    			marginRight: 5
+					height       : null,
+					paddingTop   : 4,
+					paddingBottom: 4,
+					padding      : 8,
+					marginRight  : 5,
+					marginBottom : 15, 
 	    		}}
 	    	>
 				<Icon 

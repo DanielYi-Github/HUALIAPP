@@ -22,7 +22,6 @@ class MeetingSearchPage extends React.PureComponent  {
     let time1 = new Date();
     let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss").replace(/-/g, "/") );
     let isChangeTime = time1.getHours() == time2.getHours() ? false: true;
-    // console.log(Platform.OS, time1.getHours() , time2.getHours(), isChangeTime);
 
     let startTime = new Date( Moment( new Date() ).tz(RNLocalize.getTimeZone()).format() ).getTime();
     let endTime   = new Date( Moment( new Date() ).tz(RNLocalize.getTimeZone()).format() ).getTime();
@@ -41,7 +40,8 @@ class MeetingSearchPage extends React.PureComponent  {
       editDatetimeValue     : new Date(),
       editStartorEndDatetime: true, // true for start, false for end
       showNavigationMessage : false, // 顯示要前往新增會議的功能
-      isEndDateChange       : false
+      isEndDateChange       : false,
+      refreshing            : false
     }
 	}
 
@@ -166,7 +166,12 @@ class MeetingSearchPage extends React.PureComponent  {
               this.searchMeeting();
             }}
           >
-            <Text>{this.props.lang.MeetingPage.search}</Text>
+            { this.state.refreshing ?
+              <Spinner color={this.props.style.SpinnerColor}/>
+              :
+              <Text>{this.props.lang.MeetingPage.search}</Text>
+            }
+            
           </Button>
 
           {
@@ -476,6 +481,10 @@ class MeetingSearchPage extends React.PureComponent  {
         }],
       )
     } else {
+      this.setState({
+        refreshing: true
+      });
+
       let user = this.props.state.UserInfo.UserInfo;
       let meetingParams = {
           startdate      :this.state.startdate,
@@ -484,16 +493,21 @@ class MeetingSearchPage extends React.PureComponent  {
           timezone       :RNLocalize.getTimeZone()
       }
 
+
+
       let isRequestSussce = false;
       let errorMessage = "";
       let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
-        // console.log("result", result);
         isRequestSussce = true;
         return result;
       }).catch((errorResult)=>{
         errorMessage = errorResult.message;
         isRequestSussce = false;
         return [];
+      });
+
+      this.setState({
+        refreshing: false
       });
 
       if (isRequestSussce) {

@@ -236,9 +236,9 @@ class MineDetailPage extends React.Component {
           onPress: () => {
             launchImageLibrary({
               mediaType: 'photo',
-              maxHeight: 200,
-              maxWidth: 200,
-              quality: 0.5,
+              // maxHeight: 200,
+              // maxWidth: 200,
+              quality: 1,
               includeBase64: true,
             }, this.setResponse);
           }
@@ -247,10 +247,10 @@ class MineDetailPage extends React.Component {
           onPress: () => {
             launchCamera({
               mediaType: 'photo',
-              maxHeight: 200,
-              maxWidth: 200,
-              quality: 0.5,
-              saveToPhotos: true,
+              // maxHeight: 200,
+              // maxWidth: 200,
+              quality: 1,
+              saveToPhotos: false,
               includeBase64: true,
             }, this.setResponse);
           } 

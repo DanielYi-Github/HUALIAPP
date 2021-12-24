@@ -87,7 +87,6 @@ class FormContentNumber extends Component {
 					        newText = newText.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
 							this.setState({ editValue: newText });
 						}}
-						returnKeyType='done' 
 					/>
 
 					<Icon

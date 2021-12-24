@@ -128,7 +128,7 @@ class CarsPage extends React.Component {
 			<Container>
 	        	<MainPageBackground height={null}/>
 				{/*標題列*/}
-				<Header /*style={this.props.style.HeaderBackground}*/ searchBar rounded>
+				<Header style={this.props.style.HeaderBackground} searchBar rounded>
 		    	     <Left>				
 		    	       	<Button transparent onPress={() =>NavigationService.goBack()}>
 		    	       	 	<Icon name='arrow-back' style={{color:this.props.style.iconColor}}/>

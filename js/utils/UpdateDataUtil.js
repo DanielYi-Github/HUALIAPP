@@ -1680,6 +1680,7 @@ export async function getBPMRootTask(user, content) {
 			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
+		// console.log(params);
 
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
@@ -1716,8 +1717,9 @@ export async function getBPMTaskList(user, content) {
 			"content": Common.encrypt(JSON.stringify(content))
 		};
 		NetUtil.getRequestContent(params, url).then((data) => {
-			// console.log(data);
 			if (data.code != 200) {
+				console.log(data);
+				console.log(params);
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
@@ -4442,5 +4444,41 @@ export async function getDeputyAppID(user){
 			resolve(data);
 		})
 	});
+	return promise;
+}
+
+
+export async function updateMeetingAssistant(user, assistant) {
+	let lang;
+	await DeviceStorageUtil.get('locale').then((data) => {
+		lang = data ? JSON.parse(data) : data;
+	})
+
+	let content = {
+		"openMeetingQuery" :    assistant.openMeetingQuery,
+		"openMeetingMember":    assistant.openMeetingMember,
+		"openMeetingMemberNM":  assistant.openMeetingMemberNM,
+		"openMeetingPush"  :    assistant.openMeetingPush
+	}
+
+	let params = {
+		"token": Common.encrypt(user.token),
+		"userId": Common.encrypt(user.loginID),
+		"content": Common.encrypt(JSON.stringify(content)),
+		"lang": lang,
+	};
+
+	let url = "org/user/config/update";
+
+	let promise = new Promise((resolve, reject) => {
+		NetUtil.getRequestContent(params, url).then((data) => {
+			if (data.code != 200) {
+				reject(data.message); //已在其他裝置登入
+				return promise;
+			}
+			resolve(data.content);
+		})
+	});
+
 	return promise;
 }
