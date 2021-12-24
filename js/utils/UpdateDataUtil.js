@@ -245,7 +245,6 @@ export async function updateAPP(user) {
 	SQLite.deleteData(deleteSQL, null);
 
 	let promise = new Promise((resolve, reject) => {
-		let start = new Date().getTime();
 
 		let content = {
 			"empid": user.id,
@@ -259,10 +258,15 @@ export async function updateAPP(user) {
 			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
+		console.log(params);
 		let url = "data/getUserApp";
 
+		let start = new Date().getTime();
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) reject(data);
+
+			let end = new Date().getTime();
+			console.log("updateAPP:" + (end - start) / 1000);
 
 			let insertSQL = "INSERT INTO THF_APP VALUES";
 			let apps = [];
@@ -296,10 +300,14 @@ export async function updateAPP(user) {
 			}
 
 			if (data.length > 0) {
-				SQLite.insertData(insertSQL, apps).then(() => resolve());
+				SQLite.insertData(insertSQL, apps).then(() => {
+					end = new Date().getTime();
+					console.log("updateAPP:" + (end - start) / 1000);
 
-				let end = new Date().getTime();
-				console.log("updateAPP:" + (end - start) / 1000);
+					resolve();
+				});
+
+				
 			} else {
 				resolve();
 			}
@@ -3653,37 +3661,6 @@ export async function updateCertTips(user, certTips = 'N') {
 	return promise;
 }
 
-export async function getOperationSOP(user) {
-	let lang;
-	await DeviceStorageUtil.get('locale').then((data) => {
-		lang = data ? JSON.parse(data) : data;
-	})
-
-	let params = {
-		"token": Common.encrypt(user.token),
-		"userId": Common.encrypt(user.loginID),
-		"content": Common.encrypt(JSON.stringify({})),
-		"lang": lang,
-	};
-
-	let url = "data/getSOP";
-
-	let promise = new Promise((resolve, reject) => {
-		NetUtil.getRequestContent(params, url).then((data) => {
-			// console.log(data);
-
-			if (data.code != 200) {
-				reject(data.message); //已在其他裝置登入
-				return promise;
-			}
-			resolve(data.content);
-
-		})
-	});
-
-	return promise;
-}
-
 export async function getSeasonThemeDisplay() {
 	let params = {
 		"content": "SeasonThemeDisplay"
@@ -4080,11 +4057,14 @@ export async function getMeetings(user, content) {
 			"content": Common.encrypt(JSON.stringify(content)),
 			// "lang"   : Common.encrypt(user.lang)
 		};
+		var start = new Date().getTime();
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
 			}
+			let end = new Date().getTime();
+			console.log("getMeetings:" + (end - start) / 1000);
 			data = data.content;
 			resolve(data);
 		})

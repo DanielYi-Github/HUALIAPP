@@ -2,8 +2,15 @@ import * as MeetingTypes      from '../actionTypes/MeetingTypes';
 import * as UpdateDataUtil    from '../../utils/UpdateDataUtil';
 import * as SQLite            from '../../utils/SQLiteUtil';
 import * as NavigationService from '../../utils/NavigationService';
+
 import { Alert } from 'react-native';
 import * as RNLocalize from "react-native-localize";
+
+export function setRefreshing( isRefreshing ){
+	return async (dispatch, getState) => {
+		dispatch(refreshing(isRefreshing)); 	
+	}
+}
 
 export function getMeetingModeType() {
 	return async (dispatch, getState) => {
@@ -91,7 +98,7 @@ export function removeAttendee(state){
 
 export function addMeeting(meetingParams){
 	return async (dispatch, getState) => {
-		dispatch( refreshing(true) ); 	
+
 		let user = getState().UserInfo.UserInfo;
 		let addMeetingResult = await UpdateDataUtil.addMeeting(user, meetingParams).then((result)=>{
 			return result;
@@ -107,15 +114,18 @@ export function addMeeting(meetingParams){
 			resultMsg:addMeetingResult.success ? null: addMeetingResult.msg
 		}); 
 
-		if (addMeetingResult.success) this.getMeetings();
+		// 成功或失敗
+		if (addMeetingResult.success){
+			NavigationService.goBack();
+			this.getMeetings();	
+		}
 	}
 }
 
 export function modifyMeeting(meetingParams){
 	return async (dispatch, getState) => {
-		dispatch(refreshing(true)); 	
-		let user = getState().UserInfo.UserInfo;
-		
+
+		let user = getState().UserInfo.UserInfo;		
 		let modifyMeetingResult = await UpdateDataUtil.modifyMeeting(user, meetingParams).then((result)=>{
 			return result;
 		}).catch((e)=>{
@@ -130,6 +140,7 @@ export function modifyMeeting(meetingParams){
 		}); 
 
 		if (modifyMeetingResult.success) {
+			NavigationService.goBack();
 			this.getMeetings();
 		}
 	}
@@ -153,18 +164,25 @@ export function resetMeetingListRedux(){
 
 export function getMeetings(condition = ""){
 	return async (dispatch, getState) => {		
+		// 顯示loading畫面
+		dispatch({
+			type: MeetingTypes.MEETING_REFRESHING_FOR_BACKGROUND,
+			isRefreshing_for_background: true
+		});
+
 		let user = getState().UserInfo.UserInfo;
 		let content = {
 			// count    :getState().Meeting.meetingList.length,
 			// condition:condition, //查詢使用
 		}
 		let meetingsResult = await UpdateDataUtil.getMeetings(user, content).then((result)=>{
-			// console.log("meetingsResult", result);
+			console.log("meetingsResult", result);
 			return result;
 		}).catch((e)=>{
 			console.log("e", e);
 			return [];
 		});
+
 		dispatch({
 			type: MeetingTypes.GET_MEETINGS,
 			meetingsResult

@@ -316,6 +316,7 @@ export function navigateFunctionPage(app = null, userID = null) {
 		}
 	}
 }
+
 export function SetAppVisitLog(appID, userID){
 	let sSQL = `select * from THF_APPVISITLOG where APPID='${appID}' and USERID='${userID}'`;
 	SQLite.selectData(sSQL, []).then((result) => {
@@ -328,7 +329,6 @@ export function SetAppVisitLog(appID, userID){
 		}
 	});	
 }
-
 
 export function LockNoticeListState(NoticeListState){
 	return (dispatch, getState) => {
