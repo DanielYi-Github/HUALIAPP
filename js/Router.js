@@ -76,7 +76,6 @@ import DeputyPage         from './pages/Mine/DeputyPage';
 import MeetingSettingPage from './pages/Mine/MeetingSettingPage';
 import AdvicesPage        from './pages/Mine/AdvicesPage';
 import AboutPage          from './pages/Mine/AboutPage';
-import OperationPage      from './pages/Mine/OperationPage';
 import AccountSafePage    from './pages/Mine/AccountSafePage';
 import UpdatePasswordPage from './pages/Mine/UpdatePasswordPage';
 import ChangeAccountPage  from './pages/Mine/ChangeAccountPage';
@@ -337,7 +336,6 @@ function MainStack(props){
       <AppStack.Screen name ="Deputy"           component={DeputyPage} />
       <AppStack.Screen name ="MeetingSetting"   component={MeetingSettingPage} />
       <AppStack.Screen name ="Advices"          component={AdvicesPage} />
-      <AppStack.Screen name ="Operation"        component={OperationPage} />
       <AppStack.Screen name ="About"            component={AboutPage} />
       <AppStack.Screen name ="AccountSafe"      component={AccountSafePage} />
       <AppStack.Screen name ="UpdatePassword"   component={UpdatePasswordPage} />

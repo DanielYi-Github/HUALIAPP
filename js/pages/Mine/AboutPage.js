@@ -158,7 +158,6 @@ class AboutPage extends React.Component {
               <Card>
                 <CardItem button onPress={()=>{ 
                   NavigationService.navigate("ViewFile",{
-                    // url: "data/getSOP",
                     file: this.state.SOPUrl,
                     fileType:'pdf',
                     content:{},

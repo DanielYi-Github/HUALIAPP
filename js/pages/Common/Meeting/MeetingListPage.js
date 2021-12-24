@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Keyboard, SafeAreaView, SectionList, Dimensions } from 'react-native';
+import { View, Keyboard, SafeAreaView, SectionList, Dimensions, Alert } from 'react-native';
 import { Container, Header, Body, Left, Right, Button, Item, Icon, Input, Title, Text, Label, Segment, connectStyle} from 'native-base';
 import { tify, sify} from 'chinese-conv'; 
 import { connect } from 'react-redux';
@@ -37,16 +37,22 @@ class MeetingListPage extends React.PureComponent  {
         sKeyword       :"",          //簡體中文
         tKeyword       :"",          //繁體中文
         isShowSearch   :false,
-        isLoading      :false,
         showFooter     :false,
         SegmentButton  :"all",
         isEnd          :false,
-        screenWidth    :Dimensions.get('window').width
+        screenWidth    :Dimensions.get('window').width,
+        isLoading      :false,
+
+        readyOpenMeetingParam:props.route.params ?  props.route.params.readyOpenMeetingParam : false,
       }
 	}
 
   componentDidMount(){
-    if (this.props.state.Meeting.meetingList.length == 0) {
+    if (
+      this.props.state.Meeting.meetingList.length == 0 
+      && 
+      this.props.state.Meeting.isRefreshing_for_background == false
+    ) {
       this.props.actions.getMeetings();
       this.setState({
         isEnd:false
@@ -55,12 +61,51 @@ class MeetingListPage extends React.PureComponent  {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
+    if(
+      nextProps.state.Meeting.isRefreshing_for_background == false &&
+      this.state.readyOpenMeetingParam
+    ){
+      let isSearchedMeeting = false;
+      for(let meeting of nextProps.state.Meeting.meetingList){
+        if ( this.state.readyOpenMeetingParam.oid == meeting.oid) {
+          isSearchedMeeting = true;
+          break;
+        }
+      }
+
+      if (isSearchedMeeting) {
+        NavigationService.navigate("MeetingInsert", {
+            meetingParam: this.state.readyOpenMeetingParam,
+            fromPage:"MessageFuc"
+          });
+
+
+      } else {
+        Alert.alert( nextProps.state.Language.lang.MeetingPage.meetingAlreadyDone, "",
+          [
+            {
+              text: nextProps.state.Language.lang.Common.Close,   // 關閉 
+              style: 'cancel',
+              onPress: () => {}, 
+            }
+          ],
+        )
+      }
+
+      this.setState({ readyOpenMeetingParam : false });
+    }
+
+
     if (nextProps.state.Meeting.meetingList.length == this.props.state.Meeting.meetingList.length) {
       this.setState({
         isEnd:true
       });
     }else{
-      if (nextProps.state.Meeting.meetingList.length == 0) {
+      if (
+        nextProps.state.Meeting.meetingList.length == 0 
+        && 
+        nextProps.state.Meeting.isRefreshing_for_background == false
+      ) {
         this.props.actions.getMeetings();
         this.setState({
           isEnd:false
@@ -206,15 +251,15 @@ class MeetingListPage extends React.PureComponent  {
             </Label >
           )}
           ListFooterComponent   = {this.renderFooter}
-          onEndReachedThreshold = {0.3}
-          onEndReached          = {this.state.isEnd ? null :this.endReachedGetMeetings}
+          // onEndReachedThreshold = {0.3}
+          // onEndReached          = {this.state.isEnd ? null :this.endReachedGetMeetings}
         />
       </Container>
     );
 	}
 
   endReachedGetMeetings = () => {
-    this.props.actions.getMeetings();
+    // this.props.actions.getMeetings();
   }
 
   renderItem = (item) => {
@@ -264,7 +309,7 @@ class MeetingListPage extends React.PureComponent  {
   }
 
   renderFooter = () => {
-    if (this.props.state.Meeting.isRefreshing) {
+    if (this.props.state.Meeting.isRefreshing_for_background) {
       return <NoMoreItem text={this.props.state.Language.lang.ListFooter.Loading}/>;
     } else {
       return (<NoMoreItem text={this.props.state.Language.lang.ListFooter.NoMore}/>);         

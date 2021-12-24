@@ -2,6 +2,7 @@ import * as types from '../actionTypes/MeetingTypes';
 
 const initialState = {
   isRefreshing                  : false,
+  isRefreshing_for_background   : false,
   meetingModeTypes              : [],
   actionResult                  : null,
   actionResultMsg               : "",
@@ -119,9 +120,11 @@ export default function index(state = initialState, action = {}) {
     case types.GET_MEETINGS:
       return{
         ...state,
-        actionResult          : null,
-        actionResultMsg       : "",
-        meetingList:action.meetingsResult
+        actionResult   : null,
+        actionResultMsg: "",
+        meetingList    : action.meetingsResult,
+        isRefreshing   : false,
+        isRefreshing_for_background:false
       }
     case types.GET_MEETINGSPERSON_DATETIME:
       return{
@@ -134,6 +137,11 @@ export default function index(state = initialState, action = {}) {
       return{
         ...state,
         isRefreshing:action.isRefreshing
+      }
+    case types.MEETING_REFRESHING_FOR_BACKGROUND:
+      return {
+        ...state,
+        isRefreshing_for_background:action.isRefreshing_for_background
       }
     case types.GET_MEETINGS_FREE_DATETIME:
       return{

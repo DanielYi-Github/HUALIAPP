@@ -228,10 +228,6 @@ class MeetingInsertPage extends React.PureComponent  {
           } else {
             ToastUnit.show('success', this.state.isModify ? this.props.lang.MeetingPage.modifyMeetingSuccess :this.props.lang.MeetingPage.insertMeetingSuccess);
           }
-          setTimeout(
-            function(){ NavigationService.goBack(); }, 
-            50
-          );
         } else {
           let actionResultMsg = "";
           let serverErrorString = nextProps.state.Meeting.actionResultMsg.indexOf('###');
@@ -1216,6 +1212,8 @@ class MeetingInsertPage extends React.PureComponent  {
         }],
       )
     } else {
+      this.props.actions.setRefreshing(true);
+
       let startdate;
       if (this.state.isChangeTime) {
         startdate = new Date(this.state.startdate.replace(/-/g, "/")).getTime()+1000-28800000;
@@ -1270,12 +1268,16 @@ class MeetingInsertPage extends React.PureComponent  {
           this.props.actions.addMeeting(meetingParams);
         }
       } else {
+
+        let actions = this.props.actions;
         Alert.alert(
          this.props.lang.Common.Error,   // 表單動作失敗
          enableMeeting.message, //`與會人員此段時間已安排其他會議`
           [{
               text: this.props.state.Language.lang.Common.Close,   // 關閉 
-              onPress: () => { }, 
+              onPress: () => {
+                actions.setRefreshing(false);
+              }, 
           }],
         )
       }
