@@ -29,6 +29,7 @@ class MeetingItemForAttendees extends Component {
 					onTintColor   = {"#00C853"}
           			tintColors    ={{true: "#00C853", false: '#aaaaaa'}}
 					style         ={{ marginRight: 20 }}
+		        	animationDuration = {0.01}
 				/>
 				<Label>{this.props.item.name} </Label><Text note>{this.props.item.depname}</Text>
 				<Icon 

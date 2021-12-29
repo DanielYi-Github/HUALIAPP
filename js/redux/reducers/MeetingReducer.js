@@ -2,6 +2,7 @@ import * as types from '../actionTypes/MeetingTypes';
 
 const initialState = {
   isRefreshing                  : false,
+  isRefreshing_for_background   : false,
   meetingModeTypes              : [],
   actionResult                  : null,
   actionResultMsg               : "",
@@ -19,7 +20,55 @@ const initialState = {
   companies                     : [],
   selectedCompany               : "",
   attendees_by_position         : [],
-  organization_tree             : null
+  organization_tree             : null,
+  blocking                      : false,
+  isNeedCheckMeetingTime        : true,   //是否需要檢查會議時間衝突功能
+  repeatType:[
+    {
+      type:"NR",
+    },
+    {
+      type:"ED",
+    },
+    // {
+      // type:"WD",
+    // },
+    {
+      type:"EW",
+    },
+    {
+      type:"EM",
+    },
+    {
+      type:"DM",
+    },
+  ],
+  selectedRepeatType:"NR",
+  weekDays:[
+    {
+      value:"MON",
+    },
+    {
+      value:"TUE",
+    },
+    {
+      value:"WEB",
+    },
+    {
+      value:"THU",
+    },
+    {
+      value:"FRI",
+    },
+    {
+      value:"SAT",
+    },
+    {
+      value:"SUN",
+    }
+  ],
+  selectedWeekDays:[],
+  repeatEndDate:"",
 };
 
 export default function index(state = initialState, action = {}) {
@@ -32,9 +81,12 @@ export default function index(state = initialState, action = {}) {
     case types.MEETING_ACTIONRESULT:
       return {
         ...state,
-        actionResult   :action.result,
-        actionResultMsg:action.resultMsg,
-        meetingList    :action.result? []:state.meetingList,
+        actionResult      :action.result,
+        actionResultMsg   :action.resultMsg,
+        meetingList       :action.result? []:state.meetingList,
+        selectedRepeatType:"NR",
+        selectedWeekDays  :[],
+        repeatEndDate     :"",
       }
     case types.MEETING_MODIFYRESULT:
       return {
@@ -53,9 +105,12 @@ export default function index(state = initialState, action = {}) {
     case types.MEETING_RESET:
       return {
         ...state,
-        isRefreshing    : false,
-        meetingModeTypes: [],
-        actionResult    : null,
+        isRefreshing      : false,
+        meetingModeTypes  : [],
+        actionResult      : null,
+        selectedRepeatType: "NR",
+        selectedWeekDays  : [],
+        repeatEndDate     : "",
       }
     case types.MEETINGLIST_RESET:
       return {
@@ -65,9 +120,11 @@ export default function index(state = initialState, action = {}) {
     case types.GET_MEETINGS:
       return{
         ...state,
-        actionResult          : null,
-        actionResultMsg       : "",
-        meetingList:action.meetingsResult
+        actionResult   : null,
+        actionResultMsg: "",
+        meetingList    : action.meetingsResult,
+        isRefreshing   : false,
+        isRefreshing_for_background:false
       }
     case types.GET_MEETINGSPERSON_DATETIME:
       return{
@@ -80,6 +137,11 @@ export default function index(state = initialState, action = {}) {
       return{
         ...state,
         isRefreshing:action.isRefreshing
+      }
+    case types.MEETING_REFRESHING_FOR_BACKGROUND:
+      return {
+        ...state,
+        isRefreshing_for_background:action.isRefreshing_for_background
       }
     case types.GET_MEETINGS_FREE_DATETIME:
       return{
@@ -98,7 +160,8 @@ export default function index(state = initialState, action = {}) {
         meetingOid         :action.oid,
         attendees          :action.attendees,
         attendees_startDate:action.startdate,
-        attendees_endDate  :action.enddate
+        attendees_endDate  :action.enddate,
+        isNeedCheckMeetingTime:action.isNeedCheckMeetingTime
       }
     case types.MEETING_SET_ATTENDEES:
       return{
@@ -127,6 +190,18 @@ export default function index(state = initialState, action = {}) {
       return {
         ...state,
         organization_tree:action.organization,
+      }
+    case types.MEETING_BLOCKING:
+      return {
+        ...state,
+        blocking:action.isblocking,
+      }
+    case types.MEETING_SET_REPEATTYPE:
+      return {
+        ...state,
+        selectedRepeatType:action.selectedRepeatType,
+        selectedWeekDays  :action.selectedWeekDays,
+        repeatEndDate     :action.repeatEndDate
       }
     default:
       return state;

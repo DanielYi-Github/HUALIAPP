@@ -51,7 +51,8 @@ export default {
 			Thursday :"週四",
 			Friday   :"週五",
 			Saturday :"週六",
-		}
+		},
+		selectAll: "全選"
 	},
 	InitialPage: {
 		Update                   : '更新',
@@ -844,12 +845,15 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		alertMessage_duplicate     :"有重複",
 		alertMessage_period        :"該時段",
 		alertMessage_meetingAlready:"已有安排會議",
+		alertMessage_meetingAttendeesAlready:" 此段時間已安排其他會議",
 		meetingSchedule            :"會議時程",
 		noMeetings                 :"暫時無會議",
 		myMeetings                 :"我的會議",
 		all                        :"全部",
 		initiator                  :"我發起",
 		invited                    :"被邀請",
+		Notified				   :"被通知",
+		NotifiedTips			   :"此會議為xxx的會議行程",
 		functionMsg                :"為了快速得知特定時間內，您想邀請的人員是否已安排其他會議，可使用下列\“起迄時間\”與\”新增與會人員\“的設定，快速查詢所有\”與會人員\“的會議時間，方便您安排會議與發送邀請。",
 		attendeesTimeSearch        :"與會人員時間查詢",
 		insertAttendees            :"新增與會人員",
@@ -863,7 +867,6 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		period_2hour               :"二小時",
 		period_4hour               :"四小時",
 		meetingsOfAttendees        :"與會人員的會議時程",
-		suggestMeetingTime         :"建議安排會議時間",
 		noSuggestMeetingTime       :"無建議時間",
 		noSuggestMeetingTimeMsg    :"查無此段的建議會議時間，請點擊右上角修改會議長度或返回上頁調整會議時間。",
 		suggestMeetingTime         :"建議的會議時間",
@@ -889,6 +892,13 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		person 					   :"人",
 		selectedAttendeeReorder    :"已選與會人員排序",
 		noneNextOrg    			   :"此廠區底下目前無可選單位",
+		regularMeeting  		   :"例行性會議",
+		endDate         		   :"結束日期",
+		needEndDate     		   :"需要指定結束日期",
+		couldNotOverYear		   :"不能超過一年",
+		customEveryWeek 		   :"每週自定義重複",
+		frequency       		   :"頻率",
+		frequencyByWeek 		   :"按周重複",
 		MeetingModeType			   :{
 			Z:"Zoom",
 			S:"Skype",
@@ -897,9 +907,41 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 			M:"Team",
 			D:"釘釘",
 			A:"實體會議室"
-		}
+		},
+		repeatType:{
+		  NR:"不重複",
+		  ED:"每天",
+		  WD:"工作日(週一到週五)",
+		  EW:"每週",
+		  EM:"每月",
+		  DM:"自定義"
+		},
+		weekDays:{
+			MON:"週一",
+			TUE:"週二",
+			WEB:"週三",
+			THU:"週四",
+			FRI:"週五",
+			SAT:"週六",
+			SUN:"週日"
+		},
+		// `將在${label1}的 ${label2} 到 ${label3} 進行會議，直到 ${label4}結束`;
+		regularMsg1:"將在",
+		regularMsg2:"的",
+		regularMsg3:"到",
+		regularMsg4:"進行會議，直到",
+		regularMsg5:"結束",
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "公司文件",
+	},
+	MeetingSettingPage:{
+		meetingSettingTitle: "會議管理設定",
+		meetingNotificationAssistant: "啟用會議通知助手",
+		meetingAssistant: "會議助手",
+		meetingAssistantTitle: "請選擇會議助手",
+		shareMeetingNotice: "分享會議通知",
+		meetingNotificationAssistantTxt: '開啟此設定，您的會議行程將會在"會議助手"的"我的會議"功能中顯示',
+		shareMeetingNoticeTxt: '開啟此設定，您的會議通知將會同時推送給"會議助手"',
 	}
 }

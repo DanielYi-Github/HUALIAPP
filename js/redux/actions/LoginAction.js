@@ -14,6 +14,7 @@ import * as SQLite            from '../../utils/SQLiteUtil';
 import * as UpdateDataUtil    from '../../utils/UpdateDataUtil';
 import * as NavigationService from '../../utils/NavigationService';
 import * as LoggerUtil        from '../../utils/LoggerUtil';
+import * as FileUtil from "../../utils/FileUtil";
 
 /***** 查看用哪一種登入方式登入 tab 還是 single *****/
 export function loadLoginMode() {
@@ -358,6 +359,7 @@ export function initialApi( user, way=false ){
 		LoggerUtil.uploadLocalDBErrorLog(user); 	// 將資料庫的log上傳至server
   		UpdateDataUtil.updateContact(user); //通訊錄	
   		UpdateDataUtil.updateMSG(user); 	//手機消息-執行最久
+		UpdateDataUtil.updateGroupFile(user); //集团文件
 
   		//取得首頁常見功能要顯示幾個
   		UpdateDataUtil.getHomeIconNum(user).then((data)=>{
@@ -382,12 +384,10 @@ export function initialApi( user, way=false ){
   			UpdateDataUtil.updateRead(user),		//訊息讀取表       
 			UpdateDataUtil.setLoginInfo(user),
 			UpdateDataUtil.updateDailyOralEnglish(user), //每日英语
-			UpdateDataUtil.updateCompanyDocument(user) //公司文件
+			UpdateDataUtil.updateCompanyDocument(user)   //公司文件
 		];
 
 	  	Promise.all(arr).then( async (data) => {
-
-	  		
 	  		loadBannerImagesIntoState(dispatch, getState);//撈取HomePage Banners資料
 	        user = certTips(dispatch, getState(), user); //判斷是否進行提示生物識別設定
 			dispatch(setUserInfo(user));				//將資料存放在UserInfoReducer的state裡
@@ -404,10 +404,7 @@ export function initialApi( user, way=false ){
 
 			user = await getUserInfoWithImage(user); 	//處理使用者圖片的後續處理
 			dispatch(setUserInfo(user));				//將資料存放在UserInfoReducer的state裡
-
-			
 	  	}).catch((e)=>{
-	  		
 	  		switch(way) {
 	  		  case "token":
 	  		    dispatch(logout('code:'+e, true));
@@ -423,10 +420,9 @@ export function initialApi( user, way=false ){
 	  		    dispatch(check_done());
 	  		    break;
 	  		  default:
-	  		    dispatch(logout());
+	  		    dispatch(logout('code:'+e, true));
 	  		}
 	  		LoggerUtil.addErrorLog("LoginAction initialApi", "APP Action", "ERROR", e);
-	  		
 	  	})	
 		
 		
@@ -454,7 +450,10 @@ export function initialApi( user, way=false ){
 		}).catch(e=>{
 			console.log('updateCompanyDocumentToServer Error',e);
 		})
-  		
+		//同步集团文件资料(VISITCOUNT)
+		UpdateDataUtil.updateGroupFileToServer(user).catch(e=>console.log('updateGroupFileToServer Error',e))
+		//定期清理缓存文件
+		FileUtil.clearFileForRegular()
 	}
 }
 
@@ -575,7 +574,6 @@ function certTips(dispatch,state,user){
 		      	Alert.alert(
 			        //溫馨提示
 			        state.Language.lang.Common.Alert,
-			        //是否要删除设备信息
 			        state.Language.lang.LoginPage.FirstCertTips,
 			        [
 			            {text: state.Language.lang.Common.Setting, onPress: () => { NavigationService.navigate('AccountSafe')}},//前往設定

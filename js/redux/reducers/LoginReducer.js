@@ -108,6 +108,7 @@ export default function login(state = initialState, action = {}) {
         "DELETE FROM THF_DAILY_ORAL_ENGLISH",
         "DELETE FROM THF_COMPANY_DOC",
         // "DELETE FROM THF_VERSION"
+        "DELETE FROM THF_GROUPFILE",
       ];
 
       SQLite.cleanTableData(deleteTables).then( async () => {

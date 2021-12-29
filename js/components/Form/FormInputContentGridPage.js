@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { Container, Header, Left, Content, Right, Item, Label, Input, Body, Card, CardItem, Title, Button, Icon, Text, CheckBox, Toast, connectStyle } from 'native-base';
-import { View, FlatList, TextField, Alert, Platform, AlertIOS }from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { View, FlatList, TextField, Alert, Platform, AlertIOS, Button as ReactButton, Keyboard, Dimensions}from 'react-native';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view'
 
 import FormInputContent          from './FormInputContent';
 import FormInputContentGridLabel from './FormInputContentGridLabel';
 import * as NavigationService    from '../../utils/NavigationService';
 import FormUnit                  from '../../utils/FormUnit';
 import HeaderForGeneral          from '../HeaderForGeneral';
-import ToastUnit              from '../../utils/ToastUnit';
+import ToastUnit                 from '../../utils/ToastUnit';
 
 
 class FormInputContentGridPage extends Component {
@@ -23,7 +23,34 @@ class FormInputContentGridPage extends Component {
 			user              : this.props.route.params.user,
 			editCheckItemIndex: this.props.route.params.editCheckItemIndex,
 			confirmOnPress    : this.props.route.params.confirmOnPress,
+			keyboardShow      : false,
+			keyboardHeight    : 0
 		};
+	}
+
+	componentDidMount() {
+	  this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow',(event)=>this.keyboardDidShow(event) );
+	  this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide',(event)=>this.keyboardDidHide(event) );
+	}
+
+	componentWillUnmount() {
+	  this.keyboardDidShowListener.remove();
+	  this.keyboardDidHideListener.remove();
+	}
+
+
+	keyboardDidShow = (event) => {
+	  this.setState({
+	    keyboardShow:true,
+	    keyboardHeight:event.endCoordinates.height
+	  })
+	}
+
+	keyboardDidHide = (event) => {
+	  this.setState({
+	    keyboardShow:false,
+	    keyboardHeight:0
+	  })
 	}
 
 	render() {
@@ -59,10 +86,8 @@ class FormInputContentGridPage extends Component {
 				  isTransparent         = {false}
 				/>
 				<KeyboardAwareScrollView
-					contentContainerStyle ={{
-						alignItems: 'center', 
-						justifyContent: 'center',
-					}}
+					contentContainerStyle ={{ alignItems: 'center',  justifyContent: 'center'}}
+					extraScrollHeight = {150}
 				>
 					<Card style={{margin: "2.5%"}}>
 						<CardItem style={{flexDirection: 'column', alignItems: 'center'}}>
@@ -86,6 +111,33 @@ class FormInputContentGridPage extends Component {
 					</Button>
 					<Body style={{width:"100%", height:100}}/>
 				</KeyboardAwareScrollView>
+
+				{/* 顯示鍵盤的完成按鈕 */}
+				{
+				  this.state.keyboardShow && Platform.OS == "ios" ?  
+				    <View style={{
+				      width          : Dimensions.get('window').width,
+				      height         : 48,
+				      flexDirection  : 'row',
+				      justifyContent : 'flex-end',
+				      alignItems     : 'center',
+				      backgroundColor: 'rgba(209, 211, 215, 1)',
+				      position       : "absolute",
+				      bottom         : this.state.keyboardHeight,
+				      borderTopWidth : 0.25,
+				      borderColor    : this.props.style.inputWithoutCardBg.inputColorPlaceholder
+				    }}>
+				      <ReactButton
+				        onPress={() => {
+				          this.setState({ keyboardShow:false });
+				          Keyboard.dismiss();
+				        }}
+				        title={this.state.lang.CreateFormPage.Done}
+				      />
+				    </View>
+				  :
+				    null
+				}
 			</Container>
 		);
 	}
@@ -191,8 +243,8 @@ class FormInputContentGridPage extends Component {
 			)
 		} else {
 			this.state.confirmOnPress( this.deepClone(tempData), this.state.editCheckItemIndex);
-			// this.pageClose();
 			NavigationService.goBack();
+			// this.pageClose();
 		}
 	}
 

@@ -8,13 +8,13 @@ export default class FormContent extends Component {
 		super(props);
 	}
 
-	render() {
+	render() {			
 		return (
 	        <Card style={{alignSelf: 'center'}}>
 				<Accordion
 					dataArray     ={[this.props.data]}
 					animation     ={true}
-					expanded      ={this.props.isOpen}
+					expanded      ={this.props.isOpen==0 ? [this.props.isOpen]: []}
 					renderHeader  ={this.renderHeader}
 					renderContent ={this.renderContent}
 					style         ={{ borderRadius: 10 }}
@@ -22,9 +22,10 @@ export default class FormContent extends Component {
 				/>
 			</Card>
 		);
+
 	}
 	
-	renderHeader = (item, expanded) => {
+	renderHeader = (item, expanded) => {		
 		let backgroundColorExpanded = "#2196F3";
 		let backgroundColorUnexpand = "#1976D2";
 
@@ -57,9 +58,11 @@ export default class FormContent extends Component {
 			  	</Right>
 			</CardItem>
 		);
+		
 	}
 
 	renderContent = (item) => {
+		
 		// 是否可進行編輯
 		let onPress = null;
 		let editable = false;
@@ -91,5 +94,6 @@ export default class FormContent extends Component {
 				{render}
 			</CardItem>
 		);
+		
 	}
 }

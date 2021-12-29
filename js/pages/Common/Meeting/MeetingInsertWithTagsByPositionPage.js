@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, RefreshControl, VirtualizedList, Platform, Alert, Keyboard, TouchableOpacity } from 'react-native';
+import { View, FlatList, RefreshControl, VirtualizedList, Platform, Alert, Keyboard, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Icon, Title, Text, Card, CardItem, Label, Footer, connectStyle } from 'native-base';
 import { tify, sify} from 'chinese-conv'; 
 import { connect }   from 'react-redux';
@@ -34,6 +34,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
       isFooterRefreshing: false,
       isEnd             : false,       //紀錄搜尋結果是否已經沒有更多資料
       defaultCompany    : props.state.UserInfo.UserInfo.co, //預設公司
+      loading_index     : null,
     };
   }
 
@@ -205,7 +206,6 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
           {this.props.lang.MeetingPage.selectPosition}
         </Label>
         <FlatList
-          contentContainerStyle = {{flex: 1}}
           keyExtractor          = {(item, index) => index.toString()}
           data                  = {this.props.state.Meeting.attendees_by_position}
           extraData             = {this.props.state.Meeting}
@@ -214,10 +214,13 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
         />
 
         <MeetingSelectAttendeesFooter
-          lang         = {this.props.state.Language.lang}
-          selectNumber = {this.props.state.Meeting.attendees.length}
-          onPress      = {()=>NavigationService.navigate("MeetingAttendeesReorder")}
+          lang                               = {this.props.state.Language.lang}
+          selectNumber                       = {this.props.state.Meeting.attendees.length}
+          onPress                            = {()=>NavigationService.navigate("MeetingAttendeesReorder")}
           MeetingInsertWithTagsPageRouterKey = {this.props.MeetingInsertWithTagsPageRouterKey}
+          showAllSelectChk       = {false} // 要不要顯示全選按鈕
+          allSelectChkValue      = {null}  // 全選之後需要給定的值
+          onSelectChkValueChange = {null}  // 全選與取消全選要做的事
         />
       </Container>
     );
@@ -243,8 +246,13 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
     return (
       <Item 
         fixedLabel 
-        style   ={{paddingLeft: 10, paddingRight: 5, backgroundColor: this.props.style.InputFieldBackground}} 
+        style   ={{
+          paddingLeft: 10, 
+          paddingRight: 5, 
+          backgroundColor: this.props.style.InputFieldBackground,
+        }} 
         onPress ={ async ()=>{ 
+          this.setState({ loading_index: item.index });
           this.props.actions.positionCheckboxOnPress(!(checked || included), item.item.value);
         }} 
       >
@@ -252,6 +260,7 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
           disabled      ={ Platform.OS == "android" ? false : true }
           onValueChange ={(newValue) => {
             if (Platform.OS == "android"){
+              this.setState({ loading_index: item.index });
               this.props.actions.positionCheckboxOnPress(!(checked || included), item.item.value);
             }
           }}
@@ -261,19 +270,28 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
           onCheckColor  ={checkBoxColor}
           onTintColor   ={checkBoxColor}
           style         ={{ marginRight: 20 }}
+          animationDuration = {0.01}
         />
-        <Label>{item.item.label} </Label><Text note>{item.item.depname}</Text>
+        <Label style = {{flex:0}}>{item.item.label} </Label ><Text note>{item.item.depname}</Text>
 
+        <ActivityIndicator 
+          animating ={this.props.state.Meeting.blocking && item.index == this.state.loading_index}
+          color     ={this.props.style.SpinnerColor}
+          style     ={{marginRight: 10, marginLeft: 10, borderWidth: 0 }}
+        />
+        <View style = {{flex:1}}/>
         <Icon 
-          style ={{padding: 10, paddingRight: 10, paddingLeft: '40%'}}
+          style ={{padding: 10, paddingRight: 10, borderWidth: 0}}
           name  ='arrow-forward'
           onPress={()=>{
             NavigationService.navigate("MeetingInsertWithTagsForSelect", {
-              selectList    :item.item.value,
-              onItemPress   :this.props.actions.getPositions,
-              renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
-              showFooter    :true,
-              title         :this.props.lang.MeetingPage.attendeesInvite
+              selectList       : item.item.value,
+              onItemPress      : this.props.actions.getPositions,
+              renderItemMode   : "multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
+              showFooter       : true,
+              title            : this.props.lang.MeetingPage.attendeesInvite,
+              showAllSelectChk : true,
+              onSelectChkValueChange : this.props.actions.positionCheckboxOnPress // 全選使用的功能
             });
           }}
         />
@@ -283,11 +301,20 @@ class MeetingInsertWithTagsByPositionPage extends React.Component {
   }
 
   renderEmptyComponent = () => {
-    return (
-      <Item style={{padding: 15, justifyContent: 'center', backgroundColor: this.props.style.InputFieldBackground}}>
-          <Label>{this.props.state.Language.lang.ListFooter.NoMore}</Label>
-      </Item>
-    );
+    if (this.props.state.Meeting.isRefreshing) {
+      return (
+        <Item style={{padding: 15, justifyContent: 'center', backgroundColor: this.props.style.InputFieldBackground}}>
+            <Label>{this.props.state.Language.lang.ListFooter.Loading}</Label>
+        </Item>
+      );
+    } else {
+      return (
+        <Item style={{padding: 15, justifyContent: 'center', backgroundColor: this.props.style.InputFieldBackground}}>
+            <Label>{this.props.state.Language.lang.ListFooter.NoMore}</Label>
+        </Item>
+      );
+    }
+    
   }
 
   dedup(arr) {
@@ -320,6 +347,10 @@ let MeetingInsertWithTagsByPositionPagefunction = (props) => {
   let MeetingInsertWithTagsPageRouterKey = "";
   for(let item of navigationState.routes){
     if (item.name == "MeetingInsertWithTags") {
+      MeetingInsertWithTagsPageRouterKey = item.key;
+    }
+
+    if (item.name == "MeetingSearchWithTags") {
       MeetingInsertWithTagsPageRouterKey = item.key;
     }
   }

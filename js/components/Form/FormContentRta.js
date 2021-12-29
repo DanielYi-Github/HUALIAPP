@@ -32,8 +32,13 @@ class FormContentRta extends Component {
       value    : null,
     };
 
+
     // 補齊字體顏色設定
-    CopyPastDisable = `<style>* { -webkit-user-select: none; color:${this.props.style.textColor}; }</style>`;
+    if( Platform.OS === "ios" ){
+      CopyPastDisable = `<style>* { -webkit-user-select: none; color:${this.props.style.textColor};  overflow-x: scroll; overflow-y: hidden;}</style>`;
+    }else{
+      CopyPastDisable = `<style>* { -webkit-user-select: none; color:${this.props.style.textColor};  }</style>`;
+    }
 	}
 
   onMessage = (event) => {
@@ -126,7 +131,7 @@ class FormContentRta extends Component {
                       <WebView
                            injectedJavaScript={BaseScript}
                            source={{ html: FixTinyText+CopyPastDisable+this.props.data.defaultvalue}}
-                           style={{ width: "100%", height: this.state.height, backgroundColor: 'transparent' }}
+                           style={{ width: "100%", height: this.state.height, backgroundColor: 'transparent'  }}
                            onMessage={event => this.onMessage(event.nativeEvent.data) }
                            scrollEnabled={false}
                       />

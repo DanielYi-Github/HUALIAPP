@@ -79,7 +79,13 @@ class FormContentNumber extends Component {
 							});
 						}}
 						onChangeText={(text) => {
-							this.setState({ editValue: text });
+							let newText = (text != '' && text.substr(0,1) == '.') ? '' : text;
+					        newText = newText.replace(/^0+[0-9]+/g, "0"); //不能以0开头输入
+					        newText = newText.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+					        newText = newText.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+					        newText  = newText.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+					        newText = newText.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+							this.setState({ editValue: newText });
 						}}
 					/>
 

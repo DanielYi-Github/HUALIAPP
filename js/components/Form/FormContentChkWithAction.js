@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { View, Platform} from 'react-native';
 import { Content, Item, Label, Input, Form, Icon, Button, Text, Body, Card, CardItem, Title, connectStyle } from 'native-base';
-import SortableList from 'react-native-sortable-list';
 import TagInput          from 'react-native-tags-input';
 import SortableRow         from './SortableRow';
 import * as UpdateDataUtil from '../../utils/UpdateDataUtil';
 import * as NavigationService   from '../../utils/NavigationService';
+import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist";
+
 
 class FormContentChkWithAction extends Component {
 	constructor(props) {
@@ -21,11 +22,13 @@ class FormContentChkWithAction extends Component {
 	render() {
 		let defaultvalueArray = (this.props.data.defaultvalue == null ) ? []: this.props.data.defaultvalue;
 		// 用來確認checkBox的狀態
-		for(let item of defaultvalueArray){
-			if ((typeof item.checked) == "undefined") {
-				item.checked = false
-			}
-		}
+		defaultvalueArray.forEach(function(item, index, array){
+			item.index = index;
+		  	item.key = `item-${index}`;
+		  	if ((typeof item.checked) == "undefined") {
+		  		item.checked = false
+		  	}
+		});
 
 		// 確認是否可編輯
 		let editable  = this.props.editable;
@@ -83,16 +86,14 @@ class FormContentChkWithAction extends Component {
 		   		  	   }
 		            </Item>
 		            </View>
-		            <View style={{flex:1}}>
-		            	<SortableList
-							style                 ={{flex:1}}
-							contentContainerStyle ={{width: this.props.style.PageSize.width}}
-							data                  ={defaultvalueArray}
-							renderRow             ={this.renderSortableRow} 
-							onReleaseRow = {(key,currentOrder)=>{ this.changeDefaultvalueArray(currentOrder);}}
-							renderFooter = {this.renderFooter}
+		            	<DraggableFlatList
+		            	  extraData    ={this.props} 
+		            	  data         ={defaultvalueArray}
+		            	  onDragEnd    ={({ data }) => this.props.onPress(data, this.props.data)}
+		            	  keyExtractor ={(item) => item.key}
+		            	  renderItem   ={this.renderSortableRow}
+						  renderFooter = {this.renderFooter}
 		            	/>
-		            </View>
 	            </View>
 			);
 		} else {
@@ -129,15 +130,19 @@ class FormContentChkWithAction extends Component {
 		return renderItem;
 	}
 
-	renderSortableRow = ({key, index, data, disabled, active}) => {
-	  return <SortableRow 
-				data           ={data} 
-				active         ={active} 
-				index          ={index}
-				onCheckBoxTap  = {this.onCheckBoxTap}
-				name           ={data.COLUMN2}
-				departmentName ={data.COLUMN3}
-	  		/>
+	renderSortableRow = ({item, drag, isActive}) => {
+	 return(
+	   <SortableRow 
+	     data           ={item} 
+	     active         ={isActive} 
+	     index          ={item.index}
+	     onCheckBoxTap  ={this.onCheckBoxTap}
+	     name           ={item.COLUMN2}
+	     departmentName ={item.COLUMN3}
+	     onLongPress    ={drag}
+	   />
+	 );
+
 	}
 
 	changeDefaultvalueArray = (currentOrder) => {
@@ -150,6 +155,7 @@ class FormContentChkWithAction extends Component {
 	}
 
 	onCheckBoxTap = (index, data) => {
+		console.log(index, data);
 		let array = this.props.data.defaultvalue;
 		array[index].checked = !array[index].checked;
 		this.props.onPress(array, this.props.data);

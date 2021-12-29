@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Keyboard, TouchableOpacity, Platform, Modal, Alert } from 'react-native';
-import { Container, Header, Content, Item, Icon, Input, Title, Text, Label, Button, ListItem, connectStyle, Card, CardItem, Body} from 'native-base';
+import { Container, Header, Content, Item, Icon, Input, Title, Text, Label, Button, ListItem, connectStyle, Card, CardItem, Body, Spinner} from 'native-base';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DateFormat             from  'dateformat';
@@ -22,7 +22,6 @@ class MeetingSearchPage extends React.PureComponent  {
     let time1 = new Date();
     let time2 = new Date( DateFormat( time1, "yyyy-mm-dd HH:MM:ss").replace(/-/g, "/") );
     let isChangeTime = time1.getHours() == time2.getHours() ? false: true;
-    // console.log(Platform.OS, time1.getHours() , time2.getHours(), isChangeTime);
 
     let startTime = new Date( Moment( new Date() ).tz(RNLocalize.getTimeZone()).format() ).getTime();
     let endTime   = new Date( Moment( new Date() ).tz(RNLocalize.getTimeZone()).format() ).getTime();
@@ -41,7 +40,8 @@ class MeetingSearchPage extends React.PureComponent  {
       editDatetimeValue     : new Date(),
       editStartorEndDatetime: true, // true for start, false for end
       showNavigationMessage : false, // 顯示要前往新增會議的功能
-      isEndDateChange       : false
+      isEndDateChange       : false,
+      refreshing            : false
     }
 	}
 
@@ -166,7 +166,12 @@ class MeetingSearchPage extends React.PureComponent  {
               this.searchMeeting();
             }}
           >
-            <Text>{this.props.lang.MeetingPage.search}</Text>
+            { this.state.refreshing ?
+              <Spinner color={this.props.style.SpinnerColor}/>
+              :
+              <Text>{this.props.lang.MeetingPage.search}</Text>
+            }
+            
           </Button>
 
           {
@@ -210,12 +215,12 @@ class MeetingSearchPage extends React.PureComponent  {
         {
           (this.state.showDatePicker) ? 
             <DateTimePicker 
-              value    ={this.state.editDatetimeValue}
+              value       ={new Date(this.state.editDatetimeValue)}
               minimumDate = {new Date(this.state.now)}
-              mode     ={"date"}
-              is24Hour ={true}
-              display  ="default"
-              onChange ={this.setDate}
+              mode        ={"date"}
+              is24Hour    ={true}
+              display     ="default"
+              onChange    ={this.setDate}
             />
           :
             null
@@ -224,12 +229,12 @@ class MeetingSearchPage extends React.PureComponent  {
         {
           (this.state.showTimePicker) ? 
             <DateTimePicker 
-              value    ={this.state.editDatetimeValue}
-              mode     ={"time"}
+              value          ={new Date(this.state.editDatetimeValue)}
+              mode           ={"time"}
               minimumDate    = {new Date(this.state.now)}
-              is24Hour ={true}
-              display  ="spinner"
-              onChange ={this.setTime}
+              is24Hour       ={true}
+              display        ="spinner"
+              onChange       ={this.setTime}
               minuteInterval = {10}
             />
           :
@@ -286,6 +291,13 @@ class MeetingSearchPage extends React.PureComponent  {
           :
             null
         }
+
+        {/*是否顯示loading 畫面*/}
+        <Modal animationType="fade" transparent={true} visible={this.props.state.Meeting.isRefreshing} >
+          <Container style={{justifyContent: 'center', alignItems: 'center', backgroundColor:this.props.style.SpinnerbackgroundColor}}>
+            <Spinner color={this.props.style.SpinnerColor}/>
+          </Container>
+        </Modal>
       </Container>
     );
 	}
@@ -469,6 +481,10 @@ class MeetingSearchPage extends React.PureComponent  {
         }],
       )
     } else {
+      this.setState({
+        refreshing: true
+      });
+
       let user = this.props.state.UserInfo.UserInfo;
       let meetingParams = {
           startdate      :this.state.startdate,
@@ -476,6 +492,8 @@ class MeetingSearchPage extends React.PureComponent  {
           attendees      :attendees,
           timezone       :RNLocalize.getTimeZone()
       }
+
+
 
       let isRequestSussce = false;
       let errorMessage = "";
@@ -486,6 +504,10 @@ class MeetingSearchPage extends React.PureComponent  {
         errorMessage = errorResult.message;
         isRequestSussce = false;
         return [];
+      });
+
+      this.setState({
+        refreshing: false
       });
 
       if (isRequestSussce) {

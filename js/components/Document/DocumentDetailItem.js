@@ -18,7 +18,7 @@ export default class DocumentDetailItem extends React.PureComponent  {
 		// let iconType = iconParmas[3] ? iconParmas[3] : "Ionicons";
 
 		let iamgeSource=require("../../image/document/pdf.png")
-		switch(detailInfo.doctype){
+		switch(detailInfo.DOCTYPE){
 			case "pdf":
 				iamgeSource=require("../../image/document/pdf.png");
 				break;
@@ -34,7 +34,7 @@ export default class DocumentDetailItem extends React.PureComponent  {
 		 		break;
 		}
 		//unit k->MB
-		let docSize=detailInfo.docsize/1024/1024;
+		let docSize=detailInfo.DOCSIZE/1024/1024;
 		return(
 			<Card style={{alignSelf: 'center'}}>
 				<CardItem button onPress={this.props.onPress}>
@@ -54,10 +54,10 @@ export default class DocumentDetailItem extends React.PureComponent  {
                   		/>
 					</Button>
 				    <Body style={{paddingLeft:10}}>
-						<Text >{detailInfo.docname}</Text>
+						<Text >{detailInfo.DOCNAME}</Text>
 				    	<Body style={{flexDirection: 'row', alignSelf: 'flex-start'}}>
 							<Left>
-								<Text note>{Common.dateFormatNoTime(detailInfo.dmodified)}</Text>
+								<Text note>{Common.dateFormatNoTime(detailInfo.DMODIFIED)}</Text>
 							</Left>
 							<Right>
 								<Text style={{paddingRight:10}} note>{docSize.toFixed(2)} MB</Text>	

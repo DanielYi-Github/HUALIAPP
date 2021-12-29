@@ -379,6 +379,7 @@ class MyFormListPage extends React.Component {
               defaultData ={this.state.defaultFormState} 
               data        ={this.state.FormStateList}
               onPress={(item, index) => {
+                console.log("4567890");
                 this.setState({
                   defaultFormState: this.state.FormStateList[index]
                 });

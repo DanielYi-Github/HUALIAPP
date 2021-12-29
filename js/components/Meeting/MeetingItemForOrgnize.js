@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Platform } from 'react-native';
+import { View, Platform, ActivityIndicator } from 'react-native';
 import {Card, CardItem, Left, Body, Right, Icon, Text, Button, connectStyle, Thumbnail, Title, Label, Item } from 'native-base';
 import CheckBox from '@react-native-community/checkbox';
 
@@ -34,10 +34,18 @@ class MeetingItemForOrgnize extends Component {
 		        onTintColor  ={checkBoxColor}
           		tintColors    ={{true: checkBoxColor, false: '#aaaaaa'}}
 		        style        ={{ marginRight: 20 }}
+		        animationDuration = {0.01}
 		      />
-		    <Label>{item.name} </Label>
+		    <Label style={{flex:0}}>{item.name} </Label>
+
+		    <ActivityIndicator 
+		    	animating={this.props.loading}
+		    	color     ={this.props.style.SpinnerColor}
+		    	style     ={{marginRight: 10, marginLeft: 10}}
+		    />
+        	<View style={{flex:1}}/>
 		    <Icon 
-		      style ={{borderWidth: 0, padding: 10, paddingRight: 10, paddingLeft: '40%'}}
+		      style ={{borderWidth: 0, padding: 10, paddingRight: 10}}
 		      name  ='arrow-forward'
 		      onPress={()=>this.props.onItemNextIconPress(item)}
 		    />

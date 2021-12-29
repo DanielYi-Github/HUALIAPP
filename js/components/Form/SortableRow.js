@@ -64,17 +64,25 @@ class SortableRow extends Component {
     let activeBackgroundColor = active ? "rgba(0,0,0,.3)": this.props.style.InputFieldBackground ; 
     return (
       <Animated.View style={[ styles.row, this._style, { backgroundColor:activeBackgroundColor  } ]}>
-        <Body style={{flexDirection: 'row'}}>
+        <Item button style={{width: '100%', borderBottomWidth: 0}} 
+          onPress={()=>{
+            this.props.onCheckBoxTap(index, data);
+          }}
+          onLongPress={this.props.onLongPress}
+        >
           <Left style={{flexDirection: 'row', flex: 0}}>
             <CheckBox
                 value={data.checked}
                 onValueChange={(newValue) => {
-                  this.props.onCheckBoxTap(index, data); 
+                  if (Platform.OS == "android") this.props.onCheckBoxTap(index, data);
                 }}
                 boxType      = {"square"}
                 onCheckColor = {"#E25241"}
                 onTintColor  = {"#E25241"}
                 tintColors   = {{true: "#E25241", false: '#aaaaaa'}}
+                animationDuration = {0.01}
+                disabled     ={ Platform.OS == "android" ? false : true }
+
               />
           </Left>
           <Body style={{justifyContent: 'space-between', paddingLeft: 10, flexDirection: 'row'}}>
@@ -83,7 +91,7 @@ class SortableRow extends Component {
           <Right style={{flex: 0}}>
             <Icon name={"reorder-two"}/>
           </Right>
-        </Body>
+        </Item>
       </Animated.View>
     );
   }

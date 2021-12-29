@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Keyboard, SafeAreaView, SectionList } from 'react-native';
+import { View, Keyboard, SafeAreaView, SectionList, Dimensions, Alert } from 'react-native';
 import { Container, Header, Body, Left, Right, Button, Item, Icon, Input, Title, Text, Label, Segment, connectStyle} from 'native-base';
 import { tify, sify} from 'chinese-conv'; 
 import { connect } from 'react-redux';
@@ -37,15 +37,22 @@ class MeetingListPage extends React.PureComponent  {
         sKeyword       :"",          //簡體中文
         tKeyword       :"",          //繁體中文
         isShowSearch   :false,
-        isLoading      :false,
         showFooter     :false,
         SegmentButton  :"all",
-        isEnd          :false
+        isEnd          :false,
+        screenWidth    :Dimensions.get('window').width,
+        isLoading      :false,
+
+        readyOpenMeetingParam:props.route.params ?  props.route.params.readyOpenMeetingParam : false,
       }
 	}
 
   componentDidMount(){
-    if (this.props.state.Meeting.meetingList.length == 0) {
+    if (
+      this.props.state.Meeting.meetingList.length == 0 
+      && 
+      this.props.state.Meeting.isRefreshing_for_background == false
+    ) {
       this.props.actions.getMeetings();
       this.setState({
         isEnd:false
@@ -54,12 +61,51 @@ class MeetingListPage extends React.PureComponent  {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
+    if(
+      nextProps.state.Meeting.isRefreshing_for_background == false &&
+      this.state.readyOpenMeetingParam
+    ){
+      let isSearchedMeeting = false;
+      for(let meeting of nextProps.state.Meeting.meetingList){
+        if ( this.state.readyOpenMeetingParam.oid == meeting.oid) {
+          isSearchedMeeting = true;
+          break;
+        }
+      }
+
+      if (isSearchedMeeting) {
+        NavigationService.navigate("MeetingInsert", {
+            meetingParam: this.state.readyOpenMeetingParam,
+            fromPage:"MessageFuc"
+          });
+
+
+      } else {
+        Alert.alert( nextProps.state.Language.lang.MeetingPage.meetingAlreadyDone, "",
+          [
+            {
+              text: nextProps.state.Language.lang.Common.Close,   // 關閉 
+              style: 'cancel',
+              onPress: () => {}, 
+            }
+          ],
+        )
+      }
+
+      this.setState({ readyOpenMeetingParam : false });
+    }
+
+
     if (nextProps.state.Meeting.meetingList.length == this.props.state.Meeting.meetingList.length) {
       this.setState({
         isEnd:true
       });
     }else{
-      if (nextProps.state.Meeting.meetingList.length == 0) {
+      if (
+        nextProps.state.Meeting.meetingList.length == 0 
+        && 
+        nextProps.state.Meeting.isRefreshing_for_background == false
+      ) {
         this.props.actions.getMeetings();
         this.setState({
           isEnd:false
@@ -71,6 +117,8 @@ class MeetingListPage extends React.PureComponent  {
 	render() {
     let userId = this.props.state.UserInfo.UserInfo.id;
     let meetingList = this.props.state.Meeting.meetingList;
+    let managerMeeting = meetingList.filter(value => value.manager).length > 0 ? true : false;
+    let btnWidth = managerMeeting ? this.state.screenWidth / 4 : this.state.screenWidth / 3;
     let keySearched = [];
     // 關鍵字搜尋的整理
     if (this.state.isShowSearch) {
@@ -90,6 +138,9 @@ class MeetingListPage extends React.PureComponent  {
         break;
       case 'invited':
         meetingList = meetingList.filter(createFilter(userId, Invited_TO_FILTERS))
+        break;
+      case 'manager':
+        meetingList = meetingList.filter(value => value.manager)
         break;
     }
 
@@ -139,7 +190,7 @@ class MeetingListPage extends React.PureComponent  {
         <Segment style={{backgroundColor: "rgba(0,0,0,0)"}}>
           <Button 
             first 
-            style={{width:"32%", justifyContent: 'center' }} 
+            style={{width: btnWidth, justifyContent: 'center' }} 
             active={this.state.SegmentButton == "all"}
             onPress={()=>{
               this.setState({SegmentButton:"all"});
@@ -148,7 +199,7 @@ class MeetingListPage extends React.PureComponent  {
             <Text>{this.props.lang.MeetingPage.all}</Text>
           </Button>
           <Button 
-            style={{width:"30%", justifyContent: 'center'}} 
+            style={{width: btnWidth, justifyContent: 'center'}} 
             active={this.state.SegmentButton == "create"}
             onPress={()=>{
               this.setState({SegmentButton:"create"});
@@ -157,8 +208,8 @@ class MeetingListPage extends React.PureComponent  {
             <Text>{this.props.lang.MeetingPage.initiator}</Text>
           </Button>
           <Button 
-            last 
-            style={{width:"32%", justifyContent: 'center'}} 
+            last = {managerMeeting ? false: true}
+            style={{width: btnWidth, justifyContent: 'center'}} 
             active={this.state.SegmentButton == "invited"}
             onPress={()=>{
               this.setState({SegmentButton:"invited"});
@@ -166,6 +217,21 @@ class MeetingListPage extends React.PureComponent  {
           >
             <Text>{this.props.lang.MeetingPage.invited}</Text>
           </Button>
+          {
+            managerMeeting ? 
+              <Button 
+                last 
+                style={{width: btnWidth, justifyContent: 'center'}} 
+                active={this.state.SegmentButton == "manager"}
+                onPress={()=>{
+                  this.setState({SegmentButton:"manager"});
+                }}
+              >
+                <Text>{this.props.lang.MeetingPage.Notified}</Text>
+              </Button>
+            :
+              null
+          }         
         </Segment>
         <SectionList
           extraData           ={this.props.state.Meeting.meetingList} 
@@ -185,15 +251,15 @@ class MeetingListPage extends React.PureComponent  {
             </Label >
           )}
           ListFooterComponent   = {this.renderFooter}
-          onEndReachedThreshold = {0.3}
-          onEndReached          = {this.state.isEnd ? null :this.endReachedGetMeetings}
+          // onEndReachedThreshold = {0.3}
+          // onEndReached          = {this.state.isEnd ? null :this.endReachedGetMeetings}
         />
       </Container>
     );
 	}
 
   endReachedGetMeetings = () => {
-    this.props.actions.getMeetings();
+    // this.props.actions.getMeetings();
   }
 
   renderItem = (item) => {
@@ -243,7 +309,7 @@ class MeetingListPage extends React.PureComponent  {
   }
 
   renderFooter = () => {
-    if (this.props.state.Meeting.isRefreshing) {
+    if (this.props.state.Meeting.isRefreshing_for_background) {
       return <NoMoreItem text={this.props.state.Language.lang.ListFooter.Loading}/>;
     } else {
       return (<NoMoreItem text={this.props.state.Language.lang.ListFooter.NoMore}/>);         

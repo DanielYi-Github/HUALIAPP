@@ -9,6 +9,8 @@ import * as ThemeAction   from './redux/actions/ThemeAction';
 import * as CommonAction  from './redux/actions/CommonAction';
 import * as LoginAction   from './redux/actions/LoginAction';
 import * as MessageAction from './redux/actions/MessageAction';
+import * as MeetingAction from './redux/actions/MeetingAction';
+
 
 
 import { SafeAreaProvider, SafeAreaView }     from 'react-native-safe-area-context';
@@ -77,7 +79,6 @@ import DeputyPage         from './pages/Mine/DeputyPage';
 import MeetingSettingPage from './pages/Mine/MeetingSettingPage';
 import AdvicesPage        from './pages/Mine/AdvicesPage';
 import AboutPage          from './pages/Mine/AboutPage';
-import OperationPage      from './pages/Mine/OperationPage';
 import AccountSafePage    from './pages/Mine/AccountSafePage';
 import UpdatePasswordPage from './pages/Mine/UpdatePasswordPage';
 import ChangeAccountPage  from './pages/Mine/ChangeAccountPage';
@@ -120,6 +121,8 @@ import DailyOralEnglishDetailPage from "./pages/Common/DailyOralEnglish/DailyOra
 
 import CompanyDocumentPage from "./pages/Common/CompanyDocument/CompanyDocumentPage";
 import CompanyDocumentDetailPage from "./pages/Common/CompanyDocument/CompanyDocumentDetailPage";
+
+import MeetingSettingAssistantPage from "./pages/Mine/MeetingSettingAssistantPage";
 
 function ShowSplashPage(props){
   const isFocused = useIsFocused();
@@ -251,7 +254,7 @@ function HomeTabNavigator(props) {
   
   const [preventGoback, setPreventGoback] = useState(false);
   let state = useSelector(state => state);
-  let theme = state.Theme.theme.['Component.BottomNavigation'];
+  let theme = state.Theme.theme['Component.BottomNavigation'];
   let dispatch = useDispatch();
 
   // 導航欄正顯示且允許進行初始化程式才可增加返回監聽
@@ -316,6 +319,8 @@ function HomeTabNavigator(props) {
 
 const AppStack  = createStackNavigator();
 function MainStack(props){
+  // console.log("TransitionSpecs", TransitionSpecs, CardStyleInterpolators, TransitionPresets);
+
   return(
     <AppStack.Navigator headerMode="none">
 
@@ -363,7 +368,6 @@ function MainStack(props){
       <AppStack.Screen name ="Deputy"           component={DeputyPage} />
       <AppStack.Screen name ="MeetingSetting"   component={MeetingSettingPage} />
       <AppStack.Screen name ="Advices"          component={AdvicesPage} />
-      <AppStack.Screen name ="Operation"        component={OperationPage} />
       <AppStack.Screen name ="About"            component={AboutPage} />
       <AppStack.Screen name ="AccountSafe"      component={AccountSafePage} />
       <AppStack.Screen name ="UpdatePassword"   component={UpdatePasswordPage} />
@@ -401,17 +405,17 @@ function MainStack(props){
       <AppStack.Screen name ="MeetingInsertWithRegularCustomize" component={MeetingInsertWithRegularCustomizePage} />
       
       <AppStack.Screen name ="MeetingInsertChairperson" component={MeetingInsertChairpersonPage} />
-      <AppStack.Screen name ="MeetingTimeForPerson" component={MeetingTimeForPersonPage} />
-      <AppStack.Screen name ="MeetingAttendeesReorder" component={MeetingAttendeesReorderPage} 
+      <AppStack.Screen name ="MeetingTimeForPerson"     component={MeetingTimeForPersonPage} />
+      <AppStack.Screen name ="MeetingAttendeesReorder"  component={MeetingAttendeesReorderPage}         
         options={{
           cardStyleInterpolator: Platform.OS == 'ios' ? CardStyleInterpolators.forModalPresentationIOS : CardStyleInterpolators.forFadeFromBottomAndroid,
           cardOverlayEnabled: true
         }}
       />
       <AppStack.Screen name ="MeetingTimeForSearch" component={MeetingTimeForSearchPage} />
-
       <AppStack.Screen name = "CompanyDocument" component = {CompanyDocumentPage} />
       <AppStack.Screen name = "CompanyDocumentDetail" component = {CompanyDocumentDetailPage} />
+      <AppStack.Screen name = "MeetingSettingAssistant" component = {MeetingSettingAssistantPage} />
     </AppStack.Navigator>
   )
 }
@@ -446,7 +450,6 @@ class Router extends React.Component {
     ) {
       let user = await DeviceStorageUtil.get('User');
       if (user !== "") {
-        // console.log("this.props.actions.appHotInit");
         this.props.actions.appHotInit(this.props.actions);
       }
     }
@@ -497,7 +500,8 @@ const appRouter = connect(
       ...ThemeAction,
       ...CommonAction,
       ...LoginAction,
-      ...MessageAction
+      ...MessageAction,
+      ...MeetingAction
     }, dispatch)
   })
 )(Router);

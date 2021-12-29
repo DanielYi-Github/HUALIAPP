@@ -7,6 +7,7 @@ import DateFormat from  'dateformat';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as RNLocalize from "react-native-localize";
 import Moment from 'moment-timezone';
+import CheckBox from '@react-native-community/checkbox';
 
 import HeaderForGeneral       from '../../../components/HeaderForGeneral';
 import * as NavigationService from '../../../utils/NavigationService';
@@ -16,102 +17,116 @@ import ToastUnit              from '../../../utils/ToastUnit';
 class MeetingInsertWithRegularPage extends React.PureComponent  {
 	constructor(props) {
 	    super(props);
+
+      var d1 = new Date();
+      var d2 = new Date(d1);
+      d2.setFullYear(d2.getFullYear()+1);
+      d2.setDate(d2.getDate()-1);
+
 	    this.state = {
+        startdate     : props.route.params.startdate,
+        enddate       : props.route.params.enddate,
+        showDatePicker: false,
+        editDatetimeValue : new Date(),
+        maximumDate : new Date(d2)
       }
 	}
 
-  componentDidMount(){
+  componentWillUnmount(){
+    if( 
+      this.props.state.Meeting.selectedRepeatType != "NR" &&
+      this.props.state.Meeting.repeatEndDate == ""
+    ){
+      NavigationService.navigate("MeetingInsertWithRegular", {
+        startdate: this.state.startdate,
+        enddate  : this.state.enddate,
+        onPress  : "",
+        // oid      : this.state.oid
+      });
 
+      Alert.alert(
+        this.props.lang.Common.Alert,
+        this.props.lang.MeetingPage.needEndDate,
+        [
+          { text: "OK", onPress: () => {
+            this.setState({ 
+              showDatePicker: true,
+              editDatetimeValue : this.props.state.Meeting.repeatEndDate == "" ? this.state.editDatetimeValue : new Date(this.props.state.Meeting.repeatEndDate)
+            });
+          }}
+        ]
+      );
+    }
   }
 
 	render() {
-    console.log(this.props.state.Meeting.reCircleMeetingOptions);
     return (
       <Container>
         <HeaderForGeneral
           isLeftButtonIconShow  = {true}
           leftButtonIcon        = {{name:"arrow-back"}}
-          leftButtonOnPress     = {() =>NavigationService.goBack()} 
+          leftButtonOnPress     = {() =>{
+            if( 
+              this.props.state.Meeting.selectedRepeatType != "NR" &&
+              this.props.state.Meeting.repeatEndDate == ""
+            ){
+              Alert.alert(
+                this.props.lang.Common.Alert,
+                this.props.lang.MeetingPage.needEndDate,
+                [
+                  { text: "OK", onPress: () => {
+                    this.setState({ 
+                      showDatePicker: true,
+                      editDatetimeValue : this.props.state.Meeting.repeatEndDate == "" ? this.state.editDatetimeValue : new Date(this.props.state.Meeting.repeatEndDate)
+                    });
+                  }}
+                ]
+              );
+            }else{
+              NavigationService.goBack();
+            }
+          }} 
           isRightButtonIconShow = {false}
           rightButtonIcon       = {null}
           rightButtonOnPress    = {null} 
-          title                 = {"例行性會議"}
+          title                 = {this.props.lang.MeetingPage.regularMeeting}
           isTransparent         = {false}
         />
 
         <FlatList
-          data={this.props.state.Meeting.reCircleMeetingOptions}
-          renderItem={this.renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor        ={item => item.id}
+          data                ={this.props.state.Meeting.repeatType}
+          renderItem          ={this.renderItem}
+          ListFooterComponent ={this.ListFooterComponent}
         />
 
-        <Content>
 
-
-          
-          {/*會議前提醒*/}
-          <Item 
-            style={{
-              backgroundColor: this.props.style.InputFieldBackground,
-              height         : this.props.style.inputHeightBase,
-              paddingLeft    : 10,
-              paddingRight   : 5,
-              marginTop      : 20,
-            }}
-            onPress  = {()=>{
-              
-            }}
-          >
-              <Icon name='clock-alert-outline' type="MaterialCommunityIcons" />
-              <Label style={{flex:1}}>{"測試"}</Label>
-              <Text>{"請選擇"}</Text>
-              <Icon name='arrow-forward' />
-          </Item>
-
-        </Content>
-
-        {/*選擇日期
+        {/*選擇日期*/}
         {
-          (this.state.showDatePicker) ? 
+          (this.state.showDatePicker && Platform.OS == 'android') ? 
             <DateTimePicker 
               value       ={this.state.editDatetimeValue}
-              minimumDate ={new Date(this.state.now)}
+              minimumDate ={new Date()}
+              maximumDate ={this.state.maximumDate}
               mode        ={"date"}
-              is24Hour    ={true}
               display     ="default"
               onChange    ={this.setDate}
             />
           :
             null
         }
-        */}
-        {/*選擇時間
+
+        {/*選擇日期for ios*/}
         {
-          (this.state.showTimePicker) ? 
-            <DateTimePicker 
-              value    ={this.state.editDatetimeValue}
-              mode     ={"time"}
-              is24Hour ={true}
-              display  ="spinner"
-              onChange ={this.setTime}
-              minuteInterval = {10}
-            />
-          :
-            null
-        }
-        */}
-        {/*選擇日期時間for ios
-        {
-          this.state.showDateTimePicker ?
-            <Modal animationType="fade" transparent={true} visible={this.state.showDateTimePicker} >
+          this.state.showDatePicker &&  Platform.OS == 'ios' ?
+            <Modal animationType="fade" transparent={true} visible={this.state.showDatePicker} >
                 <View style={{flex:1, backgroundColor:"rgba(0,0,0,.4)", flexDirection:"column", justifyContent:"flex-end"}}>
                   <View style={{backgroundColor:"white"}}>
                     <View style={{flexDirection:"row", justifyContent:"space-between"}}>
                       <Button transparent onPress ={()=>{ 
                         this.setState({ 
-                          showDateTimePicker:false, 
-                          editDatetimeValue :null, 
-                          isEndDateChange   :true
+                          showDatePicker   :false, 
+                          editDatetimeValue:null, 
                         });
                       }}>
                         <Text style={{color: "black"}}>{this.props.state.Language.lang.Common.Cancel}</Text>
@@ -121,14 +136,15 @@ class MeetingInsertWithRegularPage extends React.PureComponent  {
                       </Button>
                     </View>
                     <DateTimePicker 
-                      mode     ={"datetime"}
-                      value    ={this.state.editDatetimeValue}
-                      minimumDate = {new Date(this.state.now)}
-                      minuteInterval = {10}
-                      is24Hour ={true}
-                      display  ={"spinner"}
-                      locale   ={this.props.state.Language.lang.LangStatus}
-                      onChange ={this.setDatetime_ios}
+                      mode           ={"date"}
+                      value          ={this.state.editDatetimeValue}
+                      minimumDate    ={new Date()}
+                      maximumDate    ={this.state.maximumDate}
+                      minuteInterval ={10}
+                      is24Hour       ={true}
+                      display        ={"spinner"}
+                      locale         ={this.props.state.Language.lang.LangStatus}
+                      onChange       ={this.setDatetime_ios}
                     />
                   </View>
                 </View>
@@ -136,39 +152,104 @@ class MeetingInsertWithRegularPage extends React.PureComponent  {
           :
             null
         }
-        */}
+
       </Container>
     );
 	}
 
   renderItem = (item) => {
-    return <View></View>
+    let isChecked = item.item.type == this.props.state.Meeting.selectedRepeatType ? true: false;
+    let label = this.props.lang.MeetingPage.repeatType[item.item.type];
+    return (
+      <Item 
+        style={{
+          backgroundColor: this.props.style.InputFieldBackground,
+          height         : this.props.style.inputHeightBase,
+          paddingLeft    : 10,
+          paddingRight   : 5,
+        }}
+        onPress  = {()=>{ this.setRepeatType({ type:item.item.type }); }}
+      >
+          <Label style={{flex:1}}>{label}</Label>
+          {
+            isChecked ?
+              <CheckBox
+                disabled      ={ Platform.OS == "android" ? false : true }
+                onValueChange={(newValue) => { this.setRepeatType({ type:item.item.type }); }}
+                value             = {isChecked}
+                boxType           = {"square"}
+                onCheckColor      = {"#00C853"}
+                onTintColor       = {"#00C853"}
+                tintColors        = {{true: "#00C853", false: '#00C853'}}
+                style             = {{ marginRight: 20 }}
+                animationDuration = {0.01}
+              />
+            :
+              false
+          }
+      </Item>
+    )
   }
 
-  showDateTimePicker = (editStartorEndDatetime) => {
-    let startdate = new Date( this.state.startdate.replace(/-/g, "/") ).getTime();
-    let enddate = new Date( this.state.enddate.replace(/-/g, "/") ).getTime();
-
-      if (this.state.isEndDateChange) {
-      } else {
-        enddate = startdate;
-      }
-    
-    if (Platform.OS == "ios") {
-      this.setState({
-        editStartorEndDatetime: editStartorEndDatetime,
-        editDatetimeValue: editStartorEndDatetime ? startdate: enddate,
-        showDateTimePicker: true,
-        isEndDateChange: editStartorEndDatetime ? false: true,
-      });
-    } else {
-      this.setState({
-        editStartorEndDatetime: editStartorEndDatetime,
-        editDatetimeValue: editStartorEndDatetime ? startdate: enddate,
-        showDatePicker: true,
-        isEndDateChange: editStartorEndDatetime ? false: true,
-      });
+  setRepeatType = (param) => {
+    switch (param.type) {
+      case 'NR':
+        this.props.actions.setRepeatType({ 
+          selectedRepeatType:param.type,
+          selectedWeekDays  :[],
+          repeatEndDate : ""
+        });
+        break;
+      case 'DM':
+        NavigationService.navigate("MeetingInsertWithRegularCustomize", {
+          startdate: this.state.startdate,
+          enddate  : this.state.enddate,
+        });
+        this.props.actions.setRepeatType({ selectedRepeatType:param.type });
+        break;
+      default:
+        this.props.actions.setRepeatType({ selectedRepeatType:param.type });
     }
+  }
+
+  ListFooterComponent = () => {
+    // 判斷結束日期的顯示內容
+    let endRepeatDate = disabled ? <Label>{this.props.lang.MeetingPage.couldNotOverYear}</Label> : <Text>{this.props.lang.MeetingPage.couldNotOverYear}</Text>;
+    if ( this.props.state.Meeting.repeatEndDate != "" ) {
+      endRepeatDate = (<Text>{this.props.state.Meeting.repeatEndDate}</Text>);
+    }
+
+    let disabled = this.props.state.Meeting.selectedRepeatType == "NR" ? true: false;
+    return (
+      <View style={{ paddingTop: 30 }}>
+        <Item 
+          disabled = {disabled}
+          style={{
+            backgroundColor: this.props.style.InputFieldBackground,
+            height         : this.props.style.inputHeightBase,
+            paddingLeft    : 10,
+            paddingRight   : 5,
+          }}
+          onPress  = {()=>{
+            this.setState({ 
+              showDatePicker: true,
+              editDatetimeValue : this.props.state.Meeting.repeatEndDate == "" ? this.state.editDatetimeValue : new Date(this.props.state.Meeting.repeatEndDate)
+            });
+          }}
+        >
+            { 
+              this.props.state.Meeting.selectedRepeatType == "NR" ? 
+                null
+              :
+                <Label style={{flex: 0, color:"#FE1717"}}>{"*"}</Label>
+            }
+            <Label style={{flex:1}}>{this.props.lang.MeetingPage.needEndDate}</Label>
+            { endRepeatDate }
+            <Icon name='arrow-forward' />
+        </Item>
+        <Label style={{margin:10}}>{``}</Label>
+      </View>
+    );
   }
 
   setDatetime_ios = (event, date) => {
@@ -177,77 +258,32 @@ class MeetingInsertWithRegularPage extends React.PureComponent  {
     });
   }
 
+  setDatetime = () => {
+    this.setState({
+      showDatePicker : false,
+      editDatetimeValue : new Date()
+    });
+    this.props.actions.setRepeatType({ 
+      repeatEndDate: DateFormat( new Date(this.state.editDatetimeValue), "yyyy-mm-dd") 
+    });
+  }
+
   setDate = (date) => {
     if (date.type == "set") {
       this.setState({
-        // editDatetimeValue:this.state.isChangeTime ? date.nativeEvent.timestamp-28800000: date.nativeEvent.timestamp ,
-        editDatetimeValue:date.nativeEvent.timestamp,
         showDatePicker   :false,
-        showTimePicker   :true,
+        editDatetimeValue:new Date()
+      });
+
+      this.props.actions.setRepeatType({ 
+        repeatEndDate: DateFormat( new Date(date.nativeEvent.timestamp), "yyyy-mm-dd") 
       });
     }else{
       this.setState({
-        showDatePicker:false
+        showDatePicker   :false,
+        editDatetimeValue:new Date()
       });
     }
-  }
-
-  setTime = (time) => {
-    console.log(DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"));
-    if (time.type == "set") {
-      if (this.state.editStartorEndDatetime) {
-        //start
-        this.setState({
-          startdate      :DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"),
-          showTimePicker    : false,
-        });
-      } else {
-        //end
-        this.setState({
-          enddate        :DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"),
-          showTimePicker    : false, 
-        });
-      }
-
-    }else{
-      this.setState({
-        showTimePicker:false
-      });
-    }
-  }
-  
-  setDatetime = () => {
-    if (this.state.editStartorEndDatetime) {
-      //start
-      let editDatetimeValue = this.state.editDatetimeValue-1000 >= this.state.now ? this.state.editDatetimeValue : this.state.now;
-      this.setState({
-        startdate      :DateFormat( new Date(editDatetimeValue), "yyyy-mm-dd HH:MM:ss"),
-        showDateTimePicker    : false, // for ios
-      });
-    } else {
-      //end
-      let editDatetimeValue = this.state.editDatetimeValue;
-      this.setState({
-        enddate        :DateFormat( new Date(editDatetimeValue), "yyyy-mm-dd HH:MM:ss"),
-        showDateTimePicker    : false, // for ios
-      });
-    }
-  }
-
-  dateFormat = (datetime) => {
-    let datetimeString = "";
-    switch (this.props.state.Language.langStatus) {
-      case 'zh-TW':
-      case 'zh-CN':
-        datetimeString = DateFormat( new Date(datetime), "m月d日 ") + this.props.state.Language.lang.Common.week[DateFormat( new Date(datetime), "dddd")];
-        break;
-      case 'vi':
-        datetimeString = DateFormat( new Date(datetime), "mm-dd ") + this.props.state.Language.lang.Common.week[DateFormat( new Date(datetime), "dddd")];
-        break;
-      default:
-        datetimeString = DateFormat( new Date(datetime), "mmm dd dddd");
-    }
-    return datetimeString;
   }
 }
 

@@ -51,7 +51,8 @@ export default {
 			Thursday :"Thứ năm",
 			Friday   :"Thứ sáu",
 			Saturday :"ngày thứ bảy",
-		}
+		},
+		selectAll: "Chọn tất cả"
 	},
 	InitialPage: {
 		Update                   : 'Cập nhật', //更新
@@ -838,11 +839,14 @@ export default {
 		alertMessage_duplicate     :"Có sự trùng lặp",
 		alertMessage_period        :"Giai đoạn này",
 		alertMessage_meetingAlready:"Cuộc họp đã lên lịch/ Đã sắp xếp cuộc họp này",
+		alertMessage_meetingAttendeesAlready:" cuộc họp đã lên lịch/ Đã sắp xếp cuộc họp này",
 		meetingSchedule            :"Lịch họp",
 		noMeetings                 :"Tạm thời không có cuộc họp",
 		myMeetings                 :"Cuộc họp của tôi",
 		initiator                  :"Tôi khởi xướng",
 		invited                    :"Được mời",
+		Notified				   :"Được thông báo",
+		NotifiedTips			   :"Cuộc họp này là lịch họp của xxx",
 		functionMsg                :"Để nhanh chóng biết liệu người bạn muốn mời có lên lịch các cuộc họp khác trong một khoảng thời gian đã định  hay không, bạn có thể sử dụng các cài đặt sau : \"thời gian bắt đầu và kết thúc\" và \"thêm người tham gia\" để nhanh chóng tra cứu  tất cả \"thời gian họp của người gia\" Thời gian họp thuận tiện để bạn sắp xếp cuộc họp và gửi lời mời.",
 		attendeesTimeSearch        :"Tra cứu thời gian của người tham gia họp",
 		insertAttendees            :"Thêm người tham gia họp",
@@ -856,7 +860,6 @@ export default {
 		period_2hour               :"2 tiếng",
 		period_4hour               :"4 tiếng",
 		meetingsOfAttendees        :"Lịch họp của những người tham gia",
-		suggestMeetingTime         :"Đề xuất thời gian họp",
 		noSuggestMeetingTime       :"Không có thời gian đề xuất",
 		noSuggestMeetingTimeMsg    :"Nếu không có thời gian họp được đề xuất cho khoảng thời gian này, vui lòng nhấp vào góc trên bên phải để sửa đổi thời lượng cuộc họp hoặc quay lại trang trước để điều chỉnh thời gian họp.",
 		suggestMeetingTime         :"Thời gian họp đề xuất",
@@ -885,6 +888,13 @@ export default {
 		person 					   :"người",
 		selectedAttendeeReorder    :"sắp xếp",
 		noneNextOrg				   :"Không có Sở!",
+		regularMeeting  		   :"lịch trình",
+		endDate         		   :"ngày cuối",
+		needEndDate     		   :"nhu cầu ngày cuối",
+		couldNotOverYear		   :"Không quá một năm",
+		customEveryWeek 		   :"tập quán",
+		frequency       		   :"tần số",
+		frequencyByWeek 		   :"Lặp lại hàng tuần",
 		MeetingModeType			   :{
 			Z:"Zoom",
 			S:"Skype",
@@ -893,9 +903,41 @@ export default {
 			M:"Team",
 			D:"DingDing",
 			A:"Phòng họp Vật lý"
-		}
+		},
+		repeatType:{
+			NR: "Không bao giờ",
+			ED: "Mỗi ngày",
+			WD: "Tất cả các ngày làm việc",
+			EW: "Hàng tuần",
+			EM: "Mỗi tháng",
+			DM: "Tùy chỉnh"
+		},
+		weekDays:{
+			MON: "Thứ Hai",
+			TUE: "Thứ Ba",
+			WEB: "Thứ Tư",
+			THU: "Thứ Năm",
+			FRI: "Thứ sáu",
+			SAT: "Thứ Bảy",
+			SUN: "Chủ nhật"
+		},
+		// `將在${label1}的 ${label2} 到 ${label3} 進行會議，直到 ${label4}結束`;
+		regularMsg1:"sẽ là ",
+		regularMsg2:"của",
+		regularMsg3:"đến",
+		regularMsg4:"Tổ chức cuộc họp cho đến khi",
+		regularMsg5:" Kết thúc",
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "Tập tin công ty",
+	},
+	MeetingSettingPage:{
+		meetingSettingTitle: "Cài đặt quản lý hội nghị",
+		meetingNotificationAssistant: "Bật trợ lý thông báo cuộc họp",
+		meetingAssistant: "Trợ lý cuộc họp",
+		meetingAssistantTitle: "Vui lòng chọn một trợ lý cuộc họp",
+		shareMeetingNotice: "Chia sẻ thông báo cuộc họp",
+		meetingNotificationAssistantTxt: 'Bật cài đặt này và lịch họp của bạn sẽ được hiển thị trong chức năng "Cuộc họp của tôi" của "Trợ lý cuộc họp"',
+		shareMeetingNoticeTxt: 'Bật cài đặt này, thông báo cuộc họp của bạn sẽ được chuyển đến "trợ lý cuộc họp" cùng một lúc',
 	}
 }

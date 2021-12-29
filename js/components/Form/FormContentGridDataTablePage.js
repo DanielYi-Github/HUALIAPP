@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { View, ScrollView, TouchableOpacity, TextInput, Alert, Keyboard}from 'react-native';
 import { Container, Content, Header, Left, Right, Item, Label, Body, Title, Button, Icon, Text, connectStyle } from 'native-base';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view'
 
 import * as NavigationService from '../../utils/NavigationService';
 import HeaderForGeneral from '../HeaderForGeneral';
 import FormUnit from '../../utils/FormUnit';
-import ToastUnit              from '../../utils/ToastUnit';
+import ToastUnit from '../../utils/ToastUnit';
 
 // 資料欄位輸入錯誤，跳回上一個數值問題
 class FormContentGridDataTablePage extends Component {
@@ -33,7 +33,9 @@ class FormContentGridDataTablePage extends Component {
 			widthArr          : widthArrList,
 			editCheckItem     : false,
 			editCheckItemIndex: -1,
-			isTextEditing 	  : false,
+			editValue 		  : "",
+			isEditRowIndex	  :"",
+			isEditColumnIndex :"" ,
 			editingPosition   : {},
 		};
 	}
@@ -41,7 +43,6 @@ class FormContentGridDataTablePage extends Component {
 	render() {
 		// let tableHead = this.state.editable ? [ "", this.state.lang.FormContentGridForEvaluation.tableAction ] : [""] ;
 		let tableHead = [""] ;
-
 		for(let i in this.state.data.listComponent){
 			if(this.state.data.listComponent[i].columntype != "hidetxt"){
 				tableHead.push(this.state.data.listComponent[i].component.name);
@@ -50,8 +51,8 @@ class FormContentGridDataTablePage extends Component {
 
 		let tableData = [];
 		for(let i in this.state.data.defaultvalue){
-			// const rowData = this.state.editable ? [ parseInt(i)+1, this.renderEditButton( this.state.data.defaultvalue[i], i ) ] : [parseInt(i)+1];
 			const rowData = [parseInt(i)+1];
+			// const rowData = this.state.editable ? [ parseInt(i)+1, this.renderEditButton( this.state.data.defaultvalue[i], i ) ] : [parseInt(i)+1];
 
 			for(let j in this.state.data.defaultvalue[i]){
 				if (this.state.data.defaultvalue[i][j].columntype != "hidetxt") {
@@ -65,10 +66,9 @@ class FormContentGridDataTablePage extends Component {
 			}
 			tableData.push(rowData);
 		}
-		
+
 		return (
 			<Container>
-
 				<Header style={this.props.style.HeaderBackground}>
 				  <Left>
 				    <Button transparent onPress={() =>{
@@ -111,7 +111,7 @@ class FormContentGridDataTablePage extends Component {
 				  </Right>
 				</Header>
 				
-				<KeyboardAwareScrollView horizontal={true}>
+				<ScrollView horizontal={true}>
 					<View>
 						<Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
 						  <Row 
@@ -126,7 +126,7 @@ class FormContentGridDataTablePage extends Component {
 								}}
 						  />
 						</Table>
-						<KeyboardAwareScrollView>
+						<KeyboardAwareScrollView extraScrollHeight = {30}>
 							<Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
 								{
 									tableData.map((rowData, index) => {
@@ -141,9 +141,6 @@ class FormContentGridDataTablePage extends Component {
 													fontWeight  : '100',
 													marginTop   : 10, 
 													marginBottom: 10, 
-													// color       : '#000'
-													// color       : '#575757'
-
 												}}
 											/>
 										)
@@ -152,84 +149,17 @@ class FormContentGridDataTablePage extends Component {
 							</Table>
 						</KeyboardAwareScrollView>
 		      		</View>
-		      	</KeyboardAwareScrollView>
+		      	</ScrollView>
 
 			</Container>
 		)
 	}
 
-	// 點擊跳頁的按鈕
-	renderEditButton = (indexData, index) => {
-		return(
-			<TouchableOpacity onPress={ async () =>{ 
-				let data = this.state.data;
-		        data.listComponent = this.deepClone(indexData); 
-
-				if (!data.listComponent[0].hasOwnProperty("show")) {
-					data = await this.editablelize(data);
-				}
-
-        		this.setState({
-					editCheckItem     : true,
-					editCheckItemIndex: index,
-        		});
-				
-				NavigationService.navigate("FormInputContentGridPage", {
-					formContent 	  : this.props.route.params.formContent,
-					propsData         : this.props.route.params.data,
-					data              : data,
-					lang              : this.state.lang, 
-					user              : this.state.user,
-					confirmOnPress    : this.confirmFormData,
-					editCheckItemIndex: index,
-				});
-				
-			}}>
-			    <View style={{flex:1, alignContent: 'center', justifyContent: 'center'}}>
-			      <Icon name='create' style ={{color: "#aaa", alignSelf: 'center'}} />
-			    </View>
-			</TouchableOpacity>
-		);
-	}
-
-	// 點擊跳頁後的值更新，只更新本地state
-	confirmFormData = async ( value ) => {
-		if (this.state.editCheckItem) {
-			value.defaultvalue[this.state.editCheckItemIndex] = this.deepClone(value.listComponent);
-		} else {
-			// 將自己的值新增到 this.state.data 的 defaultvalue 裡面
-			if (value.defaultvalue == null) {
-				value.defaultvalue = [];
-				value.defaultvalue.push(this.deepClone(value.listComponent));
-			} else {
-				value.defaultvalue.push(this.deepClone(value.listComponent));
-			}
-
-			let array = this.state.editCheckItemRecord;
-			array = [...array, false];
-			this.setState({
-				editCheckItemRecord: array
-			});
-		}
-		// 將listComponent變成最原本的樣子
-		value.listComponent = this.deepClone(this.props.route.params.data.listComponent);
-
-		this.setState({
-			preData           : this.deepClone(value),
-			data              : this.deepClone(value),
-			editCheckItem     : false,
-			editCheckItemIndex: -1,
-		});
-		// 送值
-	}
-
 	// 直接在表格輸入
 	renderInput = (data, rowIndex, columnIndex) => {
 		let isValueExist = data.defaultvalue == "" || data.defaultvalue == " " || data.defaultvalue == null ? false : true;
-
 		if (data.columntype == "txt") {
 			let component = null;
-
 			if (
 				this.state.isTextEditing && 
 				rowIndex == this.state.editingPosition.rowIndex &&
@@ -245,7 +175,9 @@ class FormContentGridDataTablePage extends Component {
 						keyboardType = {data.columntype == "number" ? "numeric" : "default"}
 						textAlign    = {"right"}
 						value        = {data.defaultvalue}
-						onChangeText = {text => this.updateStateDefaultValue(text, rowIndex, columnIndex) }
+						onChangeText = {text => {
+					        this.updateStateDefaultValue(text, rowIndex, columnIndex) 
+						}}
 						onEndEditing = {text => {
 							this.setState({
 								isTextEditing: false,
@@ -254,6 +186,7 @@ class FormContentGridDataTablePage extends Component {
 							this.confirmStateDefaultValue(text.nativeEvent.text, rowIndex, columnIndex);
 						}}
 						autoFocus = {true}
+						returnKeyType = "done"
 				    />
 				);
 			} else {
@@ -286,18 +219,49 @@ class FormContentGridDataTablePage extends Component {
 
 			return component;
 		} else {
+			let textInputRef = "textInput"+rowIndex+columnIndex;
 			return(
 				<TextInput
+					ref={input => { this[textInputRef] = input }}
 					style        = {{ 
 						flex       : 1, 
 						borderColor: data.required == "Y" && !isValueExist ? "red" : 'gray', 
 						borderWidth: data.required == "Y" && !isValueExist ? 1 : 0,
 					}}
 					keyboardType = {data.columntype == "number" ? "numeric" : "default"}
+					returnKeyType= {data.columntype == "number" ? 'done' : null}
 					textAlign    = {"right"}
 					value        = {data.defaultvalue}
-					onChangeText = {text => this.updateStateDefaultValue(text, rowIndex, columnIndex) }
-					onEndEditing = {text => this.confirmStateDefaultValue(text.nativeEvent.text, rowIndex, columnIndex)}
+					onChangeText = {text => {
+						let newText = (text != '' && text.substr(0,1) == '.') ? '' : text;
+				        newText = newText.replace(/^0+[0-9]+/g, "0"); //不能以0开头输入
+				        newText = newText.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+				        newText = newText.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+				        newText  = newText.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+				        newText = newText.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+						this.updateStateDefaultValue(newText, rowIndex, columnIndex)
+					}}
+					onEndEditing = { text => {
+							let tempText = text.nativeEvent.text;
+							
+							if( tempText == ""){
+								this.updateStateDefaultValue(this.state.editValue, rowIndex, columnIndex)
+								this.setState({ 
+									editValue : "",
+								});
+							}else{
+								this.confirmStateDefaultValue(tempText, rowIndex, columnIndex);
+							}
+					}}
+					
+					onFocus={(text) => {
+						this.setState({ 
+							editValue        : data.defaultvalue,
+							isEditRowIndex   : rowIndex,
+							isEditColumnIndex: columnIndex
+						});
+						this.updateStateDefaultValue("", rowIndex, columnIndex)
+					}}
 			    />
 			);
 		}
@@ -316,8 +280,8 @@ class FormContentGridDataTablePage extends Component {
 	confirmStateDefaultValue = async (value, rowIndex, columnIndex) => {
 		let data = this.deepClone(this.state.data);
 		let item = data.defaultvalue[rowIndex][columnIndex];
-
 		value = value == "" ? item.defaultvalue:value ;
+
 		// 欄位自己的規則比較
 		let ruleCheck = await FormUnit.formFieldRuleCheck(
 			value,
@@ -325,22 +289,25 @@ class FormContentGridDataTablePage extends Component {
 			data.defaultvalue[rowIndex],
 			item.columntype
 		);
-		
 		if (ruleCheck != true) {
-			Alert.alert(
-				this.state.lang.CreateFormPage.WrongData,
-				ruleCheck.message, [{
-					text: this.state.lang.CreateFormPage.GotIt,
-					onPress: () => {
-						// 修改回原來的值
-						this.setState({
-							data:this.deepClone(this.state.preData)
-						});
+			// 修改回原來的值
+			this.setState({
+				data:this.deepClone(this.state.preData)
+			});
+			let lang = this.state.lang;
+
+			// 顯示提示
+			setTimeout(function(){
+				Alert.alert(
+					lang.CreateFormPage.WrongData,
+					ruleCheck.message, [{
+						text: lang.CreateFormPage.GotIt,
+						onPress: () => {}
+					}], {
+						cancelable: false
 					}
-				}], {
-					cancelable: false
-				}
-			)
+				)
+			}, 50);
 		} else {
 			// 判斷是否有url 的 action動作
 			let columnactionValue = await FormUnit.getColumnactionValue(
@@ -356,24 +323,38 @@ class FormContentGridDataTablePage extends Component {
 			if (isShowMessageOrUpdateDate.showMessage) {
 				ToastUnit.show(isShowMessageOrUpdateDate.showMessage.type, isShowMessageOrUpdateDate.showMessage.message);
 			}
-			
+
 			if (isShowMessageOrUpdateDate.updateData) {
 				// 判斷該值是否填寫表單中顯示
 				data.defaultvalue[rowIndex] = FormUnit.checkFormFieldShow(
 					columnactionValue.columnList,
 					data.defaultvalue[rowIndex]
 				);
+				let preData = this.deepClone(data);
+				// 判斷下一個編輯欄位是否是編輯狀態，是就給空直，不是的話不處理
+				if(rowIndex != this.state.isEditRowIndex || columnIndex != this.state.isEditColumnIndex){
+					data.defaultvalue[parseInt(this.state.isEditRowIndex)][parseInt(this.state.isEditColumnIndex)].defaultvalue = "";
+				}
 
 				this.setState({
 					data   :this.deepClone(data),
-					preData:this.deepClone(data)
+					preData:this.deepClone(preData),
 				});
+				
 			}else{
+				let preData = this.deepClone(this.state.preData);
+				// 判斷下一個編輯欄位是否是編輯狀態，是就給空直，不是的話不處理
+				if(rowIndex != this.state.isEditRowIndex || columnIndex != this.state.isEditColumnIndex){
+					preData.defaultvalue[parseInt(this.state.isEditRowIndex)][parseInt(this.state.isEditColumnIndex)].defaultvalue = "";
+				}
+
 				// 修改回原來的值
 				this.setState({
-					data:this.deepClone(this.state.preData)
+					data         : this.deepClone(preData),
 				});
 			}
+
+
 		}
 	}
 
@@ -505,6 +486,75 @@ class FormContentGridDataTablePage extends Component {
 	deepClone(src) {
 		return JSON.parse(JSON.stringify(src));
 	}
+
+	// 點擊跳頁的按鈕
+	/*
+	renderEditButton = (indexData, index) => {
+		return(
+			<TouchableOpacity onPress={ async () =>{ 
+				let data = this.state.data;
+		        data.listComponent = this.deepClone(indexData); 
+
+				if (!data.listComponent[0].hasOwnProperty("show")) {
+					data = await this.editablelize(data);
+				}
+
+        		this.setState({
+					editCheckItem     : true,
+					editCheckItemIndex: index,
+        		});
+				
+				NavigationService.navigate("FormInputContentGridPage", {
+					formContent 	  : this.props.route.params.formContent,
+					propsData         : this.props.route.params.data,
+					data              : data,
+					lang              : this.state.lang, 
+					user              : this.state.user,
+					confirmOnPress    : this.confirmFormData,
+					editCheckItemIndex: index,
+				});
+				
+			}}>
+			    <View style={{flex:1, alignContent: 'center', justifyContent: 'center'}}>
+			      <Icon name='create' style ={{color: "#aaa", alignSelf: 'center'}} />
+			    </View>
+			</TouchableOpacity>
+		);
+	}
+	*/
+
+	// 點擊跳頁後的值更新，只更新本地state
+	/*
+	confirmFormData = async ( value ) => {
+		if (this.state.editCheckItem) {
+			value.defaultvalue[this.state.editCheckItemIndex] = this.deepClone(value.listComponent);
+		} else {
+			// 將自己的值新增到 this.state.data 的 defaultvalue 裡面
+			if (value.defaultvalue == null) {
+				value.defaultvalue = [];
+				value.defaultvalue.push(this.deepClone(value.listComponent));
+			} else {
+				value.defaultvalue.push(this.deepClone(value.listComponent));
+			}
+
+			let array = this.state.editCheckItemRecord;
+			array = [...array, false];
+			this.setState({
+				editCheckItemRecord: array
+			});
+		}
+		// 將listComponent變成最原本的樣子
+		value.listComponent = this.deepClone(this.props.route.params.data.listComponent);
+
+		this.setState({
+			preData           : this.deepClone(value),
+			data              : this.deepClone(value),
+			editCheckItem     : false,
+			editCheckItemIndex: -1,
+		});
+		// 送值
+	}
+	*/
 }
 
 export default connectStyle( 'Component.FormContent', {} )(FormContentGridDataTablePage);

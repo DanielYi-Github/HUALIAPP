@@ -3,7 +3,7 @@ import { View, Platform, Alert, Modal, Dimensions } from 'react-native';
 import { Container, Header, Content, Icon, Button, Body, Right, Title, Item, Input, Text, Card, CardItem, Tabs, Tab, TabHeading, ScrollableTab, Left, Spinner, connectStyle } from 'native-base';
 import StepIndicator from 'react-native-step-indicator';
 import Carousel from 'react-native-snap-carousel';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view'
 
 import { connect }            from 'react-redux';
 import { bindActionCreators } from 'redux';

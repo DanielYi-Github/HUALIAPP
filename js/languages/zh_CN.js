@@ -51,7 +51,8 @@ export default {
 			Thursday :"週四",
 			Friday   :"週五",
 			Saturday :"週六",
-		}
+		},
+		selectAll: "全选"
 	},
 	InitialPage: {
 		Update                   :'更新',
@@ -843,12 +844,15 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		alertMessage_duplicate     :"有重复",
 		alertMessage_period        :"该时段",
 		alertMessage_meetingAlready:"已有安排会议",
+		alertMessage_meetingAttendeesAlready:" 此段时间已安排其他会议",
 		meetingSchedule            :"会议时程",
 		noMeetings                 :"暂时无会议",
 		myMeetings                 :"我的会议",
 		all                        :"全部",
 		initiator                  :"我发起",
 		invited                    :"被邀请",
+		Notified				   :"被通知",
+		NotifiedTips			   :"此会议为xxx的会议行程",
 		functionMsg                :"为了快速得知特定时间内，您想邀请的人员是否已安排其他会议，可使用下列\“起迄时间\”与\”新增与会人员\“的设定，快速查询所有\”与会人员\“的会议时间，方便您安排会议与发送邀请。",
 		attendeesTimeSearch        :"与会人员时间查询",
 		insertAttendees            :"新增与会人员",
@@ -862,7 +866,6 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		period_2hour               :"二小时",
 		period_4hour               :"四小时",
 		meetingsOfAttendees        :"与会人员的会议时程",
-		suggestMeetingTime         :"建议安排会议时间",
 		noSuggestMeetingTime       :"无建议时间",
 		noSuggestMeetingTimeMsg    :"查无此段的建议会议时间，请点击右上角修改会议长度或返回上页调整会议时间。",
 		suggestMeetingTime         :"建议的会议时间",
@@ -888,6 +891,13 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		person 					   :"人",
 		selectedAttendeeReorder    :"已选与会人员排序",
 		noneNextOrg				   :"此厂区底下目前无可选单位",
+		regularMeeting  		   :"例行性会议",
+		endDate         		   :"结束日期",
+		needEndDate     		   :"需要指定结束日期",
+		couldNotOverYear		   :"不能超过一年",
+		customEveryWeek 		   :"每周自定义重复",
+		frequency       		   :"频率",
+		frequencyByWeek 		   :"按周重复",
 		MeetingModeType			   :{
 			Z:"Zoom",
 			S:"Skype",
@@ -896,9 +906,41 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 			M:"Team",
 			D:"钉钉",
 			A:"实体会议室"
-		}
+		},
+		repeatType:{
+		  NR:"不重复",
+		  ED:"每天",
+		  WD:"工作日(周一到周五)",
+		  EW:"每周",
+		  EM:"每月",
+		  DM:"自定义"
+		},
+		weekDays:{
+			MON:"周一",
+			TUE:"周二",
+			WEB:"周三",
+			THU:"周四",
+			FRI:"周五",
+			SAT:"周六",
+			SUN:"周日"
+		},
+		// `將在${label1}的 ${label2} 到 ${label3} 進行會議，直到 ${label4}結束`;
+		regularMsg1:"将在",
+		regularMsg2:"的",
+		regularMsg3:"到",
+		regularMsg4:"进行会议，直到",
+		regularMsg5:"结束",
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "公司文件",
+	},
+	MeetingSettingPage:{
+		meetingSettingTitle: "会议管理设定",
+		meetingNotificationAssistant: "启用会议通知助手",
+		meetingAssistant: "会议助手",
+		meetingAssistantTitle: "请选择会议助手",
+		shareMeetingNotice: "分享会议通知",
+		meetingNotificationAssistantTxt: '开启此设定，您的会议行程将会在"会议助手"的"我的会议"功能中显示',
+		shareMeetingNoticeTxt: '开启此设定，您的会议通知将会同时推送给"会议助手"',
 	}
 }

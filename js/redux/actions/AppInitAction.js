@@ -266,9 +266,9 @@ export function appHotInit(initActions){
 
 		initActions.setThemeState( null, getState().Network.networkStatus); // 設定APP主題風格
 		await initActions.hotInitialApi( getState().UserInfo.UserInfo, false, initActions ); // 集團公告、輪播圖 重新撈取
-    	initActions.loadInitialNoticeData(); // 集團公告重新自資料庫撈取   
+    	initActions.loadInitialNoticeData(); 	// 集團公告重新自資料庫撈取   
+    	initActions.getMeetings(); 				// 重新撈取會議清單   
     	// initActions.loadMessageIntoState();
-    	// initActions.getMeetings();   
 
 		let arr = [
 			UpgradeDBTableUtil.UpgradeDBTable(), 	// 檢查DB表有無更新

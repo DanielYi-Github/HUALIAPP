@@ -44,14 +44,15 @@ export default {
 		androidChangeAPPMessage13:" Don't show again.",
 		WebViewUrlError          :"Abnormal website address acquisition",
 		week:{
-			Sunday   :"Sun",
 			Monday   :"Mon",
 			Tuesday  :"Tue",
 			Wednesday:"Wed",
 			Thursday :"Thu",
 			Friday   :"Fri",
 			Saturday :"Sat",
-		}
+			Sunday   :"Sun",
+		},
+		selectAll: "Select All"
 	},
 	InitialPage: {
 		Update                   :'Update',		//更新
@@ -837,11 +838,14 @@ export default {
 		alertMessage_duplicate     :"Conflict",
 		alertMessage_period        :"The period",
 		alertMessage_meetingAlready:"has scheduled",
+		alertMessage_meetingAttendeesAlready:" have scheduled in the period.",
 		meetingSchedule            :"Schedule",
 		noMeetings                 :"No appointments",
 		myMeetings                 :"My appointments",
 		initiator                  :"Initiated",
 		invited                    :"Invited",
+		Notified				   :"Notified",
+		NotifiedTips			   :"This meeting is a meeting schedule of xxx",
 		functionMsg                :"To quickly get the avalable schedule of attendees in purticular period, you can choose \"Start-End time\" and \"Attendees\" fields to search the appointments.",
 		attendeesTimeSearch        :"Searching the schedule of attendees",
 		insertAttendees            :"Invite Attendees",
@@ -855,10 +859,9 @@ export default {
 		period_2hour               :"2 Hours",
 		period_4hour               :"4 Hours",
 		meetingsOfAttendees        :"Schedule of Attendees",
-		suggestMeetingTime         :"Suggested appointment",
 		noSuggestMeetingTime       :"No suggested schedule",
 		noSuggestMeetingTimeMsg    :"No suggested schedule, please click \"the upper right corner\" to select other options or go back then choose different \"Start-End time\"",
-		suggestMeetingTime         :"Suggested",
+		suggestMeetingTime         :"Suggested appointment",
 		haveaMeeting               :"have an appointment",
 		crossDayMeeting            :"Cross day meetin",
 		avalableTime               :"Avalable schedule",
@@ -884,6 +887,13 @@ export default {
 		person 					   :"attendee",
 		selectedAttendeeReorder    :"Arrangment",
 		noneNextOrg				   :"No Department!",
+		regularMeeting  		   :"Routine",
+		endDate         		   :"End date",
+		needEndDate     		   :"End date can't be empty.",
+		couldNotOverYear		   :"Couldn't over a year",
+		customEveryWeek 		   :"Custom in a week",
+		frequency       		   :"Frequency",
+		frequencyByWeek 		   :"Frequency by week",
 		MeetingModeType			   :{
 			Z:"Zoom",
 			S:"Skype",
@@ -892,9 +902,41 @@ export default {
 			M:"Team",
 			D:"DingTalk",
 			A:"Physical meeting room"
-		}
+		},
+		repeatType:{
+		  NR:"Never",
+		  ED:"Everyday",
+		  WD:"All Workdays",
+		  EW:"Every Week",
+		  EM:"Every Month",
+		  DM:"Custom"
+		},
+		weekDays:{
+			MON:"Monday",
+			TUE:"Tuesday",
+			WEB:"Wednesday",
+			THU:"Thursday",
+			FRI:"Friday",
+			SAT:"Saturday",
+			SUN:"Sunday"
+		},
+		// `將在${label1}的 ${label2} 到 ${label3} 進行會議，直到 ${label4}結束`;
+		regularMsg1:"將在",
+		regularMsg2:"的",
+		regularMsg3:"到",
+		regularMsg4:"進行會議，直到",
+		regularMsg5:"結束",
 	},
 	CompanyDocumentPage:{
 		CompanyDocument : "Company Document",
+	},
+	MeetingSettingPage:{
+		meetingSettingTitle: "Meeting Management Settings",
+		meetingNotificationAssistant: "Enable Meeting Notification Assistant",
+		meetingAssistant: "Meeting Assistant",
+		meetingAssistantTitle: "Please choose a meeting assistant",
+		shareMeetingNotice: "Share meeting notice",
+		meetingNotificationAssistantTxt: 'Turn on this setting, and your meeting schedule will be displayed in the "My Meeting" function of "Meeting Assistant"',
+		shareMeetingNoticeTxt: 'Turn on this setting, your meeting notifications will be pushed to the "meeting assistant" at the same time',
 	}
 }

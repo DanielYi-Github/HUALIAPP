@@ -79,6 +79,13 @@ export default class CompanyDocumentCard extends Component {
     }
 
     goCompanyDocumentDetail = () => {
-        NavigationService.navigate("CompanyDocumentDetail", { type: this.props.type, data: this.props.data, maxDetailNum: this.state.maxDetailNum, cardItemOnPress: this.state.cardItemOnPress })
+        let param = {
+            title: this.props.explainText,
+            type: this.props.type,
+            data: this.props.data,
+            maxDetailNum: this.state.maxDetailNum,
+            cardItemOnPress: this.state.cardItemOnPress
+        }
+        NavigationService.navigate("CompanyDocumentDetail", param)
     }
 }

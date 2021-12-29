@@ -57,17 +57,19 @@ class MinePage extends React.Component {
     
     let isShowBpmDeputySetting = false;   // 是否顯示代理人設定
     let isShowMeetingSetting = false;     // 是否顯示會議管理設定
-
-    for(let role of this.props.state.UserInfo.UserInfo.roles){
-      if (role == "BPM") isShowBpmDeputySetting = true;
+    // console.log(this.props.state.UserInfo.UserInfo);
+    if(this.props.state.UserInfo.UserInfo.roles){
+      for(let role of this.props.state.UserInfo.UserInfo.roles){
+        if (role == "BPM") isShowBpmDeputySetting = true;
+      }
     }
-    /*
+    
     for(let FunctionData of this.props.state.Home.FunctionData){
-      if (FunctionData.ID == "Sign") isShowBpmDeputySetting = true;
+      // if (FunctionData.ID == "Sign") isShowBpmDeputySetting = true;
       if (FunctionData.ID == "MeetingList") isShowMeetingSetting = true;
     }
-    */
-
+    
+    // console.log(user);
     return (
       <Container>
        <MainPageBackground height={200}/>
@@ -150,9 +152,9 @@ class MinePage extends React.Component {
             }
 
             {/*會議管理設定*/}
-            {/* isShowMeetingSetting ?
+            { isShowMeetingSetting ?
               <MineItem
-                title    = {"會議管理設定"}
+                title    = {this.props.state.Language.lang.MeetingSettingPage.meetingSettingTitle}
                 iconBackgroundColor = {"#00B0FF"}
                 iconName = {"calendar"}
                 iconType = {"MaterialCommunityIcons"}
@@ -161,7 +163,7 @@ class MinePage extends React.Component {
               />  
               :
               null
-            */}
+            }
 
             {/*主題顏色*/}
             <MineItem

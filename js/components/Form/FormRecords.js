@@ -18,7 +18,7 @@ export default class FormRecords extends Component {
 				<Accordion
 					dataArray     ={[this.props.data]}
 					animation     ={true}
-					expanded      ={0}
+					expanded      ={[0]}
 					renderHeader  ={this.renderHeader}
 					renderContent ={this.renderContent}
 					innerCircle   ={'dot'}

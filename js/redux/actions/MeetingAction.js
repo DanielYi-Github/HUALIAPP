@@ -2,8 +2,15 @@ import * as MeetingTypes      from '../actionTypes/MeetingTypes';
 import * as UpdateDataUtil    from '../../utils/UpdateDataUtil';
 import * as SQLite            from '../../utils/SQLiteUtil';
 import * as NavigationService from '../../utils/NavigationService';
+
 import { Alert } from 'react-native';
 import * as RNLocalize from "react-native-localize";
+
+export function setRefreshing( isRefreshing ){
+	return async (dispatch, getState) => {
+		dispatch(refreshing(isRefreshing)); 	
+	}
+}
 
 export function getMeetingModeType() {
 	return async (dispatch, getState) => {
@@ -17,7 +24,6 @@ export function getMeetingModeType() {
 		});
 		dispatch(loadModeType(meetingModeTypes)); 	
 		dispatch(refreshing(false)); 	
-
 	}
 }
 
@@ -36,20 +42,26 @@ function loadModeType(meetingModeTypes){
 	}
 }
 
-export function setInitialMeetingInfoInRedux(attendees, oid, startdate, enddate){
+export function setInitialMeetingInfoInRedux(attendees, oid, startdate, enddate, isNeedCheckMeetingTime = true){
 	return async (dispatch, getState) => {
 		dispatch({
 			type     :MeetingTypes.MEETING_SET_DEFAULT_MEETION_INFO,
 			oid      : oid,
 			attendees: attendees,
 			startdate: startdate,
-			enddate  : enddate
+			enddate  : enddate,
+			isNeedCheckMeetingTime: isNeedCheckMeetingTime
 		}); 
 	}
 }
 
 export function setAttendees(attendees){
 	return async (dispatch, getState) => {
+		attendees.forEach(function(attendee, index, array){
+			attendee.index = index;
+		  	attendee.key = `item-${index}`;
+		});
+
 		dispatch({
 			type     :MeetingTypes.MEETING_SET_ATTENDEES,
 			attendees: attendees,
@@ -86,7 +98,7 @@ export function removeAttendee(state){
 
 export function addMeeting(meetingParams){
 	return async (dispatch, getState) => {
-		dispatch( refreshing(true) ); 	
+
 		let user = getState().UserInfo.UserInfo;
 		let addMeetingResult = await UpdateDataUtil.addMeeting(user, meetingParams).then((result)=>{
 			return result;
@@ -102,15 +114,18 @@ export function addMeeting(meetingParams){
 			resultMsg:addMeetingResult.success ? null: addMeetingResult.msg
 		}); 
 
-		if (addMeetingResult.success) this.getMeetings();
+		// 成功或失敗
+		if (addMeetingResult.success){
+			NavigationService.goBack();
+			this.getMeetings();	
+		}
 	}
 }
 
 export function modifyMeeting(meetingParams){
 	return async (dispatch, getState) => {
-		dispatch(refreshing(true)); 	
-		let user = getState().UserInfo.UserInfo;
-		
+
+		let user = getState().UserInfo.UserInfo;		
 		let modifyMeetingResult = await UpdateDataUtil.modifyMeeting(user, meetingParams).then((result)=>{
 			return result;
 		}).catch((e)=>{
@@ -125,6 +140,7 @@ export function modifyMeeting(meetingParams){
 		}); 
 
 		if (modifyMeetingResult.success) {
+			NavigationService.goBack();
 			this.getMeetings();
 		}
 	}
@@ -148,12 +164,19 @@ export function resetMeetingListRedux(){
 
 export function getMeetings(condition = ""){
 	return async (dispatch, getState) => {		
+		// 顯示loading畫面
+		dispatch({
+			type: MeetingTypes.MEETING_REFRESHING_FOR_BACKGROUND,
+			isRefreshing_for_background: true
+		});
+
 		let user = getState().UserInfo.UserInfo;
 		let content = {
 			// count    :getState().Meeting.meetingList.length,
 			// condition:condition, //查詢使用
 		}
 		let meetingsResult = await UpdateDataUtil.getMeetings(user, content).then((result)=>{
+			console.log("meetingsResult", result);
 			return result;
 		}).catch((e)=>{
 			console.log("e", e);
@@ -413,6 +436,8 @@ function setCompanyList_MeetingCO(companies){
 
 export function getPositions(selectedCompany){
 	return async (dispatch, getState) => {
+		dispatch(refreshing(true));
+
 		let sql = `select * from THF_MASTERDATA 
 				   where CLASS1='HRPosition' and STATUS='Y' 
 				   order by SORT;`
@@ -467,6 +492,7 @@ export function getPositions(selectedCompany){
         	}
         }
 		dispatch(setAttendees_by_position(companyPositions, selectedCompany));
+		dispatch(refreshing(false));
 	}
 }
 
@@ -480,6 +506,7 @@ function setAttendees_by_position(companies, selectedCompany){
 
 export function getOrg(value){
 	return async (dispatch, getState) => {
+		// dispatch(meetingBlock(true));
 
 		let user = getState().UserInfo.UserInfo;
 		let action = "org/hr/meeting/getOrg";
@@ -490,12 +517,13 @@ export function getOrg(value){
         
         // 取得該公司裡面的廠區
         let organization = await UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
+        	// console.log("organization", result);
 			return result;
         }).catch((err) => {
 			console.log(err);
 			return null;
         })
-
+		// dispatch(meetingBlock(false));
 		dispatch(setOrganization_tree(organization));
 	}
 }
@@ -509,33 +537,39 @@ function setOrganization_tree(organization){
 
 export function attendeeItemOnPress(attendee){
 	return async (dispatch, getState) => {
-		
-		let enableMeeting = await checkHaveMeetingTime(
-			getState().Meeting.meetingOid,
-			[{id:attendee.id}], 
-			getState().Meeting.attendees_startDate, 
-			getState().Meeting.attendees_endDate,
-			getState().UserInfo.UserInfo
-		);
+		if (getState().Meeting.isNeedCheckMeetingTime) {
+			let enableMeeting = await checkHaveMeetingTime(
+				getState().Meeting.meetingOid,
+				[{id:attendee.id}], 
+				getState().Meeting.attendees_startDate, 
+				getState().Meeting.attendees_endDate,
+				getState().UserInfo.UserInfo
+			);
 
-		if (enableMeeting.length == 0) {
-		  let attendees = addOrRemoveTag( attendee, getState);
-		  dispatch({
-		  	type     :MeetingTypes.MEETING_SET_ATTENDEES,
-		  	attendees: attendees,
-		  }); 
+			if (enableMeeting.length == 0) {
+			  let attendees = addOrRemoveTag( attendee, getState);
+			  dispatch({
+			  	type     :MeetingTypes.MEETING_SET_ATTENDEES,
+			  	attendees: attendees,
+			  }); 
+			} else {
+			  let lang = getState().Language.lang.MeetingPage;
+			  Alert.alert(
+			    lang.alertMessage_duplicate, //"有重複"
+			    `${lang.alertMessage_period} ${attendee.name} ${lang.alertMessage_meetingAlready}`,
+			    [
+			      { text: "OK", onPress: () => console.log("OK Pressed") }
+			    ],
+			    { cancelable: false }
+			  );
+			}
 		} else {
-		  let lang = getState().Language.lang.MeetingPage;
-		  Alert.alert(
-		    lang.alertMessage_duplicate, //"有重複"
-		    `${lang.alertMessage_period} ${attendee.name} ${lang.alertMessage_meetingAlready}`,
-		    [
-		      { text: "OK", onPress: () => console.log("OK Pressed") }
-		    ],
-		    { cancelable: false }
-		  );
+			let attendees = addOrRemoveTag( attendee, getState);
+			dispatch({
+				type     :MeetingTypes.MEETING_SET_ATTENDEES,
+				attendees: attendees,
+			}); 
 		}
-		
 	}
 }
 
@@ -577,73 +611,90 @@ function addOrRemoveTag( item, getState ){
 	return attendees;
 }
 
-export function organizeCheckboxOnPress(checkItemAttendees){
+export function organizeCheckboxOnPress(checkItemAttendees, allSelectChkValue = null){
 	return async (dispatch, getState) => {
+		dispatch(meetingBlock(true));
+
 		// 將所有要新增的人員暫存起來
 		// 先檢查是要新增還是刪除
 		// 新增的話先搜尋有沒有在redux裡面了 然後檢查有無會議衝突
 		// 刪除的話搜尋相同id然後刪除
 
-		let allOrgAttendees = await getAllOrgAttendees(checkItemAttendees);
-		let reduxAttendees = getState().Meeting.attendees; //已經存在的
+		let allOrgAttendees = getAllOrgAttendees(checkItemAttendees);   //組織的所有人
+		let reduxAttendees = getState().Meeting.attendees; 				//已經存在的
 
 		// checkValue檢查看看有沒有全部人包含在裡面
 		let included = false;  // 有沒有包含
 		let checkValue = false; // 有沒有全部包含
-		let selectedCount = 0;
+		// let selectedCount = 0;
 		
 		// 確認有沒有已經包含在裡面，用來顯示不同的勾勾顏色
 		for(let positionAttendee of allOrgAttendees){
 		  for(let propsAttendee of reduxAttendees){
 		    if( positionAttendee.id == propsAttendee.id ){
 		      included = true;
-		      selectedCount++;
+		      // selectedCount++;
 		      break;
 		    }
 		  }
 		}
-		checkValue = selectedCount == allOrgAttendees.length ? true: false;
+
+		included = allSelectChkValue == null ? included : !allSelectChkValue
 
 		if (!included) {
 			// 檢查有哪些人沒有在裡面
 			let unInside = [];
 			for(let checkItem of allOrgAttendees){
+				let isinside = false;
 				for(let attendee of reduxAttendees){
 					if(checkItem.id == attendee.id){
+						isinside = true;
 						break;
 					}
 				}
-				unInside.push(checkItem);
-			}
 
-			// 將所有的集體送出檢查時間有無異常
-			let enableMeeting = await checkHaveMeetingTime(
-				getState().Meeting.meetingOid,
-				unInside, 
-				getState().Meeting.attendees_startDate, 
-				getState().Meeting.attendees_endDate,
-				getState().UserInfo.UserInfo
-			);
-
-			if (enableMeeting.length == 0) {
-				reduxAttendees = [...reduxAttendees, ...allOrgAttendees];
-			} else {
-				let unAbles = "";
-				for(let i in enableMeeting){
-					unAbles = i==0 ? unAbles+enableMeeting[i].name : unAbles+", "+enableMeeting[i].name
+				if(!isinside){
+					unInside.push(checkItem);
 				}
-				
-  				let lang = getState().Language.lang.MeetingPage;
-				Alert.alert(
-					lang.alertMessage_duplicate, //"有重複"
-					`${lang.alertMessage_period} ${unAbles} ${lang.alertMessage_meetingAlready}`,
-					[
-					  { text: "OK", onPress: () => console.log("OK Pressed") }
-					],
-					{ cancelable: false }
-				);
 			}
+			
+			// 是否需要檢查會議時間衝突
+			if (getState().Meeting.isNeedCheckMeetingTime) {
+				// 將所有的集體送出檢查時間有無異常
+				let enableMeeting = await checkHaveMeetingTime(
+					getState().Meeting.meetingOid,
+					unInside, 
+					getState().Meeting.attendees_startDate, 
+					getState().Meeting.attendees_endDate,
+					getState().UserInfo.UserInfo
+				);
+				// console.log("enableMeeting", enableMeeting);
 
+				if (enableMeeting.length == 0) {
+					reduxAttendees = [...reduxAttendees, ...unInside];
+					dispatch( meetingBlock(false) );
+				} else {
+					let unAbles = "";
+					for(let i in enableMeeting){
+						unAbles = i==0 ? unAbles+enableMeeting[i].name : unAbles+", "+enableMeeting[i].name
+					}
+					
+	  				let lang = getState().Language.lang.MeetingPage;
+					Alert.alert(
+						lang.alertMessage_duplicate, //"有重複"
+						`${lang.alertMessage_period} ${unAbles} ${lang.alertMessage_meetingAlready}`,
+						[
+						  { text: "OK", onPress: () => {
+							dispatch( meetingBlock(false) );
+						  }}
+						],
+						{ cancelable: false }
+					);
+				}
+			} else {
+				reduxAttendees = [...reduxAttendees, ...unInside];
+				dispatch( meetingBlock(false) );
+			}
 		} else {
 			for(let checkItem of allOrgAttendees){
 				for(let i in reduxAttendees){
@@ -653,6 +704,7 @@ export function organizeCheckboxOnPress(checkItemAttendees){
 					}
 				}
 			}
+			dispatch( meetingBlock(false) );
 		}
 
 		dispatch({
@@ -677,8 +729,17 @@ function getAllOrgAttendees(checkItemAttendees){
 	return tempAttendees;
 }
 
+function meetingBlock(isblicking){
+	return{
+		type: MeetingTypes.MEETING_BLOCKING,
+		isblocking:isblicking
+	}
+}
+
 export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 	return async (dispatch, getState) => {
+		dispatch( meetingBlock(true) );
+
 		// 先檢查是要新增還是刪除
 		// 新增的話先搜尋有沒有在裡面了 然後檢查有無會議衝突
 		// 刪除的話搜尋相同id然後刪除
@@ -687,43 +748,56 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 
 			// 檢查有哪些人沒有在裡面
 			let unInside = [];
+
 			for(let checkItem of checkItemAttendees){
+				let isinside = false;
 				for(let attendee of attendees){
 					if(checkItem.id == attendee.id){
+						isinside = true;
 						break;
 					}
 				}
-				unInside.push(checkItem);
-			}
 
-			// 將所有的集體送出檢查時間有無異常
-			let enableMeeting = await checkHaveMeetingTime(
-				getState().Meeting.meetingOid,
-				unInside, 
-				getState().Meeting.attendees_startDate, 
-				getState().Meeting.attendees_endDate,
-				getState().UserInfo.UserInfo
-			);
-
-			if (enableMeeting.length == 0) {
-				attendees = [...attendees, ...checkItemAttendees];
-			} else {
-				let unAbles = "";
-				for(let i in enableMeeting){
-					unAbles = i==0 ? unAbles+enableMeeting[i].name : unAbles+", "+enableMeeting[i].name
+				if(!isinside){
+					unInside.push(checkItem);
 				}
-				
-  				let lang = getState().Language.lang.MeetingPage;
-				Alert.alert(
-					lang.alertMessage_duplicate, //"有重複"
-					`${lang.alertMessage_period} ${unAbles} ${lang.alertMessage_meetingAlready}`,
-					[
-					  { text: "OK", onPress: () => console.log("OK Pressed") }
-					],
-					{ cancelable: false }
-				);
 			}
 
+
+			//需不需要做會議時間衝突檢查
+			if (getState().Meeting.isNeedCheckMeetingTime){
+				// 將所有的集體送出檢查時間有無異常
+				let enableMeeting = await checkHaveMeetingTime(
+					getState().Meeting.meetingOid,
+					unInside, 
+					getState().Meeting.attendees_startDate, 
+					getState().Meeting.attendees_endDate,
+					getState().UserInfo.UserInfo
+				);
+
+				if (enableMeeting.length == 0) {
+					attendees = [...attendees, ...unInside];
+					dispatch( meetingBlock(false) );
+				} else {
+					let unAbles = "";
+					for(let i in enableMeeting){
+						unAbles = i==0 ? unAbles+enableMeeting[i].name : unAbles+", "+enableMeeting[i].name
+					}
+					
+	  				let lang = getState().Language.lang.MeetingPage;
+					Alert.alert(
+						lang.alertMessage_duplicate, //"有重複"
+						`${lang.alertMessage_period} ${unAbles} ${lang.alertMessage_meetingAlready}`,
+						[
+						  { text: "OK", onPress: () => dispatch( meetingBlock(false) ) }
+						],
+						{ cancelable: false }
+					);
+				}
+			} else {
+				attendees = [...attendees, ...unInside];
+				dispatch( meetingBlock(false) );
+			}
 		} else {
 			for(let checkItem of checkItemAttendees){
 				for(let i in attendees){
@@ -733,6 +807,7 @@ export function positionCheckboxOnPress(checkValue, checkItemAttendees){
 					}
 				}
 			}
+			dispatch( meetingBlock(false) );
 		}
 
 		dispatch({
@@ -749,3 +824,37 @@ export function attendeeItemCalendarOnPress(attendee){
 		});
 	}
 }
+
+export function blocking(isblocking){
+	return async (dispatch, getState) => {
+		dispatch( meetingBlock(isblocking) );
+	}
+}
+
+export function setRepeatType(param){
+	return async (dispatch, getState) => {
+		if(
+			param.selectedWeekDays &&
+			getState().Meeting.selectedRepeatType == "DM" &&
+			param.selectedWeekDays.length == 0
+		){
+			dispatch({
+				type              :MeetingTypes.MEETING_SET_REPEATTYPE,
+				selectedRepeatType:"NR",
+				selectedWeekDays  :[],
+				repeatEndDate     :""
+			});
+		}else{
+			dispatch({
+				type              :MeetingTypes.MEETING_SET_REPEATTYPE,
+				selectedRepeatType:param.selectedRepeatType ? param.selectedRepeatType : getState().Meeting.selectedRepeatType,
+				selectedWeekDays  :param.selectedWeekDays ? param.selectedWeekDays : getState().Meeting.selectedWeekDays,
+				repeatEndDate     :typeof param.repeatEndDate != "undefined" ? param.repeatEndDate : getState().Meeting.repeatEndDate
+			});
+		}
+	}
+}
+
+
+
+

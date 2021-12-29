@@ -625,8 +625,11 @@ let FormUnit = {
   },
   // 欄位顯示隱藏檢查
   checkFormFieldShow(columnactionValue, formFormat){
+    
     for(let actionValue of columnactionValue){
       for(let content of formFormat){        // 判斷該值是否填寫表單中顯示
+
+
         if (actionValue.id == content.component.id) {
           content.defaultvalue = actionValue.value === "" ? content.defaultvalue : this.deepClone(actionValue.value);
           content.paramList    = actionValue.paramList;
@@ -638,20 +641,92 @@ let FormUnit = {
             for(let vo of actionValue.voList){     
               for(let com of content.listComponent){
                 if (vo.id == com.component.id) {
-                  com.visible   = vo.visible;
-                  com.required  = vo.required; 
+                  com.visible      = vo.visible;
+                  com.required     = vo.required; 
                   com.defaultvalue = vo.value; 
-                  com.paramList = vo.paramList; 
+                  com.paramList    = vo.paramList; 
+                  break;
                 }
               }
             }
           }
-
+          break;
         }
       }
     }
     return formFormat;
   },
+
+  // 針對所有的ap進行更值
+  checkAllFormFieldShow(columnactionValue, formApFormat){
+    for(let actionValue of columnactionValue){
+      for (let formFormat of formApFormat) {
+        for(let content of formFormat.content){
+
+          if (actionValue.id == content.component.id) {
+            content.defaultvalue = actionValue.value === "" ? content.defaultvalue : this.deepClone(actionValue.value);
+            content.paramList    = actionValue.paramList;
+            content.show         = actionValue.visible;
+            content.required     = (actionValue.required) ? "Y" : "F";
+
+            // 需要加入判斷，確認vo是array還是object，如果是array表示要修改的資料為表格grid
+            if (actionValue.voList) {
+              for(let vo of actionValue.voList){     
+                for(let com of content.listComponent){
+                  if (vo.id == com.component.id) {
+                    com.visible      = vo.visible;
+                    com.required     = vo.required; 
+                    com.defaultvalue = vo.value; 
+                    com.paramList    = vo.paramList; 
+                    break;
+                  }
+                }
+              }
+            }
+            break;
+          }
+        }
+      }
+    }
+    return formApFormat;
+  },
+
+  /**修改后的代码 */
+  /*
+  checkFormFieldShow2(columnactionValue, formFormat){
+
+    for(let actionValue of columnactionValue){
+      for (let formFormatObject of formFormat) {
+
+        for(let content of formFormatObject.content){        // 判斷該值是否填寫表單中顯示
+          if (actionValue.id == content.component.id) {
+            content.defaultvalue = actionValue.value === "" ? content.defaultvalue : this.deepClone(actionValue.value);
+            content.paramList    = actionValue.paramList;
+            content.show         = actionValue.visible;
+            content.required     = (actionValue.required) ? "Y" : "F";
+  
+            // 需要加入判斷，確認vo是array還是object，如果是array表示要修改的資料為表格grid
+            if (actionValue.voList) {
+              for(let vo of actionValue.voList){     
+                for(let com of content.listComponent){
+                  if (vo.id == com.component.id) {
+                    com.visible   = vo.visible;
+                    com.required  = vo.required; 
+                    com.defaultvalue = vo.value; 
+                    com.paramList = vo.paramList; 
+                  }
+                }
+              }
+            }
+  
+          }
+        }
+      }
+    }
+    return formFormat;
+  },
+  */
+
   // 針對listButtom的值進行整理
   formatListButtonOfForm(buttonItem, columns){
     let columnactionColumnParam = {}
@@ -1114,6 +1189,37 @@ let FormUnit = {
   // deep clone
   deepClone(src) {
     return JSON.parse(JSON.stringify(src));
+  },
+
+  // 針對合併考核單做的處理
+  findButtonParamFor_PRO08381605165376982(formApFormat){
+    let isUpdate = false;
+    let isFindIsUpdate = false;
+    let buttonParam = null;
+    for(let formFormat of formApFormat){
+      for(let content of formFormat.content){
+        if(content.component.id == "isUpdate"){
+          isUpdate = content.defaultvalue == "Y" ? true: false;
+          isFindIsUpdate = true;
+          break;
+        }
+
+        if(isFindIsUpdate && isUpdate){
+          if(content.listButton){
+            for(let button of content.listButton){
+              if(button.component.id == "sort"){
+                  buttonParam = button;
+                  break;
+              }
+            }
+          }
+        }
+      }
+
+      if(buttonParam != null) break;
+    }
+
+    return buttonParam;
   }
 }
 

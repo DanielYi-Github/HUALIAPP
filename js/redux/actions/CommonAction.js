@@ -238,34 +238,40 @@ export function goDirectorPage(data){
 				NavigationService.navigate(data.APPID, JSON.parse(data.CONTENT1));
 				break;
 			case "Meeting":  	    // 會議訊息
-				let isSearchedMeeting = false;
-				for(let meeting of getState().Meeting.meetingList){
-				  if (data.CONTENT1 == meeting.oid) {
-				    isSearchedMeeting = true;
-				    break;
-				  }
-				}
-
-				if (isSearchedMeeting) {
-					NavigationService.navigate("MeetingInsert", {
-				      meetingParam: { oid:data.CONTENT1	},
-				      fromPage:"MessageFuc"
+				// 是否資料獲取已完成
+				if ( getState().Meeting.isRefreshing_for_background ) {
+					NavigationService.navigate("MeetingList", {
+						readyOpenMeetingParam: { oid:data.CONTENT1 },
 				    });
 				} else {
-					Alert.alert(
-					  getState().Language.lang.MeetingPage.meetingAlreadyDone,
-					  "",
-					  [
-					    {
-					      text: getState().Language.lang.Common.Close,   // 關閉 
-					      style: 'cancel',
-					      onPress: () => {
-					        // NavigationService.goBack();
-					      }, 
-					    }
-					  ],
-					)
+					let isSearchedMeeting = false;
+					for(let meeting of getState().Meeting.meetingList){
+					  if (data.CONTENT1 == meeting.oid) {
+					    isSearchedMeeting = true;
+					    break;
+					  }
+					}
+
+					if (isSearchedMeeting) {
+						NavigationService.navigate("MeetingInsert", {
+					      meetingParam: { oid:data.CONTENT1	},
+					      fromPage:"MessageFuc"
+					    });
+					} else {
+						Alert.alert( getState().Language.lang.MeetingPage.meetingAlreadyDone, "",
+						  [
+						    {
+						      text: getState().Language.lang.Common.Close,   // 關閉 
+						      style: 'cancel',
+						      onPress: () => {
+						        // NavigationService.goBack();
+						      }, 
+						    }
+						  ],
+						)
+					}
 				}
+				
 
 				break;
 			case "Notice": 				// 集團公告

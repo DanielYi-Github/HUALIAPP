@@ -81,7 +81,7 @@ class FormContentGridForEvaluation extends Component {
 			}
 
 			this.setState({
-				data               :this.deepClone(nextProps.data),
+				data :this.deepClone(nextProps.data),
 				editCheckItemRecord:editCheckItemRecord
 			});
 		}
@@ -92,7 +92,6 @@ class FormContentGridForEvaluation extends Component {
 		let required = (this.props.data.required == "Y") ? "*" : "  ";
 		let renderItem = null;
 		let showLabelname = (this.state.labelname == "null" || this.state.labelname == null) ? false : true;
-
 		if (this.state.editable) {
 			renderItem = (
 				<View style={{width: '100%'}}>
@@ -100,9 +99,9 @@ class FormContentGridForEvaluation extends Component {
 	            		fixedLabel 
 	            		style={{
 							borderBottomWidth: 0, 
-							paddingTop       : showLabelname ? 15: 0, 
-							paddingBottom    : 15, 
-							borderWidth      : 5 
+							borderWidth      : 5,
+							// paddingTop       : showLabelname ? 15: 0, 
+							// paddingBottom    : 15, 
 	            		}} 
 	            		error={this.props.data.requiredAlbert}
 	            	>
@@ -277,14 +276,13 @@ class FormContentGridForEvaluation extends Component {
 							name  ="create" 
 							style ={{fontSize:30, color: "#aaa"}}
 		                	onPress={()=>{
-		                		let data = this.state.data;
+		                		let data = this.deepClone(this.props.data);
 		                		data.listComponent = this.deepClone(item); 
 		                		this.setState({
 									editCheckItem     : true,
 									editCheckItemIndex: index,
 		                		});
 								this.showEditModal(data, index)
-								
 		                	}}
 		                />
 					</Right>
@@ -339,9 +337,7 @@ class FormContentGridForEvaluation extends Component {
 
 			let array = this.state.editCheckItemRecord;
 			array = [...array, false];
-			this.setState({
-				editCheckItemRecord: array
-			});
+			this.setState({ editCheckItemRecord: array });
 		}
 		// 送值
 		await this.props.onPress(this.deepClone(value), this.props.data);

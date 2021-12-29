@@ -4,7 +4,11 @@ import { Container, Header, Left, Content, Body, Right, Item, Input, Button, Ico
 import * as NavigationService from '../../../utils/NavigationService';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
 import SortableRow         from '../../../components/Form/SortableRow';
-import SortableList from 'react-native-sortable-list';
+import MeetingSelectAttendeesFooter from '../../../components/Meeting/MeetingSelectAttendeesFooter';
+import CheckBox from '@react-native-community/checkbox';
+
+import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist";
+
 
 import { connect }   from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -25,9 +29,11 @@ class MeetingAttendeesReorderPage extends React.Component {
       for(let person of this.props.state.Meeting.attendees){
         if(person.checked) checkedAttendees++
       }
+      let isCheckedAllAttendees = checkedAttendees == this.props.state.Meeting.attendees.length ? true: false;
+      isCheckedAllAttendees = 0 == this.props.state.Meeting.attendees.length ? false: isCheckedAllAttendees;
 
       return (
-        <Container>
+        <View style ={{height: "100%", width: '100%'}}>
           <Header style={this.props.style.HeaderBackground}>
             <Left>
               <Button transparent onPress={() =>NavigationService.goBack()}>
@@ -36,7 +42,7 @@ class MeetingAttendeesReorderPage extends React.Component {
             </Left>
             <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>
                 <Title style={{color:this.props.style.color}} onPress={()=>{ this.setState({ isShowSearch:true });}}>
-                  {this.props.state.Language.lang.MeetingPage.selectedAttendeeReorder}{/*已選與會人員排序*/}
+                  {this.props.state.Language.lang.MeetingPage.selectedAttendeeReorder}
                 </Title>
             </Body>
             <Right style={{alignItems: 'center'}}>
@@ -59,20 +65,40 @@ class MeetingAttendeesReorderPage extends React.Component {
               </TouchableOpacity>
             </Right>
           </Header>
-
-          <SortableList
-            style                 ={{flex:1}}
-            contentContainerStyle ={{width: this.props.style.PageSize.width}}
-            data                  ={this.props.state.Meeting.attendees}
-            renderRow             ={this.renderSortableRow} 
-            onReleaseRow          ={(key,currentOrder)=>{ this.changeDefaultvalueArray(currentOrder);}}
+          <DraggableFlatList
+            extraData    ={this.props.state.Meeting} 
+            data         ={this.props.state.Meeting.attendees}
+            onDragEnd    ={({ data }) => this.props.actions.setAttendees(data)}
+            keyExtractor ={(item) => item.key}
+            renderItem   ={this.renderSortableRow}
           />
-
           <Footer>
-            <Body>
-              <Text style={{marginLeft: 15}}>{`${this.props.state.Language.lang.MeetingPage.selected} ${checkedAttendees} ${this.props.state.Language.lang.MeetingPage.person}`}</Text>
+            <Item style={{borderWidth: 1, paddingLeft: 10, borderBottomWidth: 0, borderWidth: 1}}
+              onPress ={()=>{
+                this.onAllCheckBoxTap(!isCheckedAllAttendees);
+              }} 
+            >
+                <CheckBox
+                  disabled      ={ Platform.OS == "android" ? false : true }
+                  onValueChange={(newValue) => {
+                    if (Platform.OS == "android") this.onAllCheckBoxTap(!isCheckedAllAttendees);
+                  }}
+                  value             = {isCheckedAllAttendees}
+                  boxType           = {"square"}
+                  onCheckColor      = {"#F44336"}
+                  onTintColor       = {"#F44336"}
+                  tintColors        = {{true: "#F44336", false: '#aaaaaa'}}
+                  style             = {{ marginRight: 20 }}
+                  animationDuration = {0.01}
+                />
+                  <Label>{this.props.state.Language.lang.Common.selectAll}</Label>
+            </Item>
+            <Body style={{justifyContent: 'flex-end', paddingRight: 10 }}>
+              <Text style={{marginLeft: 15}}>
+                {`${this.props.state.Language.lang.MeetingPage.selected} ${checkedAttendees} ${this.props.state.Language.lang.MeetingPage.person}`}
+                </Text>
             </Body>
-            <Right>
+            <Right style={{flex: 0}}>
               <TouchableOpacity 
                 style={{
                   marginRight    : 15,
@@ -94,22 +120,25 @@ class MeetingAttendeesReorderPage extends React.Component {
               </TouchableOpacity>
             </Right>
           </Footer>
-        </Container>
+        </View>
+        
       )
     };
+   
+   renderSortableRow = ({item, drag, isActive}) => {
+    return(
+      <SortableRow 
+        data           ={item} 
+        active         ={isActive} 
+        index          ={item.index}
+        onCheckBoxTap  ={this.onCheckBoxTap}
+        name           ={item.name}
+        departmentName ={item.depname}
+        onLongPress    ={drag}
+      />
+    );
 
-    renderSortableRow = ({key, index, data, disabled, active}) => {
-      return (
-        <SortableRow 
-          data           ={data} 
-          active         ={active} 
-          index          ={index}
-          onCheckBoxTap  ={this.onCheckBoxTap}
-          name           ={data.name}
-          departmentName ={data.depname}
-        />
-      )
-    }
+   }
 
     changeDefaultvalueArray = (currentOrder) => {
       let array = [];
@@ -126,6 +155,14 @@ class MeetingAttendeesReorderPage extends React.Component {
       this.props.actions.setAttendees(array);
     }
 
+    onAllCheckBoxTap = (isCheckedAllAttendees) => {
+      let array = this.props.state.Meeting.attendees;
+      for(let item of array){
+        item.checked = isCheckedAllAttendees;
+      }
+      this.props.actions.setAttendees(array);
+    }
+
     removeCheckItem = () => {
       let array = [];
       for(let item of this.props.state.Meeting.attendees){
@@ -136,9 +173,6 @@ class MeetingAttendeesReorderPage extends React.Component {
       this.props.actions.setAttendees(array);
     }
 };
-
-
-
 
 export let MeetingAttendeesReorderPageStyle = connectStyle( 'Page.FormPage', {} )(MeetingAttendeesReorderPage);
 
@@ -153,3 +187,4 @@ export default connect(
     }, dispatch)
   })
 )(MeetingAttendeesReorderPageStyle);
+

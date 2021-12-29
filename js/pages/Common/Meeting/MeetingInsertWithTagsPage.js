@@ -6,7 +6,6 @@ import { connect }   from 'react-redux';
 import TagInput      from 'react-native-tags-input';
 import { bindActionCreators } from 'redux';
 import * as RNLocalize from "react-native-localize";
-import CheckBox from '@react-native-community/checkbox';
 
 import * as MeetingAction      from '../../../redux/actions/MeetingAction';
 import * as UpdateDataUtil     from '../../../utils/UpdateDataUtil';
@@ -49,7 +48,8 @@ class MeetingInsertWithTagsPage extends React.Component {
       this.props.route.params.attendees,
       this.state.oid,
       this.state.startdate,
-      this.state.enddate
+      this.state.enddate,
+      true  // 需要檢測會議時間衝突的設定
     );
     this.loadMoreData();
   }
@@ -121,7 +121,7 @@ class MeetingInsertWithTagsPage extends React.Component {
                     tKeyword       :"",
                     searchedData   :[],
                     searchedCount  :0,
-                    isEnd:false
+                    isEnd          :false
                   });
                 }}>
                   <Icon name="close" style={{color:this.props.style.color}}/>
@@ -149,8 +149,25 @@ class MeetingInsertWithTagsPage extends React.Component {
           :
             <Header style={this.props.style.HeaderBackground}>
               <Left>
-                <Button transparent onPress={() =>NavigationService.goBack()}>
-                  <Icon name='arrow-back' style={{color:this.props.style.color}}/>
+                <Button transparent onPress={() =>{
+                  Alert.alert(
+                    this.props.lang.FormContentGridForEvaluation.continueToGoBack, //請確認是否執行返回?
+                    this.props.lang.FormContentGridForEvaluation.continueToGoBackMsg, //確認返回將不儲存已編輯資料；如欲儲存已編輯資料，請點擊畫面右上角“完成”按鈕
+                    [
+                      {
+                        text: this.props.lang.FormContentGridForEvaluation.cancel, //取消
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel"
+                      },
+                      { 
+                        text: this.props.lang.FormContentGridForEvaluation.goBack, //確認返回, 
+                        onPress: () => NavigationService.goBack(),
+                      style: "destructive",
+                      }
+                    ]
+                  );
+                }}>
+                  <Icon name='close' style={{color:this.props.style.color}}/>
                 </Button>
               </Left>
               <Body onPress={()=>{ this.setState({ isShowSearch:true });}}>
@@ -256,7 +273,7 @@ class MeetingInsertWithTagsPage extends React.Component {
         </Item>
 
         <View style={{flex: 1, paddingTop: 20}}>
-          <Label style={{paddingLeft: 10, paddingBottom: 5, paddingTop     : 5,color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
+          <Label style={{paddingLeft: 10, paddingBottom: 5, paddingTop: 5,color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>
             {`${this.props.state.Language.lang.CreateFormPage.QuickSelect} ${this.props.lang.MeetingPage.attendees}`}
           </Label>
           <FlatList
@@ -274,7 +291,7 @@ class MeetingInsertWithTagsPage extends React.Component {
     );
   }
 
-  loadMoreData = (isSearching, searchedData = null) => {
+  loadMoreData = (isSearching = {}, searchedData = null) => {
     isSearching = (typeof isSearching == "object") ? false : isSearching;
     let isSearch = isSearching ? isSearching : this.state.isSearch;
     searchedData = (searchedData == null) ? this.state.searchedData : searchedData;
@@ -314,7 +331,6 @@ class MeetingInsertWithTagsPage extends React.Component {
            isEnd:isEnd
           })
         }).catch((err) => {
-          // ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
           this.setState({ 
             isShowSearch   :false,
             isSearch       :false,
@@ -328,15 +344,15 @@ class MeetingInsertWithTagsPage extends React.Component {
             isFooterRefreshing:false
           });
 
-          let message = this.props.lang.MeetingPage.searchError;
           setTimeout(function(){ 
-            ToastUnit.show('error', message);
+            ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
           }, 300);
-          console.log(err);
+          // console.log(err);
         })
       } else {
         let actionObject = { condition:"" }; //查詢使用
         actionObject.count = this.state.data.length;
+        
         UpdateDataUtil.getCreateFormDetailFormat(user, action, actionObject).then((result)=>{
           let isEnd = this.dealIsDataEnd(this.state.data, result);
           this.setState({
@@ -344,7 +360,10 @@ class MeetingInsertWithTagsPage extends React.Component {
             isFooterRefreshing:false,
             isEnd             :isEnd
           });
+          
         }).catch((err) => {
+          ToastUnit.show('error', this.props.lang.MeetingPage.searchError);
+          
           this.setState({ 
             isShowSearch   :false,
             isSearch       :false,
@@ -444,94 +463,6 @@ class MeetingInsertWithTagsPage extends React.Component {
     string = string.replace(/\s/g,"");
     return string;
   }
-
-  /*
-  itemOnPress = async (item) => {
-    let enableMeeting = await this.checkHaveMeetingTime(item.id, this.state.startdate, this.state.enddate);
-    if (enableMeeting) {
-      this.addTag(item);
-    } else {
-      Alert.alert(
-        this.props.lang.MeetingPage.alertMessage_duplicate, //"有重複"
-        `${this.props.lang.MeetingPage.alertMessage_period} ${item.name} ${this.props.lang.MeetingPage.alertMessage_meetingAlready}`,
-        [
-          { text: "OK", onPress: () => console.log("OK Pressed") }
-        ],
-        { cancelable: false }
-      );
-      
-    }
-  }
-  */
-
-  /*
-  checkHaveMeetingTime = async (id, startTime, endTime) => {
-    let user = this.props.state.UserInfo.UserInfo;
-    let meetingParams = {
-      startdate:startTime,
-      enddate  : endTime,
-      attendees:[ {id:id} ],
-      timezone :RNLocalize.getTimeZone(),
-      oid      : this.state.oid
-    }
-    let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
-      if (result.length == 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }).catch((errorResult)=>{
-      console.log("errorResult",errorResult.message);
-      return false;
-    });
-
-    return searchMeetingResult;
-  }
-  */
-
-  /*
-  addTag = (item) => {      
-    let attendees = this.props.state.Meeting.attendees;
-    let isAdded = false;
-
-    for(let value of attendees){
-      if(item.id == value.id) isAdded = true; 
-    }
-
-    if (isAdded) {
-      this.removeTag(item);
-      // ToastUnit.show('error', this.props.state.Language.lang.CreateFormPage.NoAreadyItem);
-    } else {
-        attendees.push(item);
-        this.props.actions.setAttendees(attendees);
-    }
-    
-    this._content.wrappedInstance.scrollToEnd({animated: true});
-  }
-  */
-  /*
-  calendarOnPress = (item) => {
-    //顯示此人有哪些會議
-    NavigationService.navigate("MeetingTimeForPerson", {
-      person: item,
-    });
-  }
-  */
-
-  /*
-  removeTag = (item) => {
-    let attendees = this.props.state.Meeting.attendees;
-
-    let removeIndex = 0;
-    for(let i in attendees){
-      if(item.id == attendees[i].id) removeIndex = i;
-    }
-
-    attendees.splice(removeIndex, 1);
-
-    this.props.actions.setAttendees(attendees);
-  }
-  */
 }
 
 export let MeetingInsertWithTagsPageStyle = connectStyle( 'Page.FormPage', {} )(MeetingInsertWithTagsPage);

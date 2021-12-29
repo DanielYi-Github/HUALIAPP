@@ -14,6 +14,7 @@ class CompanyDocumentDetailPage extends Component {
         super(props)
 
         this.state = {
+            title: this.props.route.params.title,//标题
             type: this.props.route.params.type,//文件分类
             data: this.props.route.params.data,//文件
             isEnd: false,//是否加载结束
@@ -48,7 +49,7 @@ class CompanyDocumentDetailPage extends Component {
                     isLeftButtonIconShow={true}
                     leftButtonIcon={{ name: "arrow-back" }}
                     leftButtonOnPress={() => NavigationService.goBack()}
-                    title={this.props.state.Language.lang.CompanyDocumentPage.CompanyDocument}
+                    title={this.state.title}
                 />
                 <Content>
                     <FlatList

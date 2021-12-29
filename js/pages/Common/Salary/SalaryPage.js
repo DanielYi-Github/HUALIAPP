@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Easing, Modal, Alert, Platform} from 'react-native';
 import { Container, Content, Tabs, Tab, Spinner, connectStyle, Card, CardItem, Text, Title, Body, Button, ScrollableTab} from 'native-base';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view'
 import Drawer from 'react-native-drawer-menu';
 
 import { connect }            from 'react-redux';
@@ -308,20 +308,20 @@ class SalaryPage extends React.Component {
               paddingBottom:20
           }}>
             <View style={{flexDirection: 'row', alignItems: 'flex-start',paddingBottom: 5}}>
-              <Title style={{color:"red"}}>{this.props.state.Language.lang.Common.Alert}:</Title>
+              <Title style={{color:"#FF5252"}}>{this.props.state.Language.lang.Common.Alert}:</Title>
             </View>
 
             <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-              <Text>1.</Text>
-              <Text>{this.props.state.Language.lang.SalaryPage.Alert1}</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>1.</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{this.props.state.Language.lang.SalaryPage.Alert1}</Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-              <Text>2.</Text>
-              <Text>{this.props.state.Language.lang.SalaryPage.Alert2}</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>2.</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{this.props.state.Language.lang.SalaryPage.Alert2}</Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-              <Text>3.</Text>
-              <Text>{this.props.state.Language.lang.SalaryPage.Alert3}</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>3.</Text>
+              <Text style={{color:this.props.style.inputWithoutCardBg.inputColorPlaceholder}}>{this.props.state.Language.lang.SalaryPage.Alert3}</Text>
             </View>
           </View>
         </Content>

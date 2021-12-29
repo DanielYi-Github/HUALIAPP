@@ -157,7 +157,7 @@ export function loadMyFormContentIntoState(userData, processid, id, rootid, lang
 		});
 
 		await UpdateDataUtil.getBPMForm(userData, content).then( async (data) => {
-			console.log("loadMyFormContentIntoState",data);
+			// console.log("loadMyFormContentIntoState",data);
 			let apList = [];
 			let apListIndex = -1;
 			var tmpList = data.tmpList; 

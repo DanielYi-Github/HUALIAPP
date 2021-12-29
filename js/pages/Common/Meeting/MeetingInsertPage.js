@@ -14,6 +14,7 @@ import HeaderForGeneral       from '../../../components/HeaderForGeneral';
 import FormInputContent       from '../../../components/Form/FormInputContent';
 import * as NavigationService from '../../../utils/NavigationService';
 import * as MeetingAction     from '../../../redux/actions/MeetingAction';
+import * as UpdateDataUtil    from '../../../utils/UpdateDataUtil';
 import ToastUnit              from '../../../utils/ToastUnit';
 import Common                 from '../../../utils/Common';
 
@@ -52,7 +53,12 @@ class MeetingInsertPage extends React.PureComponent  {
       let isSearchedMeeting = true;                     // 有沒有找到此會議的訊息
       let timezone          = RNLocalize.getTimeZone(); 
       let showTimezone      = false;                    // 顯示時區資訊
-
+      let regularMeetingEnable = true;                 // 例行性會議是否可行
+      let repeatType           = props.state.Meeting.repeatType;
+      let repeatEndDate        = props.state.Meeting.repeatEndDate;
+      let weekDays             = props.state.Meeting.weekDays;
+      let notified             = false;                 // 被通知會議
+      let notifierNM           = "";                    // 通知人姓名
 
       // 判斷當前頁面,從哪個畫面來
       if (isParams) {
@@ -71,7 +77,7 @@ class MeetingInsertPage extends React.PureComponent  {
             initiator        = meetingParam.initiator;
             chairperson      = meetingParam.chairperson;
             chairpersonLabel = meetingParam.chairperson.name;
-            attendees        = meetingParam.attendees;
+            attendees        = this.dedup(meetingParam.attendees);
             meetingMode      = meetingParam.meetingMode;
             isOnlineAndPlace = meetingParam.place;
             meetingPlace     = meetingParam.meetingPlace ? meetingParam.meetingPlace : meetingPlace;
@@ -81,6 +87,12 @@ class MeetingInsertPage extends React.PureComponent  {
             remindtime       = meetingParam.remindtime;
             timezone         = meetingParam.timezone;
             showTimezone     = true;
+            regularMeetingEnable = false;
+            repeatType       = meetingParam.repeatType;
+            repeatEndDate    = meetingParam.repeatEndDate;
+            weekDays         = meetingParam.weekDays;
+            notified         = meetingParam.manager;
+            notifierNM       = meetingParam.managers.join(",");
             break;
           case 'MeetingSearch': // 參與人員搜尋那邊過來的
             startTime = new Date( meetingParam.startdate.replace(/-/g, "/") ).getTime();
@@ -125,6 +137,12 @@ class MeetingInsertPage extends React.PureComponent  {
               remindtime       = meetingParam.remindtime;
               timezone         = meetingParam.timezone;
               showTimezone     = true;
+              regularMeetingEnable = false;
+              repeatType       = meetingParam.repeatType;
+              repeatEndDate    = meetingParam.repeatEndDate;
+              weekDays         = meetingParam.weekDays;
+              notified         = meetingParam.manager;
+              notifierNM       = meetingParam.managers.join(",");
 
             } else {
               isSearchedMeeting = false;
@@ -193,6 +211,12 @@ class MeetingInsertPage extends React.PureComponent  {
         isDelete              : false,  // 是否刪除表單
         timezone              : timezone,
         showTimezone          : showTimezone,
+        regularMeetingEnable  : regularMeetingEnable,
+        repeatType            : repeatType,
+        repeatEndDate         : repeatEndDate,
+        weekDays              : weekDays,
+        notified              : notified,
+        notifierNM            : notifierNM
       }
 	}
 
@@ -204,10 +228,6 @@ class MeetingInsertPage extends React.PureComponent  {
           } else {
             ToastUnit.show('success', this.state.isModify ? this.props.lang.MeetingPage.modifyMeetingSuccess :this.props.lang.MeetingPage.insertMeetingSuccess);
           }
-          setTimeout(
-            function(){ NavigationService.goBack(); }, 
-            50
-          );
         } else {
           let actionResultMsg = "";
           let serverErrorString = nextProps.state.Meeting.actionResultMsg.indexOf('###');
@@ -281,6 +301,8 @@ class MeetingInsertPage extends React.PureComponent  {
     startdate = this.state.isChangeTime ? startdate-28800000 : startdate;
     enddate = this.state.isChangeTime ? enddate-28800000 : enddate;
 
+    // 整理例行性會議的文字內容
+    let selectedRepeatTypeLabel = this.props.lang.MeetingPage.repeatType[this.props.state.Meeting.selectedRepeatType];
 
     let nowTimeZone = RNLocalize.getTimeZone();
     let differentZone = this.state.timezone == nowTimeZone ? false : true;
@@ -299,8 +321,17 @@ class MeetingInsertPage extends React.PureComponent  {
           isTransparent         = {false}
         />
         <Content>
+          {/* 被通知会议提示 */}
+          { this.state.notified ?
+              <Label style={{marginTop: 20, paddingLeft: 10, color: 'red'}}>
+                {this.props.lang.MeetingPage.NotifiedTips.replace("xxx", this.state.notifierNM)}
+              </Label>
+            :
+              null
+          }
+
           {/*會議主題*/}
-          <Item style={{ backgroundColor: this.props.style.InputFieldBackground, marginTop: 20, borderWidth: 0, paddingLeft: 10 }}>
+          <Item style={{ backgroundColor: this.props.style.InputFieldBackground, borderWidth: 0, paddingLeft: 10, marginTop: this.state.notified ? null: 20 }}>
               <Label>{this.props.lang.MeetingPage.meetingSubject}</Label>
               <Input 
                 scrollEnabled ={false}
@@ -484,37 +515,43 @@ class MeetingInsertPage extends React.PureComponent  {
             }
           </Item>
 
-          {/*例行性會議 未完成*/}
+          {/*例行性會議*/}
           {/*
-            <Item 
-              style={{
-                backgroundColor: this.props.style.InputFieldBackground,
-                height         : this.props.style.inputHeightBase,
-                paddingLeft    : 10,
-                paddingRight   : 5,
-                marginTop      : 20,
-              }}
-              disabled = {!this.state.isEditable}
-              onPress  = {()=>{
-                Keyboard.dismiss();
-                NavigationService.navigate("MeetingInsertWithRegular", {
-                  startdate: this.state.startdate,
-                  enddate  : this.state.enddate,
-                  onPress  : "",
-                  // oid      : this.state.oid
-                });
-              }}
-            >
-              <Icon name='reload-circle-outline' />
-              <Label style={{flex:1}}>{"例行性會議"}</Label>
-              {
-               this.state.isEditable ? <Text>{regularMeetingLabel}</Text> : <Label>{regularMeetingLabel}</Label>  
-              }
-              {
-                this.state.isEditable ? <Icon name='arrow-forward' /> : null
-              }
-            </Item>
+            this.state.regularMeetingEnable ? 
+              <Item 
+                style={{
+                  backgroundColor: this.props.style.InputFieldBackground,
+                  height         : this.props.style.inputHeightBase,
+                  paddingLeft    : 10,
+                  paddingRight   : 5,
+                  marginTop      : 20,
+                }}
+                disabled = {!this.state.isEditable}
+                onPress  = {()=>{
+                  Keyboard.dismiss();
+                  NavigationService.navigate("MeetingInsertWithRegular", {
+                    startdate: this.state.startdate,
+                    enddate  : this.state.enddate,
+                    onPress  : "",
+                    // oid      : this.state.oid
+                  });
+                }}
+              >
+                <Icon name='reload-circle-outline' />
+                <Label style={{flex:1}}>{this.props.lang.MeetingPage.regularMeeting}</Label>
+                {
+                 this.state.isEditable ? <Text>{selectedRepeatTypeLabel}</Text> : <Label>{selectedRepeatTypeLabel}</Label>  
+                }
+                {
+                  this.state.isEditable ? <Icon name='arrow-forward' /> : null
+                }
+              </Item>
+            :
+              null
           */}
+
+          {/*顯示例行性會議的提示文字*/}
+          { this.formatRegularMeetingAlertLabel() }
 
           {/*顯示會議的按鈕*/}
           { this.renderMeetingActionButton() }
@@ -526,7 +563,7 @@ class MeetingInsertPage extends React.PureComponent  {
         {
           (this.state.showDatePicker) ? 
             <DateTimePicker 
-              value       ={this.state.editDatetimeValue}
+              value       ={new Date(this.state.editDatetimeValue)}
               minimumDate ={new Date(this.state.now)}
               mode        ={"date"}
               is24Hour    ={true}
@@ -540,7 +577,7 @@ class MeetingInsertPage extends React.PureComponent  {
         {
           (this.state.showTimePicker) ? 
             <DateTimePicker 
-              value    ={this.state.editDatetimeValue}
+              value    ={new Date(this.state.editDatetimeValue)}
               mode     ={"time"}
               is24Hour ={true}
               display  ="spinner"
@@ -588,16 +625,11 @@ class MeetingInsertPage extends React.PureComponent  {
         }
 
         {/*是否顯示loading 畫面*/}
-        {
-          (this.props.state.Meeting.isRefreshing) ? 
-            <Modal animationType="fade" transparent={true} visible={true} >
-              <Container style={{justifyContent: 'center', alignItems: 'center', backgroundColor:this.props.style.SpinnerbackgroundColor}}>
-                <Spinner color={this.props.style.SpinnerColor}/>
-              </Container>
-            </Modal>
-          :
-            null
-        }
+        <Modal animationType="fade" transparent={true} visible={this.props.state.Meeting.isRefreshing} >
+          <Container style={{justifyContent: 'center', alignItems: 'center', backgroundColor:this.props.style.SpinnerbackgroundColor}}>
+            <Spinner color={this.props.style.SpinnerColor}/>
+          </Container>
+        </Modal>
       </Container>
     );
 	}
@@ -605,10 +637,11 @@ class MeetingInsertPage extends React.PureComponent  {
   showDateTimePicker = (editStartorEndDatetime) => {
     let startdate = new Date( this.state.startdate.replace(/-/g, "/") ).getTime();
     let enddate = new Date( this.state.enddate.replace(/-/g, "/") ).getTime();
-      if (this.state.isEndDateChange) {
-      } else {
-        // enddate = startdate + 3600000;
-      }
+
+    if (this.state.isEndDateChange) {
+    } else {
+      // enddate = startdate + 3600000;
+    }
     
     if (Platform.OS == "ios") {
       this.setState({
@@ -650,7 +683,6 @@ class MeetingInsertPage extends React.PureComponent  {
   setTime = (time) => {
     if (time.type == "set") {
       if (this.state.editStartorEndDatetime) {
-
         //start
         if (this.state.isModify) {
           this.setState({
@@ -659,7 +691,7 @@ class MeetingInsertPage extends React.PureComponent  {
           });
         } else {
           // 編輯開始時間要自動幫結束時間增加一小時
-          let enddate = time.nativeEvent.timestamp+3600000;
+          let enddate = time.nativeEvent.timestamp.getTime()+3600000;
           this.setState({
             startdate      :DateFormat( time.nativeEvent.timestamp, "yyyy-mm-dd HH:MM:ss"),
             enddate        :DateFormat( new Date(enddate), "yyyy-mm-dd HH:MM:ss"),
@@ -693,7 +725,7 @@ class MeetingInsertPage extends React.PureComponent  {
         });
       } else {
         // 編輯開始時間要自動幫結束時間增加一小時
-        let enddate = editDatetimeValue.getTime()+3600000;
+        let enddate = (new Date(editDatetimeValue)).getTime()+3600000;
         this.setState({
           startdate      :DateFormat( new Date(editDatetimeValue), "yyyy-mm-dd HH:MM:ss"),
           enddate        :DateFormat( new Date(enddate), "yyyy-mm-dd HH:MM:ss"),
@@ -719,6 +751,39 @@ class MeetingInsertPage extends React.PureComponent  {
         break;
       case 'vi':
         datetimeString = DateFormat( new Date(datetime), "mm-dd ") + this.props.state.Language.lang.Common.week[DateFormat( new Date(datetime), "dddd")];
+        break;
+      default:
+        datetimeString = DateFormat( new Date(datetime), "mmm dd dddd");
+    }
+    return datetimeString;
+  }
+
+  dateFormatWithoutWeek = (datetime) => {
+    let datetimeString = "";
+    switch (this.props.state.Language.langStatus) {
+      case 'zh-TW':
+      case 'zh-CN':
+        datetimeString = DateFormat( new Date(datetime), "m月d日 ");
+        break;
+      case 'vi':
+        datetimeString = DateFormat( new Date(datetime), "mm-dd ");
+        break;
+      default:
+        datetimeString = DateFormat( new Date(datetime), "mmm dd dddd");
+    }
+    return datetimeString;
+  }
+
+  dateFormatWithoutMonthWeek = (datetime) => {
+    let datetimeString = "";
+    switch (this.props.state.Language.langStatus) {
+      case 'zh-TW':
+      case 'zh-CN':
+        datetimeString = DateFormat( new Date(datetime), "d日 ");
+        break;
+      case 'vi':
+      case 'en':
+        datetimeString = DateFormat( new Date(datetime), "dS");
         break;
       default:
         datetimeString = DateFormat( new Date(datetime), "mmm dd dddd");
@@ -817,9 +882,12 @@ class MeetingInsertPage extends React.PureComponent  {
         } else {
           // 顯示線上會議的帳號與密碼
           this.setState({
-            meetingMode    :this.props.state.Meeting.meetingModeTypes[buttonIndex].paramcode,
+            meetingMode     :this.props.state.Meeting.meetingModeTypes[buttonIndex].paramcode,
             meetingPlaceName:this.props.state.Meeting.meetingModeTypes[buttonIndex].paramname,
-            isOnlineMeeting :true
+            isOnlineMeeting :true,
+            meetingPlace    :"",
+            meetingNumber   :"",
+            meetingPassword :"",
           });
         }
         break;
@@ -1007,7 +1075,92 @@ class MeetingInsertPage extends React.PureComponent  {
     return button;
   }
 
-  addMeeting = () =>{
+  formatRegularMeetingAlertLabel = () => {
+    let regularMeetingAlertLabel = "";
+    let reduxMeeting = this.props.state.Meeting;
+    let langMeeting = this.props.state.Language.lang.MeetingPage;
+
+    if( 
+      this.state.regularMeetingEnable && 
+      this.props.state.Meeting.selectedRepeatType != "NR" && 
+      reduxMeeting.repeatEndDate !== ""
+    ){
+      
+      let label1, label2, label3, label4, label5, label6;
+      regularMeetingAlertLabel = `${langMeeting.repeatType[reduxMeeting.selectedRepeatType]}`;
+
+      switch (reduxMeeting.selectedRepeatType) {
+        case 'ED':
+          label1 = langMeeting.repeatType[reduxMeeting.selectedRepeatType];
+          label2 = Moment( new Date(this.state.startdate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label3 = Moment( new Date(this.state.enddate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label4 = DateFormat(reduxMeeting.repeatEndDate, "yyyy")+"年 "+this.dateFormatWithoutWeek(reduxMeeting.repeatEndDate);
+
+          if(this.props.state.Language.langStatus == "en"){
+            regularMeetingAlertLabel = `The meeting will be scheduled ${label2}-${label3} everyday, end on ${DateFormat(reduxMeeting.repeatEndDate, "mmmm dS, yyyy")}.`;
+          }else{
+            regularMeetingAlertLabel = `${langMeeting.regularMsg1}${label1}${langMeeting.regularMsg2} ${label2} ${langMeeting.regularMsg3} ${label3} ${langMeeting.regularMsg4} ${label4}${langMeeting.regularMsg5}`;
+          }
+          break;
+        case 'EW':
+          label1 = langMeeting.repeatType[reduxMeeting.selectedRepeatType];
+          label2 = this.props.state.Language.lang.Common.week[DateFormat( new Date(this.state.startdate), "dddd")];
+          label3 = Moment( new Date(this.state.startdate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label4 = this.props.state.Language.lang.Common.week[DateFormat( new Date(this.state.enddate), "dddd")];
+          label5 = Moment( new Date(this.state.enddate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label6 = this.dateFormatWithoutWeek(reduxMeeting.repeatEndDate);
+
+          if(this.props.state.Language.langStatus == "en"){
+            regularMeetingAlertLabel = `The meeting will be scheduled from ${DateFormat(new Date(this.state.startdate),"HH:MM, ddd")} to ${DateFormat(new Date(this.state.enddate),"HH:MM, ddd")} every week, end on ${DateFormat(reduxMeeting.repeatEndDate, "mmmm dS, yyyy")}.`;
+          }else{
+            regularMeetingAlertLabel = `${langMeeting.regularMsg1}${label1}${langMeeting.regularMsg2} ${label2}${label3} ${langMeeting.regularMsg3} ${label4}${label5} ${langMeeting.regularMsg4} ${label6}${langMeeting.regularMsg5}`;
+          }
+
+          break;
+        case 'EM':
+          label1 = `${langMeeting.repeatType[reduxMeeting.selectedRepeatType]}`;
+          label2 = this.dateFormatWithoutMonthWeek(new Date(this.state.startdate));
+          label3 = Moment( new Date(this.state.startdate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label4 = this.dateFormatWithoutMonthWeek(new Date(this.state.enddate));
+          label5 = Moment( new Date(this.state.enddate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label6 = this.dateFormatWithoutWeek(reduxMeeting.repeatEndDate);
+
+          if(this.props.state.Language.langStatus == "en"){
+            regularMeetingAlertLabel = `The meeting will be scheduled from ${DateFormat(new Date(this.state.startdate),"HH:MM, dS")} to ${DateFormat(new Date(this.state.enddate),"HH:MM, dS")} every month, end on ${DateFormat(reduxMeeting.repeatEndDate, "mmmm dS, yyyy")}.`;
+          } else {
+            regularMeetingAlertLabel = `${langMeeting.regularMsg1}${label1}${langMeeting.regularMsg2} ${label2}${label3} ${langMeeting.regularMsg3} ${label4}${label5} ${langMeeting.regularMsg4} ${label6}${langMeeting.regularMsg5}`;
+          }
+
+          break;
+        case 'DM':
+          label1 = [];
+          for (const [key, value] of Object.entries(langMeeting.weekDays)) {
+            for(let day of reduxMeeting.selectedWeekDays){
+              if(day == key) label1.push(value);
+            }
+          }
+
+          label2 = Moment( new Date(this.state.startdate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label3 = Moment( new Date(this.state.enddate) ).tz(RNLocalize.getTimeZone()).format("HH:mm");
+          label4 = this.dateFormatWithoutWeek(reduxMeeting.repeatEndDate);
+          
+          if(this.props.state.Language.langStatus == "en"){
+            regularMeetingAlertLabel = `The meeting will be scheduled ${label2}-${label3}, ${label1} every week, end on ${DateFormat(reduxMeeting.repeatEndDate, "mmmm dS, yyyy")}.`;
+          } else {
+            regularMeetingAlertLabel = `${langMeeting.regularMsg1}${langMeeting.repeatType.EW} ${langMeeting.regularMsg2}${label1} ${label2} ${langMeeting.regularMsg3} ${label3} ${langMeeting.regularMsg4} ${label4}${langMeeting.regularMsg5}`;
+          }
+
+          break;
+      }
+
+      return <Label style={{margin: 15}}>{regularMeetingAlertLabel}</Label>
+
+    } else {
+      return null;
+    }
+  }
+
+  addMeeting = async () =>{
     // subject
     // description
     // attendees
@@ -1059,59 +1212,104 @@ class MeetingInsertPage extends React.PureComponent  {
         }],
       )
     } else {
+      this.props.actions.setRefreshing(true);
+
       let startdate;
       if (this.state.isChangeTime) {
         startdate = new Date(this.state.startdate.replace(/-/g, "/")).getTime()+1000-28800000;
       } else {
         startdate = new Date(this.state.startdate.replace(/-/g, "/")).getTime()+1000;
       }
+      startdate = DateFormat( startdate, "yyyy-mm-dd HH:MM:ss");
 
-      let meetingParams = {
-          subject        :this.state.subject,
-          description    :this.state.description,
-          startdate      :DateFormat( startdate, "yyyy-mm-dd HH:MM:ss"),
-          enddate        :this.state.enddate,
-          meetingMode    :this.state.meetingMode,
-          place          :this.state.isOnlineAndPlace,
-          meetingPlace   :this.state.meetingPlace,
-          meetingNumber  :this.state.meetingNumber,
-          meetingPassword:this.state.meetingPassword,
-          remindtime     :this.state.remindtime,
-          initiator      :this.state.initiator,
-          chairperson    :this.state.chairperson,
-          attendees      :this.state.attendees,
-          timezone       :RNLocalize.getTimeZone(),
-          repeatType     :"NR",
-          repeatEndDate  :"",
-          weekDays       :[]
-      }
-      
-      if (this.state.isModify) {
-        // 修改會議
-        meetingParams.oid = this.state.oid;
-        this.props.actions.modifyMeeting(meetingParams);
+      // 先檢測與會人員時間有無重複 沒有重複為true 有重複為false 
+      let enableMeeting = await this.checkHaveMeetingTime(this.state.attendees, startdate, this.state.enddate);
+      if(enableMeeting.result) {
+        
+        let meetingParams = {
+            subject        :this.state.subject,
+            description    :this.state.description,
+            startdate      :startdate,
+            enddate        :this.state.enddate,
+            meetingMode    :this.state.meetingMode,
+            meetingPlace   :this.state.meetingPlace,
+            place          :this.state.isOnlineAndPlace,
+            meetingNumber  :this.state.meetingNumber,
+            meetingPassword:this.state.meetingPassword,
+            remindtime     :this.state.remindtime,
+            initiator      :this.state.initiator,
+            chairperson    :this.state.chairperson,
+            attendees      :this.state.attendees,
+            timezone       :RNLocalize.getTimeZone(),
+        }
+
+        if (this.state.regularMeetingEnable) {
+          // 先檢測有沒有啟用例行性會議，如果有要確認有沒有設定結束時間，如果沒有設定自動幫他加入過去一年
+          let repeatEndDate = this.props.state.Meeting.repeatEndDate;
+          if(this.props.state.Meeting.selectedRepeatType != 'NR' && repeatEndDate == ""){
+            var d1 = new Date();
+            var d2 = new Date(d1);
+            d2.setFullYear(d2.getFullYear()+1);
+            d2.setDate(d2.getDate()-1);
+            repeatEndDate = DateFormat( d2, "yyyy-mm-dd");
+          }
+
+          meetingParams.repeatType = this.props.state.Meeting.selectedRepeatType;
+          meetingParams.repeatEndDate = repeatEndDate;
+          meetingParams.weekDays = this.props.state.Meeting.selectedWeekDays 
+        }
+        
+        if (this.state.isModify) {
+          // 修改會議
+          meetingParams.oid = this.state.oid;
+          this.props.actions.modifyMeeting(meetingParams);
+        } else {
+          // 新增會議
+          this.props.actions.addMeeting(meetingParams);
+        }
       } else {
-        // 新增會議
-        this.props.actions.addMeeting(meetingParams);
+
+        let actions = this.props.actions;
+        Alert.alert(
+         this.props.lang.Common.Error,   // 表單動作失敗
+         enableMeeting.message, //`與會人員此段時間已安排其他會議`
+          [{
+              text: this.props.state.Language.lang.Common.Close,   // 關閉 
+              onPress: () => {
+                actions.setRefreshing(false);
+              }, 
+          }],
+        )
       }
     }    
   }
 
+  dedup(arr) {
+    var hashTable = {};
+
+    return arr.filter(function (el) {
+      var key = JSON.stringify(el);
+      var match = Boolean(hashTable[key]);
+
+      return (match ? false : hashTable[key] = true);
+    });
+  }
+
   cancelMeeting = () => {
     Alert.alert(
-          this.props.lang.MeetingPage.alert, // "提醒！"
-          this.props.lang.MeetingPage.deleteConfirm, //"確定刪除此會議" 
-          [
-            {
-              text: this.props.lang.Common.Cancel, //"取消"
-              onPress: () => console.log("Cancel Pressed"),
-              style: "cancel"
-            },
-            { text: this.props.lang.Common.Comfirm, onPress: () => {
-              this.setState({isDelete:true});
-              this.props.actions.cancelMeeting(this.state.oid);
-            }}
-          ]
+      this.props.lang.MeetingPage.alert, // "提醒！"
+      this.props.lang.MeetingPage.deleteConfirm, //"確定刪除此會議" 
+      [
+        {
+          text: this.props.lang.Common.Cancel, //"取消"
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: this.props.lang.Common.Comfirm, onPress: () => {
+          this.setState({isDelete:true});
+          this.props.actions.cancelMeeting(this.state.oid);
+        }}
+      ]
     );
   }
 
@@ -1129,6 +1327,58 @@ class MeetingInsertPage extends React.PureComponent  {
 
   componentWillUnmount(){
     this.props.actions.resetMeetingRedux();
+  }
+
+  checkHaveMeetingTime = async (ids, startTime, endTime) => {
+    let user = this.props.state.UserInfo.UserInfo;
+    let meetingParams = {
+      startdate: startTime,
+      enddate  : endTime,
+      attendees: [this.state.chairperson, ...ids],
+      timezone : RNLocalize.getTimeZone(),
+      oid      : this.state.oid
+    }
+    let searchMeetingResult = await UpdateDataUtil.searchMeeting(user, meetingParams).then((result)=>{
+      if (result.length == 0) {
+        return {
+          result: true,
+        };
+      } else {
+        let unableAttendees = [];
+        for(let item of result){
+          if(unableAttendees.length == 0){
+            unableAttendees.push(item.name);
+
+          }else{
+            let isAdd = true;
+            for(let unable of unableAttendees){
+              if(item.name == unable){
+                isAdd = false;
+                break;
+              }
+            }
+
+            if(isAdd){
+              unableAttendees.push(item.name);
+            }
+
+          }
+        }
+
+        return {
+          result: false,
+          message: unableAttendees.toString()+this.props.lang.MeetingPage.alertMessage_meetingAttendeesAlready
+        };
+      }
+    }).catch((errorResult)=>{
+      console.log("errorResult",errorResult.message);
+      return {
+          result: false,
+          message: "系統維護中，請收到再試" 
+      };
+    });
+
+    return searchMeetingResult;
   }
 }
 

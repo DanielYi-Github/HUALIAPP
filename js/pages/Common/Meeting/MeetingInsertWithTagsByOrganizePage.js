@@ -135,6 +135,9 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
           selectNumber = {this.props.state.Meeting.attendees.length}
           onPress      = {()=> NavigationService.navigate("MeetingAttendeesReorder")}
           MeetingInsertWithTagsPageRouterKey = {this.props.MeetingInsertWithTagsPageRouterKey}
+          showAllSelectChk       = {false} // 要不要顯示全選按鈕
+          allSelectChkValue      = {null}  // 全選之後需要給定的值
+          onSelectChkValueChange = {null}  // 全選與取消全選要做的事
         />
       </Container>
     );
@@ -152,6 +155,7 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
           NavigationService.navigate("MeetingInsertWithTagsForSelect", {
             selectList    :factories,
             onItemPress   : async (value)=>{
+              this.props.actions.blocking(true); 
               await this.props.actions.getOrg(value); // 取得組織架構資料
               this.navigateNextOrg();
             },
@@ -193,33 +197,46 @@ class MeetingInsertWithTagsByOrganizePage extends React.Component {
       NavigationService.push("MeetingInsertWithTagsForSelect", {
         orgManager    :org.members == null ? false : org.members,
         selectList    :org.subDep,
-        onItemPress   :(value)=>{
+        onItemPress   :async (value)=>{
           this.props.actions.organizeCheckboxOnPress( value );
         },
         onItemNextIconPress:(value)=>{
+          let orgValue = value;
           if(value.subDep == null){
             NavigationService.push("MeetingInsertWithTagsForSelect", {
-              selectList    :value.members,
-              onItemPress   :this.props.actions.getPositions,
-              renderItemMode:"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
-              showFooter    :true,
-              title         : this.props.lang.MeetingPage.attendeesInvite
+              selectList            :value.members,
+              onItemPress           :this.props.actions.getPositions,
+              renderItemMode        :"multiAttendees",  // normal一般, multiCheck多選, multiAttendees多選參與人
+              showFooter            :true,
+              title                 :this.props.lang.MeetingPage.attendeesInvite,
+              showAllSelectChk      :true,
+              onSelectChkValueChange:(changeValue)=>{
+                this.props.actions.organizeCheckboxOnPress( orgValue, changeValue );
+              }
             });
           }else{
             this.navigateNextOrg(value);
           }
         },
-        renderItemMode:"multiCheck",  // normal一般, multiCheck多選, multiAttendees多選參與人
-        showFooter    :true,
-        title         : this.props.lang.MeetingPage.attendeesInvite
+        renderItemMode        :"multiCheck",  // normal一般, multiCheck多選, multiAttendees多選參與人
+        showFooter            :true,
+        title                 :this.props.lang.MeetingPage.attendeesInvite,
+        showAllSelectChk      :false,
+        onSelectChkValueChange:false
+        /*
+        onSelectChkValueChange:(changeValue)=>{
+          this.props.actions.organizeCheckboxOnPress( org, changeValue );
+        }
+        */
       });
+      this.props.actions.blocking(false);
     }else{
       // 表示org為null, 沒有東西顯示
       Alert.alert(
         this.props.state.Language.lang.Common.Alert,
         this.props.state.Language.lang.MeetingPage.noneNextOrg,
         [
-          { text: "OK", onPress: () => console.log("OK Pressed") }
+          { text: "OK", onPress: () => this.props.actions.blocking(false) }
         ],
         { cancelable: false }
       );
@@ -262,6 +279,10 @@ let MeetingInsertWithTagsFurtherPagefunction = (props) => {
   let MeetingInsertWithTagsPageRouterKey = "";
   for(let item of navigationState.routes){
     if (item.name == "MeetingInsertWithTags") {
+      MeetingInsertWithTagsPageRouterKey = item.key;
+    }
+
+    if (item.name == "MeetingSearchWithTags") {
       MeetingInsertWithTagsPageRouterKey = item.key;
     }
   }
