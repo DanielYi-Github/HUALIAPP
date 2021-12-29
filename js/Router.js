@@ -9,6 +9,8 @@ import * as ThemeAction   from './redux/actions/ThemeAction';
 import * as CommonAction  from './redux/actions/CommonAction';
 import * as LoginAction   from './redux/actions/LoginAction';
 import * as MessageAction from './redux/actions/MessageAction';
+import * as MeetingAction from './redux/actions/MeetingAction';
+
 
 
 import { SafeAreaProvider, SafeAreaView }     from 'react-native-safe-area-context';
@@ -418,7 +420,6 @@ class Router extends React.Component {
     ) {
       let user = await DeviceStorageUtil.get('User');
       if (user !== "") {
-        // console.log("this.props.actions.appHotInit");
         this.props.actions.appHotInit(this.props.actions);
       }
     }
@@ -469,7 +470,8 @@ const appRouter = connect(
       ...ThemeAction,
       ...CommonAction,
       ...LoginAction,
-      ...MessageAction
+      ...MessageAction,
+      ...MeetingAction
     }, dispatch)
   })
 )(Router);
