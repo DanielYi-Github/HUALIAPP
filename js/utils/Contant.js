@@ -1,5 +1,5 @@
-export const TOMCAT_HOST = 'http://app.huali-group.com:8080/MobileApp/';    		// 正式機
-// export const TOMCAT_HOST = 'http://qas.app.huali-group.com:8080/MobileApp/';		// 測試機
+// export const TOMCAT_HOST = 'http://app.huali-group.com:8080/MobileApp/';    		// 正式機
+export const TOMCAT_HOST = 'http://qas.app.huali-group.com:8080/MobileApp/';		// 測試機
 // export const TOMCAT_HOST = 'http://10.0.0.116:8080/MobileApp/';					// 開發機
 
 //AES加密

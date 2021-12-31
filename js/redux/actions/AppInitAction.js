@@ -75,8 +75,6 @@ export function appInit(initActions/*, downloadProgressCallback*/) {
 			initActions.setThemeState(null,netStatus);  // 設定APP主題風格
 			intoAppProgress(initActions, getState(), netStatus, lang);
 		}
-		
-
 	}
 }
 

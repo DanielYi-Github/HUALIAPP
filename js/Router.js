@@ -11,12 +11,10 @@ import * as LoginAction   from './redux/actions/LoginAction';
 import * as MessageAction from './redux/actions/MessageAction';
 import * as MeetingAction from './redux/actions/MeetingAction';
 
-
-
 import { SafeAreaProvider, SafeAreaView }     from 'react-native-safe-area-context';
 import { NavigationContainer, useIsFocused }  from '@react-navigation/native';
 import { createStackNavigator, TransitionSpecs, CardStyleInterpolators, TransitionPresets } from '@react-navigation/stack';
-import { createDrawerNavigator }from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { withSecurityView }     from './components/WithSecurityView';
 import { createMyNavigator }    from './components/CustomBottomTabNavigation';
@@ -248,15 +246,64 @@ function SettingsScreen() {
   );
 }
 
-const MyBottomTabNavigator = createMyNavigator();
-// const Tab = createMaterialBottomTabNavigator();
+// const MyBottomTabNavigator = createMyNavigator();
+const Tab = createMaterialBottomTabNavigator();
 function HomeTabNavigator(props) {
-  
   const [preventGoback, setPreventGoback] = useState(false);
   let state = useSelector(state => state);
   let theme = state.Theme.theme['Component.BottomNavigation'];
   let dispatch = useDispatch();
 
+
+  // 導航欄正顯示且允許進行初始化程式才可增加返回監聽
+  if (useIsFocused() && state.Login.enableAppInitialFunction) {
+    if (!preventGoback) {
+      props.navigation.addListener('beforeRemove', (e) => {
+        e.preventDefault(); // Prevent default behavior of leaving the screen
+        Alert.alert(        // Prompt the user before leaving the screen
+          state.Language.lang.Common.Alert,
+          state.Language.lang.Common.LeaveAppAlert,
+          [
+            { text: state.Language.lang.Common.Cancel, style: 'cancel', onPress: () => {} },
+            {
+              text: state.Language.lang.Common.Comfirm, style: 'destructive',
+              onPress: () => NativeModules.ExitApp.exit()
+            },
+          ]
+        );
+        
+      })
+      setPreventGoback(true);
+    }
+  } else {
+    if (preventGoback) {
+      props.navigation.removeListener('beforeRemove');
+      setPreventGoback(false);
+    }
+  }
+  
+
+  React.useEffect(() => {
+      const unsubscribe = props.navigation.addListener('focus', () => {
+        //身分驗證成功進行跳頁
+        if ( state.Common.isAuthenticateApprove && state.Common.navigatePage!==null ) {
+          dispatch(HomeAction.navigateFunctionPage(state.Common.navigatePage));
+        }
+      });
+
+      return unsubscribe;
+    }, [state]);
+  return (
+      <Tab.Navigator >
+         <Tab.Screen name="Home"      component={HomePage} />
+         <Tab.Screen name="Find"      component={FindPage} />
+         <Tab.Screen name="Messages"  component={MessagesPage} />
+         <Tab.Screen name="Mine"      component={MinePage} />
+      </Tab.Navigator>
+  );
+  
+
+  /*
   // 導航欄正顯示且允許進行初始化程式才可增加返回監聽
   if (useIsFocused() && state.Login.enableAppInitialFunction) {
     if (!preventGoback) {
@@ -303,19 +350,9 @@ function HomeTabNavigator(props) {
         <MyBottomTabNavigator.Screen name="Mine"      component={MinePage} />
       </MyBottomTabNavigator.Navigator>
   );
-  
+  */
  
-  /*
- return (
-     <Tab.Navigator >
-       <Tab.Screen name="Home" component={HomeScreen} />
-     </Tab.Navigator>
-   );
- */
 }
-
-
-
 
 const AppStack  = createStackNavigator();
 function MainStack(props){
