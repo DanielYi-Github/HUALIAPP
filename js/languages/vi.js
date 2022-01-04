@@ -260,7 +260,8 @@ export default {
 		changeThemeNoticeText: "Chuyển đổi chế độ chủ đề sẽ khởi động lại APP, vui lòng xác nhận xem có tiếp tục không?",
 		operationManual: "Hướng dẫn vận hành",
 		operationManualCovid19:"Khảo sát sức khỏe Hướng dẫn vận hành",
-		operationManualMeeting:"Sắp xếp các cuộc họp Sổ tay hướng dẫn vận hành"
+		operationManualMeeting:"Sắp xếp các cuộc họp Sổ tay hướng dẫn vận hành",
+		ClearCache:"Rõ bộ nhớ tạm"
 	},
 	MineDetailPage: {
 		Title                             : "Thông tin của tôi",
@@ -939,5 +940,10 @@ export default {
 		shareMeetingNotice: "Chia sẻ thông báo cuộc họp",
 		meetingNotificationAssistantTxt: 'Bật cài đặt này và lịch họp của bạn sẽ được hiển thị trong chức năng "Cuộc họp của tôi" của "Trợ lý cuộc họp"',
 		shareMeetingNoticeTxt: 'Bật cài đặt này, thông báo cuộc họp của bạn sẽ được chuyển đến "trợ lý cuộc họp" cùng một lúc',
+	},
+	ClearCachePage:{
+		ClearAllCache:"清除全部缓存",
+		ClearFileCache:"清除文件缓存",
+		ClearDataCache:"清除資料缓存"
 	}
 }

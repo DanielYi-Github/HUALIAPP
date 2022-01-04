@@ -14,7 +14,7 @@ import * as SQLite            from '../../utils/SQLiteUtil';
 import * as UpdateDataUtil    from '../../utils/UpdateDataUtil';
 import * as NavigationService from '../../utils/NavigationService';
 import * as LoggerUtil        from '../../utils/LoggerUtil';
-import * as FileUtil from "../../utils/FileUtil";
+import * as CacheUtil from "../../utils/CacheUtil";
 
 /***** 查看用哪一種登入方式登入 tab 還是 single *****/
 export function loadLoginMode() {
@@ -452,8 +452,8 @@ export function initialApi( user, way=false ){
 		})
 		//同步集团文件资料(VISITCOUNT)
 		UpdateDataUtil.updateGroupFileToServer(user).catch(e=>console.log('updateGroupFileToServer Error',e))
-		//定期清理缓存文件
-		FileUtil.clearFileForRegular()
+		//定期清理缓存资料和文件
+		CacheUtil.clearAllCacheForRegular()
 	}
 }
 

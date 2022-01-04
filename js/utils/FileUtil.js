@@ -5,9 +5,8 @@ import { TOMCAT_HOST } from './Contant';
 import * as LoggerUtil from './LoggerUtil';
 
 const CACHE_DIR = RNFetchBlob.fs.dirs.CacheDir //缓存目录
-const APPFILE_DIR = CACHE_DIR + '/appfile' //APP文件缓存目录
+export const APPFILE_DIR = CACHE_DIR + '/appfile' //APP文件缓存目录
 // const DOCUMENT_DIR = RNFetchBlob.fs.dirs.DocumentDir //文件目录
-const REGULAR_TIME = 7 * 24 * 60 * 60 * 1000 //定期7天清理
 // const RE_DOWNLOAD_COUNT = 5 //下载异常可重新下载次数
 
 /**
@@ -198,48 +197,6 @@ function addFile(fileId, path, modified) {
     }
   })
 
-}
-/**
- * 定期清理过期文件
- */
-export function clearFileForRegular() {
-  let timestamp = new Date().getTime() - REGULAR_TIME
-  let dateStr = Common.dateFormat(timestamp)
-  let sql = `select * from THF_APP_FILE where OPENTIME < '${dateStr}' `
-  SQLite.selectData(sql).then(result => {
-    if (result.length > 0) {
-      let data = result.raw()
-      for (const it of data) {
-        //删除文件
-        let path = APPFILE_DIR + '/' + it.NAME
-        RNFetchBlob.fs.exists(path).then(exists => {
-          if (exists) {
-            RNFetchBlob.fs.unlink(path).then(() => {
-              console.log('删除文件成功:', path);
-            }).catch(err => {
-              console.log('删除文件失败:', err);
-            })
-          } else {
-            console.log('删除文件不存在:', path);
-          }
-        }).catch(err => {
-          console.log('判断文件存在异常:', err);
-        })
-        //删除文件资料
-        let fileId = it.ID
-        let dSql = `delete from THF_APP_FILE where ID = '${fileId}'`
-        SQLite.deleteData(dSql).then(() => {
-          console.log('删除文件资料成功:', fileId);
-        }).catch(err => {
-          console.log('删除文件资料失败:', err);
-        })
-      }
-    } else {
-      console.log('无过期文件需要清理');
-    }
-  }).catch(err => {
-    console.log('查询定期清理文件失败:', err);
-  })
 }
 
 /**

@@ -260,7 +260,8 @@ export default {
 		changeThemeNoticeText:"皮肤切换将会重新启动APP，请问确定是否继续?",
 		operationManual:"操作说明",
 		operationManualCovid19:"防疫专区说明",
-		operationManualMeeting:"会议预约说明"
+		operationManualMeeting:"会议预约说明",
+		ClearCache:"清除缓存"
 	},
 	MineDetailPage: {
 		Title                            :'我的信息',
@@ -942,5 +943,10 @@ PC审批：表单内容复杂或可修改资料的表单不适合在行动装置
 		shareMeetingNotice: "分享会议通知",
 		meetingNotificationAssistantTxt: '开启此设定，您的会议行程将会在"会议助手"的"我的会议"功能中显示',
 		shareMeetingNoticeTxt: '开启此设定，您的会议通知将会同时推送给"会议助手"',
+	},
+	ClearCachePage:{
+		ClearAllCache:"清除全部缓存",
+		ClearFileCache:"清除文件缓存",
+		ClearDataCache:"清除資料缓存"
 	}
 }
