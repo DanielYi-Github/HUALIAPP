@@ -258,7 +258,6 @@ export async function updateAPP(user) {
 			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		console.log(params);
 		let url = "data/getUserApp";
 
 		let start = new Date().getTime();
@@ -3580,12 +3579,11 @@ export async function getVerifyIdentityAndtel(empid, obj, lang) {
  */
 export async function getLoginMode() {
 	let promise = new Promise((resolve, reject) => {
-
-		let url = "public/loginMode/get";
+		let url = "public/getSwitch";
 		let params = {
 			"token": "",
 			"userId": "",
-			"content": "",
+			"content": "SingleLoginMode",
 			"lang": ""
 		};
 
@@ -3596,6 +3594,8 @@ export async function getLoginMode() {
 			}
 			data = data.content;
 			resolve(data);
+		}).catch(e => {
+			resolve(true);
 		});
 	});
 	return promise;

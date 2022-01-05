@@ -1,27 +1,27 @@
 import React, { Component } from 'react';
 
-import FormContentText           from './FormContentText';
+import FormContentText                    from './FormContentText';
 import FormContentTextWithoutDefaultValue from './FormContentTextWithoutDefaultValue';
-import FormContentTar            from './FormContentTar';
-import FormContentNumber         from './FormContentNumber';
-import FormContentTextWithText   from './FormContentTextWithText';
-import FormContentCbo            from './FormContentCbo';
-import FormContentRdo            from './FormContentRdo';
-import FormContentDate           from './FormContentDate';
-import FormContentTime           from './FormContentTime';
-import FormContentDateTime       from './FormContentDateTime';
-import FormContentTabOneItem     from './FormContentTabOneItem';
-import FormContentTextWithAction from './FormContentTextWithAction';
-import FormContentChk    		 from './FormContentChk';
-import FormContentChkWithAction  from './FormContentChkWithAction';
-import FormContentRta            from './FormContentRta';
-import FormDrawSignImage         from './FormDrawSignImage';
-import FormContentFile           from './FormContentFile';
-import FormContentGrid     		 from './FormContentGrid';
-import FormInputContentGrid      from './FormInputContentGrid';
-import FormContentGridForEvaluation  from './FormContentGridForEvaluation';
-import FormInputContentGridForDeputy from './FormInputContentGridForDeputy';
-import FormContentRdoTab            from './FormContentRdoTab';
+import FormContentTar                     from './FormContentTar';
+import FormContentNumber                  from './FormContentNumber';
+import FormContentTextWithText            from './FormContentTextWithText';
+import FormContentCbo                     from './FormContentCbo';
+import FormContentRdo                     from './FormContentRdo';
+import FormContentDate                    from './FormContentDate';
+import FormContentTime                    from './FormContentTime';
+import FormContentDateTime                from './FormContentDateTime';
+import FormContentTabOneItem              from './FormContentTabOneItem';
+import FormContentTextWithAction          from './FormContentTextWithAction';
+import FormContentChk                     from './FormContentChk';
+import FormContentChkWithAction           from './FormContentChkWithAction';
+import FormContentRta                     from './FormContentRta';
+import FormDrawSignImage                  from './FormDrawSignImage';
+import FormContentFile                    from './FormContentFile';
+import FormContentGrid                    from './FormContentGrid';
+import FormInputContentGrid               from './FormInputContentGrid';
+import FormContentGridForEvaluation       from './FormContentGridForEvaluation';
+import FormInputContentGridForDeputy      from './FormInputContentGridForDeputy';
+import FormContentRdoTab                  from './FormContentRdoTab';
 
 export default class FormInputContent extends Component {
 	constructor(props) {
