@@ -3,11 +3,10 @@ import * as types from '../actionTypes/ThemeTypes';
 import getTheme   from '../../theme/components';
 import platform   from '../../theme/variables/platform';
 import dark       from '../../theme/variables/dark';
-// import season     from '../../theme/variables/lunarNewYear'; 
-// import season     from '../../theme/variables/moonFestival'; 
-// import season     from '../../theme/variables/moonFestival2021'; 
-// import season     from '../../theme/variables/christmas'; 
-import season     from '../../theme/variables/christmas2021'; 
+// import season     from '../../theme/variables/lunarNewYear2021/lunarNewYear2021'; 
+import season     from '../../theme/variables/lunarNewYear2022/lunarNewYear2022'; 
+// import season     from '../../theme/variables/moonFestival2021/moonFestival2021';
+// import season     from '../../theme/variables/chrismaxNewYear2021/christmas2021'; 
 
 import { clearThemeCache } from 'native-base-shoutem-theme';
 

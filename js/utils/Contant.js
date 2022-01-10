@@ -5,8 +5,8 @@ let host = 'http://qas.app.huali-group.com:8080/MobileApp/';	// 測試機
 // let host = 'http://10.0.0.116:8080/MobileApp/';					// 開發機
 
 if( RNLocalize.getTimeZone() == "Asia/Shanghai" ){
-	// host = 'http://app.huali-group.com:8080/MobileApp/';    	// 正式機
-	host = 'http://10.0.0.113:8080/';							// 測試機
+	// host = 'http://10.0.0.113:8080/';    	// 正式機
+	host = 'http://10.0.0.113:8088/';							// 測試機
 	// host = 'http://10.0.0.116:8080/MobileApp/';				// 開發機
 }else{
 	// host = 'http://app.huali-group.com:8080/MobileApp/';    // 正式機
@@ -27,4 +27,3 @@ export const CODE_PUSH_KEY_IOS     = 'pTMusJbFgikGtX7cgHKDGQl1JiYP4ksvOXqog';
 // 測試機
 // export const CODE_PUSH_KEY_ANDROID = 'onpNlKOEeSLvZybeEKXPVQVHmc6O4ksvOXqog';
 // export const CODE_PUSH_KEY_IOS = 'AJhlSYXl4E1Vhy1XxvQN6Q0IsDKl4ksvOXqog';
-

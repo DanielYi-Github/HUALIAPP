@@ -10,7 +10,7 @@ import {
 import { Container, connectStyle} from 'native-base';
 
 import Flake from './Animation/Flake';
-// import Lantern from './Animation/Lantern';
+import Lantern from './Animation/Lantern';
 import { WebView } from 'react-native-webview';
 
 const FixTinyText = `
@@ -389,7 +389,7 @@ class MainPageBackground extends React.Component {
     if (this.props.style.MainPageBackground.height == height) {
       heightObject.height = height;
       content = (
-
+        
         <View style={{flex:1, backgroundColor: 'rgba(1,9,58,1)'}}>
             <WebView
               source={{ html: FixTinyText}}
@@ -406,6 +406,7 @@ class MainPageBackground extends React.Component {
             >
             </WebView>  
         </View>
+        
 
         /*
         <WebView
@@ -446,7 +447,8 @@ class MainPageBackground extends React.Component {
             )
           }
         </ImageBackground>
-        // */
+        */
+        // 
       );
     }
 
