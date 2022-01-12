@@ -202,6 +202,12 @@ android {
 
         }
     }
+
+    sourceSets { 
+        main {
+            asset.srcDirs = ['src/main/assets', '../../Static.bundle']
+        } 
+    } 
 }
 
 dependencies {
