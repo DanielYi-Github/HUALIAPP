@@ -1,20 +1,13 @@
-import * as RNLocalize from "react-native-localize";
+// 台北機房
+// export const TAIPEI_HOST = 'http://app.huali-group.com:8080/MobileApp/';		// 正式機
+export const TAIPEI_HOST = 'http://qas.app.huali-group.com:8080/MobileApp/';	// 測試機
+// export const TAIPEI_HOST = 'http://10.0.0.116:8080/MobileApp/';			 	 	// 開發機
 
-// let host = 'http://app.huali-group.com:8080/MobileApp/';    	// 正式機
-let host = 'http://qas.app.huali-group.com:8080/MobileApp/';	// 測試機
-// let host = 'http://10.0.0.116:8080/MobileApp/';					// 開發機
-
-if( RNLocalize.getTimeZone() == "Asia/Shanghai" ){
-	// host = 'http://10.0.0.113:8080/';    	// 正式機
-	host = 'http://10.0.0.113:8088/';							// 測試機
-	// host = 'http://10.0.0.116:8080/MobileApp/';				// 開發機
-}else{
-	// host = 'http://app.huali-group.com:8080/MobileApp/';    // 正式機
-	host = 'http://qas.app.huali-group.com:8080/MobileApp/';   // 測試機
-	// host = 'http://10.0.0.116:8080/MobileApp/';				// 開發機
-}
-
-export const TOMCAT_HOST = host ;
+// 廣東中山機房
+// export const ZHONGSHAN_HOST = 'http://119.145.249.192:8080/';	// 外網連正式機
+// export const ZHONGSHAN_HOST_WIF = 'http://10.0.0.113:8080/';    // 公司wifi正式機
+export const ZHONGSHAN_HOST = 'http://119.145.249.192:8088/';		// 外網連測試機
+export const ZHONGSHAN_HOST_WIFI = 'http://10.0.0.113:8088/';		// 公司wifi連測試機
 
 //AES加密
 export const AES_KEY = 'HFFGROUP20180313';

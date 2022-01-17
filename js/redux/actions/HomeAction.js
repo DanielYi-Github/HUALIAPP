@@ -237,6 +237,9 @@ export function navigateFunctionPage(app = null, userID = null) {
 					case "H00020": //請假單
 						NavigationService.navigate("CreateForm", {FormID: "H00020"});
 						break;
+					case "H00020_1": //請假單(覆核)
+						NavigationService.navigate("CreateForm", {FormID: "H00020_1"});
+						break;
 					case "H00060": //海外陸籍幹部休假單
 						NavigationService.navigate("CreateForm", {FormID: "H00060"});
 						break;

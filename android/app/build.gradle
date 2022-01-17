@@ -130,6 +130,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
+
+
     defaultConfig {
         applicationId "${appId}"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -205,7 +209,7 @@ android {
 
     sourceSets { 
         main {
-            asset.srcDirs = ['src/main/assets', '../../Static.bundle']
+            assets.srcDirs = ['src/main/assets', '../../Static.bundle']
         } 
     } 
 }

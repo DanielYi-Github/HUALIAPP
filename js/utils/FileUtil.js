@@ -3,6 +3,8 @@ import Common from './Common';
 import * as SQLite from './SQLiteUtil';
 import { TOMCAT_HOST } from './Contant';
 import * as LoggerUtil from './LoggerUtil';
+import NetUtil from './NetUtil';
+
 
 const CACHE_DIR = RNFetchBlob.fs.dirs.CacheDir //缓存目录
 const APPFILE_DIR = CACHE_DIR + '/appfile' //APP文件缓存目录
@@ -23,18 +25,12 @@ async function download(url, params) {
     // timeout: 2000
     path: APPFILE_DIR + '/' + id
   })
-  await RNFetchBlobTemp.fetch(
-    'POST',
-    `${TOMCAT_HOST}${url}`,
-    {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-store',
-    },
-    JSON.stringify(params)
-  ).progress((received, total) => {
-    console.log('progress', received / total)
-  }).then(res => {
-    // console.log('res:', res);
+
+  
+  await NetUtil.getDownloadFile(params, url, RNFetchBlobTemp).then((res) => {
+
+    if(res == null) return respone;
+    
     respone = res
     let status = res.respInfo.status
     switch (status) {
@@ -50,12 +46,45 @@ async function download(url, params) {
         LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", status);
         break
     }
-  }).catch(err => {
-    console.log('download err:', err);
-    LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", "" + err);
   })
+  return respone;
 
-  return respone
+
+  /*
+    await RNFetchBlobTemp.fetch(
+      'POST',
+      `${TOMCAT_HOST}${url}`,
+      {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store',
+      },
+      JSON.stringify(params)
+    ).progress((received, total) => {
+      console.log('progress', received / total)
+    }).then(res => {
+      // console.log('res:', res);
+      respone = res
+      let status = res.respInfo.status
+      switch (status) {
+        case 200:
+          //没有处理
+          break
+        case 204:
+          res.flush()//清除文件
+          LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", "文件不存在");
+          break
+        default:
+          res.flush()//清除文件
+          LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", status);
+          break
+      }
+    }).catch(err => {
+      console.log('download err:', err);
+      LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", "" + err);
+    })
+
+    return respone
+  */
 }
 
 /**

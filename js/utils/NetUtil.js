@@ -1,9 +1,17 @@
-import { TOMCAT_HOST }   from './Contant';
+import RNFetchBlob from 'rn-fetch-blob';
+import * as RNLocalize from "react-native-localize";
+import { TAIPEI_HOST, ZHONGSHAN_HOST, ZHONGSHAN_HOST_WIFI }   from './Contant';
 import Common            from './Common';
 import * as LoggerUtil   from './LoggerUtil';
 
-const FETCH_TIMEOUT = 100; // 設定timeout時間
-let isTimeOut = false; 	   // 判斷是否是timeout
+const FETCH_TIMEOUT         = 100; 		// 設定timeout時間
+let isTimeOut               = false; 	// 判斷是否是timeout
+let isOnlyConnectTaipeiHost = null;     // 判斷是否主機只能連台北, false只能連台北, true兩邊都能連
+
+// qas.app.huali-group.com:8080 會得到 119.145.249.181
+// 10.0.0.113:8088 會得到 119.145.249.181
+let phoneConnectIP = null;     // 用來判斷是要連中山還是台北主機的ip
+let TOMCAT_HOST    = "";
 
 /* 
 	訊息錯誤等級說明:
@@ -15,6 +23,54 @@ let isTimeOut = false; 	   // 判斷是否是timeout
 */
 
 let NetUtil = {
+	async isOnlyConnectTaipeiHost(){
+		let params = { "content": "APIHostSwitch" };
+		let fetchOptions = {
+			method : 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body   : JSON.stringify(params)
+		};
+
+		try {
+			let response = await fetch(`${TAIPEI_HOST}public/getAPIHostSwitch`, fetchOptions);
+			let responseJson = await response.json();
+
+			if(responseJson.code=="200"){
+				isOnlyConnectTaipeiHost = responseJson.content.Switch;
+				phoneConnectIP = responseJson.content.IP;
+			}else{
+				isOnlyConnectTaipeiHost = null;
+			}
+
+		} catch (err) {
+			isOnlyConnectTaipeiHost = null;
+		}
+		return null;
+	},
+	async get_TOMCAT_HOST(){
+		// 決定是否只能連去台北機房
+		if(isOnlyConnectTaipeiHost == null) await this.isOnlyConnectTaipeiHost();
+
+		// 決定是否是中國機房,false只能連台北, true兩邊都能連
+		isOnlyConnectTaipeiHost = isOnlyConnectTaipeiHost == null ? false: isOnlyConnectTaipeiHost;
+		if( !isOnlyConnectTaipeiHost ){
+			TOMCAT_HOST = TAIPEI_HOST;
+		}else{
+			// 決定目前所在地區
+			if( RNLocalize.getTimeZone() != "Asia/Shanghai" ){
+				TOMCAT_HOST = TAIPEI_HOST;
+			}else{
+				// console.log("phoneConnectIP", phoneConnectIP);
+				// 決定是否是公司wifi ip
+				if( phoneConnectIP == "119.145.249.181"){
+					TOMCAT_HOST = ZHONGSHAN_HOST_WIFI;
+				}else{
+					TOMCAT_HOST = ZHONGSHAN_HOST;
+				}
+			}
+		}
+		return null;
+	},
 	async getRequestData(params, url) {
 		return await this.dealResponseCode(params, url, "data");
 	},
@@ -25,6 +81,8 @@ let NetUtil = {
 		return await this.dealResponseCode(params, url, "json");
 	},
 	async dealResponseCode(params, url, returnType){
+		if(isOnlyConnectTaipeiHost == null) await this.get_TOMCAT_HOST();	// 取得連線主機
+
 		let fetchOptions = {
 			method: 'POST',
 			headers: {
@@ -45,8 +103,10 @@ let NetUtil = {
 
 		}, FETCH_TIMEOUT);
 		*/
+		
 
 		try {
+			// console.log(`${TOMCAT_HOST}${url}`);
 			let response = await fetch(`${TOMCAT_HOST}${url}`, fetchOptions);
 			// clearTimeout(timeout); 
 			// if (!isTimeOut){
@@ -114,7 +174,32 @@ let NetUtil = {
 			return { message:`Request Error at API ${url}, message:"${err}"`, code:-2 };
 		}
 	},
+	async getDownloadFile(params, url, RNFetchBlobTemp) {
+		await this.get_TOMCAT_HOST();	
+		let response = await RNFetchBlobTemp.fetch(
+			'POST',
+			`${TOMCAT_HOST}${url}`,
+			{
+				'Content-Type': 'application/json',
+				'Cache-Control': 'no-store',
+			},
+			JSON.stringify(params)
+		).progress((received, total) => {
+		  console.log('progress', received / total);
+
+		}).then(res => {
+		  return res;
+
+		}).catch(err => {
+		  console.log('download err:', err);
+		  LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", "" + err);
+		  return null;
+		})
+
+		return response;
+	},
 	async setErrorlog( user, obj ) {
+		await this.get_TOMCAT_HOST();	
 		let params = {
 			"token"  :Common.encrypt(user.token),
 			"userId" :Common.encrypt(user.loginID),
