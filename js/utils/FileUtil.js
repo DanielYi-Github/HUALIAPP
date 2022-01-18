@@ -165,11 +165,15 @@ export async function getAppFilePath(url, content, user, fileId, modified) {
   let path = "" //文件路劲
   let sql = `select * from THF_APP_FILE where ID = '${fileId}' `
   let result = await SQLite.selectData(sql)
+
+  console.log("result", result);
   if (result.length > 0) {
     path = APPFILE_DIR + '/' + result.item(0).NAME
     let oldPath = path //旧路径
     let exists = await RNFetchBlob.fs.exists(path)
     //判断文件是否存在
+    
+    console.log("exists", exists);
     if (exists) {
       //更新打开时间
       let dateStr = Common.dateFormat(new Date())

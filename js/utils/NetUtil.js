@@ -69,6 +69,7 @@ let NetUtil = {
 				}
 			}
 		}
+		console.log("TOMCAT_HOST", TOMCAT_HOST);
 		return null;
 	},
 	async getRequestData(params, url) {
@@ -106,7 +107,6 @@ let NetUtil = {
 		
 
 		try {
-			// console.log(`${TOMCAT_HOST}${url}`);
 			let response = await fetch(`${TOMCAT_HOST}${url}`, fetchOptions);
 			// clearTimeout(timeout); 
 			// if (!isTimeOut){
@@ -171,6 +171,27 @@ let NetUtil = {
 			// }
 		} catch (err) {
 			// LoggerUtil.addErrorLog(url, "API request in APP", "ERROR", err);
+			return { message:`Request Error at API ${url}, message:"${err}"`, code:-2 };
+		}
+	},
+	async getRequestContentFromTaipei(params, url){
+		let fetchOptions = {
+			method : 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body   : JSON.stringify(params)
+		};
+
+		try {
+			let response = await fetch(`${TAIPEI_HOST}${url}`, fetchOptions);
+			let responseJson = await response.json();
+			
+			if(responseJson.code=="200"){
+				responseJson.code = 200
+				return responseJson;
+			}else{
+				return responseJson; 
+			}
+		} catch (err) {
 			return { message:`Request Error at API ${url}, message:"${err}"`, code:-2 };
 		}
 	},
