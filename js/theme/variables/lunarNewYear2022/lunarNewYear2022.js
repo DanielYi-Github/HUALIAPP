@@ -97,7 +97,7 @@ export default {
 
   // Input Without card background
   inputWithoutCardBackground:{
-    inputColor:"#FFF",
+    inputColor:"#000",
     inputColorPlaceholder:"#DDD"
   },
   

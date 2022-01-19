@@ -1593,7 +1593,7 @@ export async function updateContactImageToServer(user, lang, content) {
 
 		// console.log("upload/headimage", params);
 
-		NetUtil.getRequestJson(params, url).then((data) => {
+		NetUtil.getRequestContentFromTaipei(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
