@@ -8,8 +8,8 @@ const FETCH_TIMEOUT         = 100; 		// 設定timeout時間
 let isTimeOut               = false; 	// 判斷是否是timeout
 let isOnlyConnectTaipeiHost = null;     // 判斷是否主機只能連台北, false只能連台北, true兩邊都能連
 
-// qas.app.huali-group.com:8080 會得到 119.145.249.181
-// 10.0.0.113:8088 會得到 119.145.249.181
+// 用公司wifi連qas.app.huali-group.com:8080 	會得到 119.145.249.181
+// 用公司wifi連10.0.0.113:8088 				會得到 10.0.17.254
 let phoneConnectIP = null;     // 用來判斷是要連中山還是台北主機的ip
 let TOMCAT_HOST    = "";
 
@@ -43,7 +43,7 @@ let NetUtil = {
 			}
 
 		} catch (err) {
-			isOnlyConnectTaipeiHost = null;
+			isOnlyConnectTaipeiHost = true;
 		}
 		return null;
 	},
@@ -239,7 +239,7 @@ let NetUtil = {
 			if(responseJson.code=="200"){
 				return responseJson.content;
 			}else{
-				console.log(responseJson.message);
+				// console.log(responseJson.message);
 				if(responseJson.message=="tokenerror") return { "code":"0" };
 			}
 
