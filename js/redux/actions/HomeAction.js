@@ -436,7 +436,6 @@ async function navigateMailFunction(state, dispatch){
 
 		if (isEmailDomainRight) {
 			let sid = await UpdateDataUtil.getSessionID(state.UserInfo.UserInfo).then((data) => {
-				console.log("123456", data);
 				if (data.code == 0) {
 					dispatch(logout());
 					//使用者Token已過期，請重新登入!
