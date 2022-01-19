@@ -159,14 +159,14 @@ class ClearCachePage extends Component {
 
     getSizeText = (size) => {
         if (size == 0) {
-            return "0K"
+            return "0 K"
         }
         let mSize = size / 1024 / 1024
         if (mSize > 1) {
-            return mSize.toFixed(2) + "M"
+            return mSize.toFixed(2) + " M"
         }
         let kSize = size / 1024
-        return kSize.toFixed(2) + "K"
+        return kSize.toFixed(2) + " K"
     }
 }
 
