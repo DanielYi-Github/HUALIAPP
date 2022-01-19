@@ -3,6 +3,8 @@ import Common from './Common';
 import * as SQLite from './SQLiteUtil';
 import { TOMCAT_HOST } from './Contant';
 import * as LoggerUtil from './LoggerUtil';
+import NetUtil from './NetUtil';
+
 
 const CACHE_DIR = RNFetchBlob.fs.dirs.CacheDir //缓存目录
 export const APPFILE_DIR = CACHE_DIR + '/appfile' //APP文件缓存目录
@@ -22,18 +24,12 @@ async function download(url, params) {
     // timeout: 2000
     path: APPFILE_DIR + '/' + id
   })
-  await RNFetchBlobTemp.fetch(
-    'POST',
-    `${TOMCAT_HOST}${url}`,
-    {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-store',
-    },
-    JSON.stringify(params)
-  ).progress((received, total) => {
-    console.log('progress', received / total)
-  }).then(res => {
-    // console.log('res:', res);
+
+  
+  await NetUtil.getDownloadFile(params, url, RNFetchBlobTemp).then((res) => {
+
+    if(res == null) return respone;
+    
     respone = res
     let status = res.respInfo.status
     switch (status) {
@@ -49,12 +45,45 @@ async function download(url, params) {
         LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", status);
         break
     }
-  }).catch(err => {
-    console.log('download err:', err);
-    LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", "" + err);
   })
+  return respone;
 
-  return respone
+
+  /*
+    await RNFetchBlobTemp.fetch(
+      'POST',
+      `${TOMCAT_HOST}${url}`,
+      {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store',
+      },
+      JSON.stringify(params)
+    ).progress((received, total) => {
+      console.log('progress', received / total)
+    }).then(res => {
+      // console.log('res:', res);
+      respone = res
+      let status = res.respInfo.status
+      switch (status) {
+        case 200:
+          //没有处理
+          break
+        case 204:
+          res.flush()//清除文件
+          LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", "文件不存在");
+          break
+        default:
+          res.flush()//清除文件
+          LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", status);
+          break
+      }
+    }).catch(err => {
+      console.log('download err:', err);
+      LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", "" + err);
+    })
+
+    return respone
+  */
 }
 
 /**
@@ -135,11 +164,15 @@ export async function getAppFilePath(url, content, user, fileId, modified) {
   let path = "" //文件路劲
   let sql = `select * from THF_APP_FILE where ID = '${fileId}' `
   let result = await SQLite.selectData(sql)
+
+  console.log("result", result);
   if (result.length > 0) {
     path = APPFILE_DIR + '/' + result.item(0).NAME
     let oldPath = path //旧路径
     let exists = await RNFetchBlob.fs.exists(path)
     //判断文件是否存在
+    
+    console.log("exists", exists);
     if (exists) {
       //更新打开时间
       let dateStr = Common.dateFormat(new Date())

@@ -20,7 +20,7 @@ import * as CacheUtil from "../../utils/CacheUtil";
 export function loadLoginMode() {
 	return async (dispatch, getState) => {
         await UpdateDataUtil.getLoginMode().then( async (data) => {
-        	if(data.paramcode=="Y"){
+        	if(data){
 		  		dispatch(setLoginMode("single")); //結束載入資料畫面
         	}else{
 		  		dispatch(setLoginMode("tab")); //結束載入資料畫面

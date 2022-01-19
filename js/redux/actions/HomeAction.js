@@ -237,6 +237,9 @@ export function navigateFunctionPage(app = null, userID = null) {
 					case "H00020": //請假單
 						NavigationService.navigate("CreateForm", {FormID: "H00020"});
 						break;
+					case "H00020_1": //請假單(覆核)
+						NavigationService.navigate("CreateForm", {FormID: "H00020_1"});
+						break;
 					case "H00060": //海外陸籍幹部休假單
 						NavigationService.navigate("CreateForm", {FormID: "H00060"});
 						break;
@@ -433,6 +436,7 @@ async function navigateMailFunction(state, dispatch){
 
 		if (isEmailDomainRight) {
 			let sid = await UpdateDataUtil.getSessionID(state.UserInfo.UserInfo).then((data) => {
+				console.log("123456", data);
 				if (data.code == 0) {
 					dispatch(logout());
 					//使用者Token已過期，請重新登入!

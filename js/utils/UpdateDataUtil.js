@@ -258,7 +258,6 @@ export async function updateAPP(user) {
 			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(JSON.stringify(content))
 		};
-		console.log(params);
 		let url = "data/getUserApp";
 
 		let start = new Date().getTime();
@@ -1594,7 +1593,7 @@ export async function updateContactImageToServer(user, lang, content) {
 
 		// console.log("upload/headimage", params);
 
-		NetUtil.getRequestJson(params, url).then((data) => {
+		NetUtil.getRequestContentFromTaipei(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
 				return promise;
@@ -3116,6 +3115,8 @@ export async function getSessionID(user) {
 			"userId": Common.encrypt(user.loginID),
 			"content": Common.encrypt(mail)
 		}
+
+		/*
 		NetUtil.getRequestContent(params, url).then((data) => {
 			if (data.code != 200) {
 				reject(data); //已在其他裝置登入
@@ -3123,6 +3124,15 @@ export async function getSessionID(user) {
 			}
 			resolve(data);
 		})
+		*/
+	
+		NetUtil.getRequestContentFromTaipei(params, url).then((data)=>{
+			if (data.code != 200) {
+				reject(data); //已在其他裝置登入
+				return promise;
+			}
+			resolve(data);
+		});
 
 	});
 	return promise;
@@ -3580,12 +3590,11 @@ export async function getVerifyIdentityAndtel(empid, obj, lang) {
  */
 export async function getLoginMode() {
 	let promise = new Promise((resolve, reject) => {
-
-		let url = "public/loginMode/get";
+		let url = "public/getSwitch";
 		let params = {
 			"token": "",
 			"userId": "",
-			"content": "",
+			"content": "SingleLoginMode",
 			"lang": ""
 		};
 
@@ -3596,6 +3605,8 @@ export async function getLoginMode() {
 			}
 			data = data.content;
 			resolve(data);
+		}).catch(e => {
+			resolve(true);
 		});
 	});
 	return promise;

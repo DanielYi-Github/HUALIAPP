@@ -222,6 +222,7 @@ export function checkDirectorPage(data, type = null){
 		this.goDirectorPage(data)
 	}
 }
+
 //跳转画面
 export function goDirectorPage(data){
 	return (dispatch, getState) => {
