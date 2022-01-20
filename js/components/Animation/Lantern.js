@@ -92,7 +92,7 @@ export default class Lantern extends Component {
       <Animated.View style={[/*this.getStyle(), */this.state.position.getLayout()]}>
         <Image
           style={this.getStyle()}
-          source={require('../../theme/variables/moonFestival2021/lantern.png')}
+          // source={require('../../theme/variables/moonFestival2021/lantern.png')}
         />
       </Animated.View>
     );

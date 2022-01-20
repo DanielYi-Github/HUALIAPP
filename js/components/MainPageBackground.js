@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import { Container, connectStyle} from 'native-base';
 
-import Flake from './Animation/Flake';
-import Lantern from './Animation/Lantern';
+// import Flake from './Animation/Flake';
+// import Lantern from './Animation/Lantern';
 import { WebView } from 'react-native-webview';
 
 let source = (Platform.OS === 'android' ? 'file:///android_asset/' : '') + `Static.bundle/index.html`;

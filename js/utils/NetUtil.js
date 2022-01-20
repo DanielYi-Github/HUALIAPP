@@ -1,5 +1,6 @@
 import RNFetchBlob from 'rn-fetch-blob';
 import * as RNLocalize from "react-native-localize";
+import NetInfo from "@react-native-community/netinfo";
 import { TAIPEI_HOST, ZHONGSHAN_HOST, ZHONGSHAN_HOST_WIFI }   from './Contant';
 import Common            from './Common';
 import * as LoggerUtil   from './LoggerUtil';
@@ -34,6 +35,7 @@ let NetUtil = {
 		try {
 			let response = await fetch(`${TAIPEI_HOST}public/getAPIHostSwitch`, fetchOptions);
 			let responseJson = await response.json();
+			// console.log("responseJson", responseJson);
 
 			if(responseJson.code=="200"){
 				isOnlyConnectTaipeiHost = responseJson.content.Switch;
@@ -50,6 +52,7 @@ let NetUtil = {
 	async get_TOMCAT_HOST(){
 		// 決定是否只能連去台北機房
 		if(isOnlyConnectTaipeiHost == null) await this.isOnlyConnectTaipeiHost();
+		// console.log("isOnlyConnectTaipeiHost", isOnlyConnectTaipeiHost);
 
 		// 決定是否是中國機房,false只能連台北, true兩邊都能連
 		isOnlyConnectTaipeiHost = isOnlyConnectTaipeiHost == null ? false: isOnlyConnectTaipeiHost;
@@ -57,19 +60,25 @@ let NetUtil = {
 			TOMCAT_HOST = TAIPEI_HOST;
 		}else{
 			// 決定目前所在地區
+			// console.log("RNLocalize.getTimeZone()", RNLocalize.getTimeZone());
 			if( RNLocalize.getTimeZone() != "Asia/Shanghai" ){
 				TOMCAT_HOST = TAIPEI_HOST;
 			}else{
 				// console.log("phoneConnectIP", phoneConnectIP);
+				// 決定是不是使用wifi
+				let isWifi = await NetInfo.fetch().then(state => {
+				  return state.type == "wifi" ? true: false;
+				});
+				// console.log("isWifi", isWifi);
 				// 決定是否是公司wifi ip
-				if( phoneConnectIP == "119.145.249.181"){
+				if( isWifi && phoneConnectIP == "119.145.249.181"){
 					TOMCAT_HOST = ZHONGSHAN_HOST_WIFI;
 				}else{
 					TOMCAT_HOST = ZHONGSHAN_HOST;
 				}
 			}
 		}
-		console.log("TOMCAT_HOST", TOMCAT_HOST);
+		// console.log("TOMCAT_HOST", TOMCAT_HOST);
 		return null;
 	},
 	async getRequestData(params, url) {
@@ -82,7 +91,7 @@ let NetUtil = {
 		return await this.dealResponseCode(params, url, "json");
 	},
 	async dealResponseCode(params, url, returnType){
-		if(isOnlyConnectTaipeiHost == null) await this.get_TOMCAT_HOST();	// 取得連線主機
+		await this.get_TOMCAT_HOST();	// 取得連線主機
 
 		let fetchOptions = {
 			method: 'POST',
@@ -104,7 +113,7 @@ let NetUtil = {
 
 		}, FETCH_TIMEOUT);
 		*/
-		
+		// console.log("TOMCAT_HOST", `${TOMCAT_HOST}${url}`);
 
 		try {
 			let response = await fetch(`${TOMCAT_HOST}${url}`, fetchOptions);
