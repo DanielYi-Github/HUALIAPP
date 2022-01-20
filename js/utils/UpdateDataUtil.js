@@ -8,13 +8,25 @@ import NetUtil from './NetUtil';
 import Common from './Common';
 import User from '../object/User';
 
+// 取得連線主機
+// 
+export async function get_TOMCAT_HOST(){
+	let promise = new Promise((resolve, reject) => {
+		NetUtil.get_TOMCAT_HOST().then(() => {
+			resolve()
+		}).catch(()=>{
+			reject();
+		});
+	});
+	return promise;
+}
+
 /**
 * 回寫THF_LOG到Server
 */
 /**
 * 重點中的重點 回傳錯誤訊息
 */
-
 export async function setErrorLog(user, position, level, msg) {
 	let promise = new Promise((resolve, reject) => {
 		let obj = [];
@@ -1113,6 +1125,7 @@ export async function updateBanner(user) {
 
 		if (ltxdat === null) {
 			NetUtil.getRequestContent(params, url).then((data) => {
+				// console.log(data);
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
@@ -1163,6 +1176,8 @@ export async function updateBanner(user) {
 			})
 		} else {
 			NetUtil.getRequestContent(params, url).then((data) => {
+				// console.log(data);
+				
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;

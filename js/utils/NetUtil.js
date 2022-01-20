@@ -7,12 +7,12 @@ import * as LoggerUtil   from './LoggerUtil';
 
 const FETCH_TIMEOUT         = 100; 		// 設定timeout時間
 let isTimeOut               = false; 	// 判斷是否是timeout
-let isOnlyConnectTaipeiHost = null;     // 判斷是否主機只能連台北, false只能連台北, true兩邊都能連
+// let isOnlyConnectTaipeiHost = null;     // 判斷是否主機只能連台北, false只能連台北, true兩邊都能連
 
 // 用公司wifi連qas.app.huali-group.com:8080 	會得到 119.145.249.181
 // 用公司wifi連10.0.0.113:8088 				會得到 10.0.17.254
-let phoneConnectIP = null;     // 用來判斷是要連中山還是台北主機的ip
-let TOMCAT_HOST    = "";
+// let phoneConnectIP = null;     // 用來判斷是要連中山還是台北主機的ip
+// let TOMCAT_HOST    = "";
 
 /* 
 	訊息錯誤等級說明:
@@ -24,7 +24,10 @@ let TOMCAT_HOST    = "";
 */
 
 let NetUtil = {
-	async isOnlyConnectTaipeiHost(){
+	isOnlyConnectTaipeiHost: null, 	// 判斷是否主機只能連台北, false只能連台北, true兩邊都能連
+	phoneConnectIP         : null,	// 用來判斷是要連中山還是台北主機的ip
+	TOMCAT_HOST            : "",
+	async getIsOnlyConnectTaipeiHost(){
 		let params = { "content": "APIHostSwitch" };
 		let fetchOptions = {
 			method : 'POST',
@@ -35,50 +38,44 @@ let NetUtil = {
 		try {
 			let response = await fetch(`${TAIPEI_HOST}public/getAPIHostSwitch`, fetchOptions);
 			let responseJson = await response.json();
-			// console.log("responseJson", responseJson);
 
 			if(responseJson.code=="200"){
-				isOnlyConnectTaipeiHost = responseJson.content.Switch;
-				phoneConnectIP = responseJson.content.IP;
+				this.isOnlyConnectTaipeiHost = responseJson.content.Switch;
+				this.phoneConnectIP = responseJson.content.IP;
 			}else{
-				isOnlyConnectTaipeiHost = null;
+				this.isOnlyConnectTaipeiHost = null;
 			}
-
+			return null;
 		} catch (err) {
-			isOnlyConnectTaipeiHost = true;
+			this.isOnlyConnectTaipeiHost = true;
+			return null;
 		}
-		return null;
 	},
 	async get_TOMCAT_HOST(){
 		// 決定是否只能連去台北機房
-		if(isOnlyConnectTaipeiHost == null) await this.isOnlyConnectTaipeiHost();
-		// console.log("isOnlyConnectTaipeiHost", isOnlyConnectTaipeiHost);
-
+		
+		if( this.isOnlyConnectTaipeiHost == null) await this.getIsOnlyConnectTaipeiHost();
 		// 決定是否是中國機房,false只能連台北, true兩邊都能連
-		isOnlyConnectTaipeiHost = isOnlyConnectTaipeiHost == null ? false: isOnlyConnectTaipeiHost;
-		if( !isOnlyConnectTaipeiHost ){
-			TOMCAT_HOST = TAIPEI_HOST;
+		this.isOnlyConnectTaipeiHost = this.isOnlyConnectTaipeiHost == null ? false: this.isOnlyConnectTaipeiHost;
+		if( !this.isOnlyConnectTaipeiHost ){
+			this.TOMCAT_HOST = TAIPEI_HOST;
 		}else{
 			// 決定目前所在地區
-			// console.log("RNLocalize.getTimeZone()", RNLocalize.getTimeZone());
 			if( RNLocalize.getTimeZone() != "Asia/Shanghai" ){
-				TOMCAT_HOST = TAIPEI_HOST;
+				this.TOMCAT_HOST = TAIPEI_HOST;
 			}else{
-				// console.log("phoneConnectIP", phoneConnectIP);
 				// 決定是不是使用wifi
 				let isWifi = await NetInfo.fetch().then(state => {
 				  return state.type == "wifi" ? true: false;
 				});
-				// console.log("isWifi", isWifi);
 				// 決定是否是公司wifi ip
-				if( isWifi && phoneConnectIP == "119.145.249.181"){
-					TOMCAT_HOST = ZHONGSHAN_HOST_WIFI;
+				if( isWifi && this.phoneConnectIP == "119.145.249.181"){
+					this.TOMCAT_HOST = ZHONGSHAN_HOST_WIFI;
 				}else{
-					TOMCAT_HOST = ZHONGSHAN_HOST;
+					this.TOMCAT_HOST = ZHONGSHAN_HOST;
 				}
 			}
 		}
-		// console.log("TOMCAT_HOST", TOMCAT_HOST);
 		return null;
 	},
 	async getRequestData(params, url) {
@@ -113,10 +110,9 @@ let NetUtil = {
 
 		}, FETCH_TIMEOUT);
 		*/
-		// console.log("TOMCAT_HOST", `${TOMCAT_HOST}${url}`);
 
 		try {
-			let response = await fetch(`${TOMCAT_HOST}${url}`, fetchOptions);
+			let response = await fetch(`${this.TOMCAT_HOST}${url}`, fetchOptions);
 			// clearTimeout(timeout); 
 			// if (!isTimeOut){
 				if (response.ok) {
@@ -168,7 +164,6 @@ let NetUtil = {
 							return responseJson; 
 					}
 				} else {
-					console.log("response", response);
 					response.text().then( err => {
 						LoggerUtil.addErrorLog(url, "API request in APP", "FATAL", err);
 					});
@@ -207,7 +202,7 @@ let NetUtil = {
 		await this.get_TOMCAT_HOST();	
 		let response = await RNFetchBlobTemp.fetch(
 			'POST',
-			`${TOMCAT_HOST}${url}`,
+			`${this.TOMCAT_HOST}${url}`,
 			{
 				'Content-Type': 'application/json',
 				'Cache-Control': 'no-store',
@@ -242,7 +237,7 @@ let NetUtil = {
 			body: JSON.stringify(params)
 		};
 		try {
-			let response = await fetch(`${TOMCAT_HOST}data/setlog`, fetchOptions);
+			let response = await fetch(`${this.TOMCAT_HOST}data/setlog`, fetchOptions);
 			let responseJson = await response.json();
 
 			if(responseJson.code=="200"){

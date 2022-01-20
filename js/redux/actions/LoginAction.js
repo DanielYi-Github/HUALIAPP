@@ -467,6 +467,7 @@ async function loadBannerImagesIntoState(dispatch, getState){
 		let sql = `select * from THF_BANNER where LANG='${lang}' and STATUS='Y' order by SORT;`
 		
 		await SQLite.selectData( sql, []).then((result) => {	
+			// console.log("result", result.raw());
 			// 如果少於3筆要加東西
 			if (result.raw().length < 3) data.push({ key:0 });
 			for(let i in result.raw()){

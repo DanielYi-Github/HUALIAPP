@@ -38,12 +38,13 @@ export function appInit(initActions/*, downloadProgressCallback*/) {
       	addDownLoadFileListener(initActions, dispatch); // 新增檔案下載監聽器
       	
 		if (netStatus) {
+			await UpdateDataUtil.get_TOMCAT_HOST(); 		// 取得連線主機
 			initActions.loadLoginMode();  					// 檢核登陸模式 tab/single
 			initActions.getJpushRegistrationID();  			// 取得Jpush的註冊ID
 			initActions.setThemeState( null, netStatus );  	// 設定APP主題風格
     		initActions.bios_check(); 						// 檢查設備是否支持生物識別
     		initActions.biometricInfo_check();				// 檢查server與設備有無使用者生物識別資訊且一致
-    		
+
 			await UpgradeDBTableUtil.UpgradeDBTable(); 	// 檢查DB表有無更新
 			await UpdateDataUtil.updateVersion();		// 檢查DB表有無APP版本號更新   
 
