@@ -167,6 +167,7 @@ class HomePage extends React.Component {
           checkDirectorPage = {this.props.actions.checkDirectorPage}
         />
     );
+    
   }
 
   renderContent = () => {

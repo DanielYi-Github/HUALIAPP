@@ -15,6 +15,7 @@ import * as UpdateDataUtil    from '../../utils/UpdateDataUtil';
 import * as NavigationService from '../../utils/NavigationService';
 import * as LoggerUtil        from '../../utils/LoggerUtil';
 import * as CacheUtil from "../../utils/CacheUtil";
+import { loadBannerImages } from './CommonAction';
 
 /***** 查看用哪一種登入方式登入 tab 還是 single *****/
 export function loadLoginMode() {
@@ -379,7 +380,7 @@ export function initialApi( user, way=false ){
   			UpdateDataUtil.updateMasterData(user),  //主資料表
 			UpdateDataUtil.updatePermission(user),  //權限資料
 			UpdateDataUtil.updateEvent(user),		//事件表
-			UpdateDataUtil.updateBanner(user),		//Banner
+			// UpdateDataUtil.updateBanner(user),		//Banner
 			UpdateDataUtil.updateModule(user),		//module
   			UpdateDataUtil.updateRead(user),		//訊息讀取表       
 			UpdateDataUtil.setLoginInfo(user),
@@ -388,13 +389,13 @@ export function initialApi( user, way=false ){
 		];
 
 	  	Promise.all(arr).then( async (data) => {
-	  		loadBannerImagesIntoState(dispatch, getState);//撈取HomePage Banners資料
 	        user = certTips(dispatch, getState(), user); //判斷是否進行提示生物識別設定
-			dispatch(setUserInfo(user));				//將資料存放在UserInfoReducer的state裡
-			dispatch(login_done(true));				    //同步完成，跳至首頁	
-			dispatch(setAccountType()); 				//恢復輸入欄位初始值	
-			dispatch(cleanLoginChangeAccount()); 		//清除切換帳號的state資訊	
-			dispatch({									//恢復運行初始化程序
+			dispatch(setUserInfo(user));				 //將資料存放在UserInfoReducer的state裡
+			dispatch(login_done(true));				     //同步完成，跳至首頁	
+			dispatch(setAccountType()); 				 //恢復輸入欄位初始值	
+			dispatch(cleanLoginChangeAccount()); 		 //清除切換帳號的state資訊	
+	  		dispatch(loadBannerImages()); 				 //撈取HomePage Banners資料
+			dispatch({									 //恢復運行初始化程序
 				type: types.ENABLE_APP_INITIAL,
 				enable:true
 			});
@@ -455,115 +456,6 @@ export function initialApi( user, way=false ){
 		//定期清理缓存资料和文件
 		CacheUtil.clearAllCacheForRegular()
 	}
-}
-
-//撈取HomePage Banners資料
-async function loadBannerImagesIntoState(dispatch, getState){
-	let data = [];
-	let lang = getState().Language.langStatus;
-	
-	// 先判斷有沒有網路
-	if (getState().Network.networkStatus) {
-		let sql = `select * from THF_BANNER where LANG='${lang}' and STATUS='Y' order by SORT;`
-		
-		await SQLite.selectData( sql, []).then((result) => {	
-			// console.log("result", result.raw());
-			// 如果少於3筆要加東西
-			if (result.raw().length < 3) data.push({ key:0 });
-			for(let i in result.raw()){
-				data.push({
-					key      : i+1,
-					source   : {uri: result.raw()[i].DOWNURL},
-					APPID    : result.raw()[i].APPID,
-					PORTALURL: result.raw()[i].PORTALURL
-				});
-			}
-		}).catch((e)=>{
-			LoggerUtil.addErrorLog("CommonAction loadBannerImages", "APP Action", "ERROR", e);
-		});
-	}
-
-	//如果沒有網路或是SQL查詢出錯，則做下面的處理
-	if (data.length == 0) {
-		let banner1, banner2, banner3, banner4, banner5, banner6, banner7, banner8, banner9, banner10;
-		switch(lang){
-			case "vi":
-				banner1 = require(`../../image/banner/banner1_en.png`);
-				banner2 = require(`../../image/banner/banner2_en.png`);
-				break;				
-			case "en":
-				banner1 = require(`../../image/banner/banner1_en.png`);
-				banner2 = require(`../../image/banner/banner2_en.png`);
-				break;
-			case "zh-CN":
-				banner1 = require(`../../image/banner/banner1_zh-CN.png`);
-				banner2 = require(`../../image/banner/banner2_zh-CN.png`);
-				break;
-			case "zh-TW":
-				banner1 = require(`../../image/banner/banner1_zh-TW.png`);
-				banner2 = require(`../../image/banner/banner2_zh-TW.png`);
-				/*
-				banner6 = require(`../../image/banner/lunarNewYear.png`);
-				banner7 = require(`../../image/banner/dragonBoatFestival.png`);
-				banner8 = require(`../../image/banner/moonFestival.png`);
-				banner9 = require(`../../image/banner/christmas.png`);
-				*/
-				break;
-		}
-		data = [{
-			key: 0,	// 如果key為0，下面的source要拿掉
-		}, {
-			key: 1,
-			source: banner1,
-			APPID    : null,
-			PORTALURL: null
-		}, {
-			key: 2,
-			source: banner2,
-			APPID    : null,
-			PORTALURL: null
-		}, /*{
-			key: 3,
-			source: banner3,
-			APPID    : null,
-			PORTALURL: null
-		}, {
-			key: 4,
-			source: banner4,
-			APPID    : null,
-			PORTALURL: null
-		}, {
-			key: 5,
-			source: banner5,
-			APPID    : null,
-			PORTALURL: null
-		}, {
-			key: 6,
-			source: banner6,
-			APPID    : null,
-			PORTALURL: null
-		}, {
-			key: 7,
-			source: banner7,
-			APPID    : null,
-			PORTALURL: null
-		}, {
-			key: 8,
-			source: banner8,
-			APPID    : null,
-			PORTALURL: null
-		}, {
-			key: 9,
-			source: banner9,
-			APPID    : null,
-			PORTALURL: null
-		}*/];
-	}
-
-	dispatch({
-		type:CommonTypes.SET_BANNERIMAGES,
-		data
-	}); 
 }
 
 //判斷是否進行提示生物識別設定
@@ -648,7 +540,7 @@ export function hotInitialApi( user, way=false, initActions){
 
 	  	Promise.all(arr).then( async (data) => {
     		initActions.loadMessageIntoState();
-	  		loadBannerImagesIntoState(dispatch, getState);//撈取HomePage Banners資料
+	  		dispatch( loadBannerImages() ); 	//撈取HomePage Banners資料
 	  	}).catch((e)=>{
 	  		// console.log("LoginAction hotInitialApi", e, way);
 	  		console.log("網路他媽的又異常", e, way);

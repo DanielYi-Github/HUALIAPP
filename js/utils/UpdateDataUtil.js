@@ -1109,6 +1109,7 @@ export async function updateEvent(user) {
 /**
 * 取得同步APP Banner API
 */
+/*
 export async function updateBanner(user) {
 	let lSQL = "SELECT MAX(TXDAT) as TXDAT FROM THF_BANNER"; //取最大的更新時間
 	let lData = await SQLite.selectData(lSQL, []);
@@ -1118,19 +1119,20 @@ export async function updateBanner(user) {
 
 		let url = "data/getBanner";
 		let params = {
-			"token": Common.encrypt(user.token),
-			"userId": Common.encrypt(user.loginID),
-			"content": Common.encrypt(ltxdat ? ltxdat : '')
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			"content": Common.encrypt(ltxdat ? ltxdat : ''),
+			"lang"   : user.lang
 		}
 
 		if (ltxdat === null) {
 			NetUtil.getRequestContent(params, url).then((data) => {
-				// console.log(data);
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
 				}
 				data = data.content;
+
 
 				let max = 50;
 				let lInsert = "INSERT INTO THF_BANNER ";
@@ -1176,8 +1178,6 @@ export async function updateBanner(user) {
 			})
 		} else {
 			NetUtil.getRequestContent(params, url).then((data) => {
-				// console.log(data);
-				
 				if (data.code != 200) {
 					reject(data); //已在其他裝置登入
 					return promise;
@@ -1242,6 +1242,91 @@ export async function updateBanner(user) {
 	});
 	return promise;
 }
+*/
+
+/**
+* 即時取得APP Banner 資料
+*/
+export async function requestBannerData(user){
+	let promise = new Promise((resolve, reject) => {
+		let url = "data/getBanner";
+		let params = {
+			"token"  : Common.encrypt(user.token),
+			"userId" : Common.encrypt(user.loginID),
+			// "content": Common.encrypt(ltxdat ? ltxdat : ''),
+			"lang"   : user.lang
+		}
+
+		NetUtil.getRequestContent(params, url).then((data) => {
+			if (data.code != 200) {
+				reject([]); //已在其他裝置登入
+				return promise;
+			}
+			data = data.content;
+			resolve(data);
+		}).catch(()=>{
+			resolve([]);
+		})
+	});
+	return promise;
+}
+
+/**
+* 取得同步APP Banner API
+* 更新整張表
+*/
+export async function updateBannerData(user, data) {
+	let promise = new Promise( async (resolve, reject) => {
+		let deleteTables = [ "DELETE FROM THF_BANNER" ];
+		await SQLite.cleanTableData(deleteTables).then( async () => {
+		}).catch((e)=>{
+		  console.log("DB THF_BANNER 清空失敗",e);        
+		});
+
+		let max = 50;
+		let lInsert = "INSERT INTO THF_BANNER ";
+		let iArray = [];
+		let execute = [];
+
+		for (let i in data) {
+			i = parseInt(i);
+
+			iArray = iArray.concat([
+				data[i].oid,
+				data[i].id,
+				data[i].downurl,
+				data[i].opentype,
+				data[i].appid,
+				data[i].portalurl,
+				data[i].sort,
+				data[i].lang,
+				data[i].status,
+				Common.dateFormat(data[i].crtdat),
+				Common.dateFormat(data[i].txdat),
+			]);
+
+			if ((i + 1) % max == 0) {
+				//達到分批數量，要重置資料
+				lInsert += " select ?,?,?,?,?,?,?,?,?,?,? ";
+				execute.push([lInsert, iArray]);
+				lInsert = "INSERT INTO THF_BANNER ";
+				iArray = [];
+			} else if ((i + 1) == data.length) {
+				lInsert += " select ?,?,?,?,?,?,?,?,?,?,? ";
+				execute.push([lInsert, iArray]);
+			} else {
+				lInsert += " select ?,?,?,?,?,?,?,?,?,?,? union all";
+			}
+		}
+
+		SQLite.insertData_new(execute).then(() => {
+			resolve();
+		});
+
+	});
+	return promise;
+}
+
 
 export async function updateVersion() {
 	let start = new Date().getTime();
