@@ -261,7 +261,8 @@ export default {
 		changeThemeNoticeText :"主題模式切換將會重新啟動APP，請問確定是否繼續?",
 		operationManual       :"操作說明",
 		operationManualCovid19:"防疫專區說明",
-		operationManualMeeting:"會議預約說明"
+		operationManualMeeting:"會議預約說明",
+		ClearCache:"清除緩存"
 	},
 	MineDetailPage: {
 		Title                            :'我的資訊',
@@ -312,7 +313,7 @@ export default {
 		ImportantDesc:"重要說明",
 		StartButton:'開始',
 		SendInformation:"發送訊息",
-		Description:`1.此功能可發佈訊息至公司首頁的"公告訊息"。${'\n'}2.一則訊息可新增多個語系內容。${'\n'}3.訊息最少要有一種語系才可發送。${'\n'}4.新增不同語系的內容時，填寫過的語系不可再新增。${'\n'}5.點擊下方"Start"按鈕開始填寫&發送訊息。${'\n'}`,
+		Description:`1.此功能可發佈訊息至APP的"訊息內容"。${'\n'}2.一則訊息可新增多個語系內容。${'\n'}3.訊息最少要有一種語系才可發送。${'\n'}4.新增不同語系的內容時，填寫過的語系不可再新增。${'\n'}5.點擊下方"Start"按鈕開始填寫&發送訊息。${'\n'}`,
 	},
 	PublishEditPage:{
 		PublishEditPageTitle:"發送訊息",
@@ -943,5 +944,10 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		shareMeetingNotice: "分享會議通知",
 		meetingNotificationAssistantTxt: '開啟此設定，您的會議行程將會在"會議助手"的"我的會議"功能中顯示',
 		shareMeetingNoticeTxt: '開啟此設定，您的會議通知將會同時推送給"會議助手"',
+	},
+	ClearCachePage:{
+		ClearAllCache:"清除全部緩存",
+		ClearFileCache:"清除文件緩存",
+		ClearDataCache:"清除資料緩存"
 	}
 }

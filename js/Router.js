@@ -80,6 +80,7 @@ import AboutPage          from './pages/Mine/AboutPage';
 import AccountSafePage    from './pages/Mine/AccountSafePage';
 import UpdatePasswordPage from './pages/Mine/UpdatePasswordPage';
 import ChangeAccountPage  from './pages/Mine/ChangeAccountPage';
+import ClearCachePage     from "./pages/Mine/ClearCachePage";
 
 import ViewFilePage       from './pages/Common/ViewFilePage';
 import AuthenticationView from './components/AuthenticationView';
@@ -409,6 +410,7 @@ function MainStack(props){
       <AppStack.Screen name ="AccountSafe"      component={AccountSafePage} />
       <AppStack.Screen name ="UpdatePassword"   component={UpdatePasswordPage} />
       <AppStack.Screen name ="ChangeAccount"    component={ChangeAccountPage} />
+      <AppStack.Screen name ="ClearCache"       component={ClearCachePage} />
 
       <AppStack.Screen name ="ManageDocument"    component={ManageDocumentPage} />
       <AppStack.Screen name ="ViewFile"    component={ViewFilePage} />

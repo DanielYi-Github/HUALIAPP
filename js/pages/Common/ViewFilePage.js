@@ -18,22 +18,25 @@ class ViewFilePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: props.route.params.url ? props.route.params.url : 'NO-ID',         //從服務器獲取文件或url的API
-      content: props.route.params.content ? props.route.params.content : 'NO-ID', //上面API的參數
-      refreshing: true,
-      file: null,                                                              //文件或文件的url
-      fileType: props.route.params.fileType ? props.route.params.fileType : "",    //文件类型                                                              //文件類型
-      pageTtile: props.route.params.pageTtile ? props.route.params.pageTtile : false, //文件標題
+      url            : props.route.params.url ? props.route.params.url : 'NO-ID',         //從服務器獲取文件或url的API
+      content        : props.route.params.content ? props.route.params.content : 'NO-ID', //上面API的參數
+      refreshing     : true,
+      file           : null,                                                              //文件或文件的url
+      fileType       : props.route.params.fileType ? props.route.params.fileType : "",    //文件类型                                                              //文件類型
+      pageTtile      : props.route.params.pageTtile ? props.route.params.pageTtile : false, //文件標題
       isFailedRequest: false,                                                               //file錯誤時是否再次從服務器獲取
-      isDownload: props.route.params.isDownload ? props.route.params.isDownload : false,//是否下载文件
-      fileId: props.route.params.fileId, //文件ID
-      modified: props.route.params.modified ? props.route.params.modified : "", //修改时间
+      isDownload     : props.route.params.isDownload ? props.route.params.isDownload : false,//是否下载文件
+      fileId         : props.route.params.fileId, //文件ID
+      modified       : props.route.params.modified ? props.route.params.modified : "", //修改时间
     }
   }
 
   componentDidMount() {
-    let file = this.props.route.params.file
+    let file     = this.props.route.params.file
     let fileType = this.props.route.params.fileType
+    console.log("componentDidMount", file, fileType, this.state.isDownload);
+
+
     if (file != undefined && fileType != undefined) {
       this.setState({
         refreshing: false,
@@ -189,12 +192,13 @@ class ViewFilePage extends React.Component {
   }
 
   getAppFile = () => {
-    let user = this.props.state.UserInfo.UserInfo
-    let url = this.state.url
-    let content = this.state.content
-    let fileId = this.state.fileId
+    let user     = this.props.state.UserInfo.UserInfo
+    let url      = this.state.url
+    let content  = this.state.content
+    let fileId   = this.state.fileId
     let fileType = this.state.fileType
     let modified = this.state.modified
+    console.log(url, content, user, fileId, modified);
     FileUtil.getAppFilePath(url, content, user, fileId, modified).then(async(path) => {
       if (path != "") {
         switch(fileType){

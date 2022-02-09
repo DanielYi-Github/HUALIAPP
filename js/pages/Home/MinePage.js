@@ -195,6 +195,16 @@ class MinePage extends React.Component {
               onPress  = {this.goNext.bind(this,"About")}
             />
 
+            {/*清楚缓存*/}
+            <MineItem
+              title    = {this.props.state.Language.lang.MinePage.ClearCache}
+              iconBackgroundColor = {"#a9a9a9"}
+              iconName = {"broom"}
+              iconType = {"FontAwesome5"}
+              text     = {null}
+              onPress  = {this.goNext.bind(this,"ClearCache")}
+            /> 
+
             {/*账号与安全*/}
             <MineItem
               title    = {this.props.state.Language.lang.AccountSafePage.AccountSafe}

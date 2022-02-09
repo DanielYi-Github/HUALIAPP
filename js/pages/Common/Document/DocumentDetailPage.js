@@ -75,13 +75,13 @@ class DocumentDetailPage extends React.Component {
 
   async showDocDetail(item) {
     NavigationService.navigate("ViewFile", {
-      content: item.OID,
-      url: 'app/eip/downloadGroupFile',
-      fileType: "pdf",
-      pageTtile: item.DOCNAME,
+      content   : item.OID,
+      url       : 'app/eip/downloadGroupFile',
+      fileType  : "pdf",
+      pageTtile : item.DOCNAME,
       isDownload: true,
-      fileId: item.OID,
-      modified: item.DMODIFIED,
+      fileId    : item.OID,
+      modified  : item.DMODIFIED,
     });
 
   }

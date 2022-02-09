@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { CardItem, Body, Left, Label, Thumbnail, Title } from "native-base";
+import { CardItem, Body, Left, Label, Thumbnail, Title, Text } from "native-base";
 import { TouchableOpacity, StyleSheet } from "react-native";
 export default class DailyOralEnglishCardItem extends Component {
     constructor(props) {
@@ -24,10 +24,10 @@ export default class DailyOralEnglishCardItem extends Component {
                         </Left>
                         <Body style={{ flex: 0, width: '70%', paddingLeft: 20 }}>
                             <Body style={{ alignSelf: 'flex-start', paddingVertical: 5 }}>
-                                <Title style={styles.fontSize}>{this.props.content}</Title>
+                                <Text style={styles.fontSize}>{this.props.content}</Text>
                             </Body>
                             <Body style={{ alignSelf: 'flex-start', paddingVertical: 5 }}>
-                                <Title style={styles.fontSize}>{this.props.translate}</Title>
+                                <Text style={styles.fontSize}>{this.props.translate}</Text>
                             </Body>
                             <Body style={{ alignSelf: 'flex-start', paddingVertical: 5 }}>
                                 <Label style={styles.fontSize}>{this.props.pushdate}</Label>

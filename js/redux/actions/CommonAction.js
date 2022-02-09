@@ -222,6 +222,7 @@ export function checkDirectorPage(data, type = null){
 		this.goDirectorPage(data)
 	}
 }
+
 //跳转画面
 export function goDirectorPage(data){
 	return (dispatch, getState) => {
@@ -721,15 +722,30 @@ export function noMoreShowAndroidChangeAPPMessage(){
 	}
 }
 
+//撈取HomePage Banners資料
 export function loadBannerImages(){
 	return async (dispatch, getState) => {
+		let user = getState().UserInfo.UserInfo;
+		let isNetwork = getState().Network.networkStatus;
 		let data = [];
 		let lang = getState().Language.langStatus;
 
 		// 先判斷有沒有網路
-		if (getState().Network.networkStatus) {
+		if (isNetwork) {
+			let preData = await UpdateDataUtil.requestBannerData(user);  // 先發出請求
+			if (preData.length < 3) data.push({ key:0 });
+			for(let i in preData){
+				data.push({
+					key      : i+1,
+					source   : {uri: preData[i].downurl},
+					APPID    : preData[i].appid,
+					PORTALURL: preData[i].portalurl
+				});
+			}			
+
+			UpdateDataUtil.updateBannerData(user, preData); //更新banner DB資料
+		} else {
 			let sql = `select * from THF_BANNER where LANG='${lang}' and STATUS='Y' order by SORT;`
-			
 			await SQLite.selectData( sql, []).then((result) => {	
 				// 如果少於3筆要加東西
 				if (result.raw().length < 3) data.push({ key:0 });
@@ -745,7 +761,7 @@ export function loadBannerImages(){
 				LoggerUtil.addErrorLog("CommonAction loadBannerImages", "APP Action", "ERROR", e);
 			});
 		}
-		
+
 		//如果沒有網路或是SQL查詢出錯，則做下面的處理
 		if (data.length == 0) {
 			let banner1, banner2;
@@ -764,7 +780,6 @@ export function loadBannerImages(){
 					break;
 				case "zh-TW":
 					banner1 = require(`../../image/banner/banner1_zh-TW.png`);
-					// banner1 = require(`../../image/banner/banner_CN.png`);
 					banner2 = require(`../../image/banner/banner2_zh-TW.png`);
 					break;
 			}
@@ -782,7 +797,6 @@ export function loadBannerImages(){
 				PORTALURL: null
 			}];
 		}
-
 		dispatch({
 			type:types.SET_BANNERIMAGES,
 			data

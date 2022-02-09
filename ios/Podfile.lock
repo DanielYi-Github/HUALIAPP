@@ -378,8 +378,8 @@ PODS:
     - RNSound/Core (= 0.11.1)
   - RNSound/Core (0.11.1):
     - React-Core
-  - RNVectorIcons (7.1.0):
-    - React
+  - RNVectorIcons (9.0.0):
+    - React-Core
   - SSZipArchive (2.2.3)
   - toolbar-android (0.1.0-rc.2):
     - React
@@ -681,7 +681,7 @@ SPEC CHECKSUMS:
   RNReanimated: 514a11da3a2bcc6c3dfd9de32b38e2b9bf101926
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
   RNSound: 27e8268bdb0a1f191f219a33267f7e0445e8d62f
-  RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
+  RNVectorIcons: 4143ba35feebab8fdbe6bc43d1e776b393d47ac8
   SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
   toolbar-android: 85f3ef4d691469f2d304e7dee4bca013aa1ba1ff
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a

@@ -260,7 +260,8 @@ export default {
 		changeThemeNoticeText :"Change the theme will reboot the app. Would you keep going?",
 		operationManual       :"Operation Manual",
 		operationManualCovid19:"Health Survey Operation Manual",
-		operationManualMeeting:"Arranging Meetings Operation Manual"
+		operationManualMeeting:"Arranging Meetings Operation Manual",
+		ClearCache:"Clear Cache"
 	},
 	MineDetailPage: {
 		Title                            :'My Information',
@@ -938,5 +939,10 @@ export default {
 		shareMeetingNotice: "Share meeting notice",
 		meetingNotificationAssistantTxt: 'Turn on this setting, and your meeting schedule will be displayed in the "My Meeting" function of "Meeting Assistant"',
 		shareMeetingNoticeTxt: 'Turn on this setting, your meeting notifications will be pushed to the "meeting assistant" at the same time',
+	},
+	ClearCachePage:{
+		ClearAllCache:"Clear All Cache",
+		ClearFileCache:"Clear File Cache",
+		ClearDataCache:"Clear Data Cache"
 	}
 }

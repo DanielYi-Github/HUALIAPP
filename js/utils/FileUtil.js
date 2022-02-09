@@ -3,11 +3,12 @@ import Common from './Common';
 import * as SQLite from './SQLiteUtil';
 import { TOMCAT_HOST } from './Contant';
 import * as LoggerUtil from './LoggerUtil';
+import NetUtil from './NetUtil';
+
 
 const CACHE_DIR = RNFetchBlob.fs.dirs.CacheDir //缓存目录
-const APPFILE_DIR = CACHE_DIR + '/appfile' //APP文件缓存目录
+export const APPFILE_DIR = CACHE_DIR + '/appfile' //APP文件缓存目录
 // const DOCUMENT_DIR = RNFetchBlob.fs.dirs.DocumentDir //文件目录
-const REGULAR_TIME = 7 * 24 * 60 * 60 * 1000 //定期7天清理
 // const RE_DOWNLOAD_COUNT = 5 //下载异常可重新下载次数
 
 /**
@@ -23,18 +24,12 @@ async function download(url, params) {
     // timeout: 2000
     path: APPFILE_DIR + '/' + id
   })
-  await RNFetchBlobTemp.fetch(
-    'POST',
-    `${TOMCAT_HOST}${url}`,
-    {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-store',
-    },
-    JSON.stringify(params)
-  ).progress((received, total) => {
-    console.log('progress', received / total)
-  }).then(res => {
-    // console.log('res:', res);
+
+  
+  await NetUtil.getDownloadFile(params, url, RNFetchBlobTemp).then((res) => {
+
+    if(res == null) return respone;
+    
     respone = res
     let status = res.respInfo.status
     switch (status) {
@@ -50,12 +45,45 @@ async function download(url, params) {
         LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", status);
         break
     }
-  }).catch(err => {
-    console.log('download err:', err);
-    LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", "" + err);
   })
+  return respone;
 
-  return respone
+
+  /*
+    await RNFetchBlobTemp.fetch(
+      'POST',
+      `${TOMCAT_HOST}${url}`,
+      {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store',
+      },
+      JSON.stringify(params)
+    ).progress((received, total) => {
+      console.log('progress', received / total)
+    }).then(res => {
+      // console.log('res:', res);
+      respone = res
+      let status = res.respInfo.status
+      switch (status) {
+        case 200:
+          //没有处理
+          break
+        case 204:
+          res.flush()//清除文件
+          LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", "文件不存在");
+          break
+        default:
+          res.flush()//清除文件
+          LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", status);
+          break
+      }
+    }).catch(err => {
+      console.log('download err:', err);
+      LoggerUtil.addErrorLog(url, "APP utils in FileUtil", "ERROR", "" + err);
+    })
+
+    return respone
+  */
 }
 
 /**
@@ -136,11 +164,15 @@ export async function getAppFilePath(url, content, user, fileId, modified) {
   let path = "" //文件路劲
   let sql = `select * from THF_APP_FILE where ID = '${fileId}' `
   let result = await SQLite.selectData(sql)
+
+  console.log("result", result);
   if (result.length > 0) {
     path = APPFILE_DIR + '/' + result.item(0).NAME
     let oldPath = path //旧路径
     let exists = await RNFetchBlob.fs.exists(path)
     //判断文件是否存在
+    
+    console.log("exists", exists);
     if (exists) {
       //更新打开时间
       let dateStr = Common.dateFormat(new Date())
@@ -198,48 +230,6 @@ function addFile(fileId, path, modified) {
     }
   })
 
-}
-/**
- * 定期清理过期文件
- */
-export function clearFileForRegular() {
-  let timestamp = new Date().getTime() - REGULAR_TIME
-  let dateStr = Common.dateFormat(timestamp)
-  let sql = `select * from THF_APP_FILE where OPENTIME < '${dateStr}' `
-  SQLite.selectData(sql).then(result => {
-    if (result.length > 0) {
-      let data = result.raw()
-      for (const it of data) {
-        //删除文件
-        let path = APPFILE_DIR + '/' + it.NAME
-        RNFetchBlob.fs.exists(path).then(exists => {
-          if (exists) {
-            RNFetchBlob.fs.unlink(path).then(() => {
-              console.log('删除文件成功:', path);
-            }).catch(err => {
-              console.log('删除文件失败:', err);
-            })
-          } else {
-            console.log('删除文件不存在:', path);
-          }
-        }).catch(err => {
-          console.log('判断文件存在异常:', err);
-        })
-        //删除文件资料
-        let fileId = it.ID
-        let dSql = `delete from THF_APP_FILE where ID = '${fileId}'`
-        SQLite.deleteData(dSql).then(() => {
-          console.log('删除文件资料成功:', fileId);
-        }).catch(err => {
-          console.log('删除文件资料失败:', err);
-        })
-      }
-    } else {
-      console.log('无过期文件需要清理');
-    }
-  }).catch(err => {
-    console.log('查询定期清理文件失败:', err);
-  })
 }
 
 /**

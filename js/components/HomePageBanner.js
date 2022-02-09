@@ -8,6 +8,17 @@ class Banner extends Component{
 	  super(props);
 	}
 
+	shouldComponentUpdate(nextProps) {
+	    // Rendering the component only if 
+	    // passed props value is changed
+	  
+	    if (nextProps.data !== this.props.data) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+	  }
+
 	render(){
 		return(
 			<View>
@@ -35,6 +46,7 @@ class Banner extends Component{
 			  </View>
 			);
 		}
+		
 		return (
 		    <View>
 		    	<TouchableOpacity 
