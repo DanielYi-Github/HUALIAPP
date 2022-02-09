@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, View, DeviceEventEmitter, Platform} from 'react-native';
 import { Container, Spinner, connectStyle, Text } from 'native-base';
 import SplashScreen            from 'react-native-splash-screen';
-import {ProgressView}          from "@react-native-community/progress-view";
+import { ProgressView }          from "@react-native-community/progress-view";
 import { addDownLoadListener } from 'rn-app-upgrade';
 import { connect, useSelector} from 'react-redux';
 import { bindActionCreators }  from 'redux';
