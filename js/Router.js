@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Platform, Alert, NativeModules, AppState } from 'react-native';
-import { Icon, Text, StyleProvider, Root, connectStyle} from 'native-base';
+import { Icon, Text, StyleProvider, Root, Thumbnail, connectStyle} from 'native-base';
 import { connect, useSelector, useDispatch}from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as AppInitAction from './redux/actions/AppInitAction';
@@ -15,9 +15,8 @@ import { SafeAreaProvider, SafeAreaView }     from 'react-native-safe-area-conte
 import { NavigationContainer, useIsFocused }  from '@react-navigation/native';
 import { createStackNavigator, TransitionSpecs, CardStyleInterpolators, TransitionPresets } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { withSecurityView }     from './components/WithSecurityView';
-import { createMyNavigator }    from './components/CustomBottomTabNavigation';
 import { navigationRef }        from './utils/NavigationService';
 import DeviceStorageUtil        from './utils/DeviceStorageUtil';
 
@@ -231,37 +230,20 @@ function AuthStack(){
   )
 }
 
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home!</Text>
-    </View>
-  );
-}
-
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
-
-// const MyBottomTabNavigator = createMyNavigator();
-const Tab = createMaterialBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 function HomeTabNavigator(props) {
   const [preventGoback, setPreventGoback] = useState(false);
-  let state = useSelector(state => state);
-  let theme = state.Theme.theme['Component.BottomNavigation'];
-  let dispatch = useDispatch();
-
+  let state         = useSelector(state => state);
+  let theme         = state.Theme.theme['Component.BottomNavigation'];
+  let mainPage_lang = state.Language.lang.MainPage;
+  let dispatch      = useDispatch();
 
   // 導航欄正顯示且允許進行初始化程式才可增加返回監聽
-  if (useIsFocused() && state.Login.enableAppInitialFunction) {
+  if ( useIsFocused() && state.Login.enableAppInitialFunction ){
     if (!preventGoback) {
       props.navigation.addListener('beforeRemove', (e) => {
-        e.preventDefault(); // Prevent default behavior of leaving the screen
-        Alert.alert(        // Prompt the user before leaving the screen
+        e.preventDefault();   // Prevent default behavior of leaving the screen
+        Alert.alert(          // Prompt the user before leaving the screen
           state.Language.lang.Common.Alert,
           state.Language.lang.Common.LeaveAppAlert,
           [
@@ -272,7 +254,6 @@ function HomeTabNavigator(props) {
             },
           ]
         );
-        
       })
       setPreventGoback(true);
     }
@@ -282,83 +263,117 @@ function HomeTabNavigator(props) {
       setPreventGoback(false);
     }
   }
-  
 
   React.useEffect(() => {
-      const unsubscribe = props.navigation.addListener('focus', () => {
-        //身分驗證成功進行跳頁
-        if ( state.Common.isAuthenticateApprove && state.Common.navigatePage!==null ) {
-          dispatch(HomeAction.navigateFunctionPage(state.Common.navigatePage));
-        }
-      });
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      //身分驗證成功進行跳頁
+      if ( state.Common.isAuthenticateApprove && state.Common.navigatePage !== null ) {
+        dispatch(HomeAction.navigateFunctionPage(state.Common.navigatePage));
+      }
+    });
+    return unsubscribe;
+  }, [state]);
 
-      return unsubscribe;
-    }, [state]);
   return (
-      <Tab.Navigator >
-         <Tab.Screen name="Home"      component={HomePage} />
-         <Tab.Screen name="Find"      component={FindPage} />
-         <Tab.Screen name="Messages"  component={MessagesPage} />
-         <Tab.Screen name="Mine"      component={MinePage} />
+      <Tab.Navigator
+        screenOptions = {{ 
+          headerShown            :false, 
+          tabBarActiveTintColor  :theme.activeLabelColor,
+          tabBarInactiveTintColor:theme.inactiveLabelColor,
+          tabBarStyle            :{backgroundColor: theme.barColor}
+        }}
+      >
+        <Tab.Screen 
+          name="Home"      
+          component={HomePage} 
+          options={{
+            tabBarLabelStyle : {fontSize: 16},
+            tabBarLabel: mainPage_lang.Home,
+            tabBarIcon: ({ focused , color }) => {
+              if ( theme.iconIsImage ) {
+                return focused ?  
+                  <Thumbnail square style={{height:35, width: 35}} source={theme.icon_Home.active}/>
+                :
+                  <Thumbnail square style={{height:35, width: 35}} source={theme.icon_Home.inactive}/>
+              } else {
+                return focused ?  
+                  <Icon style={{color: color}} name={theme.icon_Home.active}/>
+                :
+                  <Icon style={{color: color}} name={theme.icon_Home.inactive}/>
+              }
+            }
+          }}
+        />
+        <Tab.Screen 
+          name="Find"      
+          component={FindPage}
+          options={{
+            tabBarLabelStyle : {fontSize: 16},
+            tabBarLabel: mainPage_lang.Find,
+            tabBarIcon: ({ focused , color }) => {
+              if ( theme.iconIsImage ) {
+                return focused ?  
+                  <Thumbnail square style={{height:35, width: 35}} source={theme.icon_Find.active}/>
+                :
+                  <Thumbnail square style={{height:35, width: 35}} source={theme.icon_Find.inactive}/>
+              } else {
+                return focused ?  
+                  <Icon style={{color: color}} name={theme.icon_Find.active}/>
+                :
+                  <Icon style={{color: color}} name={theme.icon_Find.inactive}/>
+              }
+            }
+          }}
+        />
+        <Tab.Screen 
+          name="Messages"  
+          component={MessagesPage}
+          options={{
+            tabBarLabelStyle : {fontSize: 16},
+            tabBarLabel: mainPage_lang.Message,
+            tabBarBadge: state.Message.UnMessage.length ? state.Message.UnMessage.length : null,
+            tabBarIcon: ({ focused , color }) => {
+              if ( theme.iconIsImage ) {
+                return focused ?  
+                  <Thumbnail square style={{height:35, width: 35}} source={theme.icon_Message.active}/>
+                :
+                  <Thumbnail square style={{height:35, width: 35}} source={theme.icon_Message.inactive}/>
+              } else {
+                return focused ?  
+                  <Icon style={{color: color}} name={theme.icon_Message.active}/>
+                :
+                  <Icon style={{color: color}} name={theme.icon_Message.inactive}/>
+              }
+            }
+          }}
+        />
+        <Tab.Screen 
+          name="Mine"      
+          component={MinePage} 
+          options={{
+            tabBarLabelStyle : {fontSize: 16},
+            tabBarLabel: mainPage_lang.Mine,
+            tabBarIcon: ({ focused , color }) => {
+              if ( theme.iconIsImage ) {
+                return focused ?  
+                  <Thumbnail square style={{height:35, width: 35}} source={theme.icon_Mine.active}/>
+                :
+                  <Thumbnail square style={{height:35, width: 35}} source={theme.icon_Mine.inactive}/>
+              } else {
+                return focused ?  
+                  <Icon style={{color: color}} name={theme.icon_Mine.active}/>
+                :
+                  <Icon style={{color: color}} name={theme.icon_Mine.inactive}/>
+              }
+            }
+          }}
+        />
       </Tab.Navigator>
   );
-  
-
-  /*
-  // 導航欄正顯示且允許進行初始化程式才可增加返回監聽
-  if (useIsFocused() && state.Login.enableAppInitialFunction) {
-    if (!preventGoback) {
-      props.navigation.addListener('beforeRemove', (e) => {
-        e.preventDefault(); // Prevent default behavior of leaving the screen
-        Alert.alert(        // Prompt the user before leaving the screen
-          state.Language.lang.Common.Alert,
-          state.Language.lang.Common.LeaveAppAlert,
-          [
-            { text: state.Language.lang.Common.Cancel, style: 'cancel', onPress: () => {} },
-            {
-              text: state.Language.lang.Common.Comfirm, style: 'destructive',
-              onPress: () => NativeModules.ExitApp.exit()
-            },
-          ]
-        );
-        
-      })
-      setPreventGoback(true);
-    }
-  } else {
-    if (preventGoback) {
-      props.navigation.removeListener('beforeRemove');
-      setPreventGoback(false);
-    }
-  }
-  
-
-  React.useEffect(() => {
-      const unsubscribe = props.navigation.addListener('focus', () => {
-        //身分驗證成功進行跳頁
-        if ( state.Common.isAuthenticateApprove && state.Common.navigatePage!==null ) {
-          dispatch(HomeAction.navigateFunctionPage(state.Common.navigatePage));
-        }
-      });
-
-      return unsubscribe;
-    }, [state]);
-  return (
-      <MyBottomTabNavigator.Navigator  state={state} contentStyle={theme}>
-        <MyBottomTabNavigator.Screen name="Home"      component={HomePage} />
-        <MyBottomTabNavigator.Screen name="Find"      component={FindPage} />
-        <MyBottomTabNavigator.Screen name="Messages"  component={MessagesPage} />
-        <MyBottomTabNavigator.Screen name="Mine"      component={MinePage} />
-      </MyBottomTabNavigator.Navigator>
-  );
-  */
- 
 }
 
 const AppStack  = createStackNavigator();
 function MainStack(props){
-  // console.log("TransitionSpecs", TransitionSpecs, CardStyleInterpolators, TransitionPresets);
-
   return(
     <AppStack.Navigator headerMode="none">
 
@@ -480,7 +495,6 @@ class Router extends React.Component {
 
   onChangeAppState = async nextAppState => {
     this.setState({ initialActiveCount: this.state.initialActiveCount+1 });
-    // console.log("this.state.initialActiveCount", this.state.initialActiveCount);
     // 熱起動資料重新刷新的條件，有網路、冷啟動不算、畫面在APP當中、user資料有值
     if ( 
       this.props.state.Network.networkStatus && 

@@ -44,9 +44,13 @@ export function appInit(initActions/*, downloadProgressCallback*/) {
 			initActions.setThemeState( null, netStatus );  	// 設定APP主題風格
     		initActions.bios_check(); 						// 檢查設備是否支持生物識別
     		initActions.biometricInfo_check();				// 檢查server與設備有無使用者生物識別資訊且一致
+    		console.log(1);
 
 			await UpgradeDBTableUtil.UpgradeDBTable(); 	// 檢查DB表有無更新
+    		console.log(2.2);
+
 			await UpdateDataUtil.updateVersion();		// 檢查DB表有無APP版本號更新   
+    		console.log(2);
 
 			if (getState().Login.showUpdateMessage) {
 
@@ -86,12 +90,14 @@ export function userSkipDigUpdate(initActions){
 }
 
 async function intoAppProgress(initActions, State, netStatus=true, lang){
+    		console.log(2);
+
 	let user = await DeviceStorageUtil.get('User'); // 有無使用者資料
 	user = user ? JSON.parse(user) : false;
 
 	// 有無網路
-	
 	if (netStatus) {
+    		console.log(3);
 		
 		let arr = [
 			UpdateDataUtil.getPublicView(), 		//取得公開畫面參數
@@ -102,7 +108,6 @@ async function intoAppProgress(initActions, State, netStatus=true, lang){
 			initActions.setAppleVerify(data[1].length == 3 ? true : false); 
 			initActions.setIntroductionDrawerPages(data[0]); 
 			initActions.setIntroductionPageContent(data[1]); 
-
 
 			// 確認是否是使用帳號切換登入方式來登入：是，開始進行單入步驟；否，進行正常登入
 			let loginChangeUserInfo = State.Login.loginChangeUserInfo;

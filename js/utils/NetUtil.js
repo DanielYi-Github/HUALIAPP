@@ -38,6 +38,7 @@ let NetUtil = {
 		try {
 			let response = await fetch(`${TAIPEI_HOST}public/getAPIHostSwitch`, fetchOptions);
 			let responseJson = await response.json();
+			console.log("responseJson", responseJson);
 
 			if(responseJson.code=="200"){
 				this.isOnlyConnectTaipeiHost = responseJson.content.Switch;
@@ -66,6 +67,7 @@ let NetUtil = {
 			}else{
 				// 決定是不是使用wifi
 				let isWifi = await NetInfo.fetch().then(state => {
+				  console.log("isWifi", state.type);
 				  return state.type == "wifi" ? true: false;
 				});
 				// 決定是否是公司wifi ip
@@ -112,6 +114,7 @@ let NetUtil = {
 		*/
 
 		try {
+			console.log(this.TOMCAT_HOST, url);
 			let response = await fetch(`${this.TOMCAT_HOST}${url}`, fetchOptions);
 			// clearTimeout(timeout); 
 			// if (!isTimeOut){

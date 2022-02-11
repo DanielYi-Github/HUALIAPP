@@ -518,12 +518,11 @@ function setUserInfo(data) {
 // 新增熱起動的資料撈取
 export function hotInitialApi( user, way=false, initActions){
 	return (dispatch, getState) => {
-		LoggerUtil.uploadLocalDBErrorLog(user); 	// 將資料庫的log上傳至server
+		LoggerUtil.uploadLocalDBErrorLog(user); 		//將資料庫的log上傳至server
 
 		//取得首頁常見功能要顯示幾個
-		UpdateDataUtil.updateNotice(user);	//公告資訊				
-		UpdateDataUtil.updateBanner(user);	//Banner
 		UpdateDataUtil.setLoginInfo(user);
+		UpdateDataUtil.updateNotice(user);				//公告資訊				
 		UpdateDataUtil.updateVisitLogToServer(user);	//update功能訪問數量回Server	  	
 		UpdateDataUtil.getHomeIconNum(user).then((data)=>{
 			dispatch({									
@@ -542,7 +541,6 @@ export function hotInitialApi( user, way=false, initActions){
     		initActions.loadMessageIntoState();
 	  		dispatch( loadBannerImages() ); 	//撈取HomePage Banners資料
 	  	}).catch((e)=>{
-	  		// console.log("LoginAction hotInitialApi", e, way);
 	  		console.log("網路他媽的又異常", e, way);
 	  		/*
 	  		switch(way) {

@@ -201,7 +201,7 @@ export default {
   },
   //HomePageBannerTitle
   HomePageBannerTitle:56,
-  HomePageBannerBackgroundColor:"rgba(160,11,21)",
+  HomePageBannerBackgroundColor:"rgba(160,11,21,1)",
 
   ExplainText:{
     color:"#e52d2f"
