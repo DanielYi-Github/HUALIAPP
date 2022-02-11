@@ -44,13 +44,9 @@ export function appInit(initActions/*, downloadProgressCallback*/) {
 			initActions.setThemeState( null, netStatus );  	// 設定APP主題風格
     		initActions.bios_check(); 						// 檢查設備是否支持生物識別
     		initActions.biometricInfo_check();				// 檢查server與設備有無使用者生物識別資訊且一致
-    		console.log(1);
 
 			await UpgradeDBTableUtil.UpgradeDBTable(); 	// 檢查DB表有無更新
-    		console.log(2.2);
-
 			await UpdateDataUtil.updateVersion();		// 檢查DB表有無APP版本號更新   
-    		console.log(2);
 
 			if (getState().Login.showUpdateMessage) {
 
@@ -90,15 +86,11 @@ export function userSkipDigUpdate(initActions){
 }
 
 async function intoAppProgress(initActions, State, netStatus=true, lang){
-    		console.log(2);
-
 	let user = await DeviceStorageUtil.get('User'); // 有無使用者資料
 	user = user ? JSON.parse(user) : false;
 
 	// 有無網路
 	if (netStatus) {
-    		console.log(3);
-		
 		let arr = [
 			UpdateDataUtil.getPublicView(), 		//取得公開畫面參數
 			UpdateDataUtil.getPublicViewContent() 	//取得公開畫面-集團介紹顯示內容參數

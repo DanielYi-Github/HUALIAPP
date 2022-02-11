@@ -380,7 +380,6 @@ export function initialApi( user, way=false ){
   			UpdateDataUtil.updateMasterData(user),  //主資料表
 			UpdateDataUtil.updatePermission(user),  //權限資料
 			UpdateDataUtil.updateEvent(user),		//事件表
-			// UpdateDataUtil.updateBanner(user),		//Banner
 			UpdateDataUtil.updateModule(user),		//module
   			UpdateDataUtil.updateRead(user),		//訊息讀取表       
 			UpdateDataUtil.setLoginInfo(user),
