@@ -34,8 +34,6 @@ class ViewFilePage extends React.Component {
   componentDidMount() {
     let file     = this.props.route.params.file
     let fileType = this.props.route.params.fileType
-    console.log("componentDidMount", file, fileType, this.state.isDownload);
-
 
     if (file != undefined && fileType != undefined) {
       this.setState({
@@ -66,7 +64,6 @@ class ViewFilePage extends React.Component {
           );
           break;
         case "pdf":
-
           pdf = (
             <Pdf
               // source={{uri:"data:application/pdf;base64,"+this.state.file}}
