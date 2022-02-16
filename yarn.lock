@@ -1218,11 +1218,6 @@
   resolved "https://registry.npmmirror.com/@react-native-community/eslint-plugin/download/@react-native-community/eslint-plugin-1.1.0.tgz#e42b1bef12d2415411519fd528e64b593b1363dc"
   integrity sha1-5Csb7xLSQVQRUZ/VKOZLWTsTY9w=
 
-"@react-native-community/masked-view@^0.1.10":
-  version "0.1.11"
-  resolved "https://registry.npmmirror.com/@react-native-community/masked-view/download/@react-native-community/masked-view-0.1.11.tgz#2f4c6e10bee0786abff4604e39a37ded6f3980ce"
-  integrity sha1-L0xuEL7geGq/9GBOOaN97W85gM4=
-
 "@react-native-community/netinfo@^5.9.7":
   version "5.9.10"
   resolved "https://registry.npmmirror.com/@react-native-community/netinfo/download/@react-native-community/netinfo-5.9.10.tgz#97d3a9fa62a3a4838ec7a6ec91cfec5a26e365b6"
