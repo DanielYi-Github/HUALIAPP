@@ -89,7 +89,7 @@ class LoginSingleItem extends React.PureComponent  {
                 <Text 
                   style={{width:"100%",color:"#FFF"}}
                   onPress = {()=>this.props.forgetPassword("AD", this.state.account)}
-                  >
+                >
                   {context.ForgetPassword}
                 </Text>
               </Body>

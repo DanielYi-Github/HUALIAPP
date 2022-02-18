@@ -101,7 +101,7 @@ import CreateWebViewPage       from './pages/Common/CreateWebViewPage';
 import MeetingSearchPage                     from './pages/Common/Meeting/MeetingSearchPage';
 import MeetingSearchWithTagsPage             from './pages/Common/Meeting/MeetingSearchWithTagsPage';
 import MeetingTimeForSearchPage              from './pages/Common/Meeting/MeetingTimeForSearchPage';
-import MeetingListPage                       from './pages/Common/Meeting/MeetingListPage';
+import MeetingListPage                       from './pages/Common/Meeting/MeetingListPage2';
 import MeetingInsertPage                     from './pages/Common/Meeting/MeetingInsertPage';
 import MeetingInsertChairpersonPage          from './pages/Common/Meeting/MeetingInsertChairpersonPage';
 import MeetingInsertWithTagsPage             from './pages/Common/Meeting/MeetingInsertWithTagsPage';
