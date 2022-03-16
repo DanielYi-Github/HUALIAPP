@@ -171,7 +171,6 @@ class HomePage extends React.Component {
 
   renderContent = () => {
     // 有值再進行渲染
-    // console.log("this.props.state.Home.FunctionData", this.props.state.Home.FunctionData);
     if(this.props.state.Home.FunctionData.length == 0) return null;
     // 根據FunctionData的資料來進行其他資料的獲取
     if(!this.state.isLoadFunctionDataRelateData) this.LoadFunctionDataRelateData();
@@ -307,22 +306,20 @@ class HomePage extends React.Component {
     return (
         <View style={{alignItems: 'center'}}>
           {/*常用功能*/}
-          <Card>
-           <CardItem>
-               <FlatList
-                 keyExtractor = {(item, index) => index.toString()}
-                 numColumns   = {4} 
-                 renderItem   = {this.renderFunctionButton}
-                 data         = {functionList}
-                 scrollEnabled = {false}
-               />
-           </CardItem>
-          </Card>
+        <Card>
+          <CardItem>
+             <FlatList
+               keyExtractor = {(item, index) => index.toString()}
+               numColumns   = {4} 
+               renderItem   = {this.renderFunctionButton}
+               data         = {functionList}
+               scrollEnabled = {false}
+             />
+          </CardItem>
+        </Card>
 
           {/* 廣播 */}
-          <BroadcastCard
-            data={this.props.state.Broadcast.data}
-          />
+          <BroadcastCard />
 
           {/*公告資訊*/}
           <Card>

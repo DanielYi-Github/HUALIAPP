@@ -1,3 +1,38 @@
+import { LocaleConfig } from 'react-native-calendars';
+LocaleConfig.locales['zh-CN'] = {
+  monthNames: [
+    '一月',
+    '二月',
+    '三月',
+    '四月',
+    '五月',
+    '六月',
+    '七月',
+    '八月',
+    '九月',
+    '十月',
+    '十一月',
+    '十二月'
+  ],
+  monthNamesShort: [
+	'一月', 
+	'二月', 
+	'三月', 
+	'四月', 
+	'五月', 
+	'六月', 
+	'七月', 
+	'八月', 
+	'九月', 
+	'十月', 
+	'十一月', 
+	'十二月'
+  ],
+  dayNames: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+  dayNamesShort: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+  today: "今日"
+};
+
 export default {
 	LangStatus:"zh-CN",
 	Common:{

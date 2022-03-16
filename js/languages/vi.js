@@ -1,3 +1,38 @@
+import { LocaleConfig } from 'react-native-calendars';
+LocaleConfig.locales['vi'] = {
+  monthNames: [
+  'Tháng Giêng',
+  'Tháng hai',
+  'Bước đều',
+  'Tháng tư',
+  'Có thể',
+  'Tháng Sáu',
+  'Tháng Bảy',
+  'Tháng Tám',
+  'Tháng Chín',
+  'Tháng Mười',
+  'Tháng Mười Một',
+  'Tháng 12'
+  ],
+  monthNamesShort: [
+  'Tháng Giêng',
+  'Tháng hai',
+  'Bước đều',
+  'Tháng tư',
+  'Có thể',
+  'Tháng Sáu',
+  'Tháng Bảy',
+  'Tháng Tám',
+  'Tháng Chín',
+  'Tháng Mười',
+  'Tháng Mười Một',
+  'Tháng 12'
+  ],
+  dayNames: [ 'Chủ nhật','hứ hai','Thứ ba','Thứ tư','Hôm nay','Thứ sáu','Thứ bảy'  ],
+  dayNamesShort: [ 'Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Hôm nay', 'Thứ sáu', 'Thứ bảy' ],
+  today: "Hôm nay"
+};
+
 export default {
 	LangStatus: "vi",
 	Common: {

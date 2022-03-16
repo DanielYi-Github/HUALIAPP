@@ -55,6 +55,9 @@ export default {
 
   //Container
   containerBgColor: "#000",
+  get getContainerBgColor() {
+    return this.containerBgColor;
+  },
 
   // Footer
   footerHeight: 55,
@@ -217,7 +220,7 @@ export default {
   },
   Separator:{
     height: 1, 
-    backgroundColor: '#e6e6e6'
+    backgroundColor: 'rgba(230,230,230,0.4)'
   },
   // MainPageBackground
   Transparent:{

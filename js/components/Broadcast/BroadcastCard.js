@@ -15,7 +15,7 @@ class BroadcastCard extends Component {
     }
 
     render() {
-        let data = this.props.data
+        let data = this.props.state.Broadcast.data
         if (data.length  == 0) {
             return null
         }
@@ -23,13 +23,14 @@ class BroadcastCard extends Component {
             <Card>
                 <CardItem>
                     <Carousel
-                        data={data}
-                        renderItem={this.renderItem}
-                        sliderWidth={window.width}
-                        itemWidth={window.width}
-                        loop={true}
-                        autoplay={true}
-                        autoplayDelay={5000}
+                        extraData     ={this.props}
+                        data          ={data}
+                        renderItem    ={this.renderItem}
+                        sliderWidth   ={window.width}
+                        itemWidth     ={window.width}
+                        loop          ={true}
+                        autoplay      ={true}
+                        autoplayDelay ={5000}
                     />
                 </CardItem>
             </Card>
@@ -70,7 +71,7 @@ class BroadcastCard extends Component {
                                 :
                                 null
                             }
-                            <Title style={{ fontSize: 15,paddingLeft:5,alignSelf:'flex-end', color:'#000' }}>{item.TITLE}</Title>
+                            <Title style={{ fontSize: 15,paddingLeft:5,alignSelf:'flex-end'}}>{item.TITLE}</Title>
                         </Body>
                         <Body style={{ alignSelf: 'flex-start', paddingLeft: 5, width: "85%" }}>
                             <Text 
@@ -94,8 +95,8 @@ export default connect(
     }),
     (dispatch) => ({
         actions: bindActionCreators({
-          ...BroadcastAction,
-          ...CommonAction
-        }, dispatch)
-      })
+              ...BroadcastAction,
+              ...CommonAction
+            }, dispatch)
+        })
 )(BroadcastCard)

@@ -146,8 +146,7 @@ async function intoAppProgress(initActions, State, netStatus=true, lang){
 		    lang.Common.NoInternetAlert
 		  );
 		}
-	}
-	
+	}	
 }
 
 async function  getNetworkStatus(){

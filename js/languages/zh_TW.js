@@ -1,3 +1,38 @@
+import { LocaleConfig } from 'react-native-calendars';
+LocaleConfig.locales['zh-TW'] = {
+  monthNames: [
+    '一月',
+    '二月',
+    '三月',
+    '四月',
+    '五月',
+    '六月',
+    '七月',
+    '八月',
+    '九月',
+    '十月',
+    '十一月',
+    '十二月'
+  ],
+  monthNamesShort: [
+	  '一月', 
+	  '二月', 
+	  '三月', 
+	  '四月', 
+	  '五月', 
+	  '六月', 
+	  '七月', 
+	  '八月', 
+	  '九月', 
+	  '十月', 
+	  '十一月', 
+	  '十二月'
+  ],
+  dayNames: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+  dayNamesShort: ['週日', '週一', '週二', '週三', '週四', '週五', '週六'],
+  today: "今天"
+};
+
 export default {
 	LangStatus:"zh-TW",
 	Common:{
@@ -417,11 +452,11 @@ PC審批：表單內容複雜或可修改資料的表單不適合在行動裝置
 		Members              :"人",
 	},
 	FormFile:{
-			FileName    : "檔案名稱",
-			FileSize    : "檔案大小",
-			UploadTime  : "上傳時間",
-			UploadMember: "上傳人員",
-			Description : "檔案說明",
+		FileName    : "檔案名稱",
+		FileSize    : "檔案大小",
+		UploadTime  : "上傳時間",
+		UploadMember: "上傳人員",
+		Description : "檔案說明",
 	},
 	MyFormListPage:{
 		AdvanceSearch       :"進階搜尋",

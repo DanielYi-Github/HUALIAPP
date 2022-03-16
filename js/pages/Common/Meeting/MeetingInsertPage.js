@@ -405,7 +405,7 @@ class MeetingInsertPage extends React.PureComponent  {
               });
             }}
           >
-            <Icon name='person-outline' />
+            <Icon name='person-outline' style={{color: this.props.style.textColor}}/>
             <Label style={{flex:1}}>{this.props.lang.MeetingPage.chairperson}</Label>
             {
               this.state.isEditable ? <Text>{this.state.chairpersonLabel}</Text> : <Label>{this.state.chairpersonLabel}</Label>
@@ -425,7 +425,7 @@ class MeetingInsertPage extends React.PureComponent  {
             flexDirection  : 'column',
           }}>
             <View style={{ flexDirection: 'row',  width: '100%' }}>
-              <Icon name='people-outline' />
+              <Icon name='people-outline' style={{color: this.props.style.textColor}}/>
               <Label style={{alignSelf: 'center', flex:1}}>{this.props.lang.MeetingPage.attendeesInvite}</Label>
               {
                 this.state.isEditable ? 
@@ -476,7 +476,7 @@ class MeetingInsertPage extends React.PureComponent  {
               setTimeout( this.showActionSheet, 50);
             }}
           >
-            <Icon name='meeting-room' type="MaterialIcons"/>
+            <Icon name='meeting-room' type="MaterialIcons" style={{color: this.props.style.textColor}}/>
             <Label style={{flex:1}}>{this.props.lang.MeetingPage.meetingMode}</Label>
             {
               this.state.isEditable ? <Text>{meetingPlaceName}</Text> : <Label>{meetingPlaceName}</Label>
@@ -505,7 +505,7 @@ class MeetingInsertPage extends React.PureComponent  {
               Keyboard.dismiss();
             }}
           >
-            <Icon name='clock-alert-outline' type="MaterialCommunityIcons" />
+            <Icon name='clock-alert-outline' type="MaterialCommunityIcons" style={{color: this.props.style.textColor}}/>
             <Label style={{flex:1}}>{this.props.lang.MeetingPage.reminder}</Label>
             {
              this.state.isEditable ? <Text>{remindtimeLabel}</Text> : <Label>{remindtimeLabel}</Label>  

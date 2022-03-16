@@ -54,6 +54,9 @@ export default {
 
   //Container
   containerBgColor: "#F5F6FA",
+  get getContainerBgColor() {
+    return this.containerBgColor;
+  },
 
   // Footer
   footerHeight: 55,
@@ -89,7 +92,6 @@ export default {
   inputSuccessBorderColor: "#2b8339",
   inputErrorBorderColor: "#ed2f2f",
   inputHeightBase: 50,
-  // inputHeightBase: 0,
   get inputColor() {
     return this.textColor;
   },
@@ -218,7 +220,8 @@ export default {
   },
   Separator:{
     height: 1, 
-    backgroundColor: '#e6e6e6'
+    // backgroundColor: '#e6e6e6'
+    backgroundColor: '#cecece'
   },
   //透明背景
   Transparent:{

@@ -1,43 +1,156 @@
-import React, { Component } from "react";
-import { Container, Header, Content, Picker, Form } from "native-base";
-import SplashScreen           from 'react-native-splash-screen';
+import React, {Component} from 'react';
+import {Alert, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {Agenda, DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
+import SplashScreen            from 'react-native-splash-screen';
 
 
-export default class PickerExample extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selected: "key1"
-    };
+
+
+let testIDs = {
+  menu: {
+    CONTAINER: 'menu',
+    CALENDARS: 'calendars_btn',
+    CALENDAR_LIST: 'calendar_list_btn',
+    HORIZONTAL_LIST: 'horizontal_list_btn',
+    AGENDA: 'agenda_btn',
+    EXPANDABLE_CALENDAR: 'expandable_calendar_btn',
+    WEEK_CALENDAR: 'week_calendar_btn'
+  },
+  calendars: {
+    CONTAINER: 'calendars',
+    FIRST: 'first_calendar',
+    LAST: 'last_calendar'
+  },
+  calendarList: {CONTAINER: 'calendarList'},
+  horizontalList: {CONTAINER: 'horizontalList'},
+  agenda: {
+    CONTAINER: 'agenda',
+    ITEM: 'item'
+  },
+  expandableCalendar: {CONTAINER: 'expandableCalendar'},
+  weekCalendar: {CONTAINER: 'weekCalendar'}
+};
+
+interface State {
+  items?: AgendaSchedule;
+}
+
+export default class AgendaScreen extends Component<State> {
+  state: State = {
+    items: undefined
+  };
+
+  componentDidMount(){
     SplashScreen.hide();
   }
-  onValueChange(value: string) {
-    this.setState({
-      selected: value
-    });
-  }
+
   render() {
     return (
-      <Container>
-        <Header />
-        <Content>
-          <Form>
-            <Picker
-              note
-              mode="dropdown"
-              style={{ width: 120 }}
-              selectedValue={this.state.selected}
-              onValueChange={this.onValueChange.bind(this)}
-            >
-              <Picker.Item label="Wallet" value="key0" />
-              <Picker.Item label="ATM Card" value="key1" />
-              <Picker.Item label="Debit Card" value="key2" />
-              <Picker.Item label="Credit Card" value="key3" />
-              <Picker.Item label="Net Banking" value="key4" />
-            </Picker>
-          </Form>
-        </Content>
-      </Container>
+      <Agenda
+        testID={testIDs.agenda.CONTAINER}
+        items={this.state.items}
+        loadItemsForMonth={this.loadItems}
+        selected={'2017-05-16'}
+        renderItem={this.renderItem}
+        renderEmptyDate={this.renderEmptyDate}
+        rowHasChanged={this.rowHasChanged}
+        showClosingKnob={true}
+        // markingType={'period'}
+        // markedDates={{
+        //    '2017-05-08': {textColor: '#43515c'},
+        //    '2017-05-09': {textColor: '#43515c'},
+        //    '2017-05-14': {startingDay: true, endingDay: true, color: 'blue'},
+        //    '2017-05-21': {startingDay: true, color: 'blue'},
+        //    '2017-05-22': {endingDay: true, color: 'gray'},
+        //    '2017-05-24': {startingDay: true, color: 'gray'},
+        //    '2017-05-25': {color: 'gray'},
+        //    '2017-05-26': {endingDay: true, color: 'gray'}}}
+        // monthFormat={'yyyy'}
+        // theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
+        //renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
+        // hideExtraDays={false}
+        // showOnlySelectedDayItems
+      />
     );
   }
+
+  loadItems = (day: DateData) => {
+    const items = this.state.items || {};
+
+    setTimeout(() => {
+      for (let i = -15; i < 15; i++) {
+        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+        const strTime = this.timeToString(time);
+
+        if (!items[strTime]) {
+          items[strTime] = [];
+          
+          const numItems = Math.floor(Math.random() * 3 + 1);
+          for (let j = 0; j < numItems; j++) {
+            items[strTime].push({
+              name: 'Item for ' + strTime + ' #' + j,
+              height: Math.max(50, Math.floor(Math.random() * 150)),
+              day: strTime
+            });
+          }
+        }
+      }
+      
+      const newItems: AgendaSchedule = {};
+      Object.keys(items).forEach(key => {
+        newItems[key] = items[key];
+      });
+      this.setState({
+        items: newItems
+      });
+    }, 1000);
+  }
+
+  renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
+    const fontSize = isFirst ? 16 : 14;
+    const color = isFirst ? 'black' : '#43515c';
+
+    return (
+      <TouchableOpacity
+        testID={testIDs.agenda.ITEM}
+        style={[styles.item, {height: reservation.height}]}
+        onPress={() => Alert.alert(reservation.name)}
+      >
+        <Text style={{fontSize, color}}>{reservation.name}</Text>
+      </TouchableOpacity>
+    );
+  }
+
+  renderEmptyDate = () => {
+    return (
+      <View style={styles.emptyDate}>
+        <Text>This is empty date!</Text>
+      </View>
+    );
+  }
+
+  rowHasChanged = (r1: AgendaEntry, r2: AgendaEntry) => {
+    return r1.name !== r2.name;
+  }
+
+  timeToString(time: number) {
+    const date = new Date(time);
+    return date.toISOString().split('T')[0];
+  }
 }
+
+const styles = StyleSheet.create({
+  item: {
+    backgroundColor: 'white',
+    flex: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginRight: 10,
+    marginTop: 17
+  },
+  emptyDate: {
+    height: 15,
+    flex: 1,
+    paddingTop: 30
+  }
+});
