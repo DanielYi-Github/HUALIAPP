@@ -10,5 +10,4 @@
     <!-- 測試機 -->
     <string moduleConfig="true" name="CodePushDeploymentKey">onpNlKOEeSLvZybeEKXPVQVHmc6O4ksvOXqog</string>
     <string moduleConfig="true" name="CodePushServerUrl">http://qas.app.huali-group.com:3000/</string>
-    <!--  -->
 </resources>
