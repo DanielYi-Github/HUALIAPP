@@ -206,6 +206,7 @@ class ContactPage extends React.Component {
     item = item.item.item;
     return (
       <ContactItem 
+        isNetWork   = {this.props.state.Network.networkStatus}
         contactInfo = {item} 
         onPress     = {() => this.showContactDetail(item)}
       />

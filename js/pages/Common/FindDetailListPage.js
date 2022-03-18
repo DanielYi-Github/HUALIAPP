@@ -62,6 +62,7 @@ class FindDetailListPage extends React.Component {
 
   renderItem = (item) => {
     return <FindPageFilterItem 
+              isNetWork   = {this.props.state.Network.networkStatus}
               item = {item} 
               Lang_FormStatus = {this.props.state.Language.lang.FormStatus} 
               isFindPageFilter = {false}

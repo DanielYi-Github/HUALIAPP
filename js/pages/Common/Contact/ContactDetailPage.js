@@ -21,7 +21,7 @@ class ContactDetailPage extends React.Component {
 
     let item = this.props.route.params.data;
     // 判斷該筆資料的圖片是否有值與圖片型態為何
-    if (item.PICTURE == "" || item.PICTURE == null || typeof item.PICTURE == "number") {
+    if (item.PICTURE == "" || item.PICTURE == null || typeof item.PICTURE == "number" || !this.props.state.Network.networkStatus) {
       item.PICTURE = (item.SEX == "F") ? require("../../../image/user_f.png") : require("../../../image/user_m.png");
     } else {
       // 因可能重新渲染所以需在此處稍加判斷

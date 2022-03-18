@@ -9,7 +9,7 @@ export default class ContactItem extends React.PureComponent  {
 	render() {
 		let item = this.props.contactInfo;
 		// 判斷該筆資料的圖片是否有值與圖片型態為何
-		if (item.PICTURE == "" || item.PICTURE == null || typeof item.PICTURE == "number") {
+		if (item.PICTURE == "" || item.PICTURE == null || typeof item.PICTURE == "number" || !this.props.isNetWork) {
 		  item.PICTURE = (item.SEX == "F") ? require("../image/user_f.png") : require("../image/user_m.png");
 		} else {
 		  // 因可能重新渲染所以需在此處稍加判斷

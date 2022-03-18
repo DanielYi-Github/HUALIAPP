@@ -76,6 +76,7 @@ export default class FindPageFilterItem extends Component {
 		    	// console.log(item.item);
 		      object = (
 		        <ContactItem 
+        		  isNetWork   = {this.props.isNetWork}
 		          contactInfo = {item.item}
 		          onPress = {() => this.goContact(item.item)}
 		          FindPageFilterItem = {isFindPageFilter}
