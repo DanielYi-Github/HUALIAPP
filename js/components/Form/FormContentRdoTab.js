@@ -25,9 +25,12 @@ class FormContentRdoTab extends Component {
 		let required = (this.props.data.required == "Y") ? "*" : "  ";
 		let value = false;
 
+		// editable = true;
 		if (editable) {
             value = (this.props.data.defaultvalue == null ) ? false : eval(this.props.data.defaultvalue);
-
+            if( typeof value == "string"){
+            	value = (value === 'true');
+            }
 			return(
 				 	<Item fixedLabel 
 				 		style={[
@@ -53,6 +56,9 @@ class FormContentRdoTab extends Component {
 			);
 		} else {		
 			value = (this.props.data.defaultvalue == null || this.props.data.defaultvalue == "") ? value : this.props.data.defaultvalue;
+			if( typeof value == "string"){
+				value = (value === 'true');
+			}
 			return(
 				  <Item fixedLabel 
 					  style={[
@@ -62,6 +68,8 @@ class FormContentRdoTab extends Component {
 				  >
 		 			<Label style={{flex: 0, color:"#FE1717"}}>{required}</Label>
 				  	<Label style={{flex: 0}}>{this.state.labelname}</Label>
+	               {/*為了撐開同等高度 */}
+                    <Input editable={false}/>
                     <Switch 
                         disabled={true}  
                         value={value} 
